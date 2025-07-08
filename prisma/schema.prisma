@@ -144,7 +144,9 @@ model RegionCategory {
   name      String
   isDisable Boolean @default(false)
 
-  CafeInfo CafeInfo[]
+  govermentType   GovermentType
+
+  CafeInfos CafeInfo[]
 
   AncestorCategories    ClosureRegionCategory[] @relation("AncestorCategory")
   DescendantCategories  ClosureRegionCategory[] @relation("DescendantCategory")

@@ -99,6 +99,7 @@ export type RegionCategory = {
   createdAt: Date
   name: string
   isDisable: boolean
+  govermentType: GovermentType
 }
 
 /**
@@ -231,6 +232,24 @@ export const BoardType: {
 };
 
 export type BoardType = (typeof BoardType)[keyof typeof BoardType]
+
+
+export const GovermentType: {
+  SPECIAL_CITY: 'SPECIAL_CITY',
+  METROPOLITAN_CITY: 'METROPOLITAN_CITY',
+  SPECIAL_SELF_GOVERNING_CITY: 'SPECIAL_SELF_GOVERNING_CITY',
+  PROVINCE: 'PROVINCE',
+  SPECIAL_SELF_GOVERNING_PROVINCE: 'SPECIAL_SELF_GOVERNING_PROVINCE',
+  DISTRICT: 'DISTRICT',
+  CITY: 'CITY',
+  COUNTY: 'COUNTY',
+  TOWN: 'TOWN',
+  TOWNSHIP: 'TOWNSHIP',
+  NEIGHBORHOOD: 'NEIGHBORHOOD',
+  PLACENAME: 'PLACENAME'
+};
+
+export type GovermentType = (typeof GovermentType)[keyof typeof GovermentType]
 
 
 /**
@@ -1247,13 +1266,13 @@ export namespace Prisma {
 
 
   export type RegionCategoryCountOutputType = {
-    CafeInfo: number
+    CafeInfos: number
     AncestorCategories: number
     DescendantCategories: number
   }
 
   export type RegionCategoryCountOutputTypeSelect = {
-    CafeInfo?: boolean
+    CafeInfos?: boolean
     AncestorCategories?: boolean
     DescendantCategories?: boolean
   }
@@ -6103,6 +6122,7 @@ export namespace Prisma {
     createdAt: Date | null
     name: string | null
     isDisable: boolean | null
+    govermentType: GovermentType | null
   }
 
   export type RegionCategoryMaxAggregateOutputType = {
@@ -6110,6 +6130,7 @@ export namespace Prisma {
     createdAt: Date | null
     name: string | null
     isDisable: boolean | null
+    govermentType: GovermentType | null
   }
 
   export type RegionCategoryCountAggregateOutputType = {
@@ -6117,6 +6138,7 @@ export namespace Prisma {
     createdAt: number
     name: number
     isDisable: number
+    govermentType: number
     _all: number
   }
 
@@ -6134,6 +6156,7 @@ export namespace Prisma {
     createdAt?: true
     name?: true
     isDisable?: true
+    govermentType?: true
   }
 
   export type RegionCategoryMaxAggregateInputType = {
@@ -6141,6 +6164,7 @@ export namespace Prisma {
     createdAt?: true
     name?: true
     isDisable?: true
+    govermentType?: true
   }
 
   export type RegionCategoryCountAggregateInputType = {
@@ -6148,6 +6172,7 @@ export namespace Prisma {
     createdAt?: true
     name?: true
     isDisable?: true
+    govermentType?: true
     _all?: true
   }
 
@@ -6248,6 +6273,7 @@ export namespace Prisma {
     createdAt: Date
     name: string
     isDisable: boolean
+    govermentType: GovermentType
     _count: RegionCategoryCountAggregateOutputType | null
     _avg: RegionCategoryAvgAggregateOutputType | null
     _sum: RegionCategorySumAggregateOutputType | null
@@ -6274,14 +6300,15 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     isDisable?: boolean
-    CafeInfo?: boolean | CafeInfoFindManyArgs
+    govermentType?: boolean
+    CafeInfos?: boolean | CafeInfoFindManyArgs
     AncestorCategories?: boolean | ClosureRegionCategoryFindManyArgs
     DescendantCategories?: boolean | ClosureRegionCategoryFindManyArgs
     _count?: boolean | RegionCategoryCountOutputTypeArgs
   }
 
   export type RegionCategoryInclude = {
-    CafeInfo?: boolean | CafeInfoFindManyArgs
+    CafeInfos?: boolean | CafeInfoFindManyArgs
     AncestorCategories?: boolean | ClosureRegionCategoryFindManyArgs
     DescendantCategories?: boolean | ClosureRegionCategoryFindManyArgs
     _count?: boolean | RegionCategoryCountOutputTypeArgs
@@ -6298,7 +6325,7 @@ export namespace Prisma {
     ?'include' extends U
     ? RegionCategory  & {
     [P in TrueKeys<S['include']>]:
-        P extends 'CafeInfo' ? Array < CafeInfoGetPayload<S['include'][P]>>  :
+        P extends 'CafeInfos' ? Array < CafeInfoGetPayload<S['include'][P]>>  :
         P extends 'AncestorCategories' ? Array < ClosureRegionCategoryGetPayload<S['include'][P]>>  :
         P extends 'DescendantCategories' ? Array < ClosureRegionCategoryGetPayload<S['include'][P]>>  :
         P extends '_count' ? RegionCategoryCountOutputTypeGetPayload<S['include'][P]> :  never
@@ -6306,7 +6333,7 @@ export namespace Prisma {
     : 'select' extends U
     ? {
     [P in TrueKeys<S['select']>]:
-        P extends 'CafeInfo' ? Array < CafeInfoGetPayload<S['select'][P]>>  :
+        P extends 'CafeInfos' ? Array < CafeInfoGetPayload<S['select'][P]>>  :
         P extends 'AncestorCategories' ? Array < ClosureRegionCategoryGetPayload<S['select'][P]>>  :
         P extends 'DescendantCategories' ? Array < ClosureRegionCategoryGetPayload<S['select'][P]>>  :
         P extends '_count' ? RegionCategoryCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof RegionCategory ? RegionCategory[P] : never
@@ -6649,7 +6676,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    CafeInfo<T extends CafeInfoFindManyArgs = {}>(args?: Subset<T, CafeInfoFindManyArgs>): CheckSelect<T, PrismaPromise<Array<CafeInfo>>, PrismaPromise<Array<CafeInfoGetPayload<T>>>>;
+    CafeInfos<T extends CafeInfoFindManyArgs = {}>(args?: Subset<T, CafeInfoFindManyArgs>): CheckSelect<T, PrismaPromise<Array<CafeInfo>>, PrismaPromise<Array<CafeInfoGetPayload<T>>>>;
 
     AncestorCategories<T extends ClosureRegionCategoryFindManyArgs = {}>(args?: Subset<T, ClosureRegionCategoryFindManyArgs>): CheckSelect<T, PrismaPromise<Array<ClosureRegionCategory>>, PrismaPromise<Array<ClosureRegionCategoryGetPayload<T>>>>;
 
@@ -13589,7 +13616,8 @@ export namespace Prisma {
     id: 'id',
     createdAt: 'createdAt',
     name: 'name',
-    isDisable: 'isDisable'
+    isDisable: 'isDisable',
+    govermentType: 'govermentType'
   };
 
   export type RegionCategoryScalarFieldEnum = (typeof RegionCategoryScalarFieldEnum)[keyof typeof RegionCategoryScalarFieldEnum]
@@ -14047,7 +14075,8 @@ export namespace Prisma {
     createdAt?: DateTimeFilter | Date | string
     name?: StringFilter | string
     isDisable?: BoolFilter | boolean
-    CafeInfo?: CafeInfoListRelationFilter
+    govermentType?: EnumGovermentTypeFilter | GovermentType
+    CafeInfos?: CafeInfoListRelationFilter
     AncestorCategories?: ClosureRegionCategoryListRelationFilter
     DescendantCategories?: ClosureRegionCategoryListRelationFilter
   }
@@ -14057,7 +14086,8 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     isDisable?: SortOrder
-    CafeInfo?: CafeInfoOrderByRelationAggregateInput
+    govermentType?: SortOrder
+    CafeInfos?: CafeInfoOrderByRelationAggregateInput
     AncestorCategories?: ClosureRegionCategoryOrderByRelationAggregateInput
     DescendantCategories?: ClosureRegionCategoryOrderByRelationAggregateInput
   }
@@ -14071,6 +14101,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     isDisable?: SortOrder
+    govermentType?: SortOrder
     _count?: RegionCategoryCountOrderByAggregateInput
     _avg?: RegionCategoryAvgOrderByAggregateInput
     _max?: RegionCategoryMaxOrderByAggregateInput
@@ -14086,6 +14117,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     name?: StringWithAggregatesFilter | string
     isDisable?: BoolWithAggregatesFilter | boolean
+    govermentType?: EnumGovermentTypeWithAggregatesFilter | GovermentType
   }
 
   export type ClosureRegionCategoryWhereInput = {
@@ -14909,7 +14941,8 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     isDisable?: boolean
-    CafeInfo?: CafeInfoCreateNestedManyWithoutRegionCategoryInput
+    govermentType: GovermentType
+    CafeInfos?: CafeInfoCreateNestedManyWithoutRegionCategoryInput
     AncestorCategories?: ClosureRegionCategoryCreateNestedManyWithoutAncestorCategoryInput
     DescendantCategories?: ClosureRegionCategoryCreateNestedManyWithoutDescendantCategoryInput
   }
@@ -14919,7 +14952,8 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     isDisable?: boolean
-    CafeInfo?: CafeInfoUncheckedCreateNestedManyWithoutRegionCategoryInput
+    govermentType: GovermentType
+    CafeInfos?: CafeInfoUncheckedCreateNestedManyWithoutRegionCategoryInput
     AncestorCategories?: ClosureRegionCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
     DescendantCategories?: ClosureRegionCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
   }
@@ -14928,7 +14962,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    CafeInfo?: CafeInfoUpdateManyWithoutRegionCategoryInput
+    govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
+    CafeInfos?: CafeInfoUpdateManyWithoutRegionCategoryInput
     AncestorCategories?: ClosureRegionCategoryUpdateManyWithoutAncestorCategoryInput
     DescendantCategories?: ClosureRegionCategoryUpdateManyWithoutDescendantCategoryInput
   }
@@ -14938,7 +14973,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    CafeInfo?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryInput
+    govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
+    CafeInfos?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryInput
     AncestorCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryInput
     DescendantCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryInput
   }
@@ -14948,12 +14984,14 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     isDisable?: boolean
+    govermentType: GovermentType
   }
 
   export type RegionCategoryUpdateManyMutationInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
   }
 
   export type RegionCategoryUncheckedUpdateManyInput = {
@@ -14961,6 +14999,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
   }
 
   export type ClosureRegionCategoryCreateInput = {
@@ -15007,7 +15046,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
-    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfoInput
+    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
     address: string
     directions: string
     businessNumber: string
@@ -15038,7 +15077,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
-    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfoInput
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
@@ -15966,6 +16005,13 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter
   }
 
+  export type EnumGovermentTypeFilter = {
+    equals?: GovermentType
+    in?: Enumerable<GovermentType>
+    notIn?: Enumerable<GovermentType>
+    not?: NestedEnumGovermentTypeFilter | GovermentType
+  }
+
   export type CafeInfoListRelationFilter = {
     every?: CafeInfoWhereInput
     some?: CafeInfoWhereInput
@@ -15991,6 +16037,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     isDisable?: SortOrder
+    govermentType?: SortOrder
   }
 
   export type RegionCategoryAvgOrderByAggregateInput = {
@@ -16002,6 +16049,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     isDisable?: SortOrder
+    govermentType?: SortOrder
   }
 
   export type RegionCategoryMinOrderByAggregateInput = {
@@ -16009,10 +16057,21 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     isDisable?: SortOrder
+    govermentType?: SortOrder
   }
 
   export type RegionCategorySumOrderByAggregateInput = {
     id?: SortOrder
+  }
+
+  export type EnumGovermentTypeWithAggregatesFilter = {
+    equals?: GovermentType
+    in?: Enumerable<GovermentType>
+    notIn?: Enumerable<GovermentType>
+    not?: NestedEnumGovermentTypeWithAggregatesFilter | GovermentType
+    _count?: NestedIntFilter
+    _min?: NestedEnumGovermentTypeFilter
+    _max?: NestedEnumGovermentTypeFilter
   }
 
   export type RegionCategoryRelationFilter = {
@@ -16818,6 +16877,10 @@ export namespace Prisma {
     connect?: Enumerable<ClosureRegionCategoryWhereUniqueInput>
   }
 
+  export type EnumGovermentTypeFieldUpdateOperationsInput = {
+    set?: GovermentType
+  }
+
   export type CafeInfoUpdateManyWithoutRegionCategoryInput = {
     create?: XOR<Enumerable<CafeInfoCreateWithoutRegionCategoryInput>, Enumerable<CafeInfoUncheckedCreateWithoutRegionCategoryInput>>
     connectOrCreate?: Enumerable<CafeInfoCreateOrConnectWithoutRegionCategoryInput>
@@ -16930,9 +16993,9 @@ export namespace Prisma {
     update?: XOR<RegionCategoryUpdateWithoutDescendantCategoriesInput, RegionCategoryUncheckedUpdateWithoutDescendantCategoriesInput>
   }
 
-  export type RegionCategoryCreateNestedOneWithoutCafeInfoInput = {
-    create?: XOR<RegionCategoryCreateWithoutCafeInfoInput, RegionCategoryUncheckedCreateWithoutCafeInfoInput>
-    connectOrCreate?: RegionCategoryCreateOrConnectWithoutCafeInfoInput
+  export type RegionCategoryCreateNestedOneWithoutCafeInfosInput = {
+    create?: XOR<RegionCategoryCreateWithoutCafeInfosInput, RegionCategoryUncheckedCreateWithoutCafeInfosInput>
+    connectOrCreate?: RegionCategoryCreateOrConnectWithoutCafeInfosInput
     connect?: RegionCategoryWhereUniqueInput
   }
 
@@ -16992,12 +17055,12 @@ export namespace Prisma {
     connect?: Enumerable<CafeRealImageWhereUniqueInput>
   }
 
-  export type RegionCategoryUpdateOneRequiredWithoutCafeInfoInput = {
-    create?: XOR<RegionCategoryCreateWithoutCafeInfoInput, RegionCategoryUncheckedCreateWithoutCafeInfoInput>
-    connectOrCreate?: RegionCategoryCreateOrConnectWithoutCafeInfoInput
-    upsert?: RegionCategoryUpsertWithoutCafeInfoInput
+  export type RegionCategoryUpdateOneRequiredWithoutCafeInfosInput = {
+    create?: XOR<RegionCategoryCreateWithoutCafeInfosInput, RegionCategoryUncheckedCreateWithoutCafeInfosInput>
+    connectOrCreate?: RegionCategoryCreateOrConnectWithoutCafeInfosInput
+    upsert?: RegionCategoryUpsertWithoutCafeInfosInput
     connect?: RegionCategoryWhereUniqueInput
-    update?: XOR<RegionCategoryUpdateWithoutCafeInfoInput, RegionCategoryUncheckedUpdateWithoutCafeInfoInput>
+    update?: XOR<RegionCategoryUpdateWithoutCafeInfosInput, RegionCategoryUncheckedUpdateWithoutCafeInfosInput>
   }
 
   export type CafeVirtualLinkUpdateManyWithoutCafeInfoInput = {
@@ -17464,6 +17527,23 @@ export namespace Prisma {
     gt?: number
     gte?: number
     not?: NestedFloatNullableFilter | number | null
+  }
+
+  export type NestedEnumGovermentTypeFilter = {
+    equals?: GovermentType
+    in?: Enumerable<GovermentType>
+    notIn?: Enumerable<GovermentType>
+    not?: NestedEnumGovermentTypeFilter | GovermentType
+  }
+
+  export type NestedEnumGovermentTypeWithAggregatesFilter = {
+    equals?: GovermentType
+    in?: Enumerable<GovermentType>
+    notIn?: Enumerable<GovermentType>
+    not?: NestedEnumGovermentTypeWithAggregatesFilter | GovermentType
+    _count?: NestedIntFilter
+    _min?: NestedEnumGovermentTypeFilter
+    _max?: NestedEnumGovermentTypeFilter
   }
 
   export type BoardCreateWithoutUserInput = {
@@ -18289,7 +18369,7 @@ export namespace Prisma {
 
   export type CafeInfoUpdateManyWithWhereWithoutRegionCategoryInput = {
     where: CafeInfoScalarWhereInput
-    data: XOR<CafeInfoUpdateManyMutationInput, CafeInfoUncheckedUpdateManyWithoutCafeInfoInput>
+    data: XOR<CafeInfoUpdateManyMutationInput, CafeInfoUncheckedUpdateManyWithoutCafeInfosInput>
   }
 
   export type CafeInfoScalarWhereInput = {
@@ -18352,7 +18432,8 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     isDisable?: boolean
-    CafeInfo?: CafeInfoCreateNestedManyWithoutRegionCategoryInput
+    govermentType: GovermentType
+    CafeInfos?: CafeInfoCreateNestedManyWithoutRegionCategoryInput
     DescendantCategories?: ClosureRegionCategoryCreateNestedManyWithoutDescendantCategoryInput
   }
 
@@ -18361,7 +18442,8 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     isDisable?: boolean
-    CafeInfo?: CafeInfoUncheckedCreateNestedManyWithoutRegionCategoryInput
+    govermentType: GovermentType
+    CafeInfos?: CafeInfoUncheckedCreateNestedManyWithoutRegionCategoryInput
     DescendantCategories?: ClosureRegionCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
   }
 
@@ -18374,7 +18456,8 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     isDisable?: boolean
-    CafeInfo?: CafeInfoCreateNestedManyWithoutRegionCategoryInput
+    govermentType: GovermentType
+    CafeInfos?: CafeInfoCreateNestedManyWithoutRegionCategoryInput
     AncestorCategories?: ClosureRegionCategoryCreateNestedManyWithoutAncestorCategoryInput
   }
 
@@ -18383,7 +18466,8 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     isDisable?: boolean
-    CafeInfo?: CafeInfoUncheckedCreateNestedManyWithoutRegionCategoryInput
+    govermentType: GovermentType
+    CafeInfos?: CafeInfoUncheckedCreateNestedManyWithoutRegionCategoryInput
     AncestorCategories?: ClosureRegionCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
   }
 
@@ -18401,7 +18485,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    CafeInfo?: CafeInfoUpdateManyWithoutRegionCategoryInput
+    govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
+    CafeInfos?: CafeInfoUpdateManyWithoutRegionCategoryInput
     DescendantCategories?: ClosureRegionCategoryUpdateManyWithoutDescendantCategoryInput
   }
 
@@ -18410,7 +18495,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    CafeInfo?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryInput
+    govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
+    CafeInfos?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryInput
     DescendantCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryInput
   }
 
@@ -18423,7 +18509,8 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    CafeInfo?: CafeInfoUpdateManyWithoutRegionCategoryInput
+    govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
+    CafeInfos?: CafeInfoUpdateManyWithoutRegionCategoryInput
     AncestorCategories?: ClosureRegionCategoryUpdateManyWithoutAncestorCategoryInput
   }
 
@@ -18432,30 +18519,33 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    CafeInfo?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryInput
+    govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
+    CafeInfos?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryInput
     AncestorCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryInput
   }
 
-  export type RegionCategoryCreateWithoutCafeInfoInput = {
+  export type RegionCategoryCreateWithoutCafeInfosInput = {
     createdAt?: Date | string
     name: string
     isDisable?: boolean
+    govermentType: GovermentType
     AncestorCategories?: ClosureRegionCategoryCreateNestedManyWithoutAncestorCategoryInput
     DescendantCategories?: ClosureRegionCategoryCreateNestedManyWithoutDescendantCategoryInput
   }
 
-  export type RegionCategoryUncheckedCreateWithoutCafeInfoInput = {
+  export type RegionCategoryUncheckedCreateWithoutCafeInfosInput = {
     id?: number
     createdAt?: Date | string
     name: string
     isDisable?: boolean
+    govermentType: GovermentType
     AncestorCategories?: ClosureRegionCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
     DescendantCategories?: ClosureRegionCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
   }
 
-  export type RegionCategoryCreateOrConnectWithoutCafeInfoInput = {
+  export type RegionCategoryCreateOrConnectWithoutCafeInfosInput = {
     where: RegionCategoryWhereUniqueInput
-    create: XOR<RegionCategoryCreateWithoutCafeInfoInput, RegionCategoryUncheckedCreateWithoutCafeInfoInput>
+    create: XOR<RegionCategoryCreateWithoutCafeInfosInput, RegionCategoryUncheckedCreateWithoutCafeInfosInput>
   }
 
   export type CafeVirtualLinkCreateWithoutCafeInfoInput = {
@@ -18570,24 +18660,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type RegionCategoryUpsertWithoutCafeInfoInput = {
-    update: XOR<RegionCategoryUpdateWithoutCafeInfoInput, RegionCategoryUncheckedUpdateWithoutCafeInfoInput>
-    create: XOR<RegionCategoryCreateWithoutCafeInfoInput, RegionCategoryUncheckedCreateWithoutCafeInfoInput>
+  export type RegionCategoryUpsertWithoutCafeInfosInput = {
+    update: XOR<RegionCategoryUpdateWithoutCafeInfosInput, RegionCategoryUncheckedUpdateWithoutCafeInfosInput>
+    create: XOR<RegionCategoryCreateWithoutCafeInfosInput, RegionCategoryUncheckedCreateWithoutCafeInfosInput>
   }
 
-  export type RegionCategoryUpdateWithoutCafeInfoInput = {
+  export type RegionCategoryUpdateWithoutCafeInfosInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
     AncestorCategories?: ClosureRegionCategoryUpdateManyWithoutAncestorCategoryInput
     DescendantCategories?: ClosureRegionCategoryUpdateManyWithoutDescendantCategoryInput
   }
 
-  export type RegionCategoryUncheckedUpdateWithoutCafeInfoInput = {
+  export type RegionCategoryUncheckedUpdateWithoutCafeInfosInput = {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
     AncestorCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryInput
     DescendantCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryInput
   }
@@ -18713,7 +18805,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
-    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfoInput
+    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
     address: string
     directions: string
     businessNumber: string
@@ -18752,7 +18844,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
-    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfoInput
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
@@ -18781,7 +18873,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
-    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfoInput
+    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
     address: string
     directions: string
     businessNumber: string
@@ -18820,7 +18912,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
-    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfoInput
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
@@ -18849,7 +18941,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
-    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfoInput
+    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
     address: string
     directions: string
     businessNumber: string
@@ -18888,7 +18980,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
-    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfoInput
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
@@ -18917,7 +19009,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
-    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfoInput
+    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
     address: string
     directions: string
     businessNumber: string
@@ -18978,7 +19070,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
-    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfoInput
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
@@ -19360,7 +19452,7 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoInput
   }
 
-  export type CafeInfoUncheckedUpdateManyWithoutCafeInfoInput = {
+  export type CafeInfoUncheckedUpdateManyWithoutCafeInfosInput = {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean

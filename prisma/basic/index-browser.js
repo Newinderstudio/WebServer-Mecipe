@@ -138,7 +138,8 @@ exports.Prisma.RegionCategoryScalarFieldEnum = makeEnum({
   id: 'id',
   createdAt: 'createdAt',
   name: 'name',
-  isDisable: 'isDisable'
+  isDisable: 'isDisable',
+  govermentType: 'govermentType'
 });
 
 exports.Prisma.ClosureRegionCategoryScalarFieldEnum = makeEnum({
@@ -235,6 +236,21 @@ exports.BoardType = makeEnum({
   BTALK: 'BTALK',
   BINFORM: 'BINFORM',
   BQUESTION: 'BQUESTION'
+});
+
+exports.GovermentType = makeEnum({
+  SPECIAL_CITY: 'SPECIAL_CITY',
+  METROPOLITAN_CITY: 'METROPOLITAN_CITY',
+  SPECIAL_SELF_GOVERNING_CITY: 'SPECIAL_SELF_GOVERNING_CITY',
+  PROVINCE: 'PROVINCE',
+  SPECIAL_SELF_GOVERNING_PROVINCE: 'SPECIAL_SELF_GOVERNING_PROVINCE',
+  DISTRICT: 'DISTRICT',
+  CITY: 'CITY',
+  COUNTY: 'COUNTY',
+  TOWN: 'TOWN',
+  TOWNSHIP: 'TOWNSHIP',
+  NEIGHBORHOOD: 'NEIGHBORHOOD',
+  PLACENAME: 'PLACENAME'
 });
 
 exports.Prisma.ModelName = makeEnum({
