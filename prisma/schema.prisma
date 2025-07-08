@@ -1,0 +1,261 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output = "./basic"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 로그인 타입
+enum LoginType {
+  LOCAL
+  ADMIN
+}
+
+// 유저 등급 타입
+enum UserType {
+  GENERAL
+  BUSINESS
+  ADMIN
+  MANAGER
+}
+
+// 유저
+model User {
+  id                        Int      @id @default(autoincrement())
+  createdAt                 DateTime @default(now())
+
+  loginId                   String // 로그인 ID (SNS 토큰)
+  loginPw                   String?   @db.Text // 로그인 PW 
+  username                  String
+  loginType                 LoginType
+  userType                  UserType
+  nickname                  String
+  email                     String
+  isDisable                 Boolean   @default(false)
+
+  Boards                    Board[]
+  BoardReplies              BoardReply[]
+  Notices                   Notice[]
+
+  @@unique([loginType, loginId], name: "loginUnique")
+}
+
+model Notice {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  title   String
+  content String? @db.Text
+  link    String?
+
+  userId  Int
+  User    User  @relation(fields: [userId], references: [id])
+}
+
+// 게시물 상태
+enum BoardType {
+  BTALK //잡담
+  BINFORM //정보
+  BQUESTION //질문
+}
+
+// 게시물
+model Board {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  title    String
+  content  String?  @db.Text
+  link     String?
+  startDay DateTime @default(now())
+  endDay   DateTime @default(now())
+
+  isDisable  Boolean      @default(false) // 노출 여부 false 노출 true 비노출
+  BoardImages BoardImage[]
+  BoardReplies BoardReply[]
+
+  userId  Int
+  User    User  @relation(fields: [userId], references: [id])
+
+  boardType  BoardType    @default(BTALK) //처음에는 보드타입(잡담)
+}
+
+// 게시물 이미지
+model BoardImage {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  url    String       @db.Text
+  width  Int
+  height Int
+  size   Int
+
+  isThumb Boolean     @default(false) // 썸네일이미지 여부 true 썸네일 false 상세
+
+  boardId Int         @unique
+  Board   Board       @relation(fields: [boardId], references: [id])
+}
+
+// 게시물 댓글
+model BoardReply {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+
+  content   String
+  isDisable Boolean @default(false)
+
+  userId  Int
+  User    User  @relation(fields: [userId], references: [id])
+  boardId Int
+  Board   Board @relation(fields: [boardId], references: [id])
+  boardReplyId Int?
+  BoardReply BoardReply? @relation("BoardNestedReply",fields: [boardReplyId], references: [id])
+  BoardNestedReplies BoardReply[] @relation("BoardNestedReply")
+
+  boardType  BoardType    @default(BTALK) //처음에는 보드타입(잡담)
+}
+
+enum GovermentType {
+  SPECIAL_CITY                     // 특별시
+  METROPOLITAN_CITY                // 광역시
+  SPECIAL_SELF_GOVERNING_CITY      // 특별자치시
+  PROVINCE                         // 도
+  SPECIAL_SELF_GOVERNING_PROVINCE  // 특별자치도
+  DISTRICT                         // 자치구, 시 안의 구
+  CITY                             // 자치시, 도 안의 시
+  COUNTY                           // 군
+  TOWN                             // 읍
+  TOWNSHIP                         // 면
+  NEIGHBORHOOD                     // 행정동
+  PLACENAME                        // 지명
+}
+
+model RegionCategory {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  name      String
+  isDisable Boolean @default(false)
+
+  CafeInfo CafeInfo[]
+
+  AncestorCategories    ClosureRegionCategory[] @relation("AncestorCategory")
+  DescendantCategories  ClosureRegionCategory[] @relation("DescendantCategory")
+}
+
+model ClosureRegionCategory {
+  ancestor    Int
+  descendant  Int
+  depth       Int @default(0)
+
+  AncestorCategory RegionCategory @relation("AncestorCategory", fields: [ancestor], references: [id])
+  DescendantCategory RegionCategory @relation("DescendantCategory", fields: [descendant], references: [id])
+
+  @@unique([ancestor, descendant, depth], name: "regionCategoryTreeUnique")
+}
+
+model CafeInfo {
+  id                Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now())
+
+  isDisable         Boolean @default(false)
+
+  name              String
+  regionCategoryId  Int
+  RegionCategory    RegionCategory  @relation(fields: [regionCategoryId], references: [id])
+
+  address           String
+  directions        String
+  businessNumber    String
+
+  ceoName           String
+  
+  CafeVirtualLinks      CafeVirtualLink[]
+
+  CafeThumbnailImages   CafeThumbnailImage[]
+  CafeVirtualImages     CafeVirtualImage[]
+  CafeRealImages        CafeRealImage[]
+}
+
+// 카페 썸네일 이미지
+model CafeThumbnailImage {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  url       String       @db.Text
+  width     Int
+  height    Int
+  size      Int
+
+  priority  Int @default(0)
+
+  cafeInfoId  Int
+  CafeInfo    CafeInfo @relation(fields: [cafeInfoId], references: [id])
+}
+
+// 카페 가상현실 이미지
+model CafeVirtualImage {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  url       String       @db.Text
+  width     Int
+  height    Int
+  size      Int
+
+  priority  Int @default(0)
+
+  cafeInfoId  Int
+  CafeInfo    CafeInfo @relation(fields: [cafeInfoId], references: [id])
+}
+
+// 카페 실제 이미지
+model CafeRealImage {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  url       String       @db.Text
+  width     Int
+  height    Int
+  size      Int
+
+  priority  Int @default(0)
+
+  cafeInfoId  Int
+  CafeInfo    CafeInfo @relation(fields: [cafeInfoId], references: [id])
+}
+
+// 카페 가상현실 링크
+model CafeVirtualLink {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  name      String
+  url       String
+
+  cafeInfoId  Int
+  CafeInfo    CafeInfo @relation(fields: [cafeInfoId], references: [id])
+
+  CafeVirtualLinkThumbnailImage CafeVirtualLinkThumbnailImage?
+}
+
+// 카페 가상현실 링크 썸네일
+model CafeVirtualLinkThumbnailImage {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  url       String       @db.Text
+  width     Int
+  height    Int
+  size      Int
+
+  cafeVirtualLinkId Int   @unique
+  CafeVirtualLink   CafeVirtualLink @relation(fields: [cafeVirtualLinkId], references: [id])
+}

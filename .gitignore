@@ -1,0 +1,25 @@
+node_modules
+# Keep environment variables out of version control
+.env
+media/
+prisma/migrations/
+dist/
+**/.DS_Store
+
+yarn-error.log/
+vendor/
+tmp/
+.idea
+tmp-resolvers
+package-lock.json
+flow-typed
+yarn.lock
+javascript/**/migrations/
+typescript/**/migrations/
+misc/**/migrations/
+databases/**/migrations/
+experimental/**/*.db
+.next
+.vscode/
+.nuxt
+dev.db
