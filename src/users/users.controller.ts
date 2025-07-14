@@ -23,12 +23,12 @@ export class UsersController {
   @Get('find/id')
   findUserId(
     @Query('username') username: string,
-    @Query('phone') phone: string,
+    @Query('email') email: string,
   ) {
-    return this.usersService.findUserId(username, phone);
+    return this.usersService.findUserId(username, email);
   }
 
-  // 닉네임으로 유저찾기(시공사일 경우 메인 부계정 이름)
+  // 닉네임으로 유저찾기
   @Get('find/search')
   findAllUserByNickName(
     @Query('userType') userType: 'GENERAL' | 'MANAGER',
@@ -123,12 +123,6 @@ export class UsersController {
   // deleteImage(@Param('userId') userId: string) {
   //   return this.usersService.removeImage(Number(userId));
   // }
-
-  @Public()
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
 
   @Post('admin')
   createUserByAdmin(@Body() body: { adminId: number; body: CreateUserDto }) {

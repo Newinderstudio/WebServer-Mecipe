@@ -286,7 +286,7 @@ export class UsersService {
     let whereVal:
       | { loginId: string }
       | { nickname: string }
-      | { phone: string }
+      | { email: string }
       | undefined = undefined;
     if (type === 'loginId') {
       whereVal = {
@@ -296,20 +296,20 @@ export class UsersService {
       whereVal = {
         nickname: content,
       };
-    } else if (type === 'phone') {
+    } else if (type === 'email') {
       whereVal = {
-        phone: content,
+        email: content,
       };
     } else {
       return false;
     }
 
-    const result = await this.prisma.user.findMany({
+    const result = await this.prisma.user.findFirst({
       where: whereVal,
     });
 
     console.log('result: ', result);
-    return result.length === 0 ? true : false;
+    return result === undefined ? true : false;
   }
 
   findAllUsersByGeneralInAdmin() {
@@ -340,7 +340,7 @@ export class UsersService {
     updateDto: {
       userType?: UserType;
       username?: string;
-      phone?: string;
+      email?: string;
       loginPw?: string;
       termEvent?: boolean;
     },
@@ -362,7 +362,7 @@ export class UsersService {
     });
   }
   //
-  findUserId(username: string, phone: string) {
+  findUserId(username: string, email: string) {
     return this.prisma.user.findFirst({
       where: {
         username,

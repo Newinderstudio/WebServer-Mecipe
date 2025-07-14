@@ -2,7 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 
 const {
-  Decimal
+  Decimal,
+  objectEnumValues,
+  makeStrictEnum
 } = require('./runtime/index-browser')
 
 
@@ -11,12 +13,12 @@ const Prisma = {}
 exports.Prisma = Prisma
 
 /**
- * Prisma Client JS version: 3.15.2
- * Query Engine version: 461d6a05159055555eb7dfb337c9fb271cbd4d7e
+ * Prisma Client JS version: 4.7.0
+ * Query Engine version: 39190b250ebc338586e25e6da45e5e783bc8a635
  */
 Prisma.prismaVersion = {
-  client: "3.15.2",
-  engine: "461d6a05159055555eb7dfb337c9fb271cbd4d7e"
+  client: "4.7.0",
+  engine: "39190b250ebc338586e25e6da45e5e783bc8a635"
 }
 
 Prisma.PrismaClientKnownRequestError = () => {
@@ -37,6 +39,10 @@ In case this error is unexpected for you, please report it in https://github.com
 )}
 Prisma.PrismaClientValidationError = () => {
   throw new Error(`PrismaClientValidationError is unable to be run in the browser.
+In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
+)}
+Prisma.NotFoundError = () => {
+  throw new Error(`NotFoundError is unable to be run in the browser.
 In case this error is unexpected for you, please report it in https://github.com/prisma/prisma/issues`,
 )}
 Prisma.Decimal = Decimal
@@ -62,12 +68,19 @@ In case this error is unexpected for you, please report it in https://github.com
 )}
 Prisma.validator = () => (val) => val
 
+
 /**
  * Shorthand utilities for JSON filtering
  */
-Prisma.DbNull = 'DbNull'
-Prisma.JsonNull = 'JsonNull'
-Prisma.AnyNull = 'AnyNull'
+Prisma.DbNull = objectEnumValues.instances.DbNull
+Prisma.JsonNull = objectEnumValues.instances.JsonNull
+Prisma.AnyNull = objectEnumValues.instances.AnyNull
+
+Prisma.NullTypes = {
+  DbNull: objectEnumValues.classes.DbNull,
+  JsonNull: objectEnumValues.classes.JsonNull,
+  AnyNull: objectEnumValues.classes.AnyNull
+}
 
 /**
  * Enums
@@ -75,41 +88,6 @@ Prisma.AnyNull = 'AnyNull'
 // Based on
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 function makeEnum(x) { return x; }
-
-exports.Prisma.UserScalarFieldEnum = makeEnum({
-  id: 'id',
-  createdAt: 'createdAt',
-  loginId: 'loginId',
-  loginPw: 'loginPw',
-  username: 'username',
-  loginType: 'loginType',
-  userType: 'userType',
-  nickname: 'nickname',
-  email: 'email',
-  isDisable: 'isDisable'
-});
-
-exports.Prisma.NoticeScalarFieldEnum = makeEnum({
-  id: 'id',
-  createdAt: 'createdAt',
-  title: 'title',
-  content: 'content',
-  link: 'link',
-  userId: 'userId'
-});
-
-exports.Prisma.BoardScalarFieldEnum = makeEnum({
-  id: 'id',
-  createdAt: 'createdAt',
-  title: 'title',
-  content: 'content',
-  link: 'link',
-  startDay: 'startDay',
-  endDay: 'endDay',
-  isDisable: 'isDisable',
-  userId: 'userId',
-  boardType: 'boardType'
-});
 
 exports.Prisma.BoardImageScalarFieldEnum = makeEnum({
   id: 'id',
@@ -134,18 +112,17 @@ exports.Prisma.BoardReplyScalarFieldEnum = makeEnum({
   boardType: 'boardType'
 });
 
-exports.Prisma.RegionCategoryScalarFieldEnum = makeEnum({
+exports.Prisma.BoardScalarFieldEnum = makeEnum({
   id: 'id',
   createdAt: 'createdAt',
-  name: 'name',
+  title: 'title',
+  content: 'content',
+  link: 'link',
+  startDay: 'startDay',
+  endDay: 'endDay',
   isDisable: 'isDisable',
-  govermentType: 'govermentType'
-});
-
-exports.Prisma.ClosureRegionCategoryScalarFieldEnum = makeEnum({
-  ancestor: 'ancestor',
-  descendant: 'descendant',
-  depth: 'depth'
+  userId: 'userId',
+  boardType: 'boardType'
 });
 
 exports.Prisma.CafeInfoScalarFieldEnum = makeEnum({
@@ -160,6 +137,18 @@ exports.Prisma.CafeInfoScalarFieldEnum = makeEnum({
   ceoName: 'ceoName'
 });
 
+exports.Prisma.CafeRealImageScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  url: 'url',
+  width: 'width',
+  height: 'height',
+  size: 'size',
+  priority: 'priority',
+  isDisable: 'isDisable',
+  cafeInfoId: 'cafeInfoId'
+});
+
 exports.Prisma.CafeThumbnailImageScalarFieldEnum = makeEnum({
   id: 'id',
   createdAt: 'createdAt',
@@ -168,6 +157,7 @@ exports.Prisma.CafeThumbnailImageScalarFieldEnum = makeEnum({
   height: 'height',
   size: 'size',
   priority: 'priority',
+  isDisable: 'isDisable',
   cafeInfoId: 'cafeInfoId'
 });
 
@@ -179,17 +169,7 @@ exports.Prisma.CafeVirtualImageScalarFieldEnum = makeEnum({
   height: 'height',
   size: 'size',
   priority: 'priority',
-  cafeInfoId: 'cafeInfoId'
-});
-
-exports.Prisma.CafeRealImageScalarFieldEnum = makeEnum({
-  id: 'id',
-  createdAt: 'createdAt',
-  url: 'url',
-  width: 'width',
-  height: 'height',
-  size: 'size',
-  priority: 'priority',
+  isDisable: 'isDisable',
   cafeInfoId: 'cafeInfoId'
 });
 
@@ -198,6 +178,9 @@ exports.Prisma.CafeVirtualLinkScalarFieldEnum = makeEnum({
   createdAt: 'createdAt',
   name: 'name',
   url: 'url',
+  type: 'type',
+  isDisable: 'isDisable',
+  isAvaliable: 'isAvaliable',
   cafeInfoId: 'cafeInfoId'
 });
 
@@ -211,27 +194,58 @@ exports.Prisma.CafeVirtualLinkThumbnailImageScalarFieldEnum = makeEnum({
   cafeVirtualLinkId: 'cafeVirtualLinkId'
 });
 
-exports.Prisma.SortOrder = makeEnum({
-  asc: 'asc',
-  desc: 'desc'
+exports.Prisma.ClosureRegionCategoryScalarFieldEnum = makeEnum({
+  ancestor: 'ancestor',
+  descendant: 'descendant',
+  depth: 'depth'
+});
+
+exports.Prisma.NoticeScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  title: 'title',
+  content: 'content',
+  link: 'link',
+  userId: 'userId'
 });
 
 exports.Prisma.QueryMode = makeEnum({
   default: 'default',
   insensitive: 'insensitive'
 });
-exports.LoginType = makeEnum({
-  LOCAL: 'LOCAL',
-  ADMIN: 'ADMIN'
+
+exports.Prisma.RegionCategoryScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  name: 'name',
+  isDisable: 'isDisable',
+  govermentType: 'govermentType'
 });
 
-exports.UserType = makeEnum({
-  GENERAL: 'GENERAL',
-  BUSINESS: 'BUSINESS',
-  ADMIN: 'ADMIN',
-  MANAGER: 'MANAGER'
+exports.Prisma.SortOrder = makeEnum({
+  asc: 'asc',
+  desc: 'desc'
 });
 
+exports.Prisma.TransactionIsolationLevel = makeStrictEnum({
+  ReadUncommitted: 'ReadUncommitted',
+  ReadCommitted: 'ReadCommitted',
+  RepeatableRead: 'RepeatableRead',
+  Serializable: 'Serializable'
+});
+
+exports.Prisma.UserScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  loginId: 'loginId',
+  loginPw: 'loginPw',
+  username: 'username',
+  loginType: 'loginType',
+  userType: 'userType',
+  nickname: 'nickname',
+  email: 'email',
+  isDisable: 'isDisable'
+});
 exports.BoardType = makeEnum({
   BTALK: 'BTALK',
   BINFORM: 'BINFORM',
@@ -251,6 +265,18 @@ exports.GovermentType = makeEnum({
   TOWNSHIP: 'TOWNSHIP',
   NEIGHBORHOOD: 'NEIGHBORHOOD',
   PLACENAME: 'PLACENAME'
+});
+
+exports.LoginType = makeEnum({
+  LOCAL: 'LOCAL',
+  ADMIN: 'ADMIN'
+});
+
+exports.UserType = makeEnum({
+  GENERAL: 'GENERAL',
+  BUSINESS: 'BUSINESS',
+  ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER'
 });
 
 exports.Prisma.ModelName = makeEnum({

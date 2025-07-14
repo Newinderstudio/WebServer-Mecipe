@@ -12,6 +12,9 @@ import { JwtAuthGuard } from './auth/jwt.guard';
 import { UsersModule } from './users/users.module';
 import { GlobalModule } from './global/global.module';
 import { AuthModule } from './auth/auth.module';
+import { PlacesModule } from './places/places.module';
+import { AdminAuthGuard } from './auth/jwt.guard.admin';
+import { RegioncategoriesModule } from './regioncategories/regioncategories.module';
 
 @Module({
   imports: [
@@ -27,6 +30,8 @@ import { AuthModule } from './auth/auth.module';
     ExamplesModule,
     UsersModule,
     AuthModule,
+    PlacesModule,
+    RegioncategoriesModule,
   ],
   controllers: [AppController],
   providers: [

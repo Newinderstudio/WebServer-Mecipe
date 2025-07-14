@@ -197,6 +197,7 @@ model CafeThumbnailImage {
   size      Int
 
   priority  Int @default(0)
+  isDisable Boolean @default(false)
 
   cafeInfoId  Int
   CafeInfo    CafeInfo @relation(fields: [cafeInfoId], references: [id])
@@ -213,6 +214,7 @@ model CafeVirtualImage {
   size      Int
 
   priority  Int @default(0)
+  isDisable Boolean @default(false)
 
   cafeInfoId  Int
   CafeInfo    CafeInfo @relation(fields: [cafeInfoId], references: [id])
@@ -229,6 +231,7 @@ model CafeRealImage {
   size      Int
 
   priority  Int @default(0)
+  isDisable Boolean @default(false)
 
   cafeInfoId  Int
   CafeInfo    CafeInfo @relation(fields: [cafeInfoId], references: [id])
@@ -241,6 +244,10 @@ model CafeVirtualLink {
 
   name      String
   url       String
+  type      String
+
+  isDisable   Boolean @default(false)
+  isAvaliable Boolean @default(true)
 
   cafeInfoId  Int
   CafeInfo    CafeInfo @relation(fields: [cafeInfoId], references: [id])

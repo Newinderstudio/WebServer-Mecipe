@@ -140,6 +140,7 @@ export type CafeThumbnailImage = {
   height: number
   size: number
   priority: number
+  isDisable: boolean
   cafeInfoId: number
 }
 
@@ -155,6 +156,7 @@ export type CafeVirtualImage = {
   height: number
   size: number
   priority: number
+  isDisable: boolean
   cafeInfoId: number
 }
 
@@ -170,6 +172,7 @@ export type CafeRealImage = {
   height: number
   size: number
   priority: number
+  isDisable: boolean
   cafeInfoId: number
 }
 
@@ -182,6 +185,9 @@ export type CafeVirtualLink = {
   createdAt: Date
   name: string
   url: string
+  type: string
+  isDisable: boolean
+  isAvaliable: boolean
   cafeInfoId: number
 }
 
@@ -206,24 +212,6 @@ export type CafeVirtualLinkThumbnailImage = {
 
 // Based on
 // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
-
-export const LoginType: {
-  LOCAL: 'LOCAL',
-  ADMIN: 'ADMIN'
-};
-
-export type LoginType = (typeof LoginType)[keyof typeof LoginType]
-
-
-export const UserType: {
-  GENERAL: 'GENERAL',
-  BUSINESS: 'BUSINESS',
-  ADMIN: 'ADMIN',
-  MANAGER: 'MANAGER'
-};
-
-export type UserType = (typeof UserType)[keyof typeof UserType]
-
 
 export const BoardType: {
   BTALK: 'BTALK',
@@ -252,6 +240,24 @@ export const GovermentType: {
 export type GovermentType = (typeof GovermentType)[keyof typeof GovermentType]
 
 
+export const LoginType: {
+  LOCAL: 'LOCAL',
+  ADMIN: 'ADMIN'
+};
+
+export type LoginType = (typeof LoginType)[keyof typeof LoginType]
+
+
+export const UserType: {
+  GENERAL: 'GENERAL',
+  BUSINESS: 'BUSINESS',
+  ADMIN: 'ADMIN',
+  MANAGER: 'MANAGER'
+};
+
+export type UserType = (typeof UserType)[keyof typeof UserType]
+
+
 /**
  * ##  Prisma Client ʲˢ
  * 
@@ -269,35 +275,10 @@ export type GovermentType = (typeof GovermentType)[keyof typeof GovermentType]
 export class PrismaClient<
   T extends Prisma.PrismaClientOptions = Prisma.PrismaClientOptions,
   U = 'log' extends keyof T ? T['log'] extends Array<Prisma.LogLevel | Prisma.LogDefinition> ? Prisma.GetEvents<T['log']> : never : never,
-  GlobalReject = 'rejectOnNotFound' extends keyof T
+  GlobalReject extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined = 'rejectOnNotFound' extends keyof T
     ? T['rejectOnNotFound']
     : false
       > {
-      /**
-       * @private
-       */
-      private fetcher;
-      /**
-       * @private
-       */
-      private readonly dmmf;
-      /**
-       * @private
-       */
-      private connectionPromise?;
-      /**
-       * @private
-       */
-      private disconnectionPromise?;
-      /**
-       * @private
-       */
-      private readonly engineConfig;
-      /**
-       * @private
-       */
-      private readonly measurePerformance;
-
     /**
    * ##  Prisma Client ʲˢ
    * 
@@ -390,7 +371,9 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
-  $transaction<P extends PrismaPromise<any>[]>(arg: [...P]): Promise<UnwrapTuple<P>>;
+  $transaction<P extends PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>;
+
+  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: {maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel}): Promise<R>;
 
       /**
    * `prisma.user`: Exposes CRUD operations for the **User** model.
@@ -534,6 +517,7 @@ export namespace Prisma {
   export import PrismaClientRustPanicError = runtime.PrismaClientRustPanicError
   export import PrismaClientInitializationError = runtime.PrismaClientInitializationError
   export import PrismaClientValidationError = runtime.PrismaClientValidationError
+  export import NotFoundError = runtime.NotFoundError
 
   /**
    * Re-export of sql-template-tag
@@ -552,8 +536,17 @@ export namespace Prisma {
   export type DecimalJsLike = runtime.DecimalJsLike
 
   /**
-   * Prisma Client JS version: 3.15.2
-   * Query Engine version: 461d6a05159055555eb7dfb337c9fb271cbd4d7e
+   * Metrics 
+   */
+  export type Metrics = runtime.Metrics
+  export type Metric<T> = runtime.Metric<T>
+  export type MetricHistogram = runtime.MetricHistogram
+  export type MetricHistogramBucket = runtime.MetricHistogramBucket
+
+
+  /**
+   * Prisma Client JS version: 4.7.0
+   * Query Engine version: 39190b250ebc338586e25e6da45e5e783bc8a635
    */
   export type PrismaVersion = {
     client: string
@@ -612,25 +605,68 @@ export namespace Prisma {
   export type InputJsonValue = string | number | boolean | InputJsonObject | InputJsonArray
 
   /**
+   * Types of the values used to represent different kinds of `null` values when working with JSON fields.
+   * 
+   * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+   */
+  namespace NullTypes {
+    /**
+    * Type of `Prisma.DbNull`.
+    * 
+    * You cannot use other instances of this class. Please use the `Prisma.DbNull` value.
+    * 
+    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+    */
+    class DbNull {
+      private DbNull: never
+      private constructor()
+    }
+
+    /**
+    * Type of `Prisma.JsonNull`.
+    * 
+    * You cannot use other instances of this class. Please use the `Prisma.JsonNull` value.
+    * 
+    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+    */
+    class JsonNull {
+      private JsonNull: never
+      private constructor()
+    }
+
+    /**
+    * Type of `Prisma.AnyNull`.
+    * 
+    * You cannot use other instances of this class. Please use the `Prisma.AnyNull` value.
+    * 
+    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
+    */
+    class AnyNull {
+      private AnyNull: never
+      private constructor()
+    }
+  }
+
+  /**
    * Helper for filtering JSON entries that have `null` on the database (empty on the db)
    * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
-  export const DbNull: 'DbNull'
+  export const DbNull: NullTypes.DbNull
 
   /**
    * Helper for filtering JSON entries that have JSON `null` values (not empty on the db)
    * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
-  export const JsonNull: 'JsonNull'
+  export const JsonNull: NullTypes.JsonNull
 
   /**
    * Helper for filtering JSON entries that are `Prisma.DbNull` or `Prisma.JsonNull`
    * 
    * @see https://www.prisma.io/docs/concepts/components/prisma-client/working-with-fields/working-with-json-fields#filtering-on-a-json-field
    */
-  export const AnyNull: 'AnyNull'
+  export const AnyNull: NullTypes.AnyNull
 
   type SelectAndInclude = {
     select: any
@@ -674,9 +710,9 @@ export namespace Prisma {
     [K in keyof T]-?: {} extends Prisma__Pick<T, K> ? never : K
   }[keyof T]
 
-  export type TruthyKeys<T> = {
-    [key in keyof T]: T[key] extends false | undefined | null ? never : key
-  }[keyof T]
+  export type TruthyKeys<T> = keyof {
+    [K in keyof T as T[K] extends false | undefined | null ? never : K]: K
+  }
 
   export type TrueKeys<T> = TruthyKeys<Prisma__Pick<T, RequiredKeys<T>>>
 
@@ -729,7 +765,7 @@ export namespace Prisma {
   ? False
   : T extends Date
   ? False
-  : T extends Buffer
+  : T extends Uint8Array
   ? False
   : T extends BigInt
   ? False
@@ -813,6 +849,16 @@ export namespace Prisma {
   type _Record<K extends keyof any, T> = {
     [P in K]: T;
   };
+
+  // cause typescript not to expand types and preserve names
+  type NoExpand<T> = T extends unknown ? T : never;
+
+  // this type assumes the passed object is entirely optional
+  type AtLeast<O extends object, K extends string> = NoExpand<
+    O extends unknown
+    ? | (K extends keyof O ? { [P in K]: O[P] } & O : O)
+      | {[P in keyof O as P extends K ? K : never]-?: O[P]} & O
+    : never>;
 
   type _Strict<U, _U = U> = U extends unknown ? U & OptionalFlat<_Record<Exclude<Keys<_U>, keyof U>, never>> : never;
 
@@ -926,6 +972,11 @@ export namespace Prisma {
    */
   type ExcludeUnderscoreKeys<T extends string> = T extends `_${string}` ? never : T
 
+
+  export type FieldRef<Model, FieldType> = runtime.FieldRef<Model, FieldType>
+
+  type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRef<Model, FieldType>
+
   class PrismaClientFetcher {
     private readonly prisma;
     private readonly debug;
@@ -986,7 +1037,8 @@ export namespace Prisma {
   export interface PrismaClientOptions {
     /**
      * Configure findUnique/findFirst to throw an error if the query returns null. 
-     *  * @example
+     * @deprecated since 4.0.0. Use `findUniqueOrThrow`/`findFirstOrThrow` methods instead.
+     * @example
      * ```
      * // Reject on both findUnique/findFirst
      * rejectOnNotFound: true
@@ -998,7 +1050,7 @@ export namespace Prisma {
      */
     rejectOnNotFound?: RejectOnNotFound | RejectPerOperation
     /**
-     * Overwrites the datasource url from your prisma.schema file
+     * Overwrites the datasource url from your schema.prisma file
      */
     datasources?: Datasources
 
@@ -1077,7 +1129,7 @@ export namespace Prisma {
     | 'findRaw'
 
   /**
-   * These options are being passed in to the middleware as "params"
+   * These options are being passed into the middleware as "params"
    */
   export type MiddlewareParams = {
     model?: ModelName
@@ -1097,6 +1149,11 @@ export namespace Prisma {
 
   // tested in getLogLevel.test.ts
   export function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
+
+  /**
+   * `PrismaClient` proxy available in interactive transactions.
+   */
+  export type TransactionClient = Omit<PrismaClient, '$connect' | '$disconnect' | '$on' | '$transaction' | '$use'>
 
   export type Datasource = {
     url?: string
@@ -1124,23 +1181,18 @@ export namespace Prisma {
     Notices?: boolean
   }
 
-  export type UserCountOutputTypeGetPayload<
-    S extends boolean | null | undefined | UserCountOutputTypeArgs,
-    U = keyof S
-      > = S extends true
-        ? UserCountOutputType
-    : S extends undefined
-    ? never
-    : S extends UserCountOutputTypeArgs
-    ?'include' extends U
+  export type UserCountOutputTypeGetPayload<S extends boolean | null | undefined | UserCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? UserCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (UserCountOutputTypeArgs)
     ? UserCountOutputType 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (UserCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
     P extends keyof UserCountOutputType ? UserCountOutputType[P] : never
   } 
-    : UserCountOutputType
-  : UserCountOutputType
+      : UserCountOutputType
 
 
 
@@ -1175,23 +1227,18 @@ export namespace Prisma {
     BoardReplies?: boolean
   }
 
-  export type BoardCountOutputTypeGetPayload<
-    S extends boolean | null | undefined | BoardCountOutputTypeArgs,
-    U = keyof S
-      > = S extends true
-        ? BoardCountOutputType
-    : S extends undefined
-    ? never
-    : S extends BoardCountOutputTypeArgs
-    ?'include' extends U
+  export type BoardCountOutputTypeGetPayload<S extends boolean | null | undefined | BoardCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? BoardCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (BoardCountOutputTypeArgs)
     ? BoardCountOutputType 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (BoardCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
     P extends keyof BoardCountOutputType ? BoardCountOutputType[P] : never
   } 
-    : BoardCountOutputType
-  : BoardCountOutputType
+      : BoardCountOutputType
 
 
 
@@ -1224,23 +1271,18 @@ export namespace Prisma {
     BoardNestedReplies?: boolean
   }
 
-  export type BoardReplyCountOutputTypeGetPayload<
-    S extends boolean | null | undefined | BoardReplyCountOutputTypeArgs,
-    U = keyof S
-      > = S extends true
-        ? BoardReplyCountOutputType
-    : S extends undefined
-    ? never
-    : S extends BoardReplyCountOutputTypeArgs
-    ?'include' extends U
+  export type BoardReplyCountOutputTypeGetPayload<S extends boolean | null | undefined | BoardReplyCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? BoardReplyCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (BoardReplyCountOutputTypeArgs)
     ? BoardReplyCountOutputType 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (BoardReplyCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
     P extends keyof BoardReplyCountOutputType ? BoardReplyCountOutputType[P] : never
   } 
-    : BoardReplyCountOutputType
-  : BoardReplyCountOutputType
+      : BoardReplyCountOutputType
 
 
 
@@ -1277,23 +1319,18 @@ export namespace Prisma {
     DescendantCategories?: boolean
   }
 
-  export type RegionCategoryCountOutputTypeGetPayload<
-    S extends boolean | null | undefined | RegionCategoryCountOutputTypeArgs,
-    U = keyof S
-      > = S extends true
-        ? RegionCategoryCountOutputType
-    : S extends undefined
-    ? never
-    : S extends RegionCategoryCountOutputTypeArgs
-    ?'include' extends U
+  export type RegionCategoryCountOutputTypeGetPayload<S extends boolean | null | undefined | RegionCategoryCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? RegionCategoryCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (RegionCategoryCountOutputTypeArgs)
     ? RegionCategoryCountOutputType 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (RegionCategoryCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
     P extends keyof RegionCategoryCountOutputType ? RegionCategoryCountOutputType[P] : never
   } 
-    : RegionCategoryCountOutputType
-  : RegionCategoryCountOutputType
+      : RegionCategoryCountOutputType
 
 
 
@@ -1332,23 +1369,18 @@ export namespace Prisma {
     CafeRealImages?: boolean
   }
 
-  export type CafeInfoCountOutputTypeGetPayload<
-    S extends boolean | null | undefined | CafeInfoCountOutputTypeArgs,
-    U = keyof S
-      > = S extends true
-        ? CafeInfoCountOutputType
-    : S extends undefined
-    ? never
-    : S extends CafeInfoCountOutputTypeArgs
-    ?'include' extends U
+  export type CafeInfoCountOutputTypeGetPayload<S extends boolean | null | undefined | CafeInfoCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeInfoCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeInfoCountOutputTypeArgs)
     ? CafeInfoCountOutputType 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (CafeInfoCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
     P extends keyof CafeInfoCountOutputType ? CafeInfoCountOutputType[P] : never
   } 
-    : CafeInfoCountOutputType
-  : CafeInfoCountOutputType
+      : CafeInfoCountOutputType
 
 
 
@@ -1623,39 +1655,35 @@ export namespace Prisma {
     _count?: boolean | UserCountOutputTypeArgs
   }
 
+
   export type UserInclude = {
     Boards?: boolean | BoardFindManyArgs
     BoardReplies?: boolean | BoardReplyFindManyArgs
     Notices?: boolean | NoticeFindManyArgs
     _count?: boolean | UserCountOutputTypeArgs
-  }
+  } 
 
-  export type UserGetPayload<
-    S extends boolean | null | undefined | UserArgs,
-    U = keyof S
-      > = S extends true
-        ? User
-    : S extends undefined
-    ? never
-    : S extends UserArgs | UserFindManyArgs
-    ?'include' extends U
+  export type UserGetPayload<S extends boolean | null | undefined | UserArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? User :
+    S extends undefined ? never :
+    S extends { include: any } & (UserArgs | UserFindManyArgs)
     ? User  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'Boards' ? Array < BoardGetPayload<S['include'][P]>>  :
         P extends 'BoardReplies' ? Array < BoardReplyGetPayload<S['include'][P]>>  :
         P extends 'Notices' ? Array < NoticeGetPayload<S['include'][P]>>  :
         P extends '_count' ? UserCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (UserArgs | UserFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'Boards' ? Array < BoardGetPayload<S['select'][P]>>  :
         P extends 'BoardReplies' ? Array < BoardReplyGetPayload<S['select'][P]>>  :
         P extends 'Notices' ? Array < NoticeGetPayload<S['select'][P]>>  :
         P extends '_count' ? UserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
   } 
-    : User
-  : User
+      : User
 
 
   type UserCountArgs = Merge<
@@ -1664,7 +1692,7 @@ export namespace Prisma {
     }
   >
 
-  export interface UserDelegate<GlobalRejectSettings> {
+  export interface UserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one User that matches the filter.
      * @param {UserFindUniqueArgs} args - Arguments to find a User
@@ -1678,7 +1706,23 @@ export namespace Prisma {
     **/
     findUnique<T extends UserFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, UserFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'User'> extends True ? CheckSelect<T, Prisma__UserClient<User>, Prisma__UserClient<UserGetPayload<T>>> : CheckSelect<T, Prisma__UserClient<User | null >, Prisma__UserClient<UserGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'User'> extends True ? Prisma__UserClient<UserGetPayload<T>> : Prisma__UserClient<UserGetPayload<T> | null, null>
+
+    /**
+     * Find one User that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {UserFindUniqueOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends UserFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, UserFindUniqueOrThrowArgs>
+    ): Prisma__UserClient<UserGetPayload<T>>
 
     /**
      * Find the first User that matches the filter.
@@ -1695,7 +1739,25 @@ export namespace Prisma {
     **/
     findFirst<T extends UserFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, UserFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'User'> extends True ? CheckSelect<T, Prisma__UserClient<User>, Prisma__UserClient<UserGetPayload<T>>> : CheckSelect<T, Prisma__UserClient<User | null >, Prisma__UserClient<UserGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'User'> extends True ? Prisma__UserClient<UserGetPayload<T>> : Prisma__UserClient<UserGetPayload<T> | null, null>
+
+    /**
+     * Find the first User that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserFindFirstOrThrowArgs} args - Arguments to find a User
+     * @example
+     * // Get one User
+     * const user = await prisma.user.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends UserFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, UserFindFirstOrThrowArgs>
+    ): Prisma__UserClient<UserGetPayload<T>>
 
     /**
      * Find zero or more Users that matches the filter.
@@ -1715,7 +1777,7 @@ export namespace Prisma {
     **/
     findMany<T extends UserFindManyArgs>(
       args?: SelectSubset<T, UserFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<User>>, PrismaPromise<Array<UserGetPayload<T>>>>
+    ): PrismaPromise<Array<UserGetPayload<T>>>
 
     /**
      * Create a User.
@@ -1731,7 +1793,7 @@ export namespace Prisma {
     **/
     create<T extends UserCreateArgs>(
       args: SelectSubset<T, UserCreateArgs>
-    ): CheckSelect<T, Prisma__UserClient<User>, Prisma__UserClient<UserGetPayload<T>>>
+    ): Prisma__UserClient<UserGetPayload<T>>
 
     /**
      * Create many Users.
@@ -1763,7 +1825,7 @@ export namespace Prisma {
     **/
     delete<T extends UserDeleteArgs>(
       args: SelectSubset<T, UserDeleteArgs>
-    ): CheckSelect<T, Prisma__UserClient<User>, Prisma__UserClient<UserGetPayload<T>>>
+    ): Prisma__UserClient<UserGetPayload<T>>
 
     /**
      * Update one User.
@@ -1782,7 +1844,7 @@ export namespace Prisma {
     **/
     update<T extends UserUpdateArgs>(
       args: SelectSubset<T, UserUpdateArgs>
-    ): CheckSelect<T, Prisma__UserClient<User>, Prisma__UserClient<UserGetPayload<T>>>
+    ): Prisma__UserClient<UserGetPayload<T>>
 
     /**
      * Delete zero or more Users.
@@ -1840,7 +1902,7 @@ export namespace Prisma {
     **/
     upsert<T extends UserUpsertArgs>(
       args: SelectSubset<T, UserUpsertArgs>
-    ): CheckSelect<T, Prisma__UserClient<User>, Prisma__UserClient<UserGetPayload<T>>>
+    ): Prisma__UserClient<UserGetPayload<T>>
 
     /**
      * Count the number of Users.
@@ -1967,6 +2029,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, UserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -1975,7 +2038,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__UserClient<T> implements PrismaPromise<T> {
+  export class Prisma__UserClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -1992,11 +2055,11 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    Boards<T extends BoardFindManyArgs = {}>(args?: Subset<T, BoardFindManyArgs>): CheckSelect<T, PrismaPromise<Array<Board>>, PrismaPromise<Array<BoardGetPayload<T>>>>;
+    Boards<T extends BoardFindManyArgs= {}>(args?: Subset<T, BoardFindManyArgs>): PrismaPromise<Array<BoardGetPayload<T>>| Null>;
 
-    BoardReplies<T extends BoardReplyFindManyArgs = {}>(args?: Subset<T, BoardReplyFindManyArgs>): CheckSelect<T, PrismaPromise<Array<BoardReply>>, PrismaPromise<Array<BoardReplyGetPayload<T>>>>;
+    BoardReplies<T extends BoardReplyFindManyArgs= {}>(args?: Subset<T, BoardReplyFindManyArgs>): PrismaPromise<Array<BoardReplyGetPayload<T>>| Null>;
 
-    Notices<T extends NoticeFindManyArgs = {}>(args?: Subset<T, NoticeFindManyArgs>): CheckSelect<T, PrismaPromise<Array<Notice>>, PrismaPromise<Array<NoticeGetPayload<T>>>>;
+    Notices<T extends NoticeFindManyArgs= {}>(args?: Subset<T, NoticeFindManyArgs>): PrismaPromise<Array<NoticeGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -2021,12 +2084,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * User findUnique
+   * User base type for findUnique actions
    */
-  export type UserFindUniqueArgs = {
+  export type UserFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the User
      * 
@@ -2038,10 +2103,38 @@ export namespace Prisma {
     **/
     include?: UserInclude | null
     /**
-     * Throw an Error if a User can't be found
+     * Filter, which User to fetch.
      * 
     **/
+    where: UserWhereUniqueInput
+  }
+
+  /**
+   * User: findUnique
+   */
+  export interface UserFindUniqueArgs extends UserFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * User findUniqueOrThrow
+   */
+  export type UserFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the User
+     * 
+    **/
+    select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
     /**
      * Filter, which User to fetch.
      * 
@@ -2051,9 +2144,9 @@ export namespace Prisma {
 
 
   /**
-   * User findFirst
+   * User base type for findFirst actions
    */
-  export type UserFindFirstArgs = {
+  export type UserFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the User
      * 
@@ -2065,10 +2158,73 @@ export namespace Prisma {
     **/
     include?: UserInclude | null
     /**
-     * Throw an Error if a User can't be found
+     * Filter, which User to fetch.
      * 
     **/
+    where?: UserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Users to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<UserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Users.
+     * 
+    **/
+    cursor?: UserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Users from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Users.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Users.
+     * 
+    **/
+    distinct?: Enumerable<UserScalarFieldEnum>
+  }
+
+  /**
+   * User: findFirst
+   */
+  export interface UserFindFirstArgs extends UserFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * User findFirstOrThrow
+   */
+  export type UserFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the User
+     * 
+    **/
+    select?: UserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: UserInclude | null
     /**
      * Filter, which User to fetch.
      * 
@@ -2546,30 +2702,26 @@ export namespace Prisma {
     User?: boolean | UserArgs
   }
 
+
   export type NoticeInclude = {
     User?: boolean | UserArgs
-  }
+  } 
 
-  export type NoticeGetPayload<
-    S extends boolean | null | undefined | NoticeArgs,
-    U = keyof S
-      > = S extends true
-        ? Notice
-    : S extends undefined
-    ? never
-    : S extends NoticeArgs | NoticeFindManyArgs
-    ?'include' extends U
+  export type NoticeGetPayload<S extends boolean | null | undefined | NoticeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? Notice :
+    S extends undefined ? never :
+    S extends { include: any } & (NoticeArgs | NoticeFindManyArgs)
     ? Notice  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'User' ? UserGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (NoticeArgs | NoticeFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'User' ? UserGetPayload<S['select'][P]> :  P extends keyof Notice ? Notice[P] : never
   } 
-    : Notice
-  : Notice
+      : Notice
 
 
   type NoticeCountArgs = Merge<
@@ -2578,7 +2730,7 @@ export namespace Prisma {
     }
   >
 
-  export interface NoticeDelegate<GlobalRejectSettings> {
+  export interface NoticeDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one Notice that matches the filter.
      * @param {NoticeFindUniqueArgs} args - Arguments to find a Notice
@@ -2592,7 +2744,23 @@ export namespace Prisma {
     **/
     findUnique<T extends NoticeFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, NoticeFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Notice'> extends True ? CheckSelect<T, Prisma__NoticeClient<Notice>, Prisma__NoticeClient<NoticeGetPayload<T>>> : CheckSelect<T, Prisma__NoticeClient<Notice | null >, Prisma__NoticeClient<NoticeGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Notice'> extends True ? Prisma__NoticeClient<NoticeGetPayload<T>> : Prisma__NoticeClient<NoticeGetPayload<T> | null, null>
+
+    /**
+     * Find one Notice that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {NoticeFindUniqueOrThrowArgs} args - Arguments to find a Notice
+     * @example
+     * // Get one Notice
+     * const notice = await prisma.notice.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends NoticeFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, NoticeFindUniqueOrThrowArgs>
+    ): Prisma__NoticeClient<NoticeGetPayload<T>>
 
     /**
      * Find the first Notice that matches the filter.
@@ -2609,7 +2777,25 @@ export namespace Prisma {
     **/
     findFirst<T extends NoticeFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, NoticeFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Notice'> extends True ? CheckSelect<T, Prisma__NoticeClient<Notice>, Prisma__NoticeClient<NoticeGetPayload<T>>> : CheckSelect<T, Prisma__NoticeClient<Notice | null >, Prisma__NoticeClient<NoticeGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Notice'> extends True ? Prisma__NoticeClient<NoticeGetPayload<T>> : Prisma__NoticeClient<NoticeGetPayload<T> | null, null>
+
+    /**
+     * Find the first Notice that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {NoticeFindFirstOrThrowArgs} args - Arguments to find a Notice
+     * @example
+     * // Get one Notice
+     * const notice = await prisma.notice.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends NoticeFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, NoticeFindFirstOrThrowArgs>
+    ): Prisma__NoticeClient<NoticeGetPayload<T>>
 
     /**
      * Find zero or more Notices that matches the filter.
@@ -2629,7 +2815,7 @@ export namespace Prisma {
     **/
     findMany<T extends NoticeFindManyArgs>(
       args?: SelectSubset<T, NoticeFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<Notice>>, PrismaPromise<Array<NoticeGetPayload<T>>>>
+    ): PrismaPromise<Array<NoticeGetPayload<T>>>
 
     /**
      * Create a Notice.
@@ -2645,7 +2831,7 @@ export namespace Prisma {
     **/
     create<T extends NoticeCreateArgs>(
       args: SelectSubset<T, NoticeCreateArgs>
-    ): CheckSelect<T, Prisma__NoticeClient<Notice>, Prisma__NoticeClient<NoticeGetPayload<T>>>
+    ): Prisma__NoticeClient<NoticeGetPayload<T>>
 
     /**
      * Create many Notices.
@@ -2677,7 +2863,7 @@ export namespace Prisma {
     **/
     delete<T extends NoticeDeleteArgs>(
       args: SelectSubset<T, NoticeDeleteArgs>
-    ): CheckSelect<T, Prisma__NoticeClient<Notice>, Prisma__NoticeClient<NoticeGetPayload<T>>>
+    ): Prisma__NoticeClient<NoticeGetPayload<T>>
 
     /**
      * Update one Notice.
@@ -2696,7 +2882,7 @@ export namespace Prisma {
     **/
     update<T extends NoticeUpdateArgs>(
       args: SelectSubset<T, NoticeUpdateArgs>
-    ): CheckSelect<T, Prisma__NoticeClient<Notice>, Prisma__NoticeClient<NoticeGetPayload<T>>>
+    ): Prisma__NoticeClient<NoticeGetPayload<T>>
 
     /**
      * Delete zero or more Notices.
@@ -2754,7 +2940,7 @@ export namespace Prisma {
     **/
     upsert<T extends NoticeUpsertArgs>(
       args: SelectSubset<T, NoticeUpsertArgs>
-    ): CheckSelect<T, Prisma__NoticeClient<Notice>, Prisma__NoticeClient<NoticeGetPayload<T>>>
+    ): Prisma__NoticeClient<NoticeGetPayload<T>>
 
     /**
      * Count the number of Notices.
@@ -2881,6 +3067,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, NoticeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetNoticeGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -2889,7 +3076,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__NoticeClient<T> implements PrismaPromise<T> {
+  export class Prisma__NoticeClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -2906,7 +3093,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    User<T extends UserArgs = {}>(args?: Subset<T, UserArgs>): CheckSelect<T, Prisma__UserClient<User | null >, Prisma__UserClient<UserGetPayload<T> | null >>;
+    User<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -2931,12 +3118,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * Notice findUnique
+   * Notice base type for findUnique actions
    */
-  export type NoticeFindUniqueArgs = {
+  export type NoticeFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the Notice
      * 
@@ -2948,10 +3137,38 @@ export namespace Prisma {
     **/
     include?: NoticeInclude | null
     /**
-     * Throw an Error if a Notice can't be found
+     * Filter, which Notice to fetch.
      * 
     **/
+    where: NoticeWhereUniqueInput
+  }
+
+  /**
+   * Notice: findUnique
+   */
+  export interface NoticeFindUniqueArgs extends NoticeFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Notice findUniqueOrThrow
+   */
+  export type NoticeFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Notice
+     * 
+    **/
+    select?: NoticeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: NoticeInclude | null
     /**
      * Filter, which Notice to fetch.
      * 
@@ -2961,9 +3178,9 @@ export namespace Prisma {
 
 
   /**
-   * Notice findFirst
+   * Notice base type for findFirst actions
    */
-  export type NoticeFindFirstArgs = {
+  export type NoticeFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the Notice
      * 
@@ -2975,10 +3192,73 @@ export namespace Prisma {
     **/
     include?: NoticeInclude | null
     /**
-     * Throw an Error if a Notice can't be found
+     * Filter, which Notice to fetch.
      * 
     **/
+    where?: NoticeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Notices to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<NoticeOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Notices.
+     * 
+    **/
+    cursor?: NoticeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Notices from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Notices.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Notices.
+     * 
+    **/
+    distinct?: Enumerable<NoticeScalarFieldEnum>
+  }
+
+  /**
+   * Notice: findFirst
+   */
+  export interface NoticeFindFirstArgs extends NoticeFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Notice findFirstOrThrow
+   */
+  export type NoticeFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Notice
+     * 
+    **/
+    select?: NoticeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: NoticeInclude | null
     /**
      * Filter, which Notice to fetch.
      * 
@@ -3491,39 +3771,35 @@ export namespace Prisma {
     _count?: boolean | BoardCountOutputTypeArgs
   }
 
+
   export type BoardInclude = {
     BoardImages?: boolean | BoardImageFindManyArgs
     BoardReplies?: boolean | BoardReplyFindManyArgs
     User?: boolean | UserArgs
     _count?: boolean | BoardCountOutputTypeArgs
-  }
+  } 
 
-  export type BoardGetPayload<
-    S extends boolean | null | undefined | BoardArgs,
-    U = keyof S
-      > = S extends true
-        ? Board
-    : S extends undefined
-    ? never
-    : S extends BoardArgs | BoardFindManyArgs
-    ?'include' extends U
+  export type BoardGetPayload<S extends boolean | null | undefined | BoardArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? Board :
+    S extends undefined ? never :
+    S extends { include: any } & (BoardArgs | BoardFindManyArgs)
     ? Board  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'BoardImages' ? Array < BoardImageGetPayload<S['include'][P]>>  :
         P extends 'BoardReplies' ? Array < BoardReplyGetPayload<S['include'][P]>>  :
         P extends 'User' ? UserGetPayload<S['include'][P]> :
         P extends '_count' ? BoardCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (BoardArgs | BoardFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'BoardImages' ? Array < BoardImageGetPayload<S['select'][P]>>  :
         P extends 'BoardReplies' ? Array < BoardReplyGetPayload<S['select'][P]>>  :
         P extends 'User' ? UserGetPayload<S['select'][P]> :
         P extends '_count' ? BoardCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Board ? Board[P] : never
   } 
-    : Board
-  : Board
+      : Board
 
 
   type BoardCountArgs = Merge<
@@ -3532,7 +3808,7 @@ export namespace Prisma {
     }
   >
 
-  export interface BoardDelegate<GlobalRejectSettings> {
+  export interface BoardDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one Board that matches the filter.
      * @param {BoardFindUniqueArgs} args - Arguments to find a Board
@@ -3546,7 +3822,23 @@ export namespace Prisma {
     **/
     findUnique<T extends BoardFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, BoardFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Board'> extends True ? CheckSelect<T, Prisma__BoardClient<Board>, Prisma__BoardClient<BoardGetPayload<T>>> : CheckSelect<T, Prisma__BoardClient<Board | null >, Prisma__BoardClient<BoardGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Board'> extends True ? Prisma__BoardClient<BoardGetPayload<T>> : Prisma__BoardClient<BoardGetPayload<T> | null, null>
+
+    /**
+     * Find one Board that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {BoardFindUniqueOrThrowArgs} args - Arguments to find a Board
+     * @example
+     * // Get one Board
+     * const board = await prisma.board.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends BoardFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, BoardFindUniqueOrThrowArgs>
+    ): Prisma__BoardClient<BoardGetPayload<T>>
 
     /**
      * Find the first Board that matches the filter.
@@ -3563,7 +3855,25 @@ export namespace Prisma {
     **/
     findFirst<T extends BoardFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, BoardFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Board'> extends True ? CheckSelect<T, Prisma__BoardClient<Board>, Prisma__BoardClient<BoardGetPayload<T>>> : CheckSelect<T, Prisma__BoardClient<Board | null >, Prisma__BoardClient<BoardGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Board'> extends True ? Prisma__BoardClient<BoardGetPayload<T>> : Prisma__BoardClient<BoardGetPayload<T> | null, null>
+
+    /**
+     * Find the first Board that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BoardFindFirstOrThrowArgs} args - Arguments to find a Board
+     * @example
+     * // Get one Board
+     * const board = await prisma.board.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends BoardFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, BoardFindFirstOrThrowArgs>
+    ): Prisma__BoardClient<BoardGetPayload<T>>
 
     /**
      * Find zero or more Boards that matches the filter.
@@ -3583,7 +3893,7 @@ export namespace Prisma {
     **/
     findMany<T extends BoardFindManyArgs>(
       args?: SelectSubset<T, BoardFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<Board>>, PrismaPromise<Array<BoardGetPayload<T>>>>
+    ): PrismaPromise<Array<BoardGetPayload<T>>>
 
     /**
      * Create a Board.
@@ -3599,7 +3909,7 @@ export namespace Prisma {
     **/
     create<T extends BoardCreateArgs>(
       args: SelectSubset<T, BoardCreateArgs>
-    ): CheckSelect<T, Prisma__BoardClient<Board>, Prisma__BoardClient<BoardGetPayload<T>>>
+    ): Prisma__BoardClient<BoardGetPayload<T>>
 
     /**
      * Create many Boards.
@@ -3631,7 +3941,7 @@ export namespace Prisma {
     **/
     delete<T extends BoardDeleteArgs>(
       args: SelectSubset<T, BoardDeleteArgs>
-    ): CheckSelect<T, Prisma__BoardClient<Board>, Prisma__BoardClient<BoardGetPayload<T>>>
+    ): Prisma__BoardClient<BoardGetPayload<T>>
 
     /**
      * Update one Board.
@@ -3650,7 +3960,7 @@ export namespace Prisma {
     **/
     update<T extends BoardUpdateArgs>(
       args: SelectSubset<T, BoardUpdateArgs>
-    ): CheckSelect<T, Prisma__BoardClient<Board>, Prisma__BoardClient<BoardGetPayload<T>>>
+    ): Prisma__BoardClient<BoardGetPayload<T>>
 
     /**
      * Delete zero or more Boards.
@@ -3708,7 +4018,7 @@ export namespace Prisma {
     **/
     upsert<T extends BoardUpsertArgs>(
       args: SelectSubset<T, BoardUpsertArgs>
-    ): CheckSelect<T, Prisma__BoardClient<Board>, Prisma__BoardClient<BoardGetPayload<T>>>
+    ): Prisma__BoardClient<BoardGetPayload<T>>
 
     /**
      * Count the number of Boards.
@@ -3835,6 +4145,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, BoardGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBoardGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -3843,7 +4154,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__BoardClient<T> implements PrismaPromise<T> {
+  export class Prisma__BoardClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -3860,11 +4171,11 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    BoardImages<T extends BoardImageFindManyArgs = {}>(args?: Subset<T, BoardImageFindManyArgs>): CheckSelect<T, PrismaPromise<Array<BoardImage>>, PrismaPromise<Array<BoardImageGetPayload<T>>>>;
+    BoardImages<T extends BoardImageFindManyArgs= {}>(args?: Subset<T, BoardImageFindManyArgs>): PrismaPromise<Array<BoardImageGetPayload<T>>| Null>;
 
-    BoardReplies<T extends BoardReplyFindManyArgs = {}>(args?: Subset<T, BoardReplyFindManyArgs>): CheckSelect<T, PrismaPromise<Array<BoardReply>>, PrismaPromise<Array<BoardReplyGetPayload<T>>>>;
+    BoardReplies<T extends BoardReplyFindManyArgs= {}>(args?: Subset<T, BoardReplyFindManyArgs>): PrismaPromise<Array<BoardReplyGetPayload<T>>| Null>;
 
-    User<T extends UserArgs = {}>(args?: Subset<T, UserArgs>): CheckSelect<T, Prisma__UserClient<User | null >, Prisma__UserClient<UserGetPayload<T> | null >>;
+    User<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -3889,12 +4200,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * Board findUnique
+   * Board base type for findUnique actions
    */
-  export type BoardFindUniqueArgs = {
+  export type BoardFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the Board
      * 
@@ -3906,10 +4219,38 @@ export namespace Prisma {
     **/
     include?: BoardInclude | null
     /**
-     * Throw an Error if a Board can't be found
+     * Filter, which Board to fetch.
      * 
     **/
+    where: BoardWhereUniqueInput
+  }
+
+  /**
+   * Board: findUnique
+   */
+  export interface BoardFindUniqueArgs extends BoardFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Board findUniqueOrThrow
+   */
+  export type BoardFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Board
+     * 
+    **/
+    select?: BoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: BoardInclude | null
     /**
      * Filter, which Board to fetch.
      * 
@@ -3919,9 +4260,9 @@ export namespace Prisma {
 
 
   /**
-   * Board findFirst
+   * Board base type for findFirst actions
    */
-  export type BoardFindFirstArgs = {
+  export type BoardFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the Board
      * 
@@ -3933,10 +4274,73 @@ export namespace Prisma {
     **/
     include?: BoardInclude | null
     /**
-     * Throw an Error if a Board can't be found
+     * Filter, which Board to fetch.
      * 
     **/
+    where?: BoardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Boards to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<BoardOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Boards.
+     * 
+    **/
+    cursor?: BoardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Boards from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Boards.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Boards.
+     * 
+    **/
+    distinct?: Enumerable<BoardScalarFieldEnum>
+  }
+
+  /**
+   * Board: findFirst
+   */
+  export interface BoardFindFirstArgs extends BoardFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Board findFirstOrThrow
+   */
+  export type BoardFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Board
+     * 
+    **/
+    select?: BoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: BoardInclude | null
     /**
      * Filter, which Board to fetch.
      * 
@@ -4442,30 +4846,26 @@ export namespace Prisma {
     Board?: boolean | BoardArgs
   }
 
+
   export type BoardImageInclude = {
     Board?: boolean | BoardArgs
-  }
+  } 
 
-  export type BoardImageGetPayload<
-    S extends boolean | null | undefined | BoardImageArgs,
-    U = keyof S
-      > = S extends true
-        ? BoardImage
-    : S extends undefined
-    ? never
-    : S extends BoardImageArgs | BoardImageFindManyArgs
-    ?'include' extends U
+  export type BoardImageGetPayload<S extends boolean | null | undefined | BoardImageArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? BoardImage :
+    S extends undefined ? never :
+    S extends { include: any } & (BoardImageArgs | BoardImageFindManyArgs)
     ? BoardImage  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'Board' ? BoardGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (BoardImageArgs | BoardImageFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'Board' ? BoardGetPayload<S['select'][P]> :  P extends keyof BoardImage ? BoardImage[P] : never
   } 
-    : BoardImage
-  : BoardImage
+      : BoardImage
 
 
   type BoardImageCountArgs = Merge<
@@ -4474,7 +4874,7 @@ export namespace Prisma {
     }
   >
 
-  export interface BoardImageDelegate<GlobalRejectSettings> {
+  export interface BoardImageDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one BoardImage that matches the filter.
      * @param {BoardImageFindUniqueArgs} args - Arguments to find a BoardImage
@@ -4488,7 +4888,23 @@ export namespace Prisma {
     **/
     findUnique<T extends BoardImageFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, BoardImageFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'BoardImage'> extends True ? CheckSelect<T, Prisma__BoardImageClient<BoardImage>, Prisma__BoardImageClient<BoardImageGetPayload<T>>> : CheckSelect<T, Prisma__BoardImageClient<BoardImage | null >, Prisma__BoardImageClient<BoardImageGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'BoardImage'> extends True ? Prisma__BoardImageClient<BoardImageGetPayload<T>> : Prisma__BoardImageClient<BoardImageGetPayload<T> | null, null>
+
+    /**
+     * Find one BoardImage that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {BoardImageFindUniqueOrThrowArgs} args - Arguments to find a BoardImage
+     * @example
+     * // Get one BoardImage
+     * const boardImage = await prisma.boardImage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends BoardImageFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, BoardImageFindUniqueOrThrowArgs>
+    ): Prisma__BoardImageClient<BoardImageGetPayload<T>>
 
     /**
      * Find the first BoardImage that matches the filter.
@@ -4505,7 +4921,25 @@ export namespace Prisma {
     **/
     findFirst<T extends BoardImageFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, BoardImageFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'BoardImage'> extends True ? CheckSelect<T, Prisma__BoardImageClient<BoardImage>, Prisma__BoardImageClient<BoardImageGetPayload<T>>> : CheckSelect<T, Prisma__BoardImageClient<BoardImage | null >, Prisma__BoardImageClient<BoardImageGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'BoardImage'> extends True ? Prisma__BoardImageClient<BoardImageGetPayload<T>> : Prisma__BoardImageClient<BoardImageGetPayload<T> | null, null>
+
+    /**
+     * Find the first BoardImage that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BoardImageFindFirstOrThrowArgs} args - Arguments to find a BoardImage
+     * @example
+     * // Get one BoardImage
+     * const boardImage = await prisma.boardImage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends BoardImageFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, BoardImageFindFirstOrThrowArgs>
+    ): Prisma__BoardImageClient<BoardImageGetPayload<T>>
 
     /**
      * Find zero or more BoardImages that matches the filter.
@@ -4525,7 +4959,7 @@ export namespace Prisma {
     **/
     findMany<T extends BoardImageFindManyArgs>(
       args?: SelectSubset<T, BoardImageFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<BoardImage>>, PrismaPromise<Array<BoardImageGetPayload<T>>>>
+    ): PrismaPromise<Array<BoardImageGetPayload<T>>>
 
     /**
      * Create a BoardImage.
@@ -4541,7 +4975,7 @@ export namespace Prisma {
     **/
     create<T extends BoardImageCreateArgs>(
       args: SelectSubset<T, BoardImageCreateArgs>
-    ): CheckSelect<T, Prisma__BoardImageClient<BoardImage>, Prisma__BoardImageClient<BoardImageGetPayload<T>>>
+    ): Prisma__BoardImageClient<BoardImageGetPayload<T>>
 
     /**
      * Create many BoardImages.
@@ -4573,7 +5007,7 @@ export namespace Prisma {
     **/
     delete<T extends BoardImageDeleteArgs>(
       args: SelectSubset<T, BoardImageDeleteArgs>
-    ): CheckSelect<T, Prisma__BoardImageClient<BoardImage>, Prisma__BoardImageClient<BoardImageGetPayload<T>>>
+    ): Prisma__BoardImageClient<BoardImageGetPayload<T>>
 
     /**
      * Update one BoardImage.
@@ -4592,7 +5026,7 @@ export namespace Prisma {
     **/
     update<T extends BoardImageUpdateArgs>(
       args: SelectSubset<T, BoardImageUpdateArgs>
-    ): CheckSelect<T, Prisma__BoardImageClient<BoardImage>, Prisma__BoardImageClient<BoardImageGetPayload<T>>>
+    ): Prisma__BoardImageClient<BoardImageGetPayload<T>>
 
     /**
      * Delete zero or more BoardImages.
@@ -4650,7 +5084,7 @@ export namespace Prisma {
     **/
     upsert<T extends BoardImageUpsertArgs>(
       args: SelectSubset<T, BoardImageUpsertArgs>
-    ): CheckSelect<T, Prisma__BoardImageClient<BoardImage>, Prisma__BoardImageClient<BoardImageGetPayload<T>>>
+    ): Prisma__BoardImageClient<BoardImageGetPayload<T>>
 
     /**
      * Count the number of BoardImages.
@@ -4777,6 +5211,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, BoardImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBoardImageGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -4785,7 +5220,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__BoardImageClient<T> implements PrismaPromise<T> {
+  export class Prisma__BoardImageClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -4802,7 +5237,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    Board<T extends BoardArgs = {}>(args?: Subset<T, BoardArgs>): CheckSelect<T, Prisma__BoardClient<Board | null >, Prisma__BoardClient<BoardGetPayload<T> | null >>;
+    Board<T extends BoardArgs= {}>(args?: Subset<T, BoardArgs>): Prisma__BoardClient<BoardGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -4827,12 +5262,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * BoardImage findUnique
+   * BoardImage base type for findUnique actions
    */
-  export type BoardImageFindUniqueArgs = {
+  export type BoardImageFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the BoardImage
      * 
@@ -4844,10 +5281,38 @@ export namespace Prisma {
     **/
     include?: BoardImageInclude | null
     /**
-     * Throw an Error if a BoardImage can't be found
+     * Filter, which BoardImage to fetch.
      * 
     **/
+    where: BoardImageWhereUniqueInput
+  }
+
+  /**
+   * BoardImage: findUnique
+   */
+  export interface BoardImageFindUniqueArgs extends BoardImageFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * BoardImage findUniqueOrThrow
+   */
+  export type BoardImageFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the BoardImage
+     * 
+    **/
+    select?: BoardImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: BoardImageInclude | null
     /**
      * Filter, which BoardImage to fetch.
      * 
@@ -4857,9 +5322,9 @@ export namespace Prisma {
 
 
   /**
-   * BoardImage findFirst
+   * BoardImage base type for findFirst actions
    */
-  export type BoardImageFindFirstArgs = {
+  export type BoardImageFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the BoardImage
      * 
@@ -4871,10 +5336,73 @@ export namespace Prisma {
     **/
     include?: BoardImageInclude | null
     /**
-     * Throw an Error if a BoardImage can't be found
+     * Filter, which BoardImage to fetch.
      * 
     **/
+    where?: BoardImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BoardImages to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<BoardImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BoardImages.
+     * 
+    **/
+    cursor?: BoardImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BoardImages from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BoardImages.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BoardImages.
+     * 
+    **/
+    distinct?: Enumerable<BoardImageScalarFieldEnum>
+  }
+
+  /**
+   * BoardImage: findFirst
+   */
+  export interface BoardImageFindFirstArgs extends BoardImageFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * BoardImage findFirstOrThrow
+   */
+  export type BoardImageFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the BoardImage
+     * 
+    **/
+    select?: BoardImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: BoardImageInclude | null
     /**
      * Filter, which BoardImage to fetch.
      * 
@@ -5388,42 +5916,38 @@ export namespace Prisma {
     _count?: boolean | BoardReplyCountOutputTypeArgs
   }
 
+
   export type BoardReplyInclude = {
     User?: boolean | UserArgs
     Board?: boolean | BoardArgs
     BoardReply?: boolean | BoardReplyArgs
     BoardNestedReplies?: boolean | BoardReplyFindManyArgs
     _count?: boolean | BoardReplyCountOutputTypeArgs
-  }
+  } 
 
-  export type BoardReplyGetPayload<
-    S extends boolean | null | undefined | BoardReplyArgs,
-    U = keyof S
-      > = S extends true
-        ? BoardReply
-    : S extends undefined
-    ? never
-    : S extends BoardReplyArgs | BoardReplyFindManyArgs
-    ?'include' extends U
+  export type BoardReplyGetPayload<S extends boolean | null | undefined | BoardReplyArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? BoardReply :
+    S extends undefined ? never :
+    S extends { include: any } & (BoardReplyArgs | BoardReplyFindManyArgs)
     ? BoardReply  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'User' ? UserGetPayload<S['include'][P]> :
         P extends 'Board' ? BoardGetPayload<S['include'][P]> :
         P extends 'BoardReply' ? BoardReplyGetPayload<S['include'][P]> | null :
         P extends 'BoardNestedReplies' ? Array < BoardReplyGetPayload<S['include'][P]>>  :
         P extends '_count' ? BoardReplyCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (BoardReplyArgs | BoardReplyFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'User' ? UserGetPayload<S['select'][P]> :
         P extends 'Board' ? BoardGetPayload<S['select'][P]> :
         P extends 'BoardReply' ? BoardReplyGetPayload<S['select'][P]> | null :
         P extends 'BoardNestedReplies' ? Array < BoardReplyGetPayload<S['select'][P]>>  :
         P extends '_count' ? BoardReplyCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof BoardReply ? BoardReply[P] : never
   } 
-    : BoardReply
-  : BoardReply
+      : BoardReply
 
 
   type BoardReplyCountArgs = Merge<
@@ -5432,7 +5956,7 @@ export namespace Prisma {
     }
   >
 
-  export interface BoardReplyDelegate<GlobalRejectSettings> {
+  export interface BoardReplyDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one BoardReply that matches the filter.
      * @param {BoardReplyFindUniqueArgs} args - Arguments to find a BoardReply
@@ -5446,7 +5970,23 @@ export namespace Prisma {
     **/
     findUnique<T extends BoardReplyFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, BoardReplyFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'BoardReply'> extends True ? CheckSelect<T, Prisma__BoardReplyClient<BoardReply>, Prisma__BoardReplyClient<BoardReplyGetPayload<T>>> : CheckSelect<T, Prisma__BoardReplyClient<BoardReply | null >, Prisma__BoardReplyClient<BoardReplyGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'BoardReply'> extends True ? Prisma__BoardReplyClient<BoardReplyGetPayload<T>> : Prisma__BoardReplyClient<BoardReplyGetPayload<T> | null, null>
+
+    /**
+     * Find one BoardReply that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {BoardReplyFindUniqueOrThrowArgs} args - Arguments to find a BoardReply
+     * @example
+     * // Get one BoardReply
+     * const boardReply = await prisma.boardReply.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends BoardReplyFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, BoardReplyFindUniqueOrThrowArgs>
+    ): Prisma__BoardReplyClient<BoardReplyGetPayload<T>>
 
     /**
      * Find the first BoardReply that matches the filter.
@@ -5463,7 +6003,25 @@ export namespace Prisma {
     **/
     findFirst<T extends BoardReplyFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, BoardReplyFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'BoardReply'> extends True ? CheckSelect<T, Prisma__BoardReplyClient<BoardReply>, Prisma__BoardReplyClient<BoardReplyGetPayload<T>>> : CheckSelect<T, Prisma__BoardReplyClient<BoardReply | null >, Prisma__BoardReplyClient<BoardReplyGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'BoardReply'> extends True ? Prisma__BoardReplyClient<BoardReplyGetPayload<T>> : Prisma__BoardReplyClient<BoardReplyGetPayload<T> | null, null>
+
+    /**
+     * Find the first BoardReply that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {BoardReplyFindFirstOrThrowArgs} args - Arguments to find a BoardReply
+     * @example
+     * // Get one BoardReply
+     * const boardReply = await prisma.boardReply.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends BoardReplyFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, BoardReplyFindFirstOrThrowArgs>
+    ): Prisma__BoardReplyClient<BoardReplyGetPayload<T>>
 
     /**
      * Find zero or more BoardReplies that matches the filter.
@@ -5483,7 +6041,7 @@ export namespace Prisma {
     **/
     findMany<T extends BoardReplyFindManyArgs>(
       args?: SelectSubset<T, BoardReplyFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<BoardReply>>, PrismaPromise<Array<BoardReplyGetPayload<T>>>>
+    ): PrismaPromise<Array<BoardReplyGetPayload<T>>>
 
     /**
      * Create a BoardReply.
@@ -5499,7 +6057,7 @@ export namespace Prisma {
     **/
     create<T extends BoardReplyCreateArgs>(
       args: SelectSubset<T, BoardReplyCreateArgs>
-    ): CheckSelect<T, Prisma__BoardReplyClient<BoardReply>, Prisma__BoardReplyClient<BoardReplyGetPayload<T>>>
+    ): Prisma__BoardReplyClient<BoardReplyGetPayload<T>>
 
     /**
      * Create many BoardReplies.
@@ -5531,7 +6089,7 @@ export namespace Prisma {
     **/
     delete<T extends BoardReplyDeleteArgs>(
       args: SelectSubset<T, BoardReplyDeleteArgs>
-    ): CheckSelect<T, Prisma__BoardReplyClient<BoardReply>, Prisma__BoardReplyClient<BoardReplyGetPayload<T>>>
+    ): Prisma__BoardReplyClient<BoardReplyGetPayload<T>>
 
     /**
      * Update one BoardReply.
@@ -5550,7 +6108,7 @@ export namespace Prisma {
     **/
     update<T extends BoardReplyUpdateArgs>(
       args: SelectSubset<T, BoardReplyUpdateArgs>
-    ): CheckSelect<T, Prisma__BoardReplyClient<BoardReply>, Prisma__BoardReplyClient<BoardReplyGetPayload<T>>>
+    ): Prisma__BoardReplyClient<BoardReplyGetPayload<T>>
 
     /**
      * Delete zero or more BoardReplies.
@@ -5608,7 +6166,7 @@ export namespace Prisma {
     **/
     upsert<T extends BoardReplyUpsertArgs>(
       args: SelectSubset<T, BoardReplyUpsertArgs>
-    ): CheckSelect<T, Prisma__BoardReplyClient<BoardReply>, Prisma__BoardReplyClient<BoardReplyGetPayload<T>>>
+    ): Prisma__BoardReplyClient<BoardReplyGetPayload<T>>
 
     /**
      * Count the number of BoardReplies.
@@ -5735,6 +6293,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, BoardReplyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetBoardReplyGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -5743,7 +6302,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__BoardReplyClient<T> implements PrismaPromise<T> {
+  export class Prisma__BoardReplyClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -5760,13 +6319,13 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    User<T extends UserArgs = {}>(args?: Subset<T, UserArgs>): CheckSelect<T, Prisma__UserClient<User | null >, Prisma__UserClient<UserGetPayload<T> | null >>;
+    User<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
 
-    Board<T extends BoardArgs = {}>(args?: Subset<T, BoardArgs>): CheckSelect<T, Prisma__BoardClient<Board | null >, Prisma__BoardClient<BoardGetPayload<T> | null >>;
+    Board<T extends BoardArgs= {}>(args?: Subset<T, BoardArgs>): Prisma__BoardClient<BoardGetPayload<T> | Null>;
 
-    BoardReply<T extends BoardReplyArgs = {}>(args?: Subset<T, BoardReplyArgs>): CheckSelect<T, Prisma__BoardReplyClient<BoardReply | null >, Prisma__BoardReplyClient<BoardReplyGetPayload<T> | null >>;
+    BoardReply<T extends BoardReplyArgs= {}>(args?: Subset<T, BoardReplyArgs>): Prisma__BoardReplyClient<BoardReplyGetPayload<T> | Null>;
 
-    BoardNestedReplies<T extends BoardReplyFindManyArgs = {}>(args?: Subset<T, BoardReplyFindManyArgs>): CheckSelect<T, PrismaPromise<Array<BoardReply>>, PrismaPromise<Array<BoardReplyGetPayload<T>>>>;
+    BoardNestedReplies<T extends BoardReplyFindManyArgs= {}>(args?: Subset<T, BoardReplyFindManyArgs>): PrismaPromise<Array<BoardReplyGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -5791,12 +6350,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * BoardReply findUnique
+   * BoardReply base type for findUnique actions
    */
-  export type BoardReplyFindUniqueArgs = {
+  export type BoardReplyFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the BoardReply
      * 
@@ -5808,10 +6369,38 @@ export namespace Prisma {
     **/
     include?: BoardReplyInclude | null
     /**
-     * Throw an Error if a BoardReply can't be found
+     * Filter, which BoardReply to fetch.
      * 
     **/
+    where: BoardReplyWhereUniqueInput
+  }
+
+  /**
+   * BoardReply: findUnique
+   */
+  export interface BoardReplyFindUniqueArgs extends BoardReplyFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * BoardReply findUniqueOrThrow
+   */
+  export type BoardReplyFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the BoardReply
+     * 
+    **/
+    select?: BoardReplySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: BoardReplyInclude | null
     /**
      * Filter, which BoardReply to fetch.
      * 
@@ -5821,9 +6410,9 @@ export namespace Prisma {
 
 
   /**
-   * BoardReply findFirst
+   * BoardReply base type for findFirst actions
    */
-  export type BoardReplyFindFirstArgs = {
+  export type BoardReplyFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the BoardReply
      * 
@@ -5835,10 +6424,73 @@ export namespace Prisma {
     **/
     include?: BoardReplyInclude | null
     /**
-     * Throw an Error if a BoardReply can't be found
+     * Filter, which BoardReply to fetch.
      * 
     **/
+    where?: BoardReplyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of BoardReplies to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<BoardReplyOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for BoardReplies.
+     * 
+    **/
+    cursor?: BoardReplyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` BoardReplies from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` BoardReplies.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of BoardReplies.
+     * 
+    **/
+    distinct?: Enumerable<BoardReplyScalarFieldEnum>
+  }
+
+  /**
+   * BoardReply: findFirst
+   */
+  export interface BoardReplyFindFirstArgs extends BoardReplyFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * BoardReply findFirstOrThrow
+   */
+  export type BoardReplyFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the BoardReply
+     * 
+    **/
+    select?: BoardReplySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: BoardReplyInclude | null
     /**
      * Filter, which BoardReply to fetch.
      * 
@@ -6307,39 +6959,35 @@ export namespace Prisma {
     _count?: boolean | RegionCategoryCountOutputTypeArgs
   }
 
+
   export type RegionCategoryInclude = {
     CafeInfos?: boolean | CafeInfoFindManyArgs
     AncestorCategories?: boolean | ClosureRegionCategoryFindManyArgs
     DescendantCategories?: boolean | ClosureRegionCategoryFindManyArgs
     _count?: boolean | RegionCategoryCountOutputTypeArgs
-  }
+  } 
 
-  export type RegionCategoryGetPayload<
-    S extends boolean | null | undefined | RegionCategoryArgs,
-    U = keyof S
-      > = S extends true
-        ? RegionCategory
-    : S extends undefined
-    ? never
-    : S extends RegionCategoryArgs | RegionCategoryFindManyArgs
-    ?'include' extends U
+  export type RegionCategoryGetPayload<S extends boolean | null | undefined | RegionCategoryArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? RegionCategory :
+    S extends undefined ? never :
+    S extends { include: any } & (RegionCategoryArgs | RegionCategoryFindManyArgs)
     ? RegionCategory  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'CafeInfos' ? Array < CafeInfoGetPayload<S['include'][P]>>  :
         P extends 'AncestorCategories' ? Array < ClosureRegionCategoryGetPayload<S['include'][P]>>  :
         P extends 'DescendantCategories' ? Array < ClosureRegionCategoryGetPayload<S['include'][P]>>  :
         P extends '_count' ? RegionCategoryCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (RegionCategoryArgs | RegionCategoryFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'CafeInfos' ? Array < CafeInfoGetPayload<S['select'][P]>>  :
         P extends 'AncestorCategories' ? Array < ClosureRegionCategoryGetPayload<S['select'][P]>>  :
         P extends 'DescendantCategories' ? Array < ClosureRegionCategoryGetPayload<S['select'][P]>>  :
         P extends '_count' ? RegionCategoryCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof RegionCategory ? RegionCategory[P] : never
   } 
-    : RegionCategory
-  : RegionCategory
+      : RegionCategory
 
 
   type RegionCategoryCountArgs = Merge<
@@ -6348,7 +6996,7 @@ export namespace Prisma {
     }
   >
 
-  export interface RegionCategoryDelegate<GlobalRejectSettings> {
+  export interface RegionCategoryDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one RegionCategory that matches the filter.
      * @param {RegionCategoryFindUniqueArgs} args - Arguments to find a RegionCategory
@@ -6362,7 +7010,23 @@ export namespace Prisma {
     **/
     findUnique<T extends RegionCategoryFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, RegionCategoryFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'RegionCategory'> extends True ? CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory>, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>> : CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory | null >, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'RegionCategory'> extends True ? Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>> : Prisma__RegionCategoryClient<RegionCategoryGetPayload<T> | null, null>
+
+    /**
+     * Find one RegionCategory that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {RegionCategoryFindUniqueOrThrowArgs} args - Arguments to find a RegionCategory
+     * @example
+     * // Get one RegionCategory
+     * const regionCategory = await prisma.regionCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends RegionCategoryFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, RegionCategoryFindUniqueOrThrowArgs>
+    ): Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>
 
     /**
      * Find the first RegionCategory that matches the filter.
@@ -6379,7 +7043,25 @@ export namespace Prisma {
     **/
     findFirst<T extends RegionCategoryFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, RegionCategoryFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'RegionCategory'> extends True ? CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory>, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>> : CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory | null >, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'RegionCategory'> extends True ? Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>> : Prisma__RegionCategoryClient<RegionCategoryGetPayload<T> | null, null>
+
+    /**
+     * Find the first RegionCategory that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RegionCategoryFindFirstOrThrowArgs} args - Arguments to find a RegionCategory
+     * @example
+     * // Get one RegionCategory
+     * const regionCategory = await prisma.regionCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends RegionCategoryFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, RegionCategoryFindFirstOrThrowArgs>
+    ): Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>
 
     /**
      * Find zero or more RegionCategories that matches the filter.
@@ -6399,7 +7081,7 @@ export namespace Prisma {
     **/
     findMany<T extends RegionCategoryFindManyArgs>(
       args?: SelectSubset<T, RegionCategoryFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<RegionCategory>>, PrismaPromise<Array<RegionCategoryGetPayload<T>>>>
+    ): PrismaPromise<Array<RegionCategoryGetPayload<T>>>
 
     /**
      * Create a RegionCategory.
@@ -6415,7 +7097,7 @@ export namespace Prisma {
     **/
     create<T extends RegionCategoryCreateArgs>(
       args: SelectSubset<T, RegionCategoryCreateArgs>
-    ): CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory>, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>>
+    ): Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>
 
     /**
      * Create many RegionCategories.
@@ -6447,7 +7129,7 @@ export namespace Prisma {
     **/
     delete<T extends RegionCategoryDeleteArgs>(
       args: SelectSubset<T, RegionCategoryDeleteArgs>
-    ): CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory>, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>>
+    ): Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>
 
     /**
      * Update one RegionCategory.
@@ -6466,7 +7148,7 @@ export namespace Prisma {
     **/
     update<T extends RegionCategoryUpdateArgs>(
       args: SelectSubset<T, RegionCategoryUpdateArgs>
-    ): CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory>, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>>
+    ): Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>
 
     /**
      * Delete zero or more RegionCategories.
@@ -6524,7 +7206,7 @@ export namespace Prisma {
     **/
     upsert<T extends RegionCategoryUpsertArgs>(
       args: SelectSubset<T, RegionCategoryUpsertArgs>
-    ): CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory>, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>>
+    ): Prisma__RegionCategoryClient<RegionCategoryGetPayload<T>>
 
     /**
      * Count the number of RegionCategories.
@@ -6651,6 +7333,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, RegionCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRegionCategoryGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -6659,7 +7342,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__RegionCategoryClient<T> implements PrismaPromise<T> {
+  export class Prisma__RegionCategoryClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -6676,11 +7359,11 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    CafeInfos<T extends CafeInfoFindManyArgs = {}>(args?: Subset<T, CafeInfoFindManyArgs>): CheckSelect<T, PrismaPromise<Array<CafeInfo>>, PrismaPromise<Array<CafeInfoGetPayload<T>>>>;
+    CafeInfos<T extends CafeInfoFindManyArgs= {}>(args?: Subset<T, CafeInfoFindManyArgs>): PrismaPromise<Array<CafeInfoGetPayload<T>>| Null>;
 
-    AncestorCategories<T extends ClosureRegionCategoryFindManyArgs = {}>(args?: Subset<T, ClosureRegionCategoryFindManyArgs>): CheckSelect<T, PrismaPromise<Array<ClosureRegionCategory>>, PrismaPromise<Array<ClosureRegionCategoryGetPayload<T>>>>;
+    AncestorCategories<T extends ClosureRegionCategoryFindManyArgs= {}>(args?: Subset<T, ClosureRegionCategoryFindManyArgs>): PrismaPromise<Array<ClosureRegionCategoryGetPayload<T>>| Null>;
 
-    DescendantCategories<T extends ClosureRegionCategoryFindManyArgs = {}>(args?: Subset<T, ClosureRegionCategoryFindManyArgs>): CheckSelect<T, PrismaPromise<Array<ClosureRegionCategory>>, PrismaPromise<Array<ClosureRegionCategoryGetPayload<T>>>>;
+    DescendantCategories<T extends ClosureRegionCategoryFindManyArgs= {}>(args?: Subset<T, ClosureRegionCategoryFindManyArgs>): PrismaPromise<Array<ClosureRegionCategoryGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -6705,12 +7388,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * RegionCategory findUnique
+   * RegionCategory base type for findUnique actions
    */
-  export type RegionCategoryFindUniqueArgs = {
+  export type RegionCategoryFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the RegionCategory
      * 
@@ -6722,10 +7407,38 @@ export namespace Prisma {
     **/
     include?: RegionCategoryInclude | null
     /**
-     * Throw an Error if a RegionCategory can't be found
+     * Filter, which RegionCategory to fetch.
      * 
     **/
+    where: RegionCategoryWhereUniqueInput
+  }
+
+  /**
+   * RegionCategory: findUnique
+   */
+  export interface RegionCategoryFindUniqueArgs extends RegionCategoryFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * RegionCategory findUniqueOrThrow
+   */
+  export type RegionCategoryFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the RegionCategory
+     * 
+    **/
+    select?: RegionCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: RegionCategoryInclude | null
     /**
      * Filter, which RegionCategory to fetch.
      * 
@@ -6735,9 +7448,9 @@ export namespace Prisma {
 
 
   /**
-   * RegionCategory findFirst
+   * RegionCategory base type for findFirst actions
    */
-  export type RegionCategoryFindFirstArgs = {
+  export type RegionCategoryFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the RegionCategory
      * 
@@ -6749,10 +7462,73 @@ export namespace Prisma {
     **/
     include?: RegionCategoryInclude | null
     /**
-     * Throw an Error if a RegionCategory can't be found
+     * Filter, which RegionCategory to fetch.
      * 
     **/
+    where?: RegionCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RegionCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<RegionCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RegionCategories.
+     * 
+    **/
+    cursor?: RegionCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RegionCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RegionCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RegionCategories.
+     * 
+    **/
+    distinct?: Enumerable<RegionCategoryScalarFieldEnum>
+  }
+
+  /**
+   * RegionCategory: findFirst
+   */
+  export interface RegionCategoryFindFirstArgs extends RegionCategoryFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * RegionCategory findFirstOrThrow
+   */
+  export type RegionCategoryFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the RegionCategory
+     * 
+    **/
+    select?: RegionCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: RegionCategoryInclude | null
     /**
      * Filter, which RegionCategory to fetch.
      * 
@@ -7211,33 +7987,29 @@ export namespace Prisma {
     DescendantCategory?: boolean | RegionCategoryArgs
   }
 
+
   export type ClosureRegionCategoryInclude = {
     AncestorCategory?: boolean | RegionCategoryArgs
     DescendantCategory?: boolean | RegionCategoryArgs
-  }
+  } 
 
-  export type ClosureRegionCategoryGetPayload<
-    S extends boolean | null | undefined | ClosureRegionCategoryArgs,
-    U = keyof S
-      > = S extends true
-        ? ClosureRegionCategory
-    : S extends undefined
-    ? never
-    : S extends ClosureRegionCategoryArgs | ClosureRegionCategoryFindManyArgs
-    ?'include' extends U
+  export type ClosureRegionCategoryGetPayload<S extends boolean | null | undefined | ClosureRegionCategoryArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ClosureRegionCategory :
+    S extends undefined ? never :
+    S extends { include: any } & (ClosureRegionCategoryArgs | ClosureRegionCategoryFindManyArgs)
     ? ClosureRegionCategory  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'AncestorCategory' ? RegionCategoryGetPayload<S['include'][P]> :
         P extends 'DescendantCategory' ? RegionCategoryGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (ClosureRegionCategoryArgs | ClosureRegionCategoryFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'AncestorCategory' ? RegionCategoryGetPayload<S['select'][P]> :
         P extends 'DescendantCategory' ? RegionCategoryGetPayload<S['select'][P]> :  P extends keyof ClosureRegionCategory ? ClosureRegionCategory[P] : never
   } 
-    : ClosureRegionCategory
-  : ClosureRegionCategory
+      : ClosureRegionCategory
 
 
   type ClosureRegionCategoryCountArgs = Merge<
@@ -7246,7 +8018,7 @@ export namespace Prisma {
     }
   >
 
-  export interface ClosureRegionCategoryDelegate<GlobalRejectSettings> {
+  export interface ClosureRegionCategoryDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one ClosureRegionCategory that matches the filter.
      * @param {ClosureRegionCategoryFindUniqueArgs} args - Arguments to find a ClosureRegionCategory
@@ -7260,7 +8032,23 @@ export namespace Prisma {
     **/
     findUnique<T extends ClosureRegionCategoryFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, ClosureRegionCategoryFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'ClosureRegionCategory'> extends True ? CheckSelect<T, Prisma__ClosureRegionCategoryClient<ClosureRegionCategory>, Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>> : CheckSelect<T, Prisma__ClosureRegionCategoryClient<ClosureRegionCategory | null >, Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'ClosureRegionCategory'> extends True ? Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>> : Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T> | null, null>
+
+    /**
+     * Find one ClosureRegionCategory that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ClosureRegionCategoryFindUniqueOrThrowArgs} args - Arguments to find a ClosureRegionCategory
+     * @example
+     * // Get one ClosureRegionCategory
+     * const closureRegionCategory = await prisma.closureRegionCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ClosureRegionCategoryFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ClosureRegionCategoryFindUniqueOrThrowArgs>
+    ): Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>
 
     /**
      * Find the first ClosureRegionCategory that matches the filter.
@@ -7277,7 +8065,25 @@ export namespace Prisma {
     **/
     findFirst<T extends ClosureRegionCategoryFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, ClosureRegionCategoryFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'ClosureRegionCategory'> extends True ? CheckSelect<T, Prisma__ClosureRegionCategoryClient<ClosureRegionCategory>, Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>> : CheckSelect<T, Prisma__ClosureRegionCategoryClient<ClosureRegionCategory | null >, Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'ClosureRegionCategory'> extends True ? Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>> : Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T> | null, null>
+
+    /**
+     * Find the first ClosureRegionCategory that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureRegionCategoryFindFirstOrThrowArgs} args - Arguments to find a ClosureRegionCategory
+     * @example
+     * // Get one ClosureRegionCategory
+     * const closureRegionCategory = await prisma.closureRegionCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ClosureRegionCategoryFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ClosureRegionCategoryFindFirstOrThrowArgs>
+    ): Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>
 
     /**
      * Find zero or more ClosureRegionCategories that matches the filter.
@@ -7297,7 +8103,7 @@ export namespace Prisma {
     **/
     findMany<T extends ClosureRegionCategoryFindManyArgs>(
       args?: SelectSubset<T, ClosureRegionCategoryFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<ClosureRegionCategory>>, PrismaPromise<Array<ClosureRegionCategoryGetPayload<T>>>>
+    ): PrismaPromise<Array<ClosureRegionCategoryGetPayload<T>>>
 
     /**
      * Create a ClosureRegionCategory.
@@ -7313,7 +8119,7 @@ export namespace Prisma {
     **/
     create<T extends ClosureRegionCategoryCreateArgs>(
       args: SelectSubset<T, ClosureRegionCategoryCreateArgs>
-    ): CheckSelect<T, Prisma__ClosureRegionCategoryClient<ClosureRegionCategory>, Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>>
+    ): Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>
 
     /**
      * Create many ClosureRegionCategories.
@@ -7345,7 +8151,7 @@ export namespace Prisma {
     **/
     delete<T extends ClosureRegionCategoryDeleteArgs>(
       args: SelectSubset<T, ClosureRegionCategoryDeleteArgs>
-    ): CheckSelect<T, Prisma__ClosureRegionCategoryClient<ClosureRegionCategory>, Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>>
+    ): Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>
 
     /**
      * Update one ClosureRegionCategory.
@@ -7364,7 +8170,7 @@ export namespace Prisma {
     **/
     update<T extends ClosureRegionCategoryUpdateArgs>(
       args: SelectSubset<T, ClosureRegionCategoryUpdateArgs>
-    ): CheckSelect<T, Prisma__ClosureRegionCategoryClient<ClosureRegionCategory>, Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>>
+    ): Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>
 
     /**
      * Delete zero or more ClosureRegionCategories.
@@ -7422,7 +8228,7 @@ export namespace Prisma {
     **/
     upsert<T extends ClosureRegionCategoryUpsertArgs>(
       args: SelectSubset<T, ClosureRegionCategoryUpsertArgs>
-    ): CheckSelect<T, Prisma__ClosureRegionCategoryClient<ClosureRegionCategory>, Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>>
+    ): Prisma__ClosureRegionCategoryClient<ClosureRegionCategoryGetPayload<T>>
 
     /**
      * Count the number of ClosureRegionCategories.
@@ -7549,6 +8355,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, ClosureRegionCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClosureRegionCategoryGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -7557,7 +8364,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__ClosureRegionCategoryClient<T> implements PrismaPromise<T> {
+  export class Prisma__ClosureRegionCategoryClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -7574,9 +8381,9 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    AncestorCategory<T extends RegionCategoryArgs = {}>(args?: Subset<T, RegionCategoryArgs>): CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory | null >, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T> | null >>;
+    AncestorCategory<T extends RegionCategoryArgs= {}>(args?: Subset<T, RegionCategoryArgs>): Prisma__RegionCategoryClient<RegionCategoryGetPayload<T> | Null>;
 
-    DescendantCategory<T extends RegionCategoryArgs = {}>(args?: Subset<T, RegionCategoryArgs>): CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory | null >, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T> | null >>;
+    DescendantCategory<T extends RegionCategoryArgs= {}>(args?: Subset<T, RegionCategoryArgs>): Prisma__RegionCategoryClient<RegionCategoryGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -7601,12 +8408,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * ClosureRegionCategory findUnique
+   * ClosureRegionCategory base type for findUnique actions
    */
-  export type ClosureRegionCategoryFindUniqueArgs = {
+  export type ClosureRegionCategoryFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the ClosureRegionCategory
      * 
@@ -7618,10 +8427,38 @@ export namespace Prisma {
     **/
     include?: ClosureRegionCategoryInclude | null
     /**
-     * Throw an Error if a ClosureRegionCategory can't be found
+     * Filter, which ClosureRegionCategory to fetch.
      * 
     **/
+    where: ClosureRegionCategoryWhereUniqueInput
+  }
+
+  /**
+   * ClosureRegionCategory: findUnique
+   */
+  export interface ClosureRegionCategoryFindUniqueArgs extends ClosureRegionCategoryFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ClosureRegionCategory findUniqueOrThrow
+   */
+  export type ClosureRegionCategoryFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureRegionCategory
+     * 
+    **/
+    select?: ClosureRegionCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureRegionCategoryInclude | null
     /**
      * Filter, which ClosureRegionCategory to fetch.
      * 
@@ -7631,9 +8468,9 @@ export namespace Prisma {
 
 
   /**
-   * ClosureRegionCategory findFirst
+   * ClosureRegionCategory base type for findFirst actions
    */
-  export type ClosureRegionCategoryFindFirstArgs = {
+  export type ClosureRegionCategoryFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the ClosureRegionCategory
      * 
@@ -7645,10 +8482,73 @@ export namespace Prisma {
     **/
     include?: ClosureRegionCategoryInclude | null
     /**
-     * Throw an Error if a ClosureRegionCategory can't be found
+     * Filter, which ClosureRegionCategory to fetch.
      * 
     **/
+    where?: ClosureRegionCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClosureRegionCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ClosureRegionCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ClosureRegionCategories.
+     * 
+    **/
+    cursor?: ClosureRegionCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClosureRegionCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClosureRegionCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ClosureRegionCategories.
+     * 
+    **/
+    distinct?: Enumerable<ClosureRegionCategoryScalarFieldEnum>
+  }
+
+  /**
+   * ClosureRegionCategory: findFirst
+   */
+  export interface ClosureRegionCategoryFindFirstArgs extends ClosureRegionCategoryFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ClosureRegionCategory findFirstOrThrow
+   */
+  export type ClosureRegionCategoryFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureRegionCategory
+     * 
+    **/
+    select?: ClosureRegionCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureRegionCategoryInclude | null
     /**
      * Filter, which ClosureRegionCategory to fetch.
      * 
@@ -8155,6 +9055,7 @@ export namespace Prisma {
     _count?: boolean | CafeInfoCountOutputTypeArgs
   }
 
+
   export type CafeInfoInclude = {
     RegionCategory?: boolean | RegionCategoryArgs
     CafeVirtualLinks?: boolean | CafeVirtualLinkFindManyArgs
@@ -8162,19 +9063,15 @@ export namespace Prisma {
     CafeVirtualImages?: boolean | CafeVirtualImageFindManyArgs
     CafeRealImages?: boolean | CafeRealImageFindManyArgs
     _count?: boolean | CafeInfoCountOutputTypeArgs
-  }
+  } 
 
-  export type CafeInfoGetPayload<
-    S extends boolean | null | undefined | CafeInfoArgs,
-    U = keyof S
-      > = S extends true
-        ? CafeInfo
-    : S extends undefined
-    ? never
-    : S extends CafeInfoArgs | CafeInfoFindManyArgs
-    ?'include' extends U
+  export type CafeInfoGetPayload<S extends boolean | null | undefined | CafeInfoArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeInfo :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeInfoArgs | CafeInfoFindManyArgs)
     ? CafeInfo  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'RegionCategory' ? RegionCategoryGetPayload<S['include'][P]> :
         P extends 'CafeVirtualLinks' ? Array < CafeVirtualLinkGetPayload<S['include'][P]>>  :
         P extends 'CafeThumbnailImages' ? Array < CafeThumbnailImageGetPayload<S['include'][P]>>  :
@@ -8182,9 +9079,9 @@ export namespace Prisma {
         P extends 'CafeRealImages' ? Array < CafeRealImageGetPayload<S['include'][P]>>  :
         P extends '_count' ? CafeInfoCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (CafeInfoArgs | CafeInfoFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'RegionCategory' ? RegionCategoryGetPayload<S['select'][P]> :
         P extends 'CafeVirtualLinks' ? Array < CafeVirtualLinkGetPayload<S['select'][P]>>  :
         P extends 'CafeThumbnailImages' ? Array < CafeThumbnailImageGetPayload<S['select'][P]>>  :
@@ -8192,8 +9089,7 @@ export namespace Prisma {
         P extends 'CafeRealImages' ? Array < CafeRealImageGetPayload<S['select'][P]>>  :
         P extends '_count' ? CafeInfoCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof CafeInfo ? CafeInfo[P] : never
   } 
-    : CafeInfo
-  : CafeInfo
+      : CafeInfo
 
 
   type CafeInfoCountArgs = Merge<
@@ -8202,7 +9098,7 @@ export namespace Prisma {
     }
   >
 
-  export interface CafeInfoDelegate<GlobalRejectSettings> {
+  export interface CafeInfoDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one CafeInfo that matches the filter.
      * @param {CafeInfoFindUniqueArgs} args - Arguments to find a CafeInfo
@@ -8216,7 +9112,23 @@ export namespace Prisma {
     **/
     findUnique<T extends CafeInfoFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, CafeInfoFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeInfo'> extends True ? CheckSelect<T, Prisma__CafeInfoClient<CafeInfo>, Prisma__CafeInfoClient<CafeInfoGetPayload<T>>> : CheckSelect<T, Prisma__CafeInfoClient<CafeInfo | null >, Prisma__CafeInfoClient<CafeInfoGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeInfo'> extends True ? Prisma__CafeInfoClient<CafeInfoGetPayload<T>> : Prisma__CafeInfoClient<CafeInfoGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeInfo that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeInfoFindUniqueOrThrowArgs} args - Arguments to find a CafeInfo
+     * @example
+     * // Get one CafeInfo
+     * const cafeInfo = await prisma.cafeInfo.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeInfoFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeInfoFindUniqueOrThrowArgs>
+    ): Prisma__CafeInfoClient<CafeInfoGetPayload<T>>
 
     /**
      * Find the first CafeInfo that matches the filter.
@@ -8233,7 +9145,25 @@ export namespace Prisma {
     **/
     findFirst<T extends CafeInfoFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, CafeInfoFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeInfo'> extends True ? CheckSelect<T, Prisma__CafeInfoClient<CafeInfo>, Prisma__CafeInfoClient<CafeInfoGetPayload<T>>> : CheckSelect<T, Prisma__CafeInfoClient<CafeInfo | null >, Prisma__CafeInfoClient<CafeInfoGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeInfo'> extends True ? Prisma__CafeInfoClient<CafeInfoGetPayload<T>> : Prisma__CafeInfoClient<CafeInfoGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeInfo that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeInfoFindFirstOrThrowArgs} args - Arguments to find a CafeInfo
+     * @example
+     * // Get one CafeInfo
+     * const cafeInfo = await prisma.cafeInfo.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeInfoFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeInfoFindFirstOrThrowArgs>
+    ): Prisma__CafeInfoClient<CafeInfoGetPayload<T>>
 
     /**
      * Find zero or more CafeInfos that matches the filter.
@@ -8253,7 +9183,7 @@ export namespace Prisma {
     **/
     findMany<T extends CafeInfoFindManyArgs>(
       args?: SelectSubset<T, CafeInfoFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<CafeInfo>>, PrismaPromise<Array<CafeInfoGetPayload<T>>>>
+    ): PrismaPromise<Array<CafeInfoGetPayload<T>>>
 
     /**
      * Create a CafeInfo.
@@ -8269,7 +9199,7 @@ export namespace Prisma {
     **/
     create<T extends CafeInfoCreateArgs>(
       args: SelectSubset<T, CafeInfoCreateArgs>
-    ): CheckSelect<T, Prisma__CafeInfoClient<CafeInfo>, Prisma__CafeInfoClient<CafeInfoGetPayload<T>>>
+    ): Prisma__CafeInfoClient<CafeInfoGetPayload<T>>
 
     /**
      * Create many CafeInfos.
@@ -8301,7 +9231,7 @@ export namespace Prisma {
     **/
     delete<T extends CafeInfoDeleteArgs>(
       args: SelectSubset<T, CafeInfoDeleteArgs>
-    ): CheckSelect<T, Prisma__CafeInfoClient<CafeInfo>, Prisma__CafeInfoClient<CafeInfoGetPayload<T>>>
+    ): Prisma__CafeInfoClient<CafeInfoGetPayload<T>>
 
     /**
      * Update one CafeInfo.
@@ -8320,7 +9250,7 @@ export namespace Prisma {
     **/
     update<T extends CafeInfoUpdateArgs>(
       args: SelectSubset<T, CafeInfoUpdateArgs>
-    ): CheckSelect<T, Prisma__CafeInfoClient<CafeInfo>, Prisma__CafeInfoClient<CafeInfoGetPayload<T>>>
+    ): Prisma__CafeInfoClient<CafeInfoGetPayload<T>>
 
     /**
      * Delete zero or more CafeInfos.
@@ -8378,7 +9308,7 @@ export namespace Prisma {
     **/
     upsert<T extends CafeInfoUpsertArgs>(
       args: SelectSubset<T, CafeInfoUpsertArgs>
-    ): CheckSelect<T, Prisma__CafeInfoClient<CafeInfo>, Prisma__CafeInfoClient<CafeInfoGetPayload<T>>>
+    ): Prisma__CafeInfoClient<CafeInfoGetPayload<T>>
 
     /**
      * Count the number of CafeInfos.
@@ -8505,6 +9435,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, CafeInfoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeInfoGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -8513,7 +9444,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__CafeInfoClient<T> implements PrismaPromise<T> {
+  export class Prisma__CafeInfoClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -8530,15 +9461,15 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    RegionCategory<T extends RegionCategoryArgs = {}>(args?: Subset<T, RegionCategoryArgs>): CheckSelect<T, Prisma__RegionCategoryClient<RegionCategory | null >, Prisma__RegionCategoryClient<RegionCategoryGetPayload<T> | null >>;
+    RegionCategory<T extends RegionCategoryArgs= {}>(args?: Subset<T, RegionCategoryArgs>): Prisma__RegionCategoryClient<RegionCategoryGetPayload<T> | Null>;
 
-    CafeVirtualLinks<T extends CafeVirtualLinkFindManyArgs = {}>(args?: Subset<T, CafeVirtualLinkFindManyArgs>): CheckSelect<T, PrismaPromise<Array<CafeVirtualLink>>, PrismaPromise<Array<CafeVirtualLinkGetPayload<T>>>>;
+    CafeVirtualLinks<T extends CafeVirtualLinkFindManyArgs= {}>(args?: Subset<T, CafeVirtualLinkFindManyArgs>): PrismaPromise<Array<CafeVirtualLinkGetPayload<T>>| Null>;
 
-    CafeThumbnailImages<T extends CafeThumbnailImageFindManyArgs = {}>(args?: Subset<T, CafeThumbnailImageFindManyArgs>): CheckSelect<T, PrismaPromise<Array<CafeThumbnailImage>>, PrismaPromise<Array<CafeThumbnailImageGetPayload<T>>>>;
+    CafeThumbnailImages<T extends CafeThumbnailImageFindManyArgs= {}>(args?: Subset<T, CafeThumbnailImageFindManyArgs>): PrismaPromise<Array<CafeThumbnailImageGetPayload<T>>| Null>;
 
-    CafeVirtualImages<T extends CafeVirtualImageFindManyArgs = {}>(args?: Subset<T, CafeVirtualImageFindManyArgs>): CheckSelect<T, PrismaPromise<Array<CafeVirtualImage>>, PrismaPromise<Array<CafeVirtualImageGetPayload<T>>>>;
+    CafeVirtualImages<T extends CafeVirtualImageFindManyArgs= {}>(args?: Subset<T, CafeVirtualImageFindManyArgs>): PrismaPromise<Array<CafeVirtualImageGetPayload<T>>| Null>;
 
-    CafeRealImages<T extends CafeRealImageFindManyArgs = {}>(args?: Subset<T, CafeRealImageFindManyArgs>): CheckSelect<T, PrismaPromise<Array<CafeRealImage>>, PrismaPromise<Array<CafeRealImageGetPayload<T>>>>;
+    CafeRealImages<T extends CafeRealImageFindManyArgs= {}>(args?: Subset<T, CafeRealImageFindManyArgs>): PrismaPromise<Array<CafeRealImageGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -8563,12 +9494,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * CafeInfo findUnique
+   * CafeInfo base type for findUnique actions
    */
-  export type CafeInfoFindUniqueArgs = {
+  export type CafeInfoFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the CafeInfo
      * 
@@ -8580,10 +9513,38 @@ export namespace Prisma {
     **/
     include?: CafeInfoInclude | null
     /**
-     * Throw an Error if a CafeInfo can't be found
+     * Filter, which CafeInfo to fetch.
      * 
     **/
+    where: CafeInfoWhereUniqueInput
+  }
+
+  /**
+   * CafeInfo: findUnique
+   */
+  export interface CafeInfoFindUniqueArgs extends CafeInfoFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeInfo findUniqueOrThrow
+   */
+  export type CafeInfoFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeInfo
+     * 
+    **/
+    select?: CafeInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeInfoInclude | null
     /**
      * Filter, which CafeInfo to fetch.
      * 
@@ -8593,9 +9554,9 @@ export namespace Prisma {
 
 
   /**
-   * CafeInfo findFirst
+   * CafeInfo base type for findFirst actions
    */
-  export type CafeInfoFindFirstArgs = {
+  export type CafeInfoFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the CafeInfo
      * 
@@ -8607,10 +9568,73 @@ export namespace Prisma {
     **/
     include?: CafeInfoInclude | null
     /**
-     * Throw an Error if a CafeInfo can't be found
+     * Filter, which CafeInfo to fetch.
      * 
     **/
+    where?: CafeInfoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeInfos to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeInfoOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeInfos.
+     * 
+    **/
+    cursor?: CafeInfoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeInfos from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeInfos.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeInfos.
+     * 
+    **/
+    distinct?: Enumerable<CafeInfoScalarFieldEnum>
+  }
+
+  /**
+   * CafeInfo: findFirst
+   */
+  export interface CafeInfoFindFirstArgs extends CafeInfoFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeInfo findFirstOrThrow
+   */
+  export type CafeInfoFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeInfo
+     * 
+    **/
+    select?: CafeInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeInfoInclude | null
     /**
      * Filter, which CafeInfo to fetch.
      * 
@@ -8907,6 +9931,7 @@ export namespace Prisma {
     height: number | null
     size: number | null
     priority: number | null
+    isDisable: boolean | null
     cafeInfoId: number | null
   }
 
@@ -8918,6 +9943,7 @@ export namespace Prisma {
     height: number | null
     size: number | null
     priority: number | null
+    isDisable: boolean | null
     cafeInfoId: number | null
   }
 
@@ -8929,6 +9955,7 @@ export namespace Prisma {
     height: number
     size: number
     priority: number
+    isDisable: number
     cafeInfoId: number
     _all: number
   }
@@ -8960,6 +9987,7 @@ export namespace Prisma {
     height?: true
     size?: true
     priority?: true
+    isDisable?: true
     cafeInfoId?: true
   }
 
@@ -8971,6 +9999,7 @@ export namespace Prisma {
     height?: true
     size?: true
     priority?: true
+    isDisable?: true
     cafeInfoId?: true
   }
 
@@ -8982,6 +10011,7 @@ export namespace Prisma {
     height?: true
     size?: true
     priority?: true
+    isDisable?: true
     cafeInfoId?: true
     _all?: true
   }
@@ -9086,6 +10116,7 @@ export namespace Prisma {
     height: number
     size: number
     priority: number
+    isDisable: boolean
     cafeInfoId: number
     _count: CafeThumbnailImageCountAggregateOutputType | null
     _avg: CafeThumbnailImageAvgAggregateOutputType | null
@@ -9116,34 +10147,31 @@ export namespace Prisma {
     height?: boolean
     size?: boolean
     priority?: boolean
+    isDisable?: boolean
     cafeInfoId?: boolean
     CafeInfo?: boolean | CafeInfoArgs
   }
 
+
   export type CafeThumbnailImageInclude = {
     CafeInfo?: boolean | CafeInfoArgs
-  }
+  } 
 
-  export type CafeThumbnailImageGetPayload<
-    S extends boolean | null | undefined | CafeThumbnailImageArgs,
-    U = keyof S
-      > = S extends true
-        ? CafeThumbnailImage
-    : S extends undefined
-    ? never
-    : S extends CafeThumbnailImageArgs | CafeThumbnailImageFindManyArgs
-    ?'include' extends U
+  export type CafeThumbnailImageGetPayload<S extends boolean | null | undefined | CafeThumbnailImageArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeThumbnailImage :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeThumbnailImageArgs | CafeThumbnailImageFindManyArgs)
     ? CafeThumbnailImage  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'CafeInfo' ? CafeInfoGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (CafeThumbnailImageArgs | CafeThumbnailImageFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'CafeInfo' ? CafeInfoGetPayload<S['select'][P]> :  P extends keyof CafeThumbnailImage ? CafeThumbnailImage[P] : never
   } 
-    : CafeThumbnailImage
-  : CafeThumbnailImage
+      : CafeThumbnailImage
 
 
   type CafeThumbnailImageCountArgs = Merge<
@@ -9152,7 +10180,7 @@ export namespace Prisma {
     }
   >
 
-  export interface CafeThumbnailImageDelegate<GlobalRejectSettings> {
+  export interface CafeThumbnailImageDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one CafeThumbnailImage that matches the filter.
      * @param {CafeThumbnailImageFindUniqueArgs} args - Arguments to find a CafeThumbnailImage
@@ -9166,7 +10194,23 @@ export namespace Prisma {
     **/
     findUnique<T extends CafeThumbnailImageFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, CafeThumbnailImageFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeThumbnailImage'> extends True ? CheckSelect<T, Prisma__CafeThumbnailImageClient<CafeThumbnailImage>, Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>> : CheckSelect<T, Prisma__CafeThumbnailImageClient<CafeThumbnailImage | null >, Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeThumbnailImage'> extends True ? Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>> : Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeThumbnailImage that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeThumbnailImageFindUniqueOrThrowArgs} args - Arguments to find a CafeThumbnailImage
+     * @example
+     * // Get one CafeThumbnailImage
+     * const cafeThumbnailImage = await prisma.cafeThumbnailImage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeThumbnailImageFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeThumbnailImageFindUniqueOrThrowArgs>
+    ): Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>
 
     /**
      * Find the first CafeThumbnailImage that matches the filter.
@@ -9183,7 +10227,25 @@ export namespace Prisma {
     **/
     findFirst<T extends CafeThumbnailImageFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, CafeThumbnailImageFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeThumbnailImage'> extends True ? CheckSelect<T, Prisma__CafeThumbnailImageClient<CafeThumbnailImage>, Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>> : CheckSelect<T, Prisma__CafeThumbnailImageClient<CafeThumbnailImage | null >, Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeThumbnailImage'> extends True ? Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>> : Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeThumbnailImage that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeThumbnailImageFindFirstOrThrowArgs} args - Arguments to find a CafeThumbnailImage
+     * @example
+     * // Get one CafeThumbnailImage
+     * const cafeThumbnailImage = await prisma.cafeThumbnailImage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeThumbnailImageFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeThumbnailImageFindFirstOrThrowArgs>
+    ): Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>
 
     /**
      * Find zero or more CafeThumbnailImages that matches the filter.
@@ -9203,7 +10265,7 @@ export namespace Prisma {
     **/
     findMany<T extends CafeThumbnailImageFindManyArgs>(
       args?: SelectSubset<T, CafeThumbnailImageFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<CafeThumbnailImage>>, PrismaPromise<Array<CafeThumbnailImageGetPayload<T>>>>
+    ): PrismaPromise<Array<CafeThumbnailImageGetPayload<T>>>
 
     /**
      * Create a CafeThumbnailImage.
@@ -9219,7 +10281,7 @@ export namespace Prisma {
     **/
     create<T extends CafeThumbnailImageCreateArgs>(
       args: SelectSubset<T, CafeThumbnailImageCreateArgs>
-    ): CheckSelect<T, Prisma__CafeThumbnailImageClient<CafeThumbnailImage>, Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>>
+    ): Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>
 
     /**
      * Create many CafeThumbnailImages.
@@ -9251,7 +10313,7 @@ export namespace Prisma {
     **/
     delete<T extends CafeThumbnailImageDeleteArgs>(
       args: SelectSubset<T, CafeThumbnailImageDeleteArgs>
-    ): CheckSelect<T, Prisma__CafeThumbnailImageClient<CafeThumbnailImage>, Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>>
+    ): Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>
 
     /**
      * Update one CafeThumbnailImage.
@@ -9270,7 +10332,7 @@ export namespace Prisma {
     **/
     update<T extends CafeThumbnailImageUpdateArgs>(
       args: SelectSubset<T, CafeThumbnailImageUpdateArgs>
-    ): CheckSelect<T, Prisma__CafeThumbnailImageClient<CafeThumbnailImage>, Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>>
+    ): Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>
 
     /**
      * Delete zero or more CafeThumbnailImages.
@@ -9328,7 +10390,7 @@ export namespace Prisma {
     **/
     upsert<T extends CafeThumbnailImageUpsertArgs>(
       args: SelectSubset<T, CafeThumbnailImageUpsertArgs>
-    ): CheckSelect<T, Prisma__CafeThumbnailImageClient<CafeThumbnailImage>, Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>>
+    ): Prisma__CafeThumbnailImageClient<CafeThumbnailImageGetPayload<T>>
 
     /**
      * Count the number of CafeThumbnailImages.
@@ -9455,6 +10517,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, CafeThumbnailImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeThumbnailImageGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -9463,7 +10526,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__CafeThumbnailImageClient<T> implements PrismaPromise<T> {
+  export class Prisma__CafeThumbnailImageClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -9480,7 +10543,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    CafeInfo<T extends CafeInfoArgs = {}>(args?: Subset<T, CafeInfoArgs>): CheckSelect<T, Prisma__CafeInfoClient<CafeInfo | null >, Prisma__CafeInfoClient<CafeInfoGetPayload<T> | null >>;
+    CafeInfo<T extends CafeInfoArgs= {}>(args?: Subset<T, CafeInfoArgs>): Prisma__CafeInfoClient<CafeInfoGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -9505,12 +10568,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * CafeThumbnailImage findUnique
+   * CafeThumbnailImage base type for findUnique actions
    */
-  export type CafeThumbnailImageFindUniqueArgs = {
+  export type CafeThumbnailImageFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the CafeThumbnailImage
      * 
@@ -9522,10 +10587,38 @@ export namespace Prisma {
     **/
     include?: CafeThumbnailImageInclude | null
     /**
-     * Throw an Error if a CafeThumbnailImage can't be found
+     * Filter, which CafeThumbnailImage to fetch.
      * 
     **/
+    where: CafeThumbnailImageWhereUniqueInput
+  }
+
+  /**
+   * CafeThumbnailImage: findUnique
+   */
+  export interface CafeThumbnailImageFindUniqueArgs extends CafeThumbnailImageFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeThumbnailImage findUniqueOrThrow
+   */
+  export type CafeThumbnailImageFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeThumbnailImage
+     * 
+    **/
+    select?: CafeThumbnailImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeThumbnailImageInclude | null
     /**
      * Filter, which CafeThumbnailImage to fetch.
      * 
@@ -9535,9 +10628,9 @@ export namespace Prisma {
 
 
   /**
-   * CafeThumbnailImage findFirst
+   * CafeThumbnailImage base type for findFirst actions
    */
-  export type CafeThumbnailImageFindFirstArgs = {
+  export type CafeThumbnailImageFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the CafeThumbnailImage
      * 
@@ -9549,10 +10642,73 @@ export namespace Prisma {
     **/
     include?: CafeThumbnailImageInclude | null
     /**
-     * Throw an Error if a CafeThumbnailImage can't be found
+     * Filter, which CafeThumbnailImage to fetch.
      * 
     **/
+    where?: CafeThumbnailImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeThumbnailImages to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeThumbnailImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeThumbnailImages.
+     * 
+    **/
+    cursor?: CafeThumbnailImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeThumbnailImages from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeThumbnailImages.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeThumbnailImages.
+     * 
+    **/
+    distinct?: Enumerable<CafeThumbnailImageScalarFieldEnum>
+  }
+
+  /**
+   * CafeThumbnailImage: findFirst
+   */
+  export interface CafeThumbnailImageFindFirstArgs extends CafeThumbnailImageFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeThumbnailImage findFirstOrThrow
+   */
+  export type CafeThumbnailImageFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeThumbnailImage
+     * 
+    **/
+    select?: CafeThumbnailImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeThumbnailImageInclude | null
     /**
      * Filter, which CafeThumbnailImage to fetch.
      * 
@@ -9849,6 +11005,7 @@ export namespace Prisma {
     height: number | null
     size: number | null
     priority: number | null
+    isDisable: boolean | null
     cafeInfoId: number | null
   }
 
@@ -9860,6 +11017,7 @@ export namespace Prisma {
     height: number | null
     size: number | null
     priority: number | null
+    isDisable: boolean | null
     cafeInfoId: number | null
   }
 
@@ -9871,6 +11029,7 @@ export namespace Prisma {
     height: number
     size: number
     priority: number
+    isDisable: number
     cafeInfoId: number
     _all: number
   }
@@ -9902,6 +11061,7 @@ export namespace Prisma {
     height?: true
     size?: true
     priority?: true
+    isDisable?: true
     cafeInfoId?: true
   }
 
@@ -9913,6 +11073,7 @@ export namespace Prisma {
     height?: true
     size?: true
     priority?: true
+    isDisable?: true
     cafeInfoId?: true
   }
 
@@ -9924,6 +11085,7 @@ export namespace Prisma {
     height?: true
     size?: true
     priority?: true
+    isDisable?: true
     cafeInfoId?: true
     _all?: true
   }
@@ -10028,6 +11190,7 @@ export namespace Prisma {
     height: number
     size: number
     priority: number
+    isDisable: boolean
     cafeInfoId: number
     _count: CafeVirtualImageCountAggregateOutputType | null
     _avg: CafeVirtualImageAvgAggregateOutputType | null
@@ -10058,34 +11221,31 @@ export namespace Prisma {
     height?: boolean
     size?: boolean
     priority?: boolean
+    isDisable?: boolean
     cafeInfoId?: boolean
     CafeInfo?: boolean | CafeInfoArgs
   }
 
+
   export type CafeVirtualImageInclude = {
     CafeInfo?: boolean | CafeInfoArgs
-  }
+  } 
 
-  export type CafeVirtualImageGetPayload<
-    S extends boolean | null | undefined | CafeVirtualImageArgs,
-    U = keyof S
-      > = S extends true
-        ? CafeVirtualImage
-    : S extends undefined
-    ? never
-    : S extends CafeVirtualImageArgs | CafeVirtualImageFindManyArgs
-    ?'include' extends U
+  export type CafeVirtualImageGetPayload<S extends boolean | null | undefined | CafeVirtualImageArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeVirtualImage :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeVirtualImageArgs | CafeVirtualImageFindManyArgs)
     ? CafeVirtualImage  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'CafeInfo' ? CafeInfoGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (CafeVirtualImageArgs | CafeVirtualImageFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'CafeInfo' ? CafeInfoGetPayload<S['select'][P]> :  P extends keyof CafeVirtualImage ? CafeVirtualImage[P] : never
   } 
-    : CafeVirtualImage
-  : CafeVirtualImage
+      : CafeVirtualImage
 
 
   type CafeVirtualImageCountArgs = Merge<
@@ -10094,7 +11254,7 @@ export namespace Prisma {
     }
   >
 
-  export interface CafeVirtualImageDelegate<GlobalRejectSettings> {
+  export interface CafeVirtualImageDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one CafeVirtualImage that matches the filter.
      * @param {CafeVirtualImageFindUniqueArgs} args - Arguments to find a CafeVirtualImage
@@ -10108,7 +11268,23 @@ export namespace Prisma {
     **/
     findUnique<T extends CafeVirtualImageFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, CafeVirtualImageFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeVirtualImage'> extends True ? CheckSelect<T, Prisma__CafeVirtualImageClient<CafeVirtualImage>, Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>> : CheckSelect<T, Prisma__CafeVirtualImageClient<CafeVirtualImage | null >, Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeVirtualImage'> extends True ? Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>> : Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeVirtualImage that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeVirtualImageFindUniqueOrThrowArgs} args - Arguments to find a CafeVirtualImage
+     * @example
+     * // Get one CafeVirtualImage
+     * const cafeVirtualImage = await prisma.cafeVirtualImage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeVirtualImageFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeVirtualImageFindUniqueOrThrowArgs>
+    ): Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>
 
     /**
      * Find the first CafeVirtualImage that matches the filter.
@@ -10125,7 +11301,25 @@ export namespace Prisma {
     **/
     findFirst<T extends CafeVirtualImageFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, CafeVirtualImageFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeVirtualImage'> extends True ? CheckSelect<T, Prisma__CafeVirtualImageClient<CafeVirtualImage>, Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>> : CheckSelect<T, Prisma__CafeVirtualImageClient<CafeVirtualImage | null >, Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeVirtualImage'> extends True ? Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>> : Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeVirtualImage that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeVirtualImageFindFirstOrThrowArgs} args - Arguments to find a CafeVirtualImage
+     * @example
+     * // Get one CafeVirtualImage
+     * const cafeVirtualImage = await prisma.cafeVirtualImage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeVirtualImageFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeVirtualImageFindFirstOrThrowArgs>
+    ): Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>
 
     /**
      * Find zero or more CafeVirtualImages that matches the filter.
@@ -10145,7 +11339,7 @@ export namespace Prisma {
     **/
     findMany<T extends CafeVirtualImageFindManyArgs>(
       args?: SelectSubset<T, CafeVirtualImageFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<CafeVirtualImage>>, PrismaPromise<Array<CafeVirtualImageGetPayload<T>>>>
+    ): PrismaPromise<Array<CafeVirtualImageGetPayload<T>>>
 
     /**
      * Create a CafeVirtualImage.
@@ -10161,7 +11355,7 @@ export namespace Prisma {
     **/
     create<T extends CafeVirtualImageCreateArgs>(
       args: SelectSubset<T, CafeVirtualImageCreateArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualImageClient<CafeVirtualImage>, Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>>
+    ): Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>
 
     /**
      * Create many CafeVirtualImages.
@@ -10193,7 +11387,7 @@ export namespace Prisma {
     **/
     delete<T extends CafeVirtualImageDeleteArgs>(
       args: SelectSubset<T, CafeVirtualImageDeleteArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualImageClient<CafeVirtualImage>, Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>>
+    ): Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>
 
     /**
      * Update one CafeVirtualImage.
@@ -10212,7 +11406,7 @@ export namespace Prisma {
     **/
     update<T extends CafeVirtualImageUpdateArgs>(
       args: SelectSubset<T, CafeVirtualImageUpdateArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualImageClient<CafeVirtualImage>, Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>>
+    ): Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>
 
     /**
      * Delete zero or more CafeVirtualImages.
@@ -10270,7 +11464,7 @@ export namespace Prisma {
     **/
     upsert<T extends CafeVirtualImageUpsertArgs>(
       args: SelectSubset<T, CafeVirtualImageUpsertArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualImageClient<CafeVirtualImage>, Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>>
+    ): Prisma__CafeVirtualImageClient<CafeVirtualImageGetPayload<T>>
 
     /**
      * Count the number of CafeVirtualImages.
@@ -10397,6 +11591,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, CafeVirtualImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeVirtualImageGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -10405,7 +11600,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__CafeVirtualImageClient<T> implements PrismaPromise<T> {
+  export class Prisma__CafeVirtualImageClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -10422,7 +11617,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    CafeInfo<T extends CafeInfoArgs = {}>(args?: Subset<T, CafeInfoArgs>): CheckSelect<T, Prisma__CafeInfoClient<CafeInfo | null >, Prisma__CafeInfoClient<CafeInfoGetPayload<T> | null >>;
+    CafeInfo<T extends CafeInfoArgs= {}>(args?: Subset<T, CafeInfoArgs>): Prisma__CafeInfoClient<CafeInfoGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -10447,12 +11642,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * CafeVirtualImage findUnique
+   * CafeVirtualImage base type for findUnique actions
    */
-  export type CafeVirtualImageFindUniqueArgs = {
+  export type CafeVirtualImageFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the CafeVirtualImage
      * 
@@ -10464,10 +11661,38 @@ export namespace Prisma {
     **/
     include?: CafeVirtualImageInclude | null
     /**
-     * Throw an Error if a CafeVirtualImage can't be found
+     * Filter, which CafeVirtualImage to fetch.
      * 
     **/
+    where: CafeVirtualImageWhereUniqueInput
+  }
+
+  /**
+   * CafeVirtualImage: findUnique
+   */
+  export interface CafeVirtualImageFindUniqueArgs extends CafeVirtualImageFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeVirtualImage findUniqueOrThrow
+   */
+  export type CafeVirtualImageFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeVirtualImage
+     * 
+    **/
+    select?: CafeVirtualImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeVirtualImageInclude | null
     /**
      * Filter, which CafeVirtualImage to fetch.
      * 
@@ -10477,9 +11702,9 @@ export namespace Prisma {
 
 
   /**
-   * CafeVirtualImage findFirst
+   * CafeVirtualImage base type for findFirst actions
    */
-  export type CafeVirtualImageFindFirstArgs = {
+  export type CafeVirtualImageFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the CafeVirtualImage
      * 
@@ -10491,10 +11716,73 @@ export namespace Prisma {
     **/
     include?: CafeVirtualImageInclude | null
     /**
-     * Throw an Error if a CafeVirtualImage can't be found
+     * Filter, which CafeVirtualImage to fetch.
      * 
     **/
+    where?: CafeVirtualImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeVirtualImages to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeVirtualImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeVirtualImages.
+     * 
+    **/
+    cursor?: CafeVirtualImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeVirtualImages from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeVirtualImages.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeVirtualImages.
+     * 
+    **/
+    distinct?: Enumerable<CafeVirtualImageScalarFieldEnum>
+  }
+
+  /**
+   * CafeVirtualImage: findFirst
+   */
+  export interface CafeVirtualImageFindFirstArgs extends CafeVirtualImageFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeVirtualImage findFirstOrThrow
+   */
+  export type CafeVirtualImageFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeVirtualImage
+     * 
+    **/
+    select?: CafeVirtualImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeVirtualImageInclude | null
     /**
      * Filter, which CafeVirtualImage to fetch.
      * 
@@ -10791,6 +12079,7 @@ export namespace Prisma {
     height: number | null
     size: number | null
     priority: number | null
+    isDisable: boolean | null
     cafeInfoId: number | null
   }
 
@@ -10802,6 +12091,7 @@ export namespace Prisma {
     height: number | null
     size: number | null
     priority: number | null
+    isDisable: boolean | null
     cafeInfoId: number | null
   }
 
@@ -10813,6 +12103,7 @@ export namespace Prisma {
     height: number
     size: number
     priority: number
+    isDisable: number
     cafeInfoId: number
     _all: number
   }
@@ -10844,6 +12135,7 @@ export namespace Prisma {
     height?: true
     size?: true
     priority?: true
+    isDisable?: true
     cafeInfoId?: true
   }
 
@@ -10855,6 +12147,7 @@ export namespace Prisma {
     height?: true
     size?: true
     priority?: true
+    isDisable?: true
     cafeInfoId?: true
   }
 
@@ -10866,6 +12159,7 @@ export namespace Prisma {
     height?: true
     size?: true
     priority?: true
+    isDisable?: true
     cafeInfoId?: true
     _all?: true
   }
@@ -10970,6 +12264,7 @@ export namespace Prisma {
     height: number
     size: number
     priority: number
+    isDisable: boolean
     cafeInfoId: number
     _count: CafeRealImageCountAggregateOutputType | null
     _avg: CafeRealImageAvgAggregateOutputType | null
@@ -11000,34 +12295,31 @@ export namespace Prisma {
     height?: boolean
     size?: boolean
     priority?: boolean
+    isDisable?: boolean
     cafeInfoId?: boolean
     CafeInfo?: boolean | CafeInfoArgs
   }
 
+
   export type CafeRealImageInclude = {
     CafeInfo?: boolean | CafeInfoArgs
-  }
+  } 
 
-  export type CafeRealImageGetPayload<
-    S extends boolean | null | undefined | CafeRealImageArgs,
-    U = keyof S
-      > = S extends true
-        ? CafeRealImage
-    : S extends undefined
-    ? never
-    : S extends CafeRealImageArgs | CafeRealImageFindManyArgs
-    ?'include' extends U
+  export type CafeRealImageGetPayload<S extends boolean | null | undefined | CafeRealImageArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeRealImage :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeRealImageArgs | CafeRealImageFindManyArgs)
     ? CafeRealImage  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'CafeInfo' ? CafeInfoGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (CafeRealImageArgs | CafeRealImageFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'CafeInfo' ? CafeInfoGetPayload<S['select'][P]> :  P extends keyof CafeRealImage ? CafeRealImage[P] : never
   } 
-    : CafeRealImage
-  : CafeRealImage
+      : CafeRealImage
 
 
   type CafeRealImageCountArgs = Merge<
@@ -11036,7 +12328,7 @@ export namespace Prisma {
     }
   >
 
-  export interface CafeRealImageDelegate<GlobalRejectSettings> {
+  export interface CafeRealImageDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one CafeRealImage that matches the filter.
      * @param {CafeRealImageFindUniqueArgs} args - Arguments to find a CafeRealImage
@@ -11050,7 +12342,23 @@ export namespace Prisma {
     **/
     findUnique<T extends CafeRealImageFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, CafeRealImageFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeRealImage'> extends True ? CheckSelect<T, Prisma__CafeRealImageClient<CafeRealImage>, Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>> : CheckSelect<T, Prisma__CafeRealImageClient<CafeRealImage | null >, Prisma__CafeRealImageClient<CafeRealImageGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeRealImage'> extends True ? Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>> : Prisma__CafeRealImageClient<CafeRealImageGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeRealImage that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeRealImageFindUniqueOrThrowArgs} args - Arguments to find a CafeRealImage
+     * @example
+     * // Get one CafeRealImage
+     * const cafeRealImage = await prisma.cafeRealImage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeRealImageFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeRealImageFindUniqueOrThrowArgs>
+    ): Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>
 
     /**
      * Find the first CafeRealImage that matches the filter.
@@ -11067,7 +12375,25 @@ export namespace Prisma {
     **/
     findFirst<T extends CafeRealImageFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, CafeRealImageFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeRealImage'> extends True ? CheckSelect<T, Prisma__CafeRealImageClient<CafeRealImage>, Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>> : CheckSelect<T, Prisma__CafeRealImageClient<CafeRealImage | null >, Prisma__CafeRealImageClient<CafeRealImageGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeRealImage'> extends True ? Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>> : Prisma__CafeRealImageClient<CafeRealImageGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeRealImage that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeRealImageFindFirstOrThrowArgs} args - Arguments to find a CafeRealImage
+     * @example
+     * // Get one CafeRealImage
+     * const cafeRealImage = await prisma.cafeRealImage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeRealImageFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeRealImageFindFirstOrThrowArgs>
+    ): Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>
 
     /**
      * Find zero or more CafeRealImages that matches the filter.
@@ -11087,7 +12413,7 @@ export namespace Prisma {
     **/
     findMany<T extends CafeRealImageFindManyArgs>(
       args?: SelectSubset<T, CafeRealImageFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<CafeRealImage>>, PrismaPromise<Array<CafeRealImageGetPayload<T>>>>
+    ): PrismaPromise<Array<CafeRealImageGetPayload<T>>>
 
     /**
      * Create a CafeRealImage.
@@ -11103,7 +12429,7 @@ export namespace Prisma {
     **/
     create<T extends CafeRealImageCreateArgs>(
       args: SelectSubset<T, CafeRealImageCreateArgs>
-    ): CheckSelect<T, Prisma__CafeRealImageClient<CafeRealImage>, Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>>
+    ): Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>
 
     /**
      * Create many CafeRealImages.
@@ -11135,7 +12461,7 @@ export namespace Prisma {
     **/
     delete<T extends CafeRealImageDeleteArgs>(
       args: SelectSubset<T, CafeRealImageDeleteArgs>
-    ): CheckSelect<T, Prisma__CafeRealImageClient<CafeRealImage>, Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>>
+    ): Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>
 
     /**
      * Update one CafeRealImage.
@@ -11154,7 +12480,7 @@ export namespace Prisma {
     **/
     update<T extends CafeRealImageUpdateArgs>(
       args: SelectSubset<T, CafeRealImageUpdateArgs>
-    ): CheckSelect<T, Prisma__CafeRealImageClient<CafeRealImage>, Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>>
+    ): Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>
 
     /**
      * Delete zero or more CafeRealImages.
@@ -11212,7 +12538,7 @@ export namespace Prisma {
     **/
     upsert<T extends CafeRealImageUpsertArgs>(
       args: SelectSubset<T, CafeRealImageUpsertArgs>
-    ): CheckSelect<T, Prisma__CafeRealImageClient<CafeRealImage>, Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>>
+    ): Prisma__CafeRealImageClient<CafeRealImageGetPayload<T>>
 
     /**
      * Count the number of CafeRealImages.
@@ -11339,6 +12665,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, CafeRealImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeRealImageGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -11347,7 +12674,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__CafeRealImageClient<T> implements PrismaPromise<T> {
+  export class Prisma__CafeRealImageClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -11364,7 +12691,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    CafeInfo<T extends CafeInfoArgs = {}>(args?: Subset<T, CafeInfoArgs>): CheckSelect<T, Prisma__CafeInfoClient<CafeInfo | null >, Prisma__CafeInfoClient<CafeInfoGetPayload<T> | null >>;
+    CafeInfo<T extends CafeInfoArgs= {}>(args?: Subset<T, CafeInfoArgs>): Prisma__CafeInfoClient<CafeInfoGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -11389,12 +12716,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * CafeRealImage findUnique
+   * CafeRealImage base type for findUnique actions
    */
-  export type CafeRealImageFindUniqueArgs = {
+  export type CafeRealImageFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the CafeRealImage
      * 
@@ -11406,10 +12735,38 @@ export namespace Prisma {
     **/
     include?: CafeRealImageInclude | null
     /**
-     * Throw an Error if a CafeRealImage can't be found
+     * Filter, which CafeRealImage to fetch.
      * 
     **/
+    where: CafeRealImageWhereUniqueInput
+  }
+
+  /**
+   * CafeRealImage: findUnique
+   */
+  export interface CafeRealImageFindUniqueArgs extends CafeRealImageFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeRealImage findUniqueOrThrow
+   */
+  export type CafeRealImageFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeRealImage
+     * 
+    **/
+    select?: CafeRealImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeRealImageInclude | null
     /**
      * Filter, which CafeRealImage to fetch.
      * 
@@ -11419,9 +12776,9 @@ export namespace Prisma {
 
 
   /**
-   * CafeRealImage findFirst
+   * CafeRealImage base type for findFirst actions
    */
-  export type CafeRealImageFindFirstArgs = {
+  export type CafeRealImageFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the CafeRealImage
      * 
@@ -11433,10 +12790,73 @@ export namespace Prisma {
     **/
     include?: CafeRealImageInclude | null
     /**
-     * Throw an Error if a CafeRealImage can't be found
+     * Filter, which CafeRealImage to fetch.
      * 
     **/
+    where?: CafeRealImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeRealImages to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeRealImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeRealImages.
+     * 
+    **/
+    cursor?: CafeRealImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeRealImages from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeRealImages.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeRealImages.
+     * 
+    **/
+    distinct?: Enumerable<CafeRealImageScalarFieldEnum>
+  }
+
+  /**
+   * CafeRealImage: findFirst
+   */
+  export interface CafeRealImageFindFirstArgs extends CafeRealImageFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeRealImage findFirstOrThrow
+   */
+  export type CafeRealImageFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeRealImage
+     * 
+    **/
+    select?: CafeRealImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeRealImageInclude | null
     /**
      * Filter, which CafeRealImage to fetch.
      * 
@@ -11722,6 +13142,9 @@ export namespace Prisma {
     createdAt: Date | null
     name: string | null
     url: string | null
+    type: string | null
+    isDisable: boolean | null
+    isAvaliable: boolean | null
     cafeInfoId: number | null
   }
 
@@ -11730,6 +13153,9 @@ export namespace Prisma {
     createdAt: Date | null
     name: string | null
     url: string | null
+    type: string | null
+    isDisable: boolean | null
+    isAvaliable: boolean | null
     cafeInfoId: number | null
   }
 
@@ -11738,6 +13164,9 @@ export namespace Prisma {
     createdAt: number
     name: number
     url: number
+    type: number
+    isDisable: number
+    isAvaliable: number
     cafeInfoId: number
     _all: number
   }
@@ -11758,6 +13187,9 @@ export namespace Prisma {
     createdAt?: true
     name?: true
     url?: true
+    type?: true
+    isDisable?: true
+    isAvaliable?: true
     cafeInfoId?: true
   }
 
@@ -11766,6 +13198,9 @@ export namespace Prisma {
     createdAt?: true
     name?: true
     url?: true
+    type?: true
+    isDisable?: true
+    isAvaliable?: true
     cafeInfoId?: true
   }
 
@@ -11774,6 +13209,9 @@ export namespace Prisma {
     createdAt?: true
     name?: true
     url?: true
+    type?: true
+    isDisable?: true
+    isAvaliable?: true
     cafeInfoId?: true
     _all?: true
   }
@@ -11875,6 +13313,9 @@ export namespace Prisma {
     createdAt: Date
     name: string
     url: string
+    type: string
+    isDisable: boolean
+    isAvaliable: boolean
     cafeInfoId: number
     _count: CafeVirtualLinkCountAggregateOutputType | null
     _avg: CafeVirtualLinkAvgAggregateOutputType | null
@@ -11902,38 +13343,37 @@ export namespace Prisma {
     createdAt?: boolean
     name?: boolean
     url?: boolean
+    type?: boolean
+    isDisable?: boolean
+    isAvaliable?: boolean
     cafeInfoId?: boolean
     CafeInfo?: boolean | CafeInfoArgs
     CafeVirtualLinkThumbnailImage?: boolean | CafeVirtualLinkThumbnailImageArgs
   }
 
+
   export type CafeVirtualLinkInclude = {
     CafeInfo?: boolean | CafeInfoArgs
     CafeVirtualLinkThumbnailImage?: boolean | CafeVirtualLinkThumbnailImageArgs
-  }
+  } 
 
-  export type CafeVirtualLinkGetPayload<
-    S extends boolean | null | undefined | CafeVirtualLinkArgs,
-    U = keyof S
-      > = S extends true
-        ? CafeVirtualLink
-    : S extends undefined
-    ? never
-    : S extends CafeVirtualLinkArgs | CafeVirtualLinkFindManyArgs
-    ?'include' extends U
+  export type CafeVirtualLinkGetPayload<S extends boolean | null | undefined | CafeVirtualLinkArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeVirtualLink :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeVirtualLinkArgs | CafeVirtualLinkFindManyArgs)
     ? CafeVirtualLink  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'CafeInfo' ? CafeInfoGetPayload<S['include'][P]> :
         P extends 'CafeVirtualLinkThumbnailImage' ? CafeVirtualLinkThumbnailImageGetPayload<S['include'][P]> | null :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (CafeVirtualLinkArgs | CafeVirtualLinkFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'CafeInfo' ? CafeInfoGetPayload<S['select'][P]> :
         P extends 'CafeVirtualLinkThumbnailImage' ? CafeVirtualLinkThumbnailImageGetPayload<S['select'][P]> | null :  P extends keyof CafeVirtualLink ? CafeVirtualLink[P] : never
   } 
-    : CafeVirtualLink
-  : CafeVirtualLink
+      : CafeVirtualLink
 
 
   type CafeVirtualLinkCountArgs = Merge<
@@ -11942,7 +13382,7 @@ export namespace Prisma {
     }
   >
 
-  export interface CafeVirtualLinkDelegate<GlobalRejectSettings> {
+  export interface CafeVirtualLinkDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one CafeVirtualLink that matches the filter.
      * @param {CafeVirtualLinkFindUniqueArgs} args - Arguments to find a CafeVirtualLink
@@ -11956,7 +13396,23 @@ export namespace Prisma {
     **/
     findUnique<T extends CafeVirtualLinkFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, CafeVirtualLinkFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeVirtualLink'> extends True ? CheckSelect<T, Prisma__CafeVirtualLinkClient<CafeVirtualLink>, Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>> : CheckSelect<T, Prisma__CafeVirtualLinkClient<CafeVirtualLink | null >, Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeVirtualLink'> extends True ? Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>> : Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeVirtualLink that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeVirtualLinkFindUniqueOrThrowArgs} args - Arguments to find a CafeVirtualLink
+     * @example
+     * // Get one CafeVirtualLink
+     * const cafeVirtualLink = await prisma.cafeVirtualLink.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeVirtualLinkFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeVirtualLinkFindUniqueOrThrowArgs>
+    ): Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>
 
     /**
      * Find the first CafeVirtualLink that matches the filter.
@@ -11973,7 +13429,25 @@ export namespace Prisma {
     **/
     findFirst<T extends CafeVirtualLinkFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, CafeVirtualLinkFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeVirtualLink'> extends True ? CheckSelect<T, Prisma__CafeVirtualLinkClient<CafeVirtualLink>, Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>> : CheckSelect<T, Prisma__CafeVirtualLinkClient<CafeVirtualLink | null >, Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeVirtualLink'> extends True ? Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>> : Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeVirtualLink that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeVirtualLinkFindFirstOrThrowArgs} args - Arguments to find a CafeVirtualLink
+     * @example
+     * // Get one CafeVirtualLink
+     * const cafeVirtualLink = await prisma.cafeVirtualLink.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeVirtualLinkFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeVirtualLinkFindFirstOrThrowArgs>
+    ): Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>
 
     /**
      * Find zero or more CafeVirtualLinks that matches the filter.
@@ -11993,7 +13467,7 @@ export namespace Prisma {
     **/
     findMany<T extends CafeVirtualLinkFindManyArgs>(
       args?: SelectSubset<T, CafeVirtualLinkFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<CafeVirtualLink>>, PrismaPromise<Array<CafeVirtualLinkGetPayload<T>>>>
+    ): PrismaPromise<Array<CafeVirtualLinkGetPayload<T>>>
 
     /**
      * Create a CafeVirtualLink.
@@ -12009,7 +13483,7 @@ export namespace Prisma {
     **/
     create<T extends CafeVirtualLinkCreateArgs>(
       args: SelectSubset<T, CafeVirtualLinkCreateArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualLinkClient<CafeVirtualLink>, Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>>
+    ): Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>
 
     /**
      * Create many CafeVirtualLinks.
@@ -12041,7 +13515,7 @@ export namespace Prisma {
     **/
     delete<T extends CafeVirtualLinkDeleteArgs>(
       args: SelectSubset<T, CafeVirtualLinkDeleteArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualLinkClient<CafeVirtualLink>, Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>>
+    ): Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>
 
     /**
      * Update one CafeVirtualLink.
@@ -12060,7 +13534,7 @@ export namespace Prisma {
     **/
     update<T extends CafeVirtualLinkUpdateArgs>(
       args: SelectSubset<T, CafeVirtualLinkUpdateArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualLinkClient<CafeVirtualLink>, Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>>
+    ): Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>
 
     /**
      * Delete zero or more CafeVirtualLinks.
@@ -12118,7 +13592,7 @@ export namespace Prisma {
     **/
     upsert<T extends CafeVirtualLinkUpsertArgs>(
       args: SelectSubset<T, CafeVirtualLinkUpsertArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualLinkClient<CafeVirtualLink>, Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>>
+    ): Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T>>
 
     /**
      * Count the number of CafeVirtualLinks.
@@ -12245,6 +13719,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, CafeVirtualLinkGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeVirtualLinkGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -12253,7 +13728,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__CafeVirtualLinkClient<T> implements PrismaPromise<T> {
+  export class Prisma__CafeVirtualLinkClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -12270,9 +13745,9 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    CafeInfo<T extends CafeInfoArgs = {}>(args?: Subset<T, CafeInfoArgs>): CheckSelect<T, Prisma__CafeInfoClient<CafeInfo | null >, Prisma__CafeInfoClient<CafeInfoGetPayload<T> | null >>;
+    CafeInfo<T extends CafeInfoArgs= {}>(args?: Subset<T, CafeInfoArgs>): Prisma__CafeInfoClient<CafeInfoGetPayload<T> | Null>;
 
-    CafeVirtualLinkThumbnailImage<T extends CafeVirtualLinkThumbnailImageArgs = {}>(args?: Subset<T, CafeVirtualLinkThumbnailImageArgs>): CheckSelect<T, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImage | null >, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T> | null >>;
+    CafeVirtualLinkThumbnailImage<T extends CafeVirtualLinkThumbnailImageArgs= {}>(args?: Subset<T, CafeVirtualLinkThumbnailImageArgs>): Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -12297,12 +13772,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * CafeVirtualLink findUnique
+   * CafeVirtualLink base type for findUnique actions
    */
-  export type CafeVirtualLinkFindUniqueArgs = {
+  export type CafeVirtualLinkFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the CafeVirtualLink
      * 
@@ -12314,10 +13791,38 @@ export namespace Prisma {
     **/
     include?: CafeVirtualLinkInclude | null
     /**
-     * Throw an Error if a CafeVirtualLink can't be found
+     * Filter, which CafeVirtualLink to fetch.
      * 
     **/
+    where: CafeVirtualLinkWhereUniqueInput
+  }
+
+  /**
+   * CafeVirtualLink: findUnique
+   */
+  export interface CafeVirtualLinkFindUniqueArgs extends CafeVirtualLinkFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeVirtualLink findUniqueOrThrow
+   */
+  export type CafeVirtualLinkFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeVirtualLink
+     * 
+    **/
+    select?: CafeVirtualLinkSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeVirtualLinkInclude | null
     /**
      * Filter, which CafeVirtualLink to fetch.
      * 
@@ -12327,9 +13832,9 @@ export namespace Prisma {
 
 
   /**
-   * CafeVirtualLink findFirst
+   * CafeVirtualLink base type for findFirst actions
    */
-  export type CafeVirtualLinkFindFirstArgs = {
+  export type CafeVirtualLinkFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the CafeVirtualLink
      * 
@@ -12341,10 +13846,73 @@ export namespace Prisma {
     **/
     include?: CafeVirtualLinkInclude | null
     /**
-     * Throw an Error if a CafeVirtualLink can't be found
+     * Filter, which CafeVirtualLink to fetch.
      * 
     **/
+    where?: CafeVirtualLinkWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeVirtualLinks to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeVirtualLinkOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeVirtualLinks.
+     * 
+    **/
+    cursor?: CafeVirtualLinkWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeVirtualLinks from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeVirtualLinks.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeVirtualLinks.
+     * 
+    **/
+    distinct?: Enumerable<CafeVirtualLinkScalarFieldEnum>
+  }
+
+  /**
+   * CafeVirtualLink: findFirst
+   */
+  export interface CafeVirtualLinkFindFirstArgs extends CafeVirtualLinkFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeVirtualLink findFirstOrThrow
+   */
+  export type CafeVirtualLinkFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeVirtualLink
+     * 
+    **/
+    select?: CafeVirtualLinkSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeVirtualLinkInclude | null
     /**
      * Filter, which CafeVirtualLink to fetch.
      * 
@@ -12842,30 +14410,26 @@ export namespace Prisma {
     CafeVirtualLink?: boolean | CafeVirtualLinkArgs
   }
 
+
   export type CafeVirtualLinkThumbnailImageInclude = {
     CafeVirtualLink?: boolean | CafeVirtualLinkArgs
-  }
+  } 
 
-  export type CafeVirtualLinkThumbnailImageGetPayload<
-    S extends boolean | null | undefined | CafeVirtualLinkThumbnailImageArgs,
-    U = keyof S
-      > = S extends true
-        ? CafeVirtualLinkThumbnailImage
-    : S extends undefined
-    ? never
-    : S extends CafeVirtualLinkThumbnailImageArgs | CafeVirtualLinkThumbnailImageFindManyArgs
-    ?'include' extends U
+  export type CafeVirtualLinkThumbnailImageGetPayload<S extends boolean | null | undefined | CafeVirtualLinkThumbnailImageArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeVirtualLinkThumbnailImage :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeVirtualLinkThumbnailImageArgs | CafeVirtualLinkThumbnailImageFindManyArgs)
     ? CafeVirtualLinkThumbnailImage  & {
-    [P in TrueKeys<S['include']>]:
+    [P in TruthyKeys<S['include']>]:
         P extends 'CafeVirtualLink' ? CafeVirtualLinkGetPayload<S['include'][P]> :  never
   } 
-    : 'select' extends U
-    ? {
-    [P in TrueKeys<S['select']>]:
+    : S extends { select: any } & (CafeVirtualLinkThumbnailImageArgs | CafeVirtualLinkThumbnailImageFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
         P extends 'CafeVirtualLink' ? CafeVirtualLinkGetPayload<S['select'][P]> :  P extends keyof CafeVirtualLinkThumbnailImage ? CafeVirtualLinkThumbnailImage[P] : never
   } 
-    : CafeVirtualLinkThumbnailImage
-  : CafeVirtualLinkThumbnailImage
+      : CafeVirtualLinkThumbnailImage
 
 
   type CafeVirtualLinkThumbnailImageCountArgs = Merge<
@@ -12874,7 +14438,7 @@ export namespace Prisma {
     }
   >
 
-  export interface CafeVirtualLinkThumbnailImageDelegate<GlobalRejectSettings> {
+  export interface CafeVirtualLinkThumbnailImageDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
     /**
      * Find zero or one CafeVirtualLinkThumbnailImage that matches the filter.
      * @param {CafeVirtualLinkThumbnailImageFindUniqueArgs} args - Arguments to find a CafeVirtualLinkThumbnailImage
@@ -12888,7 +14452,23 @@ export namespace Prisma {
     **/
     findUnique<T extends CafeVirtualLinkThumbnailImageFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args: SelectSubset<T, CafeVirtualLinkThumbnailImageFindUniqueArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeVirtualLinkThumbnailImage'> extends True ? CheckSelect<T, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImage>, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>> : CheckSelect<T, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImage | null >, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeVirtualLinkThumbnailImage'> extends True ? Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>> : Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeVirtualLinkThumbnailImage that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeVirtualLinkThumbnailImageFindUniqueOrThrowArgs} args - Arguments to find a CafeVirtualLinkThumbnailImage
+     * @example
+     * // Get one CafeVirtualLinkThumbnailImage
+     * const cafeVirtualLinkThumbnailImage = await prisma.cafeVirtualLinkThumbnailImage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeVirtualLinkThumbnailImageFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeVirtualLinkThumbnailImageFindUniqueOrThrowArgs>
+    ): Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>
 
     /**
      * Find the first CafeVirtualLinkThumbnailImage that matches the filter.
@@ -12905,7 +14485,25 @@ export namespace Prisma {
     **/
     findFirst<T extends CafeVirtualLinkThumbnailImageFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
       args?: SelectSubset<T, CafeVirtualLinkThumbnailImageFindFirstArgs>
-    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeVirtualLinkThumbnailImage'> extends True ? CheckSelect<T, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImage>, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>> : CheckSelect<T, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImage | null >, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T> | null >>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeVirtualLinkThumbnailImage'> extends True ? Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>> : Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeVirtualLinkThumbnailImage that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeVirtualLinkThumbnailImageFindFirstOrThrowArgs} args - Arguments to find a CafeVirtualLinkThumbnailImage
+     * @example
+     * // Get one CafeVirtualLinkThumbnailImage
+     * const cafeVirtualLinkThumbnailImage = await prisma.cafeVirtualLinkThumbnailImage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeVirtualLinkThumbnailImageFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeVirtualLinkThumbnailImageFindFirstOrThrowArgs>
+    ): Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>
 
     /**
      * Find zero or more CafeVirtualLinkThumbnailImages that matches the filter.
@@ -12925,7 +14523,7 @@ export namespace Prisma {
     **/
     findMany<T extends CafeVirtualLinkThumbnailImageFindManyArgs>(
       args?: SelectSubset<T, CafeVirtualLinkThumbnailImageFindManyArgs>
-    ): CheckSelect<T, PrismaPromise<Array<CafeVirtualLinkThumbnailImage>>, PrismaPromise<Array<CafeVirtualLinkThumbnailImageGetPayload<T>>>>
+    ): PrismaPromise<Array<CafeVirtualLinkThumbnailImageGetPayload<T>>>
 
     /**
      * Create a CafeVirtualLinkThumbnailImage.
@@ -12941,7 +14539,7 @@ export namespace Prisma {
     **/
     create<T extends CafeVirtualLinkThumbnailImageCreateArgs>(
       args: SelectSubset<T, CafeVirtualLinkThumbnailImageCreateArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImage>, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>>
+    ): Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>
 
     /**
      * Create many CafeVirtualLinkThumbnailImages.
@@ -12973,7 +14571,7 @@ export namespace Prisma {
     **/
     delete<T extends CafeVirtualLinkThumbnailImageDeleteArgs>(
       args: SelectSubset<T, CafeVirtualLinkThumbnailImageDeleteArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImage>, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>>
+    ): Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>
 
     /**
      * Update one CafeVirtualLinkThumbnailImage.
@@ -12992,7 +14590,7 @@ export namespace Prisma {
     **/
     update<T extends CafeVirtualLinkThumbnailImageUpdateArgs>(
       args: SelectSubset<T, CafeVirtualLinkThumbnailImageUpdateArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImage>, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>>
+    ): Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>
 
     /**
      * Delete zero or more CafeVirtualLinkThumbnailImages.
@@ -13050,7 +14648,7 @@ export namespace Prisma {
     **/
     upsert<T extends CafeVirtualLinkThumbnailImageUpsertArgs>(
       args: SelectSubset<T, CafeVirtualLinkThumbnailImageUpsertArgs>
-    ): CheckSelect<T, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImage>, Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>>
+    ): Prisma__CafeVirtualLinkThumbnailImageClient<CafeVirtualLinkThumbnailImageGetPayload<T>>
 
     /**
      * Count the number of CafeVirtualLinkThumbnailImages.
@@ -13177,6 +14775,7 @@ export namespace Prisma {
             : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
         }[OrderFields]
     >(args: SubsetIntersection<T, CafeVirtualLinkThumbnailImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeVirtualLinkThumbnailImageGroupByPayload<T> : PrismaPromise<InputErrors>
+
   }
 
   /**
@@ -13185,7 +14784,7 @@ export namespace Prisma {
    * Because we want to prevent naming conflicts as mentioned in
    * https://github.com/prisma/prisma-client-js/issues/707
    */
-  export class Prisma__CafeVirtualLinkThumbnailImageClient<T> implements PrismaPromise<T> {
+  export class Prisma__CafeVirtualLinkThumbnailImageClient<T, Null = never> implements PrismaPromise<T> {
     [prisma]: true;
     private readonly _dmmf;
     private readonly _fetcher;
@@ -13202,7 +14801,7 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    CafeVirtualLink<T extends CafeVirtualLinkArgs = {}>(args?: Subset<T, CafeVirtualLinkArgs>): CheckSelect<T, Prisma__CafeVirtualLinkClient<CafeVirtualLink | null >, Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T> | null >>;
+    CafeVirtualLink<T extends CafeVirtualLinkArgs= {}>(args?: Subset<T, CafeVirtualLinkArgs>): Prisma__CafeVirtualLinkClient<CafeVirtualLinkGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -13227,12 +14826,14 @@ export namespace Prisma {
     finally(onfinally?: (() => void) | undefined | null): Promise<T>;
   }
 
+
+
   // Custom InputTypes
 
   /**
-   * CafeVirtualLinkThumbnailImage findUnique
+   * CafeVirtualLinkThumbnailImage base type for findUnique actions
    */
-  export type CafeVirtualLinkThumbnailImageFindUniqueArgs = {
+  export type CafeVirtualLinkThumbnailImageFindUniqueArgsBase = {
     /**
      * Select specific fields to fetch from the CafeVirtualLinkThumbnailImage
      * 
@@ -13244,10 +14845,38 @@ export namespace Prisma {
     **/
     include?: CafeVirtualLinkThumbnailImageInclude | null
     /**
-     * Throw an Error if a CafeVirtualLinkThumbnailImage can't be found
+     * Filter, which CafeVirtualLinkThumbnailImage to fetch.
      * 
     **/
+    where: CafeVirtualLinkThumbnailImageWhereUniqueInput
+  }
+
+  /**
+   * CafeVirtualLinkThumbnailImage: findUnique
+   */
+  export interface CafeVirtualLinkThumbnailImageFindUniqueArgs extends CafeVirtualLinkThumbnailImageFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeVirtualLinkThumbnailImage findUniqueOrThrow
+   */
+  export type CafeVirtualLinkThumbnailImageFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeVirtualLinkThumbnailImage
+     * 
+    **/
+    select?: CafeVirtualLinkThumbnailImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeVirtualLinkThumbnailImageInclude | null
     /**
      * Filter, which CafeVirtualLinkThumbnailImage to fetch.
      * 
@@ -13257,9 +14886,9 @@ export namespace Prisma {
 
 
   /**
-   * CafeVirtualLinkThumbnailImage findFirst
+   * CafeVirtualLinkThumbnailImage base type for findFirst actions
    */
-  export type CafeVirtualLinkThumbnailImageFindFirstArgs = {
+  export type CafeVirtualLinkThumbnailImageFindFirstArgsBase = {
     /**
      * Select specific fields to fetch from the CafeVirtualLinkThumbnailImage
      * 
@@ -13271,10 +14900,73 @@ export namespace Prisma {
     **/
     include?: CafeVirtualLinkThumbnailImageInclude | null
     /**
-     * Throw an Error if a CafeVirtualLinkThumbnailImage can't be found
+     * Filter, which CafeVirtualLinkThumbnailImage to fetch.
      * 
     **/
+    where?: CafeVirtualLinkThumbnailImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeVirtualLinkThumbnailImages to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeVirtualLinkThumbnailImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeVirtualLinkThumbnailImages.
+     * 
+    **/
+    cursor?: CafeVirtualLinkThumbnailImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeVirtualLinkThumbnailImages from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeVirtualLinkThumbnailImages.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeVirtualLinkThumbnailImages.
+     * 
+    **/
+    distinct?: Enumerable<CafeVirtualLinkThumbnailImageScalarFieldEnum>
+  }
+
+  /**
+   * CafeVirtualLinkThumbnailImage: findFirst
+   */
+  export interface CafeVirtualLinkThumbnailImageFindFirstArgs extends CafeVirtualLinkThumbnailImageFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
     rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeVirtualLinkThumbnailImage findFirstOrThrow
+   */
+  export type CafeVirtualLinkThumbnailImageFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeVirtualLinkThumbnailImage
+     * 
+    **/
+    select?: CafeVirtualLinkThumbnailImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeVirtualLinkThumbnailImageInclude | null
     /**
      * Filter, which CafeVirtualLinkThumbnailImage to fetch.
      * 
@@ -13539,50 +15231,6 @@ export namespace Prisma {
   // Based on
   // https://github.com/microsoft/TypeScript/issues/3192#issuecomment-261720275
 
-  export const UserScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    loginId: 'loginId',
-    loginPw: 'loginPw',
-    username: 'username',
-    loginType: 'loginType',
-    userType: 'userType',
-    nickname: 'nickname',
-    email: 'email',
-    isDisable: 'isDisable'
-  };
-
-  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
-  export const NoticeScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    title: 'title',
-    content: 'content',
-    link: 'link',
-    userId: 'userId'
-  };
-
-  export type NoticeScalarFieldEnum = (typeof NoticeScalarFieldEnum)[keyof typeof NoticeScalarFieldEnum]
-
-
-  export const BoardScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    title: 'title',
-    content: 'content',
-    link: 'link',
-    startDay: 'startDay',
-    endDay: 'endDay',
-    isDisable: 'isDisable',
-    userId: 'userId',
-    boardType: 'boardType'
-  };
-
-  export type BoardScalarFieldEnum = (typeof BoardScalarFieldEnum)[keyof typeof BoardScalarFieldEnum]
-
-
   export const BoardImageScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -13612,24 +15260,20 @@ export namespace Prisma {
   export type BoardReplyScalarFieldEnum = (typeof BoardReplyScalarFieldEnum)[keyof typeof BoardReplyScalarFieldEnum]
 
 
-  export const RegionCategoryScalarFieldEnum: {
+  export const BoardScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
-    name: 'name',
+    title: 'title',
+    content: 'content',
+    link: 'link',
+    startDay: 'startDay',
+    endDay: 'endDay',
     isDisable: 'isDisable',
-    govermentType: 'govermentType'
+    userId: 'userId',
+    boardType: 'boardType'
   };
 
-  export type RegionCategoryScalarFieldEnum = (typeof RegionCategoryScalarFieldEnum)[keyof typeof RegionCategoryScalarFieldEnum]
-
-
-  export const ClosureRegionCategoryScalarFieldEnum: {
-    ancestor: 'ancestor',
-    descendant: 'descendant',
-    depth: 'depth'
-  };
-
-  export type ClosureRegionCategoryScalarFieldEnum = (typeof ClosureRegionCategoryScalarFieldEnum)[keyof typeof ClosureRegionCategoryScalarFieldEnum]
+  export type BoardScalarFieldEnum = (typeof BoardScalarFieldEnum)[keyof typeof BoardScalarFieldEnum]
 
 
   export const CafeInfoScalarFieldEnum: {
@@ -13647,6 +15291,21 @@ export namespace Prisma {
   export type CafeInfoScalarFieldEnum = (typeof CafeInfoScalarFieldEnum)[keyof typeof CafeInfoScalarFieldEnum]
 
 
+  export const CafeRealImageScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    url: 'url',
+    width: 'width',
+    height: 'height',
+    size: 'size',
+    priority: 'priority',
+    isDisable: 'isDisable',
+    cafeInfoId: 'cafeInfoId'
+  };
+
+  export type CafeRealImageScalarFieldEnum = (typeof CafeRealImageScalarFieldEnum)[keyof typeof CafeRealImageScalarFieldEnum]
+
+
   export const CafeThumbnailImageScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
@@ -13655,6 +15314,7 @@ export namespace Prisma {
     height: 'height',
     size: 'size',
     priority: 'priority',
+    isDisable: 'isDisable',
     cafeInfoId: 'cafeInfoId'
   };
 
@@ -13669,24 +15329,11 @@ export namespace Prisma {
     height: 'height',
     size: 'size',
     priority: 'priority',
+    isDisable: 'isDisable',
     cafeInfoId: 'cafeInfoId'
   };
 
   export type CafeVirtualImageScalarFieldEnum = (typeof CafeVirtualImageScalarFieldEnum)[keyof typeof CafeVirtualImageScalarFieldEnum]
-
-
-  export const CafeRealImageScalarFieldEnum: {
-    id: 'id',
-    createdAt: 'createdAt',
-    url: 'url',
-    width: 'width',
-    height: 'height',
-    size: 'size',
-    priority: 'priority',
-    cafeInfoId: 'cafeInfoId'
-  };
-
-  export type CafeRealImageScalarFieldEnum = (typeof CafeRealImageScalarFieldEnum)[keyof typeof CafeRealImageScalarFieldEnum]
 
 
   export const CafeVirtualLinkScalarFieldEnum: {
@@ -13694,6 +15341,9 @@ export namespace Prisma {
     createdAt: 'createdAt',
     name: 'name',
     url: 'url',
+    type: 'type',
+    isDisable: 'isDisable',
+    isAvaliable: 'isAvaliable',
     cafeInfoId: 'cafeInfoId'
   };
 
@@ -13713,12 +15363,25 @@ export namespace Prisma {
   export type CafeVirtualLinkThumbnailImageScalarFieldEnum = (typeof CafeVirtualLinkThumbnailImageScalarFieldEnum)[keyof typeof CafeVirtualLinkThumbnailImageScalarFieldEnum]
 
 
-  export const SortOrder: {
-    asc: 'asc',
-    desc: 'desc'
+  export const ClosureRegionCategoryScalarFieldEnum: {
+    ancestor: 'ancestor',
+    descendant: 'descendant',
+    depth: 'depth'
   };
 
-  export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+  export type ClosureRegionCategoryScalarFieldEnum = (typeof ClosureRegionCategoryScalarFieldEnum)[keyof typeof ClosureRegionCategoryScalarFieldEnum]
+
+
+  export const NoticeScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    title: 'title',
+    content: 'content',
+    link: 'link',
+    userId: 'userId'
+  };
+
+  export type NoticeScalarFieldEnum = (typeof NoticeScalarFieldEnum)[keyof typeof NoticeScalarFieldEnum]
 
 
   export const QueryMode: {
@@ -13727,6 +15390,51 @@ export namespace Prisma {
   };
 
   export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
+
+
+  export const RegionCategoryScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    name: 'name',
+    isDisable: 'isDisable',
+    govermentType: 'govermentType'
+  };
+
+  export type RegionCategoryScalarFieldEnum = (typeof RegionCategoryScalarFieldEnum)[keyof typeof RegionCategoryScalarFieldEnum]
+
+
+  export const SortOrder: {
+    asc: 'asc',
+    desc: 'desc'
+  };
+
+  export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const TransactionIsolationLevel: {
+    ReadUncommitted: 'ReadUncommitted',
+    ReadCommitted: 'ReadCommitted',
+    RepeatableRead: 'RepeatableRead',
+    Serializable: 'Serializable'
+  };
+
+  export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
+
+
+  export const UserScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    loginId: 'loginId',
+    loginPw: 'loginPw',
+    username: 'username',
+    loginType: 'loginType',
+    userType: 'userType',
+    nickname: 'nickname',
+    email: 'email',
+    isDisable: 'isDisable'
+  };
+
+  export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
   /**
@@ -14247,6 +15955,7 @@ export namespace Prisma {
     height?: IntFilter | number
     size?: IntFilter | number
     priority?: IntFilter | number
+    isDisable?: BoolFilter | boolean
     cafeInfoId?: IntFilter | number
     CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput>
   }
@@ -14259,6 +15968,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
     CafeInfo?: CafeInfoOrderByWithRelationInput
   }
@@ -14275,6 +15985,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
     _count?: CafeThumbnailImageCountOrderByAggregateInput
     _avg?: CafeThumbnailImageAvgOrderByAggregateInput
@@ -14294,6 +16005,7 @@ export namespace Prisma {
     height?: IntWithAggregatesFilter | number
     size?: IntWithAggregatesFilter | number
     priority?: IntWithAggregatesFilter | number
+    isDisable?: BoolWithAggregatesFilter | boolean
     cafeInfoId?: IntWithAggregatesFilter | number
   }
 
@@ -14308,6 +16020,7 @@ export namespace Prisma {
     height?: IntFilter | number
     size?: IntFilter | number
     priority?: IntFilter | number
+    isDisable?: BoolFilter | boolean
     cafeInfoId?: IntFilter | number
     CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput>
   }
@@ -14320,6 +16033,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
     CafeInfo?: CafeInfoOrderByWithRelationInput
   }
@@ -14336,6 +16050,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
     _count?: CafeVirtualImageCountOrderByAggregateInput
     _avg?: CafeVirtualImageAvgOrderByAggregateInput
@@ -14355,6 +16070,7 @@ export namespace Prisma {
     height?: IntWithAggregatesFilter | number
     size?: IntWithAggregatesFilter | number
     priority?: IntWithAggregatesFilter | number
+    isDisable?: BoolWithAggregatesFilter | boolean
     cafeInfoId?: IntWithAggregatesFilter | number
   }
 
@@ -14369,6 +16085,7 @@ export namespace Prisma {
     height?: IntFilter | number
     size?: IntFilter | number
     priority?: IntFilter | number
+    isDisable?: BoolFilter | boolean
     cafeInfoId?: IntFilter | number
     CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput>
   }
@@ -14381,6 +16098,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
     CafeInfo?: CafeInfoOrderByWithRelationInput
   }
@@ -14397,6 +16115,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
     _count?: CafeRealImageCountOrderByAggregateInput
     _avg?: CafeRealImageAvgOrderByAggregateInput
@@ -14416,6 +16135,7 @@ export namespace Prisma {
     height?: IntWithAggregatesFilter | number
     size?: IntWithAggregatesFilter | number
     priority?: IntWithAggregatesFilter | number
+    isDisable?: BoolWithAggregatesFilter | boolean
     cafeInfoId?: IntWithAggregatesFilter | number
   }
 
@@ -14427,6 +16147,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter | Date | string
     name?: StringFilter | string
     url?: StringFilter | string
+    type?: StringFilter | string
+    isDisable?: BoolFilter | boolean
+    isAvaliable?: BoolFilter | boolean
     cafeInfoId?: IntFilter | number
     CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput>
     CafeVirtualLinkThumbnailImage?: XOR<CafeVirtualLinkThumbnailImageRelationFilter, CafeVirtualLinkThumbnailImageWhereInput> | null
@@ -14437,6 +16160,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     url?: SortOrder
+    type?: SortOrder
+    isDisable?: SortOrder
+    isAvaliable?: SortOrder
     cafeInfoId?: SortOrder
     CafeInfo?: CafeInfoOrderByWithRelationInput
     CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageOrderByWithRelationInput
@@ -14451,6 +16177,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     url?: SortOrder
+    type?: SortOrder
+    isDisable?: SortOrder
+    isAvaliable?: SortOrder
     cafeInfoId?: SortOrder
     _count?: CafeVirtualLinkCountOrderByAggregateInput
     _avg?: CafeVirtualLinkAvgOrderByAggregateInput
@@ -14467,6 +16196,9 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     name?: StringWithAggregatesFilter | string
     url?: StringWithAggregatesFilter | string
+    type?: StringWithAggregatesFilter | string
+    isDisable?: BoolWithAggregatesFilter | boolean
+    isAvaliable?: BoolWithAggregatesFilter | boolean
     cafeInfoId?: IntWithAggregatesFilter | number
   }
 
@@ -14569,9 +16301,9 @@ export namespace Prisma {
     nickname?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    Boards?: BoardUpdateManyWithoutUserInput
-    BoardReplies?: BoardReplyUpdateManyWithoutUserInput
-    Notices?: NoticeUpdateManyWithoutUserInput
+    Boards?: BoardUpdateManyWithoutUserNestedInput
+    BoardReplies?: BoardReplyUpdateManyWithoutUserNestedInput
+    Notices?: NoticeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -14585,9 +16317,9 @@ export namespace Prisma {
     nickname?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    Boards?: BoardUncheckedUpdateManyWithoutUserInput
-    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserInput
-    Notices?: NoticeUncheckedUpdateManyWithoutUserInput
+    Boards?: BoardUncheckedUpdateManyWithoutUserNestedInput
+    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserNestedInput
+    Notices?: NoticeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -14650,7 +16382,7 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
-    User?: UserUpdateOneRequiredWithoutNoticesInput
+    User?: UserUpdateOneRequiredWithoutNoticesNestedInput
   }
 
   export type NoticeUncheckedUpdateInput = {
@@ -14724,9 +16456,9 @@ export namespace Prisma {
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
     endDay?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    BoardImages?: BoardImageUpdateManyWithoutBoardInput
-    BoardReplies?: BoardReplyUpdateManyWithoutBoardInput
-    User?: UserUpdateOneRequiredWithoutBoardsInput
+    BoardImages?: BoardImageUpdateManyWithoutBoardNestedInput
+    BoardReplies?: BoardReplyUpdateManyWithoutBoardNestedInput
+    User?: UserUpdateOneRequiredWithoutBoardsNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -14739,8 +16471,8 @@ export namespace Prisma {
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
     endDay?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    BoardImages?: BoardImageUncheckedUpdateManyWithoutBoardInput
-    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutBoardInput
+    BoardImages?: BoardImageUncheckedUpdateManyWithoutBoardNestedInput
+    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutBoardNestedInput
     userId?: IntFieldUpdateOperationsInput | number
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
@@ -14810,7 +16542,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isThumb?: BoolFieldUpdateOperationsInput | boolean
-    Board?: BoardUpdateOneRequiredWithoutBoardImagesInput
+    Board?: BoardUpdateOneRequiredWithoutBoardImagesNestedInput
   }
 
   export type BoardImageUncheckedUpdateInput = {
@@ -14885,10 +16617,10 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     content?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    User?: UserUpdateOneRequiredWithoutBoardRepliesInput
-    Board?: BoardUpdateOneRequiredWithoutBoardRepliesInput
-    BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesInput
-    BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyInput
+    User?: UserUpdateOneRequiredWithoutBoardRepliesNestedInput
+    Board?: BoardUpdateOneRequiredWithoutBoardRepliesNestedInput
+    BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesNestedInput
+    BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -14901,7 +16633,7 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     boardId?: IntFieldUpdateOperationsInput | number
     boardReplyId?: NullableIntFieldUpdateOperationsInput | number | null
-    BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyInput
+    BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -14963,9 +16695,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
-    CafeInfos?: CafeInfoUpdateManyWithoutRegionCategoryInput
-    AncestorCategories?: ClosureRegionCategoryUpdateManyWithoutAncestorCategoryInput
-    DescendantCategories?: ClosureRegionCategoryUpdateManyWithoutDescendantCategoryInput
+    CafeInfos?: CafeInfoUpdateManyWithoutRegionCategoryNestedInput
+    AncestorCategories?: ClosureRegionCategoryUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureRegionCategoryUpdateManyWithoutDescendantCategoryNestedInput
   }
 
   export type RegionCategoryUncheckedUpdateInput = {
@@ -14974,9 +16706,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
-    CafeInfos?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryInput
-    AncestorCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryInput
-    DescendantCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryInput
+    CafeInfos?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryNestedInput
+    AncestorCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
   }
 
   export type RegionCategoryCreateManyInput = {
@@ -15016,8 +16748,8 @@ export namespace Prisma {
 
   export type ClosureRegionCategoryUpdateInput = {
     depth?: IntFieldUpdateOperationsInput | number
-    AncestorCategory?: RegionCategoryUpdateOneRequiredWithoutAncestorCategoriesInput
-    DescendantCategory?: RegionCategoryUpdateOneRequiredWithoutDescendantCategoriesInput
+    AncestorCategory?: RegionCategoryUpdateOneRequiredWithoutAncestorCategoriesNestedInput
+    DescendantCategory?: RegionCategoryUpdateOneRequiredWithoutDescendantCategoriesNestedInput
   }
 
   export type ClosureRegionCategoryUncheckedUpdateInput = {
@@ -15077,15 +16809,15 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
-    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosInput
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoInput
-    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoInput
-    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoInput
-    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoInput
+    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateInput = {
@@ -15098,10 +16830,10 @@ export namespace Prisma {
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoInput
-    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoInput
-    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoInput
-    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoInput
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateManyInput = {
@@ -15145,6 +16877,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
     CafeInfo: CafeInfoCreateNestedOneWithoutCafeThumbnailImagesInput
   }
 
@@ -15156,6 +16889,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
     cafeInfoId: number
   }
 
@@ -15166,7 +16900,8 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
-    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeThumbnailImagesInput
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeThumbnailImagesNestedInput
   }
 
   export type CafeThumbnailImageUncheckedUpdateInput = {
@@ -15177,6 +16912,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
     cafeInfoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -15188,6 +16924,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
     cafeInfoId: number
   }
 
@@ -15198,6 +16935,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeThumbnailImageUncheckedUpdateManyInput = {
@@ -15208,6 +16946,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
     cafeInfoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -15218,6 +16957,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
     CafeInfo: CafeInfoCreateNestedOneWithoutCafeVirtualImagesInput
   }
 
@@ -15229,6 +16969,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
     cafeInfoId: number
   }
 
@@ -15239,7 +16980,8 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
-    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeVirtualImagesInput
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeVirtualImagesNestedInput
   }
 
   export type CafeVirtualImageUncheckedUpdateInput = {
@@ -15250,6 +16992,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
     cafeInfoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -15261,6 +17004,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
     cafeInfoId: number
   }
 
@@ -15271,6 +17015,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeVirtualImageUncheckedUpdateManyInput = {
@@ -15281,6 +17026,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
     cafeInfoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -15291,6 +17037,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
     CafeInfo: CafeInfoCreateNestedOneWithoutCafeRealImagesInput
   }
 
@@ -15302,6 +17049,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
     cafeInfoId: number
   }
 
@@ -15312,7 +17060,8 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
-    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeRealImagesInput
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeRealImagesNestedInput
   }
 
   export type CafeRealImageUncheckedUpdateInput = {
@@ -15323,6 +17072,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
     cafeInfoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -15334,6 +17084,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
     cafeInfoId: number
   }
 
@@ -15344,6 +17095,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeRealImageUncheckedUpdateManyInput = {
@@ -15354,6 +17106,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
     cafeInfoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -15361,6 +17114,9 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     url: string
+    type: string
+    isDisable?: boolean
+    isAvaliable?: boolean
     CafeInfo: CafeInfoCreateNestedOneWithoutCafeVirtualLinksInput
     CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageCreateNestedOneWithoutCafeVirtualLinkInput
   }
@@ -15370,6 +17126,9 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     url: string
+    type: string
+    isDisable?: boolean
+    isAvaliable?: boolean
     cafeInfoId: number
     CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageUncheckedCreateNestedOneWithoutCafeVirtualLinkInput
   }
@@ -15378,8 +17137,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeVirtualLinksInput
-    CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageUpdateOneWithoutCafeVirtualLinkInput
+    type?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvaliable?: BoolFieldUpdateOperationsInput | boolean
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeVirtualLinksNestedInput
+    CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageUpdateOneWithoutCafeVirtualLinkNestedInput
   }
 
   export type CafeVirtualLinkUncheckedUpdateInput = {
@@ -15387,8 +17149,11 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvaliable?: BoolFieldUpdateOperationsInput | boolean
     cafeInfoId?: IntFieldUpdateOperationsInput | number
-    CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageUncheckedUpdateOneWithoutCafeVirtualLinkInput
+    CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageUncheckedUpdateOneWithoutCafeVirtualLinkNestedInput
   }
 
   export type CafeVirtualLinkCreateManyInput = {
@@ -15396,6 +17161,9 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     url: string
+    type: string
+    isDisable?: boolean
+    isAvaliable?: boolean
     cafeInfoId: number
   }
 
@@ -15403,6 +17171,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvaliable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeVirtualLinkUncheckedUpdateManyInput = {
@@ -15410,6 +17181,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvaliable?: BoolFieldUpdateOperationsInput | boolean
     cafeInfoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -15438,7 +17212,7 @@ export namespace Prisma {
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
-    CafeVirtualLink?: CafeVirtualLinkUpdateOneRequiredWithoutCafeVirtualLinkThumbnailImageInput
+    CafeVirtualLink?: CafeVirtualLinkUpdateOneRequiredWithoutCafeVirtualLinkThumbnailImageNestedInput
   }
 
   export type CafeVirtualLinkThumbnailImageUncheckedUpdateInput = {
@@ -16214,6 +17988,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16234,6 +18009,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16245,6 +18021,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16265,6 +18042,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16285,6 +18063,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16296,6 +18075,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16316,6 +18096,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16336,6 +18117,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16347,6 +18129,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     priority?: SortOrder
+    isDisable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16369,6 +18152,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     url?: SortOrder
+    type?: SortOrder
+    isDisable?: SortOrder
+    isAvaliable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16382,6 +18168,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     url?: SortOrder
+    type?: SortOrder
+    isDisable?: SortOrder
+    isAvaliable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16390,6 +18179,9 @@ export namespace Prisma {
     createdAt?: SortOrder
     name?: SortOrder
     url?: SortOrder
+    type?: SortOrder
+    isDisable?: SortOrder
+    isAvaliable?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -16515,7 +18307,7 @@ export namespace Prisma {
     set?: boolean
   }
 
-  export type BoardUpdateManyWithoutUserInput = {
+  export type BoardUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<BoardCreateWithoutUserInput>, Enumerable<BoardUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<BoardCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<BoardUpsertWithWhereUniqueWithoutUserInput>
@@ -16529,7 +18321,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<BoardScalarWhereInput>
   }
 
-  export type BoardReplyUpdateManyWithoutUserInput = {
+  export type BoardReplyUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<BoardReplyCreateWithoutUserInput>, Enumerable<BoardReplyUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<BoardReplyCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<BoardReplyUpsertWithWhereUniqueWithoutUserInput>
@@ -16543,7 +18335,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<BoardReplyScalarWhereInput>
   }
 
-  export type NoticeUpdateManyWithoutUserInput = {
+  export type NoticeUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<NoticeCreateWithoutUserInput>, Enumerable<NoticeUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<NoticeCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<NoticeUpsertWithWhereUniqueWithoutUserInput>
@@ -16565,7 +18357,7 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type BoardUncheckedUpdateManyWithoutUserInput = {
+  export type BoardUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<BoardCreateWithoutUserInput>, Enumerable<BoardUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<BoardCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<BoardUpsertWithWhereUniqueWithoutUserInput>
@@ -16579,7 +18371,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<BoardScalarWhereInput>
   }
 
-  export type BoardReplyUncheckedUpdateManyWithoutUserInput = {
+  export type BoardReplyUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<BoardReplyCreateWithoutUserInput>, Enumerable<BoardReplyUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<BoardReplyCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<BoardReplyUpsertWithWhereUniqueWithoutUserInput>
@@ -16593,7 +18385,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<BoardReplyScalarWhereInput>
   }
 
-  export type NoticeUncheckedUpdateManyWithoutUserInput = {
+  export type NoticeUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<Enumerable<NoticeCreateWithoutUserInput>, Enumerable<NoticeUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<NoticeCreateOrConnectWithoutUserInput>
     upsert?: Enumerable<NoticeUpsertWithWhereUniqueWithoutUserInput>
@@ -16613,7 +18405,7 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
-  export type UserUpdateOneRequiredWithoutNoticesInput = {
+  export type UserUpdateOneRequiredWithoutNoticesNestedInput = {
     create?: XOR<UserCreateWithoutNoticesInput, UserUncheckedCreateWithoutNoticesInput>
     connectOrCreate?: UserCreateOrConnectWithoutNoticesInput
     upsert?: UserUpsertWithoutNoticesInput
@@ -16655,7 +18447,7 @@ export namespace Prisma {
     connect?: Enumerable<BoardReplyWhereUniqueInput>
   }
 
-  export type BoardImageUpdateManyWithoutBoardInput = {
+  export type BoardImageUpdateManyWithoutBoardNestedInput = {
     create?: XOR<Enumerable<BoardImageCreateWithoutBoardInput>, Enumerable<BoardImageUncheckedCreateWithoutBoardInput>>
     connectOrCreate?: Enumerable<BoardImageCreateOrConnectWithoutBoardInput>
     upsert?: Enumerable<BoardImageUpsertWithWhereUniqueWithoutBoardInput>
@@ -16669,7 +18461,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<BoardImageScalarWhereInput>
   }
 
-  export type BoardReplyUpdateManyWithoutBoardInput = {
+  export type BoardReplyUpdateManyWithoutBoardNestedInput = {
     create?: XOR<Enumerable<BoardReplyCreateWithoutBoardInput>, Enumerable<BoardReplyUncheckedCreateWithoutBoardInput>>
     connectOrCreate?: Enumerable<BoardReplyCreateOrConnectWithoutBoardInput>
     upsert?: Enumerable<BoardReplyUpsertWithWhereUniqueWithoutBoardInput>
@@ -16683,7 +18475,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<BoardReplyScalarWhereInput>
   }
 
-  export type UserUpdateOneRequiredWithoutBoardsInput = {
+  export type UserUpdateOneRequiredWithoutBoardsNestedInput = {
     create?: XOR<UserCreateWithoutBoardsInput, UserUncheckedCreateWithoutBoardsInput>
     connectOrCreate?: UserCreateOrConnectWithoutBoardsInput
     upsert?: UserUpsertWithoutBoardsInput
@@ -16695,7 +18487,7 @@ export namespace Prisma {
     set?: BoardType
   }
 
-  export type BoardImageUncheckedUpdateManyWithoutBoardInput = {
+  export type BoardImageUncheckedUpdateManyWithoutBoardNestedInput = {
     create?: XOR<Enumerable<BoardImageCreateWithoutBoardInput>, Enumerable<BoardImageUncheckedCreateWithoutBoardInput>>
     connectOrCreate?: Enumerable<BoardImageCreateOrConnectWithoutBoardInput>
     upsert?: Enumerable<BoardImageUpsertWithWhereUniqueWithoutBoardInput>
@@ -16709,7 +18501,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<BoardImageScalarWhereInput>
   }
 
-  export type BoardReplyUncheckedUpdateManyWithoutBoardInput = {
+  export type BoardReplyUncheckedUpdateManyWithoutBoardNestedInput = {
     create?: XOR<Enumerable<BoardReplyCreateWithoutBoardInput>, Enumerable<BoardReplyUncheckedCreateWithoutBoardInput>>
     connectOrCreate?: Enumerable<BoardReplyCreateOrConnectWithoutBoardInput>
     upsert?: Enumerable<BoardReplyUpsertWithWhereUniqueWithoutBoardInput>
@@ -16729,7 +18521,7 @@ export namespace Prisma {
     connect?: BoardWhereUniqueInput
   }
 
-  export type BoardUpdateOneRequiredWithoutBoardImagesInput = {
+  export type BoardUpdateOneRequiredWithoutBoardImagesNestedInput = {
     create?: XOR<BoardCreateWithoutBoardImagesInput, BoardUncheckedCreateWithoutBoardImagesInput>
     connectOrCreate?: BoardCreateOrConnectWithoutBoardImagesInput
     upsert?: BoardUpsertWithoutBoardImagesInput
@@ -16773,7 +18565,7 @@ export namespace Prisma {
     set?: Date | string | null
   }
 
-  export type UserUpdateOneRequiredWithoutBoardRepliesInput = {
+  export type UserUpdateOneRequiredWithoutBoardRepliesNestedInput = {
     create?: XOR<UserCreateWithoutBoardRepliesInput, UserUncheckedCreateWithoutBoardRepliesInput>
     connectOrCreate?: UserCreateOrConnectWithoutBoardRepliesInput
     upsert?: UserUpsertWithoutBoardRepliesInput
@@ -16781,7 +18573,7 @@ export namespace Prisma {
     update?: XOR<UserUpdateWithoutBoardRepliesInput, UserUncheckedUpdateWithoutBoardRepliesInput>
   }
 
-  export type BoardUpdateOneRequiredWithoutBoardRepliesInput = {
+  export type BoardUpdateOneRequiredWithoutBoardRepliesNestedInput = {
     create?: XOR<BoardCreateWithoutBoardRepliesInput, BoardUncheckedCreateWithoutBoardRepliesInput>
     connectOrCreate?: BoardCreateOrConnectWithoutBoardRepliesInput
     upsert?: BoardUpsertWithoutBoardRepliesInput
@@ -16789,7 +18581,7 @@ export namespace Prisma {
     update?: XOR<BoardUpdateWithoutBoardRepliesInput, BoardUncheckedUpdateWithoutBoardRepliesInput>
   }
 
-  export type BoardReplyUpdateOneWithoutBoardNestedRepliesInput = {
+  export type BoardReplyUpdateOneWithoutBoardNestedRepliesNestedInput = {
     create?: XOR<BoardReplyCreateWithoutBoardNestedRepliesInput, BoardReplyUncheckedCreateWithoutBoardNestedRepliesInput>
     connectOrCreate?: BoardReplyCreateOrConnectWithoutBoardNestedRepliesInput
     upsert?: BoardReplyUpsertWithoutBoardNestedRepliesInput
@@ -16799,7 +18591,7 @@ export namespace Prisma {
     update?: XOR<BoardReplyUpdateWithoutBoardNestedRepliesInput, BoardReplyUncheckedUpdateWithoutBoardNestedRepliesInput>
   }
 
-  export type BoardReplyUpdateManyWithoutBoardReplyInput = {
+  export type BoardReplyUpdateManyWithoutBoardReplyNestedInput = {
     create?: XOR<Enumerable<BoardReplyCreateWithoutBoardReplyInput>, Enumerable<BoardReplyUncheckedCreateWithoutBoardReplyInput>>
     connectOrCreate?: Enumerable<BoardReplyCreateOrConnectWithoutBoardReplyInput>
     upsert?: Enumerable<BoardReplyUpsertWithWhereUniqueWithoutBoardReplyInput>
@@ -16821,7 +18613,7 @@ export namespace Prisma {
     divide?: number
   }
 
-  export type BoardReplyUncheckedUpdateManyWithoutBoardReplyInput = {
+  export type BoardReplyUncheckedUpdateManyWithoutBoardReplyNestedInput = {
     create?: XOR<Enumerable<BoardReplyCreateWithoutBoardReplyInput>, Enumerable<BoardReplyUncheckedCreateWithoutBoardReplyInput>>
     connectOrCreate?: Enumerable<BoardReplyCreateOrConnectWithoutBoardReplyInput>
     upsert?: Enumerable<BoardReplyUpsertWithWhereUniqueWithoutBoardReplyInput>
@@ -16881,7 +18673,7 @@ export namespace Prisma {
     set?: GovermentType
   }
 
-  export type CafeInfoUpdateManyWithoutRegionCategoryInput = {
+  export type CafeInfoUpdateManyWithoutRegionCategoryNestedInput = {
     create?: XOR<Enumerable<CafeInfoCreateWithoutRegionCategoryInput>, Enumerable<CafeInfoUncheckedCreateWithoutRegionCategoryInput>>
     connectOrCreate?: Enumerable<CafeInfoCreateOrConnectWithoutRegionCategoryInput>
     upsert?: Enumerable<CafeInfoUpsertWithWhereUniqueWithoutRegionCategoryInput>
@@ -16895,7 +18687,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeInfoScalarWhereInput>
   }
 
-  export type ClosureRegionCategoryUpdateManyWithoutAncestorCategoryInput = {
+  export type ClosureRegionCategoryUpdateManyWithoutAncestorCategoryNestedInput = {
     create?: XOR<Enumerable<ClosureRegionCategoryCreateWithoutAncestorCategoryInput>, Enumerable<ClosureRegionCategoryUncheckedCreateWithoutAncestorCategoryInput>>
     connectOrCreate?: Enumerable<ClosureRegionCategoryCreateOrConnectWithoutAncestorCategoryInput>
     upsert?: Enumerable<ClosureRegionCategoryUpsertWithWhereUniqueWithoutAncestorCategoryInput>
@@ -16909,7 +18701,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<ClosureRegionCategoryScalarWhereInput>
   }
 
-  export type ClosureRegionCategoryUpdateManyWithoutDescendantCategoryInput = {
+  export type ClosureRegionCategoryUpdateManyWithoutDescendantCategoryNestedInput = {
     create?: XOR<Enumerable<ClosureRegionCategoryCreateWithoutDescendantCategoryInput>, Enumerable<ClosureRegionCategoryUncheckedCreateWithoutDescendantCategoryInput>>
     connectOrCreate?: Enumerable<ClosureRegionCategoryCreateOrConnectWithoutDescendantCategoryInput>
     upsert?: Enumerable<ClosureRegionCategoryUpsertWithWhereUniqueWithoutDescendantCategoryInput>
@@ -16923,7 +18715,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<ClosureRegionCategoryScalarWhereInput>
   }
 
-  export type CafeInfoUncheckedUpdateManyWithoutRegionCategoryInput = {
+  export type CafeInfoUncheckedUpdateManyWithoutRegionCategoryNestedInput = {
     create?: XOR<Enumerable<CafeInfoCreateWithoutRegionCategoryInput>, Enumerable<CafeInfoUncheckedCreateWithoutRegionCategoryInput>>
     connectOrCreate?: Enumerable<CafeInfoCreateOrConnectWithoutRegionCategoryInput>
     upsert?: Enumerable<CafeInfoUpsertWithWhereUniqueWithoutRegionCategoryInput>
@@ -16937,7 +18729,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeInfoScalarWhereInput>
   }
 
-  export type ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryInput = {
+  export type ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput = {
     create?: XOR<Enumerable<ClosureRegionCategoryCreateWithoutAncestorCategoryInput>, Enumerable<ClosureRegionCategoryUncheckedCreateWithoutAncestorCategoryInput>>
     connectOrCreate?: Enumerable<ClosureRegionCategoryCreateOrConnectWithoutAncestorCategoryInput>
     upsert?: Enumerable<ClosureRegionCategoryUpsertWithWhereUniqueWithoutAncestorCategoryInput>
@@ -16951,7 +18743,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<ClosureRegionCategoryScalarWhereInput>
   }
 
-  export type ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryInput = {
+  export type ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput = {
     create?: XOR<Enumerable<ClosureRegionCategoryCreateWithoutDescendantCategoryInput>, Enumerable<ClosureRegionCategoryUncheckedCreateWithoutDescendantCategoryInput>>
     connectOrCreate?: Enumerable<ClosureRegionCategoryCreateOrConnectWithoutDescendantCategoryInput>
     upsert?: Enumerable<ClosureRegionCategoryUpsertWithWhereUniqueWithoutDescendantCategoryInput>
@@ -16977,7 +18769,7 @@ export namespace Prisma {
     connect?: RegionCategoryWhereUniqueInput
   }
 
-  export type RegionCategoryUpdateOneRequiredWithoutAncestorCategoriesInput = {
+  export type RegionCategoryUpdateOneRequiredWithoutAncestorCategoriesNestedInput = {
     create?: XOR<RegionCategoryCreateWithoutAncestorCategoriesInput, RegionCategoryUncheckedCreateWithoutAncestorCategoriesInput>
     connectOrCreate?: RegionCategoryCreateOrConnectWithoutAncestorCategoriesInput
     upsert?: RegionCategoryUpsertWithoutAncestorCategoriesInput
@@ -16985,7 +18777,7 @@ export namespace Prisma {
     update?: XOR<RegionCategoryUpdateWithoutAncestorCategoriesInput, RegionCategoryUncheckedUpdateWithoutAncestorCategoriesInput>
   }
 
-  export type RegionCategoryUpdateOneRequiredWithoutDescendantCategoriesInput = {
+  export type RegionCategoryUpdateOneRequiredWithoutDescendantCategoriesNestedInput = {
     create?: XOR<RegionCategoryCreateWithoutDescendantCategoriesInput, RegionCategoryUncheckedCreateWithoutDescendantCategoriesInput>
     connectOrCreate?: RegionCategoryCreateOrConnectWithoutDescendantCategoriesInput
     upsert?: RegionCategoryUpsertWithoutDescendantCategoriesInput
@@ -17055,7 +18847,7 @@ export namespace Prisma {
     connect?: Enumerable<CafeRealImageWhereUniqueInput>
   }
 
-  export type RegionCategoryUpdateOneRequiredWithoutCafeInfosInput = {
+  export type RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput = {
     create?: XOR<RegionCategoryCreateWithoutCafeInfosInput, RegionCategoryUncheckedCreateWithoutCafeInfosInput>
     connectOrCreate?: RegionCategoryCreateOrConnectWithoutCafeInfosInput
     upsert?: RegionCategoryUpsertWithoutCafeInfosInput
@@ -17063,7 +18855,7 @@ export namespace Prisma {
     update?: XOR<RegionCategoryUpdateWithoutCafeInfosInput, RegionCategoryUncheckedUpdateWithoutCafeInfosInput>
   }
 
-  export type CafeVirtualLinkUpdateManyWithoutCafeInfoInput = {
+  export type CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeVirtualLinkCreateWithoutCafeInfoInput>, Enumerable<CafeVirtualLinkUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeVirtualLinkCreateOrConnectWithoutCafeInfoInput>
     upsert?: Enumerable<CafeVirtualLinkUpsertWithWhereUniqueWithoutCafeInfoInput>
@@ -17077,7 +18869,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeVirtualLinkScalarWhereInput>
   }
 
-  export type CafeThumbnailImageUpdateManyWithoutCafeInfoInput = {
+  export type CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeThumbnailImageCreateWithoutCafeInfoInput>, Enumerable<CafeThumbnailImageUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeThumbnailImageCreateOrConnectWithoutCafeInfoInput>
     upsert?: Enumerable<CafeThumbnailImageUpsertWithWhereUniqueWithoutCafeInfoInput>
@@ -17091,7 +18883,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeThumbnailImageScalarWhereInput>
   }
 
-  export type CafeVirtualImageUpdateManyWithoutCafeInfoInput = {
+  export type CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeVirtualImageCreateWithoutCafeInfoInput>, Enumerable<CafeVirtualImageUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeVirtualImageCreateOrConnectWithoutCafeInfoInput>
     upsert?: Enumerable<CafeVirtualImageUpsertWithWhereUniqueWithoutCafeInfoInput>
@@ -17105,7 +18897,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeVirtualImageScalarWhereInput>
   }
 
-  export type CafeRealImageUpdateManyWithoutCafeInfoInput = {
+  export type CafeRealImageUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeRealImageCreateWithoutCafeInfoInput>, Enumerable<CafeRealImageUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeRealImageCreateOrConnectWithoutCafeInfoInput>
     upsert?: Enumerable<CafeRealImageUpsertWithWhereUniqueWithoutCafeInfoInput>
@@ -17119,7 +18911,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeRealImageScalarWhereInput>
   }
 
-  export type CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoInput = {
+  export type CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeVirtualLinkCreateWithoutCafeInfoInput>, Enumerable<CafeVirtualLinkUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeVirtualLinkCreateOrConnectWithoutCafeInfoInput>
     upsert?: Enumerable<CafeVirtualLinkUpsertWithWhereUniqueWithoutCafeInfoInput>
@@ -17133,7 +18925,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeVirtualLinkScalarWhereInput>
   }
 
-  export type CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoInput = {
+  export type CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeThumbnailImageCreateWithoutCafeInfoInput>, Enumerable<CafeThumbnailImageUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeThumbnailImageCreateOrConnectWithoutCafeInfoInput>
     upsert?: Enumerable<CafeThumbnailImageUpsertWithWhereUniqueWithoutCafeInfoInput>
@@ -17147,7 +18939,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeThumbnailImageScalarWhereInput>
   }
 
-  export type CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoInput = {
+  export type CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeVirtualImageCreateWithoutCafeInfoInput>, Enumerable<CafeVirtualImageUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeVirtualImageCreateOrConnectWithoutCafeInfoInput>
     upsert?: Enumerable<CafeVirtualImageUpsertWithWhereUniqueWithoutCafeInfoInput>
@@ -17161,7 +18953,7 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeVirtualImageScalarWhereInput>
   }
 
-  export type CafeRealImageUncheckedUpdateManyWithoutCafeInfoInput = {
+  export type CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeRealImageCreateWithoutCafeInfoInput>, Enumerable<CafeRealImageUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeRealImageCreateOrConnectWithoutCafeInfoInput>
     upsert?: Enumerable<CafeRealImageUpsertWithWhereUniqueWithoutCafeInfoInput>
@@ -17181,7 +18973,7 @@ export namespace Prisma {
     connect?: CafeInfoWhereUniqueInput
   }
 
-  export type CafeInfoUpdateOneRequiredWithoutCafeThumbnailImagesInput = {
+  export type CafeInfoUpdateOneRequiredWithoutCafeThumbnailImagesNestedInput = {
     create?: XOR<CafeInfoCreateWithoutCafeThumbnailImagesInput, CafeInfoUncheckedCreateWithoutCafeThumbnailImagesInput>
     connectOrCreate?: CafeInfoCreateOrConnectWithoutCafeThumbnailImagesInput
     upsert?: CafeInfoUpsertWithoutCafeThumbnailImagesInput
@@ -17195,7 +18987,7 @@ export namespace Prisma {
     connect?: CafeInfoWhereUniqueInput
   }
 
-  export type CafeInfoUpdateOneRequiredWithoutCafeVirtualImagesInput = {
+  export type CafeInfoUpdateOneRequiredWithoutCafeVirtualImagesNestedInput = {
     create?: XOR<CafeInfoCreateWithoutCafeVirtualImagesInput, CafeInfoUncheckedCreateWithoutCafeVirtualImagesInput>
     connectOrCreate?: CafeInfoCreateOrConnectWithoutCafeVirtualImagesInput
     upsert?: CafeInfoUpsertWithoutCafeVirtualImagesInput
@@ -17209,7 +19001,7 @@ export namespace Prisma {
     connect?: CafeInfoWhereUniqueInput
   }
 
-  export type CafeInfoUpdateOneRequiredWithoutCafeRealImagesInput = {
+  export type CafeInfoUpdateOneRequiredWithoutCafeRealImagesNestedInput = {
     create?: XOR<CafeInfoCreateWithoutCafeRealImagesInput, CafeInfoUncheckedCreateWithoutCafeRealImagesInput>
     connectOrCreate?: CafeInfoCreateOrConnectWithoutCafeRealImagesInput
     upsert?: CafeInfoUpsertWithoutCafeRealImagesInput
@@ -17235,7 +19027,7 @@ export namespace Prisma {
     connect?: CafeVirtualLinkThumbnailImageWhereUniqueInput
   }
 
-  export type CafeInfoUpdateOneRequiredWithoutCafeVirtualLinksInput = {
+  export type CafeInfoUpdateOneRequiredWithoutCafeVirtualLinksNestedInput = {
     create?: XOR<CafeInfoCreateWithoutCafeVirtualLinksInput, CafeInfoUncheckedCreateWithoutCafeVirtualLinksInput>
     connectOrCreate?: CafeInfoCreateOrConnectWithoutCafeVirtualLinksInput
     upsert?: CafeInfoUpsertWithoutCafeVirtualLinksInput
@@ -17243,7 +19035,7 @@ export namespace Prisma {
     update?: XOR<CafeInfoUpdateWithoutCafeVirtualLinksInput, CafeInfoUncheckedUpdateWithoutCafeVirtualLinksInput>
   }
 
-  export type CafeVirtualLinkThumbnailImageUpdateOneWithoutCafeVirtualLinkInput = {
+  export type CafeVirtualLinkThumbnailImageUpdateOneWithoutCafeVirtualLinkNestedInput = {
     create?: XOR<CafeVirtualLinkThumbnailImageCreateWithoutCafeVirtualLinkInput, CafeVirtualLinkThumbnailImageUncheckedCreateWithoutCafeVirtualLinkInput>
     connectOrCreate?: CafeVirtualLinkThumbnailImageCreateOrConnectWithoutCafeVirtualLinkInput
     upsert?: CafeVirtualLinkThumbnailImageUpsertWithoutCafeVirtualLinkInput
@@ -17253,7 +19045,7 @@ export namespace Prisma {
     update?: XOR<CafeVirtualLinkThumbnailImageUpdateWithoutCafeVirtualLinkInput, CafeVirtualLinkThumbnailImageUncheckedUpdateWithoutCafeVirtualLinkInput>
   }
 
-  export type CafeVirtualLinkThumbnailImageUncheckedUpdateOneWithoutCafeVirtualLinkInput = {
+  export type CafeVirtualLinkThumbnailImageUncheckedUpdateOneWithoutCafeVirtualLinkNestedInput = {
     create?: XOR<CafeVirtualLinkThumbnailImageCreateWithoutCafeVirtualLinkInput, CafeVirtualLinkThumbnailImageUncheckedCreateWithoutCafeVirtualLinkInput>
     connectOrCreate?: CafeVirtualLinkThumbnailImageCreateOrConnectWithoutCafeVirtualLinkInput
     upsert?: CafeVirtualLinkThumbnailImageUpsertWithoutCafeVirtualLinkInput
@@ -17269,7 +19061,7 @@ export namespace Prisma {
     connect?: CafeVirtualLinkWhereUniqueInput
   }
 
-  export type CafeVirtualLinkUpdateOneRequiredWithoutCafeVirtualLinkThumbnailImageInput = {
+  export type CafeVirtualLinkUpdateOneRequiredWithoutCafeVirtualLinkThumbnailImageNestedInput = {
     create?: XOR<CafeVirtualLinkCreateWithoutCafeVirtualLinkThumbnailImageInput, CafeVirtualLinkUncheckedCreateWithoutCafeVirtualLinkThumbnailImageInput>
     connectOrCreate?: CafeVirtualLinkCreateOrConnectWithoutCafeVirtualLinkThumbnailImageInput
     upsert?: CafeVirtualLinkUpsertWithoutCafeVirtualLinkThumbnailImageInput
@@ -17781,8 +19573,8 @@ export namespace Prisma {
     nickname?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    Boards?: BoardUpdateManyWithoutUserInput
-    BoardReplies?: BoardReplyUpdateManyWithoutUserInput
+    Boards?: BoardUpdateManyWithoutUserNestedInput
+    BoardReplies?: BoardReplyUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNoticesInput = {
@@ -17796,8 +19588,8 @@ export namespace Prisma {
     nickname?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    Boards?: BoardUncheckedUpdateManyWithoutUserInput
-    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserInput
+    Boards?: BoardUncheckedUpdateManyWithoutUserNestedInput
+    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BoardImageCreateWithoutBoardInput = {
@@ -17957,8 +19749,8 @@ export namespace Prisma {
     nickname?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    BoardReplies?: BoardReplyUpdateManyWithoutUserInput
-    Notices?: NoticeUpdateManyWithoutUserInput
+    BoardReplies?: BoardReplyUpdateManyWithoutUserNestedInput
+    Notices?: NoticeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBoardsInput = {
@@ -17972,8 +19764,8 @@ export namespace Prisma {
     nickname?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserInput
-    Notices?: NoticeUncheckedUpdateManyWithoutUserInput
+    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserNestedInput
+    Notices?: NoticeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BoardCreateWithoutBoardImagesInput = {
@@ -18021,8 +19813,8 @@ export namespace Prisma {
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
     endDay?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    BoardReplies?: BoardReplyUpdateManyWithoutBoardInput
-    User?: UserUpdateOneRequiredWithoutBoardsInput
+    BoardReplies?: BoardReplyUpdateManyWithoutBoardNestedInput
+    User?: UserUpdateOneRequiredWithoutBoardsNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -18035,7 +19827,7 @@ export namespace Prisma {
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
     endDay?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutBoardInput
+    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutBoardNestedInput
     userId?: IntFieldUpdateOperationsInput | number
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
@@ -18182,8 +19974,8 @@ export namespace Prisma {
     nickname?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    Boards?: BoardUpdateManyWithoutUserInput
-    Notices?: NoticeUpdateManyWithoutUserInput
+    Boards?: BoardUpdateManyWithoutUserNestedInput
+    Notices?: NoticeUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBoardRepliesInput = {
@@ -18197,8 +19989,8 @@ export namespace Prisma {
     nickname?: StringFieldUpdateOperationsInput | string
     email?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    Boards?: BoardUncheckedUpdateManyWithoutUserInput
-    Notices?: NoticeUncheckedUpdateManyWithoutUserInput
+    Boards?: BoardUncheckedUpdateManyWithoutUserNestedInput
+    Notices?: NoticeUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type BoardUpsertWithoutBoardRepliesInput = {
@@ -18214,8 +20006,8 @@ export namespace Prisma {
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
     endDay?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    BoardImages?: BoardImageUpdateManyWithoutBoardInput
-    User?: UserUpdateOneRequiredWithoutBoardsInput
+    BoardImages?: BoardImageUpdateManyWithoutBoardNestedInput
+    User?: UserUpdateOneRequiredWithoutBoardsNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -18228,7 +20020,7 @@ export namespace Prisma {
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
     endDay?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    BoardImages?: BoardImageUncheckedUpdateManyWithoutBoardInput
+    BoardImages?: BoardImageUncheckedUpdateManyWithoutBoardNestedInput
     userId?: IntFieldUpdateOperationsInput | number
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
@@ -18243,9 +20035,9 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     content?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    User?: UserUpdateOneRequiredWithoutBoardRepliesInput
-    Board?: BoardUpdateOneRequiredWithoutBoardRepliesInput
-    BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesInput
+    User?: UserUpdateOneRequiredWithoutBoardRepliesNestedInput
+    Board?: BoardUpdateOneRequiredWithoutBoardRepliesNestedInput
+    BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -18486,8 +20278,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
-    CafeInfos?: CafeInfoUpdateManyWithoutRegionCategoryInput
-    DescendantCategories?: ClosureRegionCategoryUpdateManyWithoutDescendantCategoryInput
+    CafeInfos?: CafeInfoUpdateManyWithoutRegionCategoryNestedInput
+    DescendantCategories?: ClosureRegionCategoryUpdateManyWithoutDescendantCategoryNestedInput
   }
 
   export type RegionCategoryUncheckedUpdateWithoutAncestorCategoriesInput = {
@@ -18496,8 +20288,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
-    CafeInfos?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryInput
-    DescendantCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryInput
+    CafeInfos?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryNestedInput
+    DescendantCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
   }
 
   export type RegionCategoryUpsertWithoutDescendantCategoriesInput = {
@@ -18510,8 +20302,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
-    CafeInfos?: CafeInfoUpdateManyWithoutRegionCategoryInput
-    AncestorCategories?: ClosureRegionCategoryUpdateManyWithoutAncestorCategoryInput
+    CafeInfos?: CafeInfoUpdateManyWithoutRegionCategoryNestedInput
+    AncestorCategories?: ClosureRegionCategoryUpdateManyWithoutAncestorCategoryNestedInput
   }
 
   export type RegionCategoryUncheckedUpdateWithoutDescendantCategoriesInput = {
@@ -18520,8 +20312,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
-    CafeInfos?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryInput
-    AncestorCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryInput
+    CafeInfos?: CafeInfoUncheckedUpdateManyWithoutRegionCategoryNestedInput
+    AncestorCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
   }
 
   export type RegionCategoryCreateWithoutCafeInfosInput = {
@@ -18552,6 +20344,9 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     url: string
+    type: string
+    isDisable?: boolean
+    isAvaliable?: boolean
     CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageCreateNestedOneWithoutCafeVirtualLinkInput
   }
 
@@ -18560,6 +20355,9 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     url: string
+    type: string
+    isDisable?: boolean
+    isAvaliable?: boolean
     CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageUncheckedCreateNestedOneWithoutCafeVirtualLinkInput
   }
 
@@ -18580,6 +20378,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
   }
 
   export type CafeThumbnailImageUncheckedCreateWithoutCafeInfoInput = {
@@ -18590,6 +20389,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
   }
 
   export type CafeThumbnailImageCreateOrConnectWithoutCafeInfoInput = {
@@ -18609,6 +20409,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
   }
 
   export type CafeVirtualImageUncheckedCreateWithoutCafeInfoInput = {
@@ -18619,6 +20420,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
   }
 
   export type CafeVirtualImageCreateOrConnectWithoutCafeInfoInput = {
@@ -18638,6 +20440,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
   }
 
   export type CafeRealImageUncheckedCreateWithoutCafeInfoInput = {
@@ -18648,6 +20451,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
   }
 
   export type CafeRealImageCreateOrConnectWithoutCafeInfoInput = {
@@ -18670,8 +20474,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
-    AncestorCategories?: ClosureRegionCategoryUpdateManyWithoutAncestorCategoryInput
-    DescendantCategories?: ClosureRegionCategoryUpdateManyWithoutDescendantCategoryInput
+    AncestorCategories?: ClosureRegionCategoryUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureRegionCategoryUpdateManyWithoutDescendantCategoryNestedInput
   }
 
   export type RegionCategoryUncheckedUpdateWithoutCafeInfosInput = {
@@ -18680,8 +20484,8 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     govermentType?: EnumGovermentTypeFieldUpdateOperationsInput | GovermentType
-    AncestorCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryInput
-    DescendantCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryInput
+    AncestorCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureRegionCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
   }
 
   export type CafeVirtualLinkUpsertWithWhereUniqueWithoutCafeInfoInput = {
@@ -18708,6 +20512,9 @@ export namespace Prisma {
     createdAt?: DateTimeFilter | Date | string
     name?: StringFilter | string
     url?: StringFilter | string
+    type?: StringFilter | string
+    isDisable?: BoolFilter | boolean
+    isAvaliable?: BoolFilter | boolean
     cafeInfoId?: IntFilter | number
   }
 
@@ -18738,6 +20545,7 @@ export namespace Prisma {
     height?: IntFilter | number
     size?: IntFilter | number
     priority?: IntFilter | number
+    isDisable?: BoolFilter | boolean
     cafeInfoId?: IntFilter | number
   }
 
@@ -18768,6 +20576,7 @@ export namespace Prisma {
     height?: IntFilter | number
     size?: IntFilter | number
     priority?: IntFilter | number
+    isDisable?: BoolFilter | boolean
     cafeInfoId?: IntFilter | number
   }
 
@@ -18798,6 +20607,7 @@ export namespace Prisma {
     height?: IntFilter | number
     size?: IntFilter | number
     priority?: IntFilter | number
+    isDisable?: BoolFilter | boolean
     cafeInfoId?: IntFilter | number
   }
 
@@ -18844,14 +20654,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
-    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosInput
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoInput
-    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoInput
-    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoInput
+    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeThumbnailImagesInput = {
@@ -18864,9 +20674,9 @@ export namespace Prisma {
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoInput
-    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoInput
-    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoInput
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeVirtualImagesInput = {
@@ -18912,14 +20722,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
-    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosInput
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoInput
-    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoInput
-    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoInput
+    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeVirtualImagesInput = {
@@ -18932,9 +20742,9 @@ export namespace Prisma {
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoInput
-    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoInput
-    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoInput
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeRealImagesInput = {
@@ -18980,14 +20790,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
-    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosInput
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoInput
-    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoInput
-    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoInput
+    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeRealImagesInput = {
@@ -19000,9 +20810,9 @@ export namespace Prisma {
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoInput
-    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoInput
-    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoInput
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeVirtualLinksInput = {
@@ -19070,14 +20880,14 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
-    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosInput
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoInput
-    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoInput
-    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoInput
+    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeVirtualLinksInput = {
@@ -19090,9 +20900,9 @@ export namespace Prisma {
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoInput
-    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoInput
-    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeVirtualLinkThumbnailImageUpsertWithoutCafeVirtualLinkInput = {
@@ -19121,6 +20931,9 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     url: string
+    type: string
+    isDisable?: boolean
+    isAvaliable?: boolean
     CafeInfo: CafeInfoCreateNestedOneWithoutCafeVirtualLinksInput
   }
 
@@ -19129,6 +20942,9 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     url: string
+    type: string
+    isDisable?: boolean
+    isAvaliable?: boolean
     cafeInfoId: number
   }
 
@@ -19146,7 +20962,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeVirtualLinksInput
+    type?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvaliable?: BoolFieldUpdateOperationsInput | boolean
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeVirtualLinksNestedInput
   }
 
   export type CafeVirtualLinkUncheckedUpdateWithoutCafeVirtualLinkThumbnailImageInput = {
@@ -19154,6 +20973,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvaliable?: BoolFieldUpdateOperationsInput | boolean
     cafeInfoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -19196,8 +21018,8 @@ export namespace Prisma {
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
     endDay?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    BoardImages?: BoardImageUpdateManyWithoutBoardInput
-    BoardReplies?: BoardReplyUpdateManyWithoutBoardInput
+    BoardImages?: BoardImageUpdateManyWithoutBoardNestedInput
+    BoardReplies?: BoardReplyUpdateManyWithoutBoardNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -19210,8 +21032,8 @@ export namespace Prisma {
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
     endDay?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    BoardImages?: BoardImageUncheckedUpdateManyWithoutBoardInput
-    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutBoardInput
+    BoardImages?: BoardImageUncheckedUpdateManyWithoutBoardNestedInput
+    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutBoardNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -19232,9 +21054,9 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     content?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    Board?: BoardUpdateOneRequiredWithoutBoardRepliesInput
-    BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesInput
-    BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyInput
+    Board?: BoardUpdateOneRequiredWithoutBoardRepliesNestedInput
+    BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesNestedInput
+    BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -19246,7 +21068,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     boardId?: IntFieldUpdateOperationsInput | number
     boardReplyId?: NullableIntFieldUpdateOperationsInput | number | null
-    BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyInput
+    BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -19339,9 +21161,9 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     content?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    User?: UserUpdateOneRequiredWithoutBoardRepliesInput
-    BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesInput
-    BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyInput
+    User?: UserUpdateOneRequiredWithoutBoardRepliesNestedInput
+    BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesNestedInput
+    BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -19353,7 +21175,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     userId?: IntFieldUpdateOperationsInput | number
     boardReplyId?: NullableIntFieldUpdateOperationsInput | number | null
-    BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyInput
+    BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -19373,9 +21195,9 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     content?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    User?: UserUpdateOneRequiredWithoutBoardRepliesInput
-    Board?: BoardUpdateOneRequiredWithoutBoardRepliesInput
-    BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyInput
+    User?: UserUpdateOneRequiredWithoutBoardRepliesNestedInput
+    Board?: BoardUpdateOneRequiredWithoutBoardRepliesNestedInput
+    BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -19387,7 +21209,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     userId?: IntFieldUpdateOperationsInput | number
     boardId?: IntFieldUpdateOperationsInput | number
-    BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyInput
+    BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -19431,10 +21253,10 @@ export namespace Prisma {
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoInput
-    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoInput
-    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoInput
-    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoInput
+    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutRegionCategoryInput = {
@@ -19446,10 +21268,10 @@ export namespace Prisma {
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
     ceoName?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoInput
-    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoInput
-    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoInput
-    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoInput
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateManyWithoutCafeInfosInput = {
@@ -19465,7 +21287,7 @@ export namespace Prisma {
 
   export type ClosureRegionCategoryUpdateWithoutAncestorCategoryInput = {
     depth?: IntFieldUpdateOperationsInput | number
-    DescendantCategory?: RegionCategoryUpdateOneRequiredWithoutDescendantCategoriesInput
+    DescendantCategory?: RegionCategoryUpdateOneRequiredWithoutDescendantCategoriesNestedInput
   }
 
   export type ClosureRegionCategoryUncheckedUpdateWithoutAncestorCategoryInput = {
@@ -19480,7 +21302,7 @@ export namespace Prisma {
 
   export type ClosureRegionCategoryUpdateWithoutDescendantCategoryInput = {
     depth?: IntFieldUpdateOperationsInput | number
-    AncestorCategory?: RegionCategoryUpdateOneRequiredWithoutAncestorCategoriesInput
+    AncestorCategory?: RegionCategoryUpdateOneRequiredWithoutAncestorCategoriesNestedInput
   }
 
   export type ClosureRegionCategoryUncheckedUpdateWithoutDescendantCategoryInput = {
@@ -19498,6 +21320,9 @@ export namespace Prisma {
     createdAt?: Date | string
     name: string
     url: string
+    type: string
+    isDisable?: boolean
+    isAvaliable?: boolean
   }
 
   export type CafeThumbnailImageCreateManyCafeInfoInput = {
@@ -19508,6 +21333,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
   }
 
   export type CafeVirtualImageCreateManyCafeInfoInput = {
@@ -19518,6 +21344,7 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
   }
 
   export type CafeRealImageCreateManyCafeInfoInput = {
@@ -19528,13 +21355,17 @@ export namespace Prisma {
     height: number
     size: number
     priority?: number
+    isDisable?: boolean
   }
 
   export type CafeVirtualLinkUpdateWithoutCafeInfoInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageUpdateOneWithoutCafeVirtualLinkInput
+    type?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvaliable?: BoolFieldUpdateOperationsInput | boolean
+    CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageUpdateOneWithoutCafeVirtualLinkNestedInput
   }
 
   export type CafeVirtualLinkUncheckedUpdateWithoutCafeInfoInput = {
@@ -19542,7 +21373,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
-    CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageUncheckedUpdateOneWithoutCafeVirtualLinkInput
+    type?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvaliable?: BoolFieldUpdateOperationsInput | boolean
+    CafeVirtualLinkThumbnailImage?: CafeVirtualLinkThumbnailImageUncheckedUpdateOneWithoutCafeVirtualLinkNestedInput
   }
 
   export type CafeVirtualLinkUncheckedUpdateManyWithoutCafeVirtualLinksInput = {
@@ -19550,6 +21384,9 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
     url?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvaliable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeThumbnailImageUpdateWithoutCafeInfoInput = {
@@ -19559,6 +21396,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeThumbnailImageUncheckedUpdateWithoutCafeInfoInput = {
@@ -19569,6 +21407,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeThumbnailImageUncheckedUpdateManyWithoutCafeThumbnailImagesInput = {
@@ -19579,6 +21418,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeVirtualImageUpdateWithoutCafeInfoInput = {
@@ -19588,6 +21428,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeVirtualImageUncheckedUpdateWithoutCafeInfoInput = {
@@ -19598,6 +21439,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeVirtualImageUncheckedUpdateManyWithoutCafeVirtualImagesInput = {
@@ -19608,6 +21450,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeRealImageUpdateWithoutCafeInfoInput = {
@@ -19617,6 +21460,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeRealImageUncheckedUpdateWithoutCafeInfoInput = {
@@ -19627,6 +21471,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeRealImageUncheckedUpdateManyWithoutCafeRealImagesInput = {
@@ -19637,6 +21482,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
 
@@ -19652,5 +21498,5 @@ export namespace Prisma {
   /**
    * DMMF
    */
-  export const dmmf: runtime.DMMF.Document;
+  export const dmmf: runtime.BaseDMMF
 }
