@@ -16,6 +16,7 @@ import { PlacesModule } from './places/places.module';
 import { RegioncategoriesModule } from './regioncategories/regioncategories.module';
 import { ImageuploadModule } from './imageupload/imageupload.module';
 import { CafethumbnailimagesModule } from './cafethumbnailimages/cafethumbnailimages.module';
+import { CafevirtualimagesModule } from './cafevirtualimages/cafevirtualimages.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { CafethumbnailimagesModule } from './cafethumbnailimages/cafethumbnailim
     RegioncategoriesModule,
     ImageuploadModule,
     CafethumbnailimagesModule,
+    CafevirtualimagesModule,
   ],
   controllers: [AppController],
   providers: [

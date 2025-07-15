@@ -99,20 +99,35 @@ export class PlacesService {
             CafeVirtualLinkThumbnailImage: true
           }
         },
-        CafeVirtualImages: true,
-        CafeRealImages: true,
-        CafeThumbnailImages: true
+        CafeVirtualImages: {
+          orderBy: {
+            priority: 'asc',
+            id: 'asc'
+          }
+        },
+        CafeRealImages: {
+          orderBy: {
+            priority: 'asc',
+            id: 'asc'
+          }
+        },
+        CafeThumbnailImages: {
+          orderBy: {
+            priority: 'asc',
+            id: 'asc'
+          }
+        }
       }
     });
   }
 
 
-  disablePlaceByAdmin(id: number, isDisable:boolean) {
+  disablePlaceByAdmin(id: number, isDisable: boolean) {
     return this.prisma.cafeInfo.update({
       where: {
         id,
       },
-      data:{
+      data: {
         isDisable
       }
     });
@@ -188,7 +203,11 @@ export class PlacesService {
               where: {
                 isDisable: false
               },
-              take:3
+              take: 3,
+              orderBy: {
+                priority: 'asc',
+                id: 'asc'
+              }
             }
           }
         })
@@ -205,26 +224,38 @@ export class PlacesService {
       },
       include: {
         CafeVirtualImages: {
-          where:{
-            isDisable:false
+          where: {
+            isDisable: false
+          },
+          orderBy: {
+            priority: 'asc',
+            id: 'asc'
           }
         },
         CafeRealImages: {
-          where:{
-            isDisable:false
+          where: {
+            isDisable: false
+          },
+          orderBy: {
+            priority: 'asc',
+            id: 'asc'
           }
         },
         CafeVirtualLinks: {
           include: {
             CafeVirtualLinkThumbnailImage: true
           },
-          where:{
+          where: {
             isDisable: false,
           }
         },
         CafeThumbnailImages: {
-          where:{
-            isDisable:false
+          where: {
+            isDisable: false
+          },
+          orderBy: {
+            priority: 'asc',
+            id: 'asc'
           }
         }
       }
