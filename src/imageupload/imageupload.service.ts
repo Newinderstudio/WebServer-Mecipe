@@ -1,10 +1,10 @@
-import { ForbiddenException, HttpService, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 @Injectable()
 export class ImageuploadService {
 
-    constructor(private readonly httpService: HttpService) { }
+    constructor() { }
 
     async directUploadURL() {
         const imageResponse: { data: ImageUploadDirectResponse } = await axios(

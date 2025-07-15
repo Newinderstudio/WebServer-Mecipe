@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, BadGatewayException } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Public } from './util/decorators';
 import { LoginType } from 'prisma/basic';
@@ -42,6 +42,8 @@ export class AppController {
   testPassword(
     @Param('password') password
   ):string {
+    if(process.env.NODE_ENV !== 'development') throw new BadGatewayException("접근 불가");
+
     return crypto
     .createHmac('sha512', loginCryptoConstants.secret)
     .update(password)
