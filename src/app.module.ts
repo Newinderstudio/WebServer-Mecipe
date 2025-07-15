@@ -13,8 +13,9 @@ import { UsersModule } from './users/users.module';
 import { GlobalModule } from './global/global.module';
 import { AuthModule } from './auth/auth.module';
 import { PlacesModule } from './places/places.module';
-import { AdminAuthGuard } from './auth/jwt.guard.admin';
 import { RegioncategoriesModule } from './regioncategories/regioncategories.module';
+import { ImageuploadModule } from './imageupload/imageupload.module';
+import { CafethumbnailimagesModule } from './cafethumbnailimages/cafethumbnailimages.module';
 
 @Module({
   imports: [
@@ -32,6 +33,8 @@ import { RegioncategoriesModule } from './regioncategories/regioncategories.modu
     AuthModule,
     PlacesModule,
     RegioncategoriesModule,
+    ImageuploadModule,
+    CafethumbnailimagesModule,
   ],
   controllers: [AppController],
   providers: [

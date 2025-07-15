@@ -184,10 +184,11 @@ export class PlacesService {
             id: 'desc',
           },
           include: {
-            CafeVirtualImages: {
+            CafeThumbnailImages: {
               where: {
                 isDisable: false
-              }
+              },
+              take:3
             }
           }
         })
@@ -203,14 +204,29 @@ export class PlacesService {
         isDisable: false
       },
       include: {
-        CafeVirtualImages: true,
-        CafeRealImages: true,
+        CafeVirtualImages: {
+          where:{
+            isDisable:false
+          }
+        },
+        CafeRealImages: {
+          where:{
+            isDisable:false
+          }
+        },
         CafeVirtualLinks: {
           include: {
             CafeVirtualLinkThumbnailImage: true
+          },
+          where:{
+            isDisable: false,
           }
         },
-        CafeThumbnailImages: true
+        CafeThumbnailImages: {
+          where:{
+            isDisable:false
+          }
+        }
       }
     })
   }
