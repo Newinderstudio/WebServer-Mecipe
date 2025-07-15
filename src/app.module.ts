@@ -17,6 +17,7 @@ import { RegioncategoriesModule } from './regioncategories/regioncategories.modu
 import { ImageuploadModule } from './imageupload/imageupload.module';
 import { CafethumbnailimagesModule } from './cafethumbnailimages/cafethumbnailimages.module';
 import { CafevirtualimagesModule } from './cafevirtualimages/cafevirtualimages.module';
+import { CaferealimagesModule } from './caferealimages/caferealimages.module';
 
 @Module({
   imports: [
@@ -37,6 +38,7 @@ import { CafevirtualimagesModule } from './cafevirtualimages/cafevirtualimages.m
     ImageuploadModule,
     CafethumbnailimagesModule,
     CafevirtualimagesModule,
+    CaferealimagesModule,
   ],
   controllers: [AppController],
   providers: [
