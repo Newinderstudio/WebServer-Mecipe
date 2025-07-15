@@ -12,7 +12,12 @@ export class CaferealimagesService {
   ) { }
 
   findAllCafeVirtualImagesByAdmin() {
-    return this.prisma.cafeThumbnailImage.findMany();
+    return this.prisma.cafeRealImage.findMany({
+      orderBy: {
+        priority: 'asc',
+        id: 'desc'
+      }
+    });
   }
 
   uploadCafeVirtualImagesByAdmin(
@@ -29,12 +34,11 @@ export class CaferealimagesService {
       let updatedList: CafeVirtualImage[] = [];
 
       for (let i = 0; i < createDto.length; i++) {
-        const imageId = createDto[i].url.substring(createDto[i].url.lastIndexOf('/') + 1);
-        const valid = await this.imageuploadService.checkUploadURL(imageId);
+        const valid = this.imageuploadService.validUploadUrl(createDto[i].url);
 
         if (!valid) throw new ForbiddenException("Error: Invalid Image: " + createDto[i].url);
 
-        const created = await tx.cafeThumbnailImage.create({
+        const created = await tx.cafeRealImage.create({
           data: {
             ...createDto[i]
           }
@@ -47,7 +51,7 @@ export class CaferealimagesService {
       for (let i = 0; i < updateDto.length; i++) {
         // forbid access url
         const { url, ...rest } = updateDto[i];
-        const updated = await tx.cafeThumbnailImage.update({
+        const updated = await tx.cafeRealImage.update({
           where: { id: updateDto[i].id },
           data: {
             ...rest

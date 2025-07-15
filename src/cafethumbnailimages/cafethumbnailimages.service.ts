@@ -12,14 +12,19 @@ export class CafethumbnailimagesService {
   ) { }
 
   findAllCafeThumbnailImagesByAdmin() {
-    return this.prisma.cafeThumbnailImage.findMany();
+    return this.prisma.cafeThumbnailImage.findMany({
+      orderBy: {
+        priority: 'asc',
+        id: 'desc'
+      }
+    });
   }
 
   uploadCafeThumnailImagesByAdmin(
     cafeId: number,
     upsertDto: UpsertCafethumbnailimageListDto
   ) {
-    if(upsertDto.create.some(dto=>dto.cafeInfoId !== cafeId)) new ForbiddenException("Error: Wrong CafeInfoId: " + cafeId);
+    if (upsertDto.create.some(dto => dto.cafeInfoId !== cafeId)) new ForbiddenException("Error: Wrong CafeInfoId: " + cafeId);
 
     return this.prisma.$transaction(async (tx) => {
       const createDto = upsertDto.create;
@@ -29,8 +34,7 @@ export class CafethumbnailimagesService {
       let updatedList: CafeThumbnailImage[] = [];
 
       for (let i = 0; i < createDto.length; i++) {
-        const imageId = createDto[i].url.substring(createDto[i].url.lastIndexOf('/') + 1);
-        const valid = await this.imageuploadService.checkUploadURL(imageId);
+        const valid = this.imageuploadService.validUploadUrl(createDto[i].url);
 
         if (!valid) throw new ForbiddenException("Error: Invalid Image: " + createDto[i].url);
 

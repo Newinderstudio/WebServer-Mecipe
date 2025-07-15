@@ -18,6 +18,7 @@ import { ImageuploadModule } from './imageupload/imageupload.module';
 import { CafethumbnailimagesModule } from './cafethumbnailimages/cafethumbnailimages.module';
 import { CafevirtualimagesModule } from './cafevirtualimages/cafevirtualimages.module';
 import { CaferealimagesModule } from './caferealimages/caferealimages.module';
+import { CafevirtuallinksModule } from './cafevirtuallinks/cafevirtuallinks.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { CaferealimagesModule } from './caferealimages/caferealimages.module';
     CafethumbnailimagesModule,
     CafevirtualimagesModule,
     CaferealimagesModule,
+    CafevirtuallinksModule,
   ],
   controllers: [AppController],
   providers: [
