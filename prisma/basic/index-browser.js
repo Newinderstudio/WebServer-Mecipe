@@ -153,6 +153,7 @@ exports.Prisma.CafeThumbnailImageScalarFieldEnum = makeEnum({
   id: 'id',
   createdAt: 'createdAt',
   url: 'url',
+  thumbnailUrl: 'thumbnailUrl',
   width: 'width',
   height: 'height',
   size: 'size',

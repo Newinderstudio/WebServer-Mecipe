@@ -3,13 +3,14 @@ import { CreateCafeInfoDto } from './dto/create-place.dto';
 import { UpdateCafeInoDto } from './dto/update-place.dto';
 import { PrismaService } from 'src/global/prisma.service';
 import { Prisma } from 'prisma/basic';
+import { RawimageuploadService } from 'src/rawimageupload/rawimageupload.service';
 
 @Injectable()
 export class PlacesService {
 
   constructor(
-    private prisma: PrismaService
-
+    private prisma: PrismaService,
+    private readonly imageuploadService: RawimageuploadService
   ) { }
 
   /* s:admin */
@@ -25,6 +26,31 @@ export class PlacesService {
         ...createPlaceDto,
         regionCategoryId
       },
+      include: {
+        CafeVirtualLinks: {
+          include: {
+            CafeVirtualLinkThumbnailImage: true
+          }
+        },
+        CafeVirtualImages: {
+          orderBy: {
+            priority: 'asc',
+            id: 'asc'
+          }
+        },
+        CafeRealImages: {
+          orderBy: {
+            priority: 'asc',
+            id: 'asc'
+          }
+        },
+        CafeThumbnailImages: {
+          orderBy: {
+            priority: 'asc',
+            id: 'asc'
+          }
+        }
+      }
     });
   }
 
@@ -122,7 +148,7 @@ export class PlacesService {
   }
 
 
-  disablePlaceByAdmin(id: number, isDisable: boolean) {
+  updateDisablePlaceByAdmin(id: number, isDisable: boolean) {
     return this.prisma.cafeInfo.update({
       where: {
         id,
@@ -258,6 +284,99 @@ export class PlacesService {
             id: 'asc'
           }
         }
+      }
+    })
+  }
+
+  async deletePlaceByAdmin(id: number) {
+    const virtualImages = await this.prisma.cafeVirtualImage.findMany({
+      where: {
+        cafeInfoId: id
+      },
+      select: {
+        url: true
+      }
+    });
+    if (virtualImages.length > 0) {
+      await this.imageuploadService.deletImageByUrlList(virtualImages.map(image => image.url));
+      await this.prisma.cafeVirtualImage.deleteMany({
+        where: {
+          cafeInfoId: id
+        }
+      });
+    }
+
+    const realImages = await this.prisma.cafeRealImage.findMany({
+      where: {
+        cafeInfoId: id
+      },
+      select: {
+        url: true
+      }
+    });
+    if (realImages.length > 0) {
+      await this.imageuploadService.deletImageByUrlList(realImages.map(image => image.url));
+      await this.prisma.cafeRealImage.deleteMany({
+        where: {
+          cafeInfoId: id
+        },
+      });
+    }
+
+    const thumbnail = await this.prisma.cafeThumbnailImage.findMany({
+      where: {
+        cafeInfoId: id
+      },
+      select: {
+        url: true,
+        thumbnailUrl:true
+      }
+    });
+    if (thumbnail.length > 0) {
+      await this.imageuploadService.deletImageByUrlList(thumbnail.map(image => image.url));
+      await this.imageuploadService.deletImageByUrlList(thumbnail.map(image => image.thumbnailUrl));
+      await this.prisma.cafeThumbnailImage.deleteMany({
+        where: {
+          cafeInfoId: id
+        },
+      });
+    }
+
+    const virtualLinks = await this.prisma.cafeVirtualLink.findMany({
+      where: {
+        cafeInfoId: id
+      },
+      select: {
+        id: true,
+        CafeVirtualLinkThumbnailImage: {
+          select: {
+            url: true
+          }
+        }
+      },
+      // include: {
+      //   CafeVirtualLinkThumbnailImage: true
+      // }
+    });
+    if (virtualLinks.length > 0) {
+      this.imageuploadService.deletImageByUrl(virtualLinks[0].CafeVirtualLinkThumbnailImage.url);
+      await this.prisma.cafeVirtualLinkThumbnailImage.deleteMany({
+        where: {
+          cafeVirtualLinkId: {
+            in: virtualLinks.map(link => link.id)
+          }
+        }
+      })
+      await this.prisma.cafeVirtualLink.deleteMany({
+        where: {
+          cafeInfoId: id
+        }
+      });
+    }
+
+    return this.prisma.cafeInfo.delete({
+      where: {
+        id
       }
     })
   }

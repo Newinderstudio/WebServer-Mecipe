@@ -136,6 +136,7 @@ export type CafeThumbnailImage = {
   id: number
   createdAt: Date
   url: string
+  thumbnailUrl: string
   width: number
   height: number
   size: number
@@ -9927,6 +9928,7 @@ export namespace Prisma {
     id: number | null
     createdAt: Date | null
     url: string | null
+    thumbnailUrl: string | null
     width: number | null
     height: number | null
     size: number | null
@@ -9939,6 +9941,7 @@ export namespace Prisma {
     id: number | null
     createdAt: Date | null
     url: string | null
+    thumbnailUrl: string | null
     width: number | null
     height: number | null
     size: number | null
@@ -9951,6 +9954,7 @@ export namespace Prisma {
     id: number
     createdAt: number
     url: number
+    thumbnailUrl: number
     width: number
     height: number
     size: number
@@ -9983,6 +9987,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     url?: true
+    thumbnailUrl?: true
     width?: true
     height?: true
     size?: true
@@ -9995,6 +10000,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     url?: true
+    thumbnailUrl?: true
     width?: true
     height?: true
     size?: true
@@ -10007,6 +10013,7 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     url?: true
+    thumbnailUrl?: true
     width?: true
     height?: true
     size?: true
@@ -10112,6 +10119,7 @@ export namespace Prisma {
     id: number
     createdAt: Date
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
@@ -10143,6 +10151,7 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     url?: boolean
+    thumbnailUrl?: boolean
     width?: boolean
     height?: boolean
     size?: boolean
@@ -15310,6 +15319,7 @@ export namespace Prisma {
     id: 'id',
     createdAt: 'createdAt',
     url: 'url',
+    thumbnailUrl: 'thumbnailUrl',
     width: 'width',
     height: 'height',
     size: 'size',
@@ -15951,6 +15961,7 @@ export namespace Prisma {
     id?: IntFilter | number
     createdAt?: DateTimeFilter | Date | string
     url?: StringFilter | string
+    thumbnailUrl?: StringFilter | string
     width?: IntFilter | number
     height?: IntFilter | number
     size?: IntFilter | number
@@ -15964,6 +15975,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     url?: SortOrder
+    thumbnailUrl?: SortOrder
     width?: SortOrder
     height?: SortOrder
     size?: SortOrder
@@ -15981,6 +15993,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     url?: SortOrder
+    thumbnailUrl?: SortOrder
     width?: SortOrder
     height?: SortOrder
     size?: SortOrder
@@ -16001,6 +16014,7 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter | number
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     url?: StringWithAggregatesFilter | string
+    thumbnailUrl?: StringWithAggregatesFilter | string
     width?: IntWithAggregatesFilter | number
     height?: IntWithAggregatesFilter | number
     size?: IntWithAggregatesFilter | number
@@ -16873,6 +16887,7 @@ export namespace Prisma {
   export type CafeThumbnailImageCreateInput = {
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
@@ -16885,6 +16900,7 @@ export namespace Prisma {
     id?: number
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
@@ -16896,6 +16912,7 @@ export namespace Prisma {
   export type CafeThumbnailImageUpdateInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -16908,6 +16925,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -16920,6 +16938,7 @@ export namespace Prisma {
     id?: number
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
@@ -16931,6 +16950,7 @@ export namespace Prisma {
   export type CafeThumbnailImageUpdateManyMutationInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -16942,6 +16962,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -17984,6 +18005,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     url?: SortOrder
+    thumbnailUrl?: SortOrder
     width?: SortOrder
     height?: SortOrder
     size?: SortOrder
@@ -18005,6 +18027,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     url?: SortOrder
+    thumbnailUrl?: SortOrder
     width?: SortOrder
     height?: SortOrder
     size?: SortOrder
@@ -18017,6 +18040,7 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     url?: SortOrder
+    thumbnailUrl?: SortOrder
     width?: SortOrder
     height?: SortOrder
     size?: SortOrder
@@ -20374,6 +20398,7 @@ export namespace Prisma {
   export type CafeThumbnailImageCreateWithoutCafeInfoInput = {
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
@@ -20385,6 +20410,7 @@ export namespace Prisma {
     id?: number
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
@@ -20541,6 +20567,7 @@ export namespace Prisma {
     id?: IntFilter | number
     createdAt?: DateTimeFilter | Date | string
     url?: StringFilter | string
+    thumbnailUrl?: StringFilter | string
     width?: IntFilter | number
     height?: IntFilter | number
     size?: IntFilter | number
@@ -21329,6 +21356,7 @@ export namespace Prisma {
     id?: number
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
@@ -21392,6 +21420,7 @@ export namespace Prisma {
   export type CafeThumbnailImageUpdateWithoutCafeInfoInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -21403,6 +21432,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
@@ -21414,6 +21444,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number

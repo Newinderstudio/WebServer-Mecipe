@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { CafevirtuallinksService } from './cafevirtuallinks.service';
-import { CreateCafeVirtaulLinkWithImageDto, CreateCafevirtuallinkDto } from './dto/create-cafevirtuallink.dto';
+import { CreateCafeVirtaulLinkWithImageListDto } from './dto/create-cafevirtuallink.dto';
 import { UpdateCafeVirtaulLinkThumbnailImageDto, UpdateCafevirtuallinkDto } from './dto/update-cafevirtuallink.dto';
 import { AdminAuthGuard } from 'src/auth/jwt.guard.admin';
 
@@ -16,7 +16,7 @@ export class CafevirtuallinksController {
 
   @Post('admin/create/:cafeId')
   @UseGuards(AdminAuthGuard)
-  createCafeVirtualLinkByAdmin(@Param('cafeId') cafeId: string, @Body() createDto: CreateCafeVirtaulLinkWithImageDto) {
+  createCafeVirtualLinkByAdmin(@Param('cafeId') cafeId: string, @Body() createDto: CreateCafeVirtaulLinkWithImageListDto) {
     return this.cafevirtuallinksService.createCafeVirtualLinkByAdmin(+cafeId, createDto);
   }
 

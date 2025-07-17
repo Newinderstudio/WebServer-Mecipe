@@ -49,7 +49,7 @@ export class RegioncategoriesService {
       skipDuplicates: true,
     });
 
-    return newCategory;
+    return this.findAllRegionCategories();
   }
 
   async disbleRegionCategoryByAdmin(categoryId: number, isDisable: boolean) {
@@ -63,12 +63,14 @@ export class RegioncategoriesService {
       }
     });
 
-    return this.prisma.regionCategory.updateMany({
+    await this.prisma.regionCategory.updateMany({
       where: { id: { in: closueList.map(rel => rel.descendant) } },
       data: {
         isDisable: isDisable
       }
     })
+
+    return this.findAllRegionCategories();
 
   }
 
@@ -79,7 +81,7 @@ export class RegioncategoriesService {
   ) {
 
     if (newParentId && newParentId !== targetId) {
-      return await this.prisma.$transaction(async (tx) => {
+      await this.prisma.$transaction(async (tx) => {
         // 1. 기존 Closure 관계 제거
         await tx.closureRegionCategory.deleteMany({
           where: { descendant: targetId },
@@ -115,15 +117,19 @@ export class RegioncategoriesService {
             // 예: name, govermentType 등
           },
         });
+
+        return tx.regionCategory.findUnique({ where: { id: targetId } });
       });
     } else {
-      return this.prisma.regionCategory.update({
+      await this.prisma.regionCategory.update({
         where: { id: targetId },
         data: {
           ...updateDto
         },
       })
     }
+
+    return this.findAllRegionCategories();
   }
 
   async findAllRegionCategories() {

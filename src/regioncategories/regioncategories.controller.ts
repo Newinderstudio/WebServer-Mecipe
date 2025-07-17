@@ -11,22 +11,22 @@ export class RegioncategoriesController {
 
 
 
-  @Get()
+  @Get('closure')
   @Public()
   findAllRegionCategories() {
     return this.regioncategoriesService.findAllRegionCategories();
-  }
-
-  @Get('admin')
-  @UseGuards(AdminAuthGuard)
-  findChildRegionCategoriesByAdmin(@Query('parentId') parentId: string) {
-    return this.regioncategoriesService.findChildRegionCategoriesByAdmin(parentId ? +parentId : undefined);
   }
 
   @Post('admin/create')
   @UseGuards(AdminAuthGuard)
   createRegionCategoryByAdmin(@Body() createRegioncategoryDto: CreateRegioncategoryDto) {
     return this.regioncategoriesService.createRegionCategoryByAdmin(createRegioncategoryDto);
+  }
+
+  @Get('admin/child/:parentId')
+  @UseGuards(AdminAuthGuard)
+  findChildRegionCategoriesByAdmin(@Param('parentId') parentId: string) {
+    return this.regioncategoriesService.findChildRegionCategoriesByAdmin(+parentId);
   }
 
   @Patch('admin/update/:id')

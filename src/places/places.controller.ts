@@ -10,28 +10,6 @@ export class PlacesController {
   constructor(private readonly placesService: PlacesService) { }
 
 
-  @Get('search')
-  @Public()
-  findAllPlacesBySearch(
-    @Query('skip') skip: string,
-    @Query('take') take: string,
-    @Query('searchText') searchText: string,
-    @Query('regionCategoryId') regionCategoryId: string,
-  ) {
-    return this.placesService.findAllPlacesBySearch(
-      +skip,
-      +take,
-      searchText,
-      +regionCategoryId,
-    );
-  }
-
-  @Get(':id')
-  @Public()
-  findOnePlace(@Param('id') id: string,) {
-    return this.placesService.findOnePlace(+id);
-  }
-
   @Post('admin/create')
   @UseGuards(AdminAuthGuard)
   createPlaceByAdmin(@Body() createDto: CreateUcheckedCafeInfoDto) {
@@ -47,8 +25,14 @@ export class PlacesController {
 
   @Patch('admin/disable/:id')
   @UseGuards(AdminAuthGuard)
-  disablePlaceByAdmin(@Param('id') id: string, @Query('isDisable') isDisable: string) {
-    return this.placesService.disablePlaceByAdmin(+id, isDisable === 'true');
+  updateDisablePlaceByAdmin(@Param('id') id: string, @Query('isDisable') isDisable: string) {
+    return this.placesService.updateDisablePlaceByAdmin(+id, isDisable === 'true');
+  }
+
+  @Delete('admin/delete/:id')
+  @UseGuards(AdminAuthGuard)
+  deletePlaceByAdmin(@Param('id') id: string,) {
+    return this.placesService.deletePlaceByAdmin(+id);
   }
 
   @Get('admin/:id')
@@ -73,9 +57,31 @@ export class PlacesController {
       +take,
       searchType,
       searchText,
-      +regionCategoryId,
+      regionCategoryId ? +regionCategoryId : undefined,
       isDisable === 'true' ? true : false
     );
+  }
+
+  @Get('search')
+  @Public()
+  findAllPlacesBySearch(
+    @Query('skip') skip: string,
+    @Query('take') take: string,
+    @Query('searchText') searchText: string,
+    @Query('regionCategoryId') regionCategoryId: string,
+  ) {
+    return this.placesService.findAllPlacesBySearch(
+      skip ? +skip : undefined,
+      take ? +take : undefined,
+      searchText,
+      regionCategoryId ? +regionCategoryId : undefined
+    );
+  }
+
+  @Get(':id')
+  @Public()
+  findOnePlace(@Param('id') id: string,) {
+    return this.placesService.findOnePlace(+id);
   }
 
 }

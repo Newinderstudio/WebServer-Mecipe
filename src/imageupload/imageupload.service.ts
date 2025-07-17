@@ -82,6 +82,9 @@ export class ImageuploadService {
     }
 
     getImageId(url: string) {
-        return url.substring(url.lastIndexOf('/') + 1);
+        const urlObj = new URL(url);
+        const segments = urlObj.pathname.split('/').filter(Boolean); // 빈 문자열 제거
+        return segments.length >= 2 ? segments[segments.length - 2] : null;
+
     }
 }

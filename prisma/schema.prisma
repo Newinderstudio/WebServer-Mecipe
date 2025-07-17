@@ -191,7 +191,8 @@ model CafeThumbnailImage {
   id        Int       @id @default(autoincrement())
   createdAt DateTime  @default(now())
 
-  url       String       @db.Text
+  url                 String       @db.Text
+  thumbnailUrl        String       @db.Text
   width     Int
   height    Int
   size      Int

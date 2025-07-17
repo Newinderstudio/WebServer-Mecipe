@@ -1,40 +1,63 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CreateCafeVirtaulLinkWithImageDto } from './dto/create-cafevirtuallink.dto';
+import { CreateCafeVirtaulLinkWithImageListDto } from './dto/create-cafevirtuallink.dto';
 import { PrismaService } from 'src/global/prisma.service';
-import { ImageuploadService } from 'src/imageupload/imageupload.service';
+// import { ImageuploadService } from 'src/imageupload/imageupload.service';
 import { UpdateCafeVirtaulLinkThumbnailImageDto, UpdateCafevirtuallinkDto } from './dto/update-cafevirtuallink.dto';
+import { RawimageuploadService } from 'src/rawimageupload/rawimageupload.service';
+import { CafeVirtualLink, CafeVirtualLinkThumbnailImage } from 'prisma/basic';
 
 @Injectable()
 export class CafevirtuallinksService {
-  constructor(private readonly prisma: PrismaService, private readonly imageuploadService: ImageuploadService) { }
+  constructor(private readonly prisma: PrismaService, private readonly imageuploadService: RawimageuploadService) { }
 
-  async createCafeVirtualLinkByAdmin(cafeId: number, createDto: CreateCafeVirtaulLinkWithImageDto) {
-    const valid = this.imageuploadService.validUploadUrl(createDto.thumbnailImage.url);
+  async createCafeVirtualLinkByAdmin(cafeId: number, createListDto: CreateCafeVirtaulLinkWithImageListDto) {
 
-    if (!valid) throw new ForbiddenException("Error: Invalid Image: " + createDto.thumbnailImage.url);
+    try {
 
-    if (createDto.link.isDisable === true) throw new ForbiddenException("Error: Create Donot Disable Link: " + createDto.link.name);
+      return await this.prisma.$transaction(async (tx) => {
 
-    return await this.prisma.$transaction(async (tx) => {
-      const createdLink = await tx.cafeVirtualLink.create({
-        data: {
-          ...createDto.link,
-          cafeInfoId: cafeId
+        let resultList: (CafeVirtualLink & { CafeVirtualLinkThumbnailImage: CafeVirtualLinkThumbnailImage })[
+        ] = [];
+
+        for (let i = 0; i < createListDto.create.length; i++) {
+          const createDto = createListDto.create[i];
+
+          const valid = this.imageuploadService.validUploadUrl(createDto.thumbnailImage.url);
+
+          if (!valid) throw new ForbiddenException("Error: Invalid Image: " + createDto.thumbnailImage.url);
+
+          if (createDto.link.isDisable === true) throw new ForbiddenException("Error: Create Donot Disable Link: " + createDto.link.name);
+
+          const createdLink = await tx.cafeVirtualLink.create({
+            data: {
+              ...createDto.link,
+              cafeInfoId: cafeId
+            }
+          });
+
+          const createdThumbnailImage = await tx.cafeVirtualLinkThumbnailImage.create({
+            data: {
+              ...createDto.thumbnailImage,
+              cafeVirtualLinkId: createdLink.id
+            }
+          });
+
+          resultList.push({
+            ...createdLink,
+            CafeVirtualLinkThumbnailImage: createdThumbnailImage
+          });
+
+          return resultList;
         }
       });
+    } catch (e) {
+      createListDto.create.forEach(createDto => {
+        this.imageuploadService.deletImageByUrl(createDto.thumbnailImage.url);
+      })
 
-      const createdThumbnailImage = await tx.cafeVirtualLinkThumbnailImage.create({
-        data: {
-          ...createDto.thumbnailImage,
-          cafeVirtualLinkId: createdLink.id
-        }
-      });
+      throw e;
+    }
 
-      return {
-        ...createdLink,
-        CafeVirtualLinkThumbnailImage: createdThumbnailImage
-      }
-    });
   }
 
   async updateCafeVirtualLinkByAdmin(id: number, updateDto: UpdateCafevirtuallinkDto) {

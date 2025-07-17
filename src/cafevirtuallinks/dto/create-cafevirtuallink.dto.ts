@@ -7,3 +7,7 @@ export type CreateCafeVirtaulLinkWithImageDto = {
     link: CreateCafevirtuallinkDto,
     thumbnailImage: CreateCafeVirtaulLinkThumbnailImageDto
 }
+
+export type CreateCafeVirtaulLinkWithImageListDto = {
+    create: CreateCafeVirtaulLinkWithImageDto[];
+}

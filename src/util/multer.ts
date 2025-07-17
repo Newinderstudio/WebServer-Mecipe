@@ -24,11 +24,34 @@ export const getStorage = (dest: string) =>
       callback(
         null,
         file.fieldname +
-          '-' +
-          Date.now() +
-          '-' +
-          randomBytes(2).toString('hex') +
-          getExtension(file.mimetype),
+        '-' +
+        Date.now() +
+        '-' +
+        randomBytes(2).toString('hex') +
+        getExtension(file.mimetype),
+      );
+    },
+  });
+
+export const getStorageVariant = () =>
+  multer.diskStorage({
+    destination: function (req, file, callback) {
+      const dest = './media/' + req.path.split('/')[1] + file.fieldname === "thumbnail"? "/thumbnail" : "";
+
+      if (!existsSync(dest)) {
+        mkdirSync(dest);
+      }
+      callback(null, dest);
+    },
+    filename: function (req, file, callback) {
+      callback(
+        null,
+        file.fieldname +
+        '-' +
+        Date.now() +
+        '-' +
+        randomBytes(2).toString('hex') +
+        getExtension(file.mimetype),
       );
     },
   });

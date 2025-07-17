@@ -13,7 +13,7 @@ export class CafethumbnailimagesController {
     return this.cafethumnailimagesService.uploadCafeThumnailImagesByAdmin(+cafeId, upsertDto);
   }
 
-  @Post("admin")
+  @Get("admin")
   @UseGuards(AdminAuthGuard)
   findAllCafeThumbnailImagesByAdmin() {
     return this.cafethumnailimagesService.findAllCafeThumbnailImagesByAdmin();
