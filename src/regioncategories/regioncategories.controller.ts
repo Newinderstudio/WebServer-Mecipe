@@ -9,26 +9,6 @@ import { Public } from 'src/util/decorators';
 export class RegioncategoriesController {
   constructor(private readonly regioncategoriesService: RegioncategoriesService) { }
 
-
-
-  @Get('closure')
-  @Public()
-  findAllRegionCategories() {
-    return this.regioncategoriesService.findAllRegionCategories();
-  }
-
-  @Post('admin/create')
-  @UseGuards(AdminAuthGuard)
-  createRegionCategoryByAdmin(@Body() createRegioncategoryDto: CreateRegioncategoryDto) {
-    return this.regioncategoriesService.createRegionCategoryByAdmin(createRegioncategoryDto);
-  }
-
-  @Get('admin/child/:parentId')
-  @UseGuards(AdminAuthGuard)
-  findChildRegionCategoriesByAdmin(@Param('parentId') parentId: string) {
-    return this.regioncategoriesService.findChildRegionCategoriesByAdmin(+parentId);
-  }
-
   @Patch('admin/update/:id')
   @UseGuards(AdminAuthGuard)
   updateRegionCategoryByAdmin(@Param('id') id: string, @Body() updateDto: UpdateRegioncategoryDto, @Query('newParentId') newParentId: string) {
@@ -39,5 +19,23 @@ export class RegioncategoriesController {
   @UseGuards(AdminAuthGuard)
   disbleRegionCategoryByAdmin(@Param('id') id: string, @Query('isDisable') isDisable: string) {
     return this.regioncategoriesService.disbleRegionCategoryByAdmin(+id, isDisable === 'true');
+  }
+
+  @Post('admin/create')
+  @UseGuards(AdminAuthGuard)
+  createRegionCategoryByAdmin(@Body() createRegioncategoryDto: CreateRegioncategoryDto, @Query('parentId') parentId: string) {
+    return this.regioncategoriesService.createRegionCategoryByAdmin(createRegioncategoryDto, parentId? +parentId : undefined);
+  }
+
+  @Get('admin/child')
+  @UseGuards(AdminAuthGuard)
+  findChildRegionCategoriesByAdmin(@Query('parentId') parentId: string) {
+    return this.regioncategoriesService.findChildRegionCategoriesByAdmin(parentId ? +parentId : undefined);
+  }
+
+  @Get('closure')
+  @Public()
+  findAllRegionCategories() {
+    return this.regioncategoriesService.findAllRegionCategories();
   }
 }

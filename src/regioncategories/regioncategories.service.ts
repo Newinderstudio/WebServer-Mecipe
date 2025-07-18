@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateRegioncategoryDto } from './dto/create-regioncategory.dto';
 import { UpdateRegioncategoryDto } from './dto/update-regioncategory.dto';
 import { PrismaService } from 'src/global/prisma.service';
@@ -12,6 +12,54 @@ export class RegioncategoriesService {
   ) { }
 
   async createRegionCategoryByAdmin(createRegioncategoryDto: CreateRegioncategoryDto, parentCategoryId?: number) {
+
+    if (parentCategoryId) {
+      const directChildren = await this.prisma.closureRegionCategory.findMany({
+        where: {
+          ancestor: parentCategoryId,
+          depth: 1,
+        },
+        select: {
+          descendant: true,
+        },
+      });
+
+      const existing = await this.prisma.regionCategory.findFirst({
+        where: {
+          name: createRegioncategoryDto.name,
+          id: { in: directChildren.map(rel => rel.descendant) },
+        },
+      });
+
+      if (existing) {
+        throw new ConflictException('같은 부모 아래에 동일한 이름의 카테고리가 이미 존재합니다.');
+      }
+    } else {
+      const topLevelAncestors = await this.prisma.closureRegionCategory.findMany({
+        where: {
+          depth: 1,
+        },
+        select: {
+          descendant: true,
+        },
+      });
+
+      const topLevelIds = new Set(topLevelAncestors.map(rel => rel.descendant));
+
+      const existing = await this.prisma.regionCategory.findFirst({
+        where: {
+          id: {
+            notIn: Array.from(topLevelIds), // depth=1 관계가 없는 카테고리 → 최상위
+          },
+          name: createRegioncategoryDto.name,
+        },
+      });
+
+      if (existing) {
+        throw new ConflictException('최상위 카테고리에 동일한 이름이 이미 존재합니다.');
+      }
+    }
+
     // 1. 새로운 카테고리 생성
     const newCategory = await this.prisma.regionCategory.create({
       data: {
@@ -49,7 +97,7 @@ export class RegioncategoriesService {
       skipDuplicates: true,
     });
 
-    return this.findAllRegionCategories();
+    return this.findAllRegionCategories(true);
   }
 
   async disbleRegionCategoryByAdmin(categoryId: number, isDisable: boolean) {
@@ -70,7 +118,7 @@ export class RegioncategoriesService {
       }
     })
 
-    return this.findAllRegionCategories();
+    return this.findAllRegionCategories(true);
 
   }
 
@@ -79,26 +127,33 @@ export class RegioncategoriesService {
     updateDto: UpdateRegioncategoryDto,
     newParentId?: number
   ) {
+    const isMovingToTopLevel = typeof newParentId === 'number' && newParentId < 0;
 
-    if (newParentId && newParentId !== targetId) {
+    if ((newParentId && newParentId !== targetId) || isMovingToTopLevel) {
       await this.prisma.$transaction(async (tx) => {
         // 1. 기존 Closure 관계 제거
         await tx.closureRegionCategory.deleteMany({
           where: { descendant: targetId },
         });
 
-        // 2. 새로운 조상들과의 관계 생성
-        const newAncestors = await tx.closureRegionCategory.findMany({
-          where: { descendant: newParentId },
-        });
+        const newRelations: Prisma.ClosureRegionCategoryUncheckedCreateInput[] = [];
 
-        const newRelations = newAncestors.map(rel => ({
-          ancestor: rel.ancestor,
-          descendant: targetId,
-          depth: rel.depth + 1,
-        }));
+        if (!isMovingToTopLevel) {
+          // 2. 새로운 조상들과의 관계 생성
+          const newAncestors = await tx.closureRegionCategory.findMany({
+            where: { descendant: newParentId },
+          });
 
-        // 자기 자신 관계 추가
+          for (const rel of newAncestors) {
+            newRelations.push({
+              ancestor: rel.ancestor,
+              descendant: targetId,
+              depth: rel.depth + 1,
+            });
+          }
+        }
+
+        // 3. 자기 자신 관계 추가 (depth = 0)
         newRelations.push({
           ancestor: targetId,
           descendant: targetId,
@@ -110,48 +165,61 @@ export class RegioncategoriesService {
           skipDuplicates: true,
         });
 
-        // 3. RegionCategory 정보 수정 (필요 시)
+        // 4. RegionCategory 정보 수정
         await tx.regionCategory.update({
           where: { id: targetId },
           data: {
-            // 예: name, govermentType 등
+            ...updateDto,
           },
         });
 
         return tx.regionCategory.findUnique({ where: { id: targetId } });
       });
     } else {
+      // 5. 관계 변경 없이 정보만 수정
       await this.prisma.regionCategory.update({
         where: { id: targetId },
         data: {
-          ...updateDto
+          ...updateDto,
         },
-      })
+      });
     }
 
-    return this.findAllRegionCategories();
+    // 6. 전체 카테고리 반환
+    return this.findAllRegionCategories(true);
   }
-
-  async findAllRegionCategories() {
-    const disabledCategories = await this.prisma.regionCategory.findMany({
-      where: {
-        isDisable: true
+  async findAllRegionCategories(withDisable = false) {
+    if (withDisable) {
+      return {
+        categories: await this.prisma.regionCategory.findMany(),
+        closure: await this.prisma.closureRegionCategory.findMany({
+          orderBy: {
+            ancestor: 'asc',
+          }
+        })
       }
-    });
-
-    const closure = await this.prisma.closureRegionCategory.findMany({
-      where: {
-        descendant: {
-          notIn: disabledCategories.map(category => category.id)
+    } else {
+      const enabledCategories = await this.prisma.regionCategory.findMany({
+        where: {
+          isDisable: false
         }
-      },
-      orderBy: {
-        ancestor: 'asc',
-        depth: 'asc',
-      }
-    });
+      }) ?? []
 
-    return { categories: disabledCategories, closure };
+      const closure = await this.prisma.closureRegionCategory.findMany({
+        where: {
+          descendant: {
+            in: enabledCategories.map(category => category.id)
+          }
+        },
+        orderBy: {
+          ancestor: 'asc',
+          // depth: 'asc',
+        }
+      }) ?? []
+
+      return { categories: enabledCategories, closure };
+    }
+
   }
 
   async findChildRegionCategoriesByAdmin(parentId?: number) {
@@ -172,7 +240,7 @@ export class RegioncategoriesService {
           id: { in: childIds },
         },
         orderBy: { name: 'asc' },
-      });
+      }) ?? [];
     } else {
       // 최상위 카테고리: 다른 카테고리의 자손이 아닌 것
       const allDescendants = await this.prisma.closureRegionCategory.findMany({
@@ -191,7 +259,7 @@ export class RegioncategoriesService {
           },
         },
         orderBy: { name: 'asc' },
-      });
+      }) ?? [];
 
       return topLevelCategories;
     }
