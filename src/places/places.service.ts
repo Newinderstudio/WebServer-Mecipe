@@ -371,4 +371,15 @@ export class PlacesService {
     })
   }
 
+  findPlaceIds() {
+    return this.prisma.cafeInfo.findMany({
+      where:{
+        isDisable:false
+      },
+      select: {
+        id: true
+      }
+    }) ?? []
+  }
+
 }

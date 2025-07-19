@@ -77,6 +77,12 @@ export class PlacesController {
     );
   }
 
+  @Get('ids')
+  @Public()
+  findPlaceIds() {
+    return this.placesService.findPlaceIds();
+  }
+
   @Get(':id')
   @Public()
   findOnePlace(@Param('id') id: string,) {

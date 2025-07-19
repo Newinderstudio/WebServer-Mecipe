@@ -33,6 +33,12 @@ export class RegioncategoriesController {
     return this.regioncategoriesService.findChildRegionCategoriesByAdmin(parentId ? +parentId : undefined);
   }
 
+  @Get('ancestor/:categoryId')
+  @Public()
+  findAncestorCategories(@Param('categoryId') categoryId:string) {
+    return this.regioncategoriesService.findAncestorCategories(+categoryId);
+  }
+
   @Get('closure')
   @Public()
   findAllRegionCategories() {

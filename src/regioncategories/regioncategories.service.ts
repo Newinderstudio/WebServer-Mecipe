@@ -271,5 +271,33 @@ export class RegioncategoriesService {
     }
   }
 
+  async findAncestorCategories(categoryId:number) {
+    const closure = await this.prisma.closureRegionCategory.findMany({
+      where: {
+        descendant: categoryId
+      },
+      orderBy:{
+        depth:'desc'
+      },
+      select: {
+        ancestor: true
+      }
+    });
+
+    return this.prisma.regionCategory.findMany({
+      where: {
+        id: {
+          in: closure.map(rel => rel.ancestor)
+        }
+      },
+      select:{
+        id:true,
+        name:true,
+        govermentType:true
+      }
+    }) ?? []
+
+  }
+
 
 }
