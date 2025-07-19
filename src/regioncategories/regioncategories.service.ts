@@ -202,6 +202,12 @@ export class RegioncategoriesService {
       const enabledCategories = await this.prisma.regionCategory.findMany({
         where: {
           isDisable: false
+        },
+        select: {
+          id: true,
+          name: true,
+          isDisable: true,
+          govermentType: true
         }
       }) ?? []
 

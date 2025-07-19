@@ -227,7 +227,7 @@ export class PlacesService {
               orderBy: {
                 priority: 'asc',
               }
-            }
+            },
           }
         })
         : [];
