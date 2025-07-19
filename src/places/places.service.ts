@@ -35,19 +35,16 @@ export class PlacesService {
         CafeVirtualImages: {
           orderBy: {
             priority: 'asc',
-            id: 'asc'
           }
         },
         CafeRealImages: {
           orderBy: {
             priority: 'asc',
-            id: 'asc'
           }
         },
         CafeThumbnailImages: {
           orderBy: {
             priority: 'asc',
-            id: 'asc'
           }
         }
       }
@@ -128,19 +125,16 @@ export class PlacesService {
         CafeVirtualImages: {
           orderBy: {
             priority: 'asc',
-            id: 'asc'
           }
         },
         CafeRealImages: {
           orderBy: {
             priority: 'asc',
-            id: 'asc'
           }
         },
         CafeThumbnailImages: {
           orderBy: {
             priority: 'asc',
-            id: 'asc'
           }
         }
       }
@@ -232,7 +226,6 @@ export class PlacesService {
               take: 3,
               orderBy: {
                 priority: 'asc',
-                id: 'asc'
               }
             }
           }
@@ -255,7 +248,6 @@ export class PlacesService {
           },
           orderBy: {
             priority: 'asc',
-            id: 'asc'
           }
         },
         CafeRealImages: {
@@ -264,7 +256,6 @@ export class PlacesService {
           },
           orderBy: {
             priority: 'asc',
-            id: 'asc'
           }
         },
         CafeVirtualLinks: {
@@ -281,7 +272,6 @@ export class PlacesService {
           },
           orderBy: {
             priority: 'asc',
-            id: 'asc'
           }
         }
       }

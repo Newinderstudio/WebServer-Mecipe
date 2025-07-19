@@ -11,3 +11,9 @@ export type CreateCafeVirtaulLinkWithImageDto = {
 export type CreateCafeVirtaulLinkWithImageListDto = {
     create: CreateCafeVirtaulLinkWithImageDto[];
 }
+
+export type CafeVirtualLinkResult = Prisma.CafeVirtualLinkGetPayload<{
+    include: {
+        CafeVirtualLinkThumbnailImage: true
+    }
+}>;

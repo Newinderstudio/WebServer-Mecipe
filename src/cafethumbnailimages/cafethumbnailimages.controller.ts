@@ -3,7 +3,7 @@ import { CafethumbnailimagesService as CafethumbnailimagesService } from './cafe
 import { UpsertCafethumbnailimageListDto } from './dto/upsert-cafethumbnailimage.dto';
 import { AdminAuthGuard } from 'src/auth/jwt.guard.admin';
 
-@Controller('cafethumnailimages')
+@Controller('cafethumbnailimages')
 export class CafethumbnailimagesController {
   constructor(private readonly cafethumnailimagesService: CafethumbnailimagesService) { }
 

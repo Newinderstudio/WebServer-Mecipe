@@ -1,6 +1,6 @@
-import { Controller, Post, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Controller, Header, Post, Req, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { RawimageuploadService } from './rawimageupload.service';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { AdminAuthGuard } from 'src/auth/jwt.guard.admin';
 
 @Controller('rawimageupload')
@@ -16,11 +16,28 @@ export class RawimageuploadController {
   )
   @UseGuards(AdminAuthGuard)
   uploadImage(
-    @UploadedFiles() files: Express.Multer.File[],
+    @UploadedFiles() files: {
+      image: Express.Multer.File[];
+      thumbnail?: Express.Multer.File[];
+    }
   ) {
     return this.rawimageuploadService.uploadImage(
-      files['image'],
-      files['thumbnail'] ?? undefined
+      files.image,
+      files.thumbnail ?? undefined
     );
+  }
+
+  @Post('testupload')
+  @UseInterceptors(
+    FileInterceptor('image'),
+  )
+  uploadImagetest(
+    @Req() req: Request,
+    @UploadedFile() image: Express.Multer.File) {
+    console.log('test Headers:', req.headers);
+    console.log('test Body:', req.body);
+    console.log('test Files:', (req as any).files);
+
+    console.log("test uploadImage", image);
   }
 }

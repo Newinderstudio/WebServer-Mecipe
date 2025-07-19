@@ -9,14 +9,6 @@ import { Public } from 'src/util/decorators';
 export class PlacesController {
   constructor(private readonly placesService: PlacesService) { }
 
-
-  @Post('admin/create')
-  @UseGuards(AdminAuthGuard)
-  createPlaceByAdmin(@Body() createDto: CreateUcheckedCafeInfoDto) {
-    const { regionCategoryId, ...dto } = createDto
-    return this.placesService.createPlaceByAdmin(dto, regionCategoryId);
-  }
-
   @Patch('admin/update/:id')
   @UseGuards(AdminAuthGuard)
   updatePlaceByAdmin(@Param('id') id: string, @Body() updateDto: UpdateCafeInoDto) {
@@ -31,8 +23,15 @@ export class PlacesController {
 
   @Delete('admin/delete/:id')
   @UseGuards(AdminAuthGuard)
-  deletePlaceByAdmin(@Param('id') id: string,) {
+  deletePlaceByAdmin(@Param('id') id: string) {
     return this.placesService.deletePlaceByAdmin(+id);
+  }
+
+  @Post('admin/create')
+  @UseGuards(AdminAuthGuard)
+  createPlaceByAdmin(@Body() createDto: CreateUcheckedCafeInfoDto) {
+    const { regionCategoryId, ...dto } = createDto
+    return this.placesService.createPlaceByAdmin(dto, regionCategoryId);
   }
 
   @Get('admin/:id')

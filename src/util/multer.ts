@@ -36,13 +36,22 @@ export const getStorage = (dest: string) =>
 export const getStorageVariant = () =>
   multer.diskStorage({
     destination: function (req, file, callback) {
-      const dest = './media/' + req.path.split('/')[1] + file.fieldname === "thumbnail"? "/thumbnail" : "";
+      try {
+        const category = typeof req.query?.category === 'string' ? req.query.category : 'image';
+        const base = `./media/${category}`;
+        const dest = file.fieldname === 'thumbnail' ? `${base}/thumbnail` : base;
 
-      if (!existsSync(dest)) {
-        mkdirSync(dest);
+        if (!existsSync(dest)) {
+          mkdirSync(dest, { recursive: true });
+        }
+
+        callback(null, dest);
+      } catch (err) {
+        console.error('Error in destination:', err);
+        callback(err, '');
       }
-      callback(null, dest);
-    },
+    }
+    ,
     filename: function (req, file, callback) {
       callback(
         null,

@@ -19,7 +19,7 @@ export class RawimageuploadService {
 
         let result: RawImageDescriptionData[] = [];
 
-        for (let i = 0; i < images.length; i) {
+        for (let i = 0; i < images.length; i++) {
             result.push({
                 url: images[i].path,
                 thumbnailUrl: thumbnails ? thumbnails[i].path : undefined
@@ -32,13 +32,19 @@ export class RawimageuploadService {
 
     async deletImageByUrl(url: string) {
 
+        console.log("deletImageByUrl", join(getAppDirectory(), url));
         if (url) rmSync(join(getAppDirectory(), url));
         return true;
     }
 
     async deletImageByUrlList(urlList: string[]) {
 
-        if (urlList) urlList.forEach(url => { if (url) rmSync(join(getAppDirectory(), url)) });
+        if (urlList) urlList.forEach(url => {
+            if (url) {
+                console.log("deletImageByUrlList", join(getAppDirectory(), url));
+                rmSync(join(getAppDirectory(), url))
+            }
+        });
         return true;
     }
 

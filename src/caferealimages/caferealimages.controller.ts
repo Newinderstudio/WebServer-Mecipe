@@ -13,7 +13,7 @@ export class CaferealimagesController {
     return this.caferealimagesService.uploadCafeVirtualImagesByAdmin(+cafeId, upsertDto);
   }
 
-  @Post("admin")
+  @Get("admin")
   @UseGuards(AdminAuthGuard)
   findAllCafeVirtualImagesByAdmin() {
     return this.caferealimagesService.findAllCafeVirtualImagesByAdmin();

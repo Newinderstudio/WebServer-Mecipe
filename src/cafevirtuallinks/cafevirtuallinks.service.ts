@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { CreateCafeVirtaulLinkWithImageListDto } from './dto/create-cafevirtuallink.dto';
+import { CafeVirtualLinkResult, CreateCafeVirtaulLinkWithImageDto, CreateCafeVirtaulLinkWithImageListDto } from './dto/create-cafevirtuallink.dto';
 import { PrismaService } from 'src/global/prisma.service';
 // import { ImageuploadService } from 'src/imageupload/imageupload.service';
 import { UpdateCafeVirtaulLinkThumbnailImageDto, UpdateCafevirtuallinkDto } from './dto/update-cafevirtuallink.dto';
@@ -10,7 +10,45 @@ import { CafeVirtualLink, CafeVirtualLinkThumbnailImage } from 'prisma/basic';
 export class CafevirtuallinksService {
   constructor(private readonly prisma: PrismaService, private readonly imageuploadService: RawimageuploadService) { }
 
-  async createCafeVirtualLinkByAdmin(cafeId: number, createListDto: CreateCafeVirtaulLinkWithImageListDto) {
+  async createCafeVirtualLinkByAdmin(cafeId: number, createDto: CreateCafeVirtaulLinkWithImageDto): Promise<CafeVirtualLinkResult> {
+    try {
+
+      return await this.prisma.$transaction(async (tx) => {
+
+        const valid = this.imageuploadService.validUploadUrl(createDto.thumbnailImage.url);
+
+        if (!valid) throw new ForbiddenException("Error: Invalid Image: " + createDto.thumbnailImage.url);
+
+        if (createDto.link.isDisable === true) throw new ForbiddenException("Error: Create Donot Disable Link: " + createDto.link.name);
+
+        const createdLink = await tx.cafeVirtualLink.create({
+          data: {
+            ...createDto.link,
+            cafeInfoId: cafeId
+          }
+        });
+
+        const createdThumbnailImage = await tx.cafeVirtualLinkThumbnailImage.create({
+          data: {
+            ...createDto.thumbnailImage,
+            cafeVirtualLinkId: createdLink.id
+          }
+        });
+
+        return {
+          ...createdLink,
+          CafeVirtualLinkThumbnailImage: createdThumbnailImage
+        };
+      });
+    } catch (e) {
+      createDto => {
+        this.imageuploadService.deletImageByUrl(createDto.thumbnailImage.url);
+      }
+      throw e;
+    }
+  };
+
+  async createCafeVirtualLinkListByAdmin(cafeId: number, createListDto: CreateCafeVirtaulLinkWithImageListDto) {
 
     try {
 

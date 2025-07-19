@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { CafevirtuallinksService } from './cafevirtuallinks.service';
-import { CreateCafeVirtaulLinkWithImageListDto } from './dto/create-cafevirtuallink.dto';
+import { CreateCafeVirtaulLinkWithImageDto, CreateCafeVirtaulLinkWithImageListDto } from './dto/create-cafevirtuallink.dto';
 import { UpdateCafeVirtaulLinkThumbnailImageDto, UpdateCafevirtuallinkDto } from './dto/update-cafevirtuallink.dto';
 import { AdminAuthGuard } from 'src/auth/jwt.guard.admin';
 
@@ -8,15 +8,21 @@ import { AdminAuthGuard } from 'src/auth/jwt.guard.admin';
 export class CafevirtuallinksController {
   constructor(private readonly cafevirtuallinksService: CafevirtuallinksService) { }
 
-  @Get('admin')
+  @Patch('admin/update/image/:imageId')
   @UseGuards(AdminAuthGuard)
-  findAllCafeVirtualLinksByAdmin() {
-    return this.cafevirtuallinksService.findAllCafeVirtualLinksByAdmin();
+  updateCafeVirtualLinkThumbnailImageByAdmin(@Param('imageId') imageId: string, @Body() updateDto: UpdateCafeVirtaulLinkThumbnailImageDto) {
+    return this.cafevirtuallinksService.updateCafeVirtualLinkThumbnailImageByAdmin(+imageId, updateDto);
+  }
+
+  @Post('admin/create/list/:cafeId')
+  @UseGuards(AdminAuthGuard)
+  createCafeVirtualLinkListByAdmin(@Param('cafeId') cafeId: string, @Body() createDto: CreateCafeVirtaulLinkWithImageListDto) {
+    return this.cafevirtuallinksService.createCafeVirtualLinkListByAdmin(+cafeId, createDto);
   }
 
   @Post('admin/create/:cafeId')
   @UseGuards(AdminAuthGuard)
-  createCafeVirtualLinkByAdmin(@Param('cafeId') cafeId: string, @Body() createDto: CreateCafeVirtaulLinkWithImageListDto) {
+  createCafeVirtualLinkByAdmin(@Param('cafeId') cafeId: string, @Body() createDto: CreateCafeVirtaulLinkWithImageDto) {
     return this.cafevirtuallinksService.createCafeVirtualLinkByAdmin(+cafeId, createDto);
   }
 
@@ -26,9 +32,9 @@ export class CafevirtuallinksController {
     return this.cafevirtuallinksService.updateCafeVirtualLinkByAdmin(+id, updateDto,);
   }
 
-  @Patch('admin/update/image/:imageId')
+  @Get('admin')
   @UseGuards(AdminAuthGuard)
-  updateCafeVirtualLinkThumbnailImageByAdmin(@Param('imageId') imageId: string, @Body() updateDto: UpdateCafeVirtaulLinkThumbnailImageDto) {
-    return this.cafevirtuallinksService.updateCafeVirtualLinkThumbnailImageByAdmin(+imageId, updateDto);
+  findAllCafeVirtualLinksByAdmin() {
+    return this.cafevirtuallinksService.findAllCafeVirtualLinksByAdmin();
   }
 }
