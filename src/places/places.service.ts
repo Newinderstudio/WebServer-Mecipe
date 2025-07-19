@@ -371,7 +371,15 @@ export class PlacesService {
     })
   }
 
-  findPlaceIds() {
+  async findPlaceIds() {
+    const count = await this.prisma.cafeInfo.count({
+      where: {
+        isDisable: false
+      }
+    });
+
+    if(count === 0) return [];
+
     return this.prisma.cafeInfo.findMany({
       where:{
         isDisable:false
