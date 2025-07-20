@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CafeVirtualLinkResult, CreateCafeVirtaulLinkWithImageDto, CreateCafeVirtaulLinkWithImageListDto } from './dto/create-cafevirtuallink.dto';
 import { PrismaService } from 'src/global/prisma.service';
 // import { ImageuploadService } from 'src/imageupload/imageupload.service';
@@ -17,9 +17,9 @@ export class CafevirtuallinksService {
 
         const valid = this.imageuploadService.validUploadUrl(createDto.thumbnailImage.url);
 
-        if (!valid) throw new ForbiddenException("Error: Invalid Image: " + createDto.thumbnailImage.url);
+        if (!valid) throw new ConflictException("Error: Invalid Image: " + createDto.thumbnailImage.url);
 
-        if (createDto.link.isDisable === true) throw new ForbiddenException("Error: Create Donot Disable Link: " + createDto.link.name);
+        if (createDto.link.isDisable === true) throw new ConflictException("Error: Create Donot Disable Link: " + createDto.link.name);
 
         const createdLink = await tx.cafeVirtualLink.create({
           data: {
@@ -62,9 +62,9 @@ export class CafevirtuallinksService {
 
           const valid = this.imageuploadService.validUploadUrl(createDto.thumbnailImage.url);
 
-          if (!valid) throw new ForbiddenException("Error: Invalid Image: " + createDto.thumbnailImage.url);
+          if (!valid) throw new ConflictException("Error: Invalid Image: " + createDto.thumbnailImage.url);
 
-          if (createDto.link.isDisable === true) throw new ForbiddenException("Error: Create Donot Disable Link: " + createDto.link.name);
+          if (createDto.link.isDisable === true) throw new ConflictException("Error: Create Donot Disable Link: " + createDto.link.name);
 
           const createdLink = await tx.cafeVirtualLink.create({
             data: {
@@ -102,7 +102,7 @@ export class CafevirtuallinksService {
     if (updateDto.type && typeof updateDto.type === "string") {
       const equalTypeCount = await this.prisma.cafeVirtualLink.count({ where: { type: updateDto.type } })
       if (equalTypeCount > 0) {
-        throw new ForbiddenException("Error: Duplicate Type: " + updateDto.type)
+        throw new ConflictException("Error: Duplicate Type: " + updateDto.type)
       }
     }
 
@@ -120,14 +120,14 @@ export class CafevirtuallinksService {
     const { url, ...rest } = updateDto;
 
     const passed = await this.prisma.cafeVirtualLinkThumbnailImage.findUnique({ where: { id } });
-    if (!passed) throw new ForbiddenException("Error CafeVirtualLinkThumbanilImage :" + id);
+    if (!passed) throw new ConflictException("Error CafeVirtualLinkThumbanilImage :" + id);
 
     if (url && typeof url === 'string' && url != passed.url) {
       const valid = this.imageuploadService.validUploadUrl(url);
-      if (!valid) throw new ForbiddenException("Error: Invalid Image: " + url);
+      if (!valid) throw new ConflictException("Error: Invalid Image: " + url);
 
       const isDeleted = await this.imageuploadService.deletImageByUrl(passed.url);
-      if (!isDeleted) throw new ForbiddenException("Error Delete Image: " + passed.url);
+      if (!isDeleted) throw new ConflictException("Error Delete Image: " + passed.url);
     }
 
     return this.prisma.cafeVirtualLinkThumbnailImage.update({

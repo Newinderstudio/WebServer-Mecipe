@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/global/prisma.service';
 // import { ImageuploadService } from 'src/imageupload/imageupload.service';
 import { UpsertCafeRealImageListDto } from './dto/upsert-caferealimage.dto';
@@ -25,7 +25,7 @@ export class CaferealimagesService {
     cafeId: number,
     upsertDto: UpsertCafeRealImageListDto
   ) {
-    if (upsertDto.create.some(dto => dto.cafeInfoId !== cafeId)) new ForbiddenException("Error: Wrong CafeInfoId: " + cafeId);
+    if (upsertDto.create.some(dto => dto.cafeInfoId !== cafeId)) new ConflictException("Error: Wrong CafeInfoId: " + cafeId);
 
     const createDto = upsertDto.create;
     const updateDto = upsertDto.update;
@@ -40,7 +40,7 @@ export class CaferealimagesService {
         for (let i = 0; i < createDto.length; i++) {
           const valid = this.imageuploadService.validUploadUrl(createDto[i].url);
 
-          if (!valid) throw new ForbiddenException("Error: Invalid Image: " + createDto[i].url);
+          if (!valid) throw new ConflictException("Error: Invalid Image: " + createDto[i].url);
 
           const created = await tx.cafeRealImage.create({
             data: {
@@ -48,7 +48,7 @@ export class CaferealimagesService {
             }
           });
 
-          if (!created) throw new ForbiddenException(`Error: Create Image(${i})`)
+          if (!created) throw new InternalServerErrorException(`Error: Create Image(${i})`)
           createdList.push(created);
         }
 
@@ -61,7 +61,7 @@ export class CaferealimagesService {
               ...rest
             }
           });
-          if (!updated) throw new ForbiddenException(`Error: Update Image(${updateDto[i].id}:${i})`);
+          if (!updated) throw new InternalServerErrorException(`Error: Update Image(${updateDto[i].id}:${i})`);
 
           updatedList.push(updated);
         }
