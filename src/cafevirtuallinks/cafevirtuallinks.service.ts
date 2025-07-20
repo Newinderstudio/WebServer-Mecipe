@@ -41,9 +41,7 @@ export class CafevirtuallinksService {
         };
       });
     } catch (e) {
-      createDto => {
-        this.imageuploadService.deletImageByUrl(createDto.thumbnailImage.url);
-      }
+      this.imageuploadService.deletImageByUrl(createDto.thumbnailImage.url);
       throw e;
     }
   };
