@@ -38,9 +38,9 @@ export class CaferealimagesService {
         let updatedList: CafeVirtualImage[] = [];
 
         for (let i = 0; i < createDto.length; i++) {
-          const valid = this.imageuploadService.validUploadUrl(createDto[i].url);
+          // const valid = this.imageuploadService.validUploadUrl(createDto[i].url);
 
-          if (!valid) throw new ConflictException("Error: Invalid Image: " + createDto[i].url);
+          // if (!valid) throw new ConflictException("Error: Invalid Image: " + createDto[i].url);
 
           const created = await tx.cafeRealImage.create({
             data: {

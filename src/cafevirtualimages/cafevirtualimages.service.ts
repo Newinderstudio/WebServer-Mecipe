@@ -35,9 +35,9 @@ export class CafevirtualimagesService {
 
         for (let i = 0; i < createDto.length; i++) {
 
-          const valid = this.imageuploadService.validUploadUrl(createDto[i].url);
+          // const valid = this.imageuploadService.validUploadUrl(createDto[i].url);
 
-          if (!valid) throw new ForbiddenException("Error: Invalid Image: " + createDto[i].url);
+          // if (!valid) throw new ForbiddenException("Error: Invalid Image: " + createDto[i].url);
 
           const created = await tx.cafeVirtualImage.create({
             data: {

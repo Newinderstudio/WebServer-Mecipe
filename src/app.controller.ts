@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, BadGatewayException } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, BadGatewayException, UseGuards } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Public } from './util/decorators';
 import { LoginType } from 'prisma/basic';
@@ -6,6 +6,7 @@ import { AuthService } from './auth/auth.service';
 import { loginCryptoConstants } from './auth/jwtConstants';
 import * as crypto from 'crypto';
 import { CreateUserDto } from './users/dto/create-user.dto';
+import { AdminAuthGuard } from './auth/jwt.guard.admin';
 
 @Controller()
 export class AppController {
@@ -54,5 +55,11 @@ export class AppController {
   @Post('signup')
   signUp(@Body() userDto: CreateUserDto) {
     return this.authService.signUp(userDto);
+  }
+
+  @UseGuards(AdminAuthGuard)
+  @Get('auth/me')
+  getAuthToken() {
+    return this.appService.getAuthToken();
   }
 }

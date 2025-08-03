@@ -15,9 +15,9 @@ export class CafevirtuallinksService {
 
       return await this.prisma.$transaction(async (tx) => {
 
-        const valid = this.imageuploadService.validUploadUrl(createDto.thumbnailImage.url);
+        // const valid = this.imageuploadService.validUploadUrl(createDto.thumbnailImage.url);
 
-        if (!valid) throw new ConflictException("Error: Invalid Image: " + createDto.thumbnailImage.url);
+        // if (!valid) throw new ConflictException("Error: Invalid Image: " + createDto.thumbnailImage.url);
 
         if (createDto.link.isDisable === true) throw new ConflictException("Error: Create Donot Disable Link: " + createDto.link.name);
 
@@ -58,9 +58,9 @@ export class CafevirtuallinksService {
         for (let i = 0; i < createListDto.create.length; i++) {
           const createDto = createListDto.create[i];
 
-          const valid = this.imageuploadService.validUploadUrl(createDto.thumbnailImage.url);
+          // const valid = this.imageuploadService.validUploadUrl(createDto.thumbnailImage.url);
 
-          if (!valid) throw new ConflictException("Error: Invalid Image: " + createDto.thumbnailImage.url);
+          // if (!valid) throw new ConflictException("Error: Invalid Image: " + createDto.thumbnailImage.url);
 
           if (createDto.link.isDisable === true) throw new ConflictException("Error: Create Donot Disable Link: " + createDto.link.name);
 
@@ -121,8 +121,8 @@ export class CafevirtuallinksService {
     if (!passed) throw new ConflictException("Error CafeVirtualLinkThumbanilImage :" + id);
 
     if (url && typeof url === 'string' && url != passed.url) {
-      const valid = this.imageuploadService.validUploadUrl(url);
-      if (!valid) throw new ConflictException("Error: Invalid Image: " + url);
+      // const valid = this.imageuploadService.validUploadUrl(url);
+      // if (!valid) throw new ConflictException("Error: Invalid Image: " + url);
 
       const isDeleted = await this.imageuploadService.deletImageByUrl(passed.url);
       if (!isDeleted) throw new ConflictException("Error Delete Image: " + passed.url);
