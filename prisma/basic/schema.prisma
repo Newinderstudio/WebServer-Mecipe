@@ -15,6 +15,11 @@ datasource db {
 enum LoginType {
   LOCAL
   ADMIN
+  KAKAO
+  NAVER
+  GOOGLE
+  APPLE
+  ZEPETO
 }
 
 // 유저 등급 타입
@@ -42,6 +47,9 @@ model User {
   Boards                    Board[]
   BoardReplies              BoardReply[]
   Notices                   Notice[]
+
+  ProxyUsers                ProxyUser[]
+  CafeCouponHistories       CafeCouponHistory[]
 
   @@unique([loginType, loginId], name: "loginUnique")
 }
@@ -167,9 +175,10 @@ model CafeInfo {
   id                Int       @id @default(autoincrement())
   createdAt         DateTime  @default(now())
 
-  isDisable         Boolean @default(false)
+  isDisable         Boolean   @default(false)
 
   name              String
+  code              String?    @unique
   regionCategoryId  Int
   RegionCategory    RegionCategory  @relation(fields: [regionCategoryId], references: [id])
 
@@ -184,6 +193,8 @@ model CafeInfo {
   CafeThumbnailImages   CafeThumbnailImage[]
   CafeVirtualImages     CafeVirtualImage[]
   CafeRealImages        CafeRealImage[]
+
+  CafeCouponGroupPartners      CafeCouponGoupPartner[]
 }
 
 // 카페 썸네일 이미지
@@ -268,4 +279,120 @@ model CafeVirtualLinkThumbnailImage {
 
   cafeVirtualLinkId Int   @unique
   CafeVirtualLink   CafeVirtualLink @relation(fields: [cafeVirtualLinkId], references: [id])
+}
+
+model CafeCouponGroup {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  code          String    @unique
+  name          String
+  tag           String
+  description   String
+  isDisable     Boolean @default(false)
+
+  startDay        DateTime  @default(now())
+  endDay          DateTime
+
+  issuanceStartDay  DateTime
+  issuanceEndDay    DateTime
+
+  CafeCoupons   CafeCoupon[]
+  CafeCouponGoupPartners CafeCouponGoupPartner[]
+}
+
+model CafeCouponGoupPartner {
+  cafeCouponGroupId   Int
+  CafeCouponGroup     CafeCouponGroup @relation(fields: [cafeCouponGroupId], references: [id])
+
+  cafeInfoId          Int
+  CafeInfo            CafeInfo @relation(fields: [cafeInfoId], references: [id])
+
+  @@unique([cafeCouponGroupId, cafeInfoId], name: "cafeCouponGroupPartnerUnique")
+}
+
+enum ProxyUserType {
+  ETC
+  WEB
+  ZEPETO
+  WEV_VIEWER
+}
+
+model ProxyUser {
+  id              Int     @id @default(autoincrement())
+  memberId        String
+  createdAt       DateTime @default(now())
+
+  proxyUserType   ProxyUserType
+
+  name            String
+  token           String
+  userId          Int?
+  User            User?    @relation(fields: [userId], references: [id])
+
+  CafeCoupons     CafeCoupon[]
+
+  @@unique([memberId, proxyUserType], name: "proxyUserUnique")
+
+}
+
+// 카페 쿠폰
+model CafeCoupon {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  name            String
+  content         String
+  serialNumber    String    @unique
+
+  startDay        DateTime  @default(now())
+  endDay          DateTime? // 쿠폰 만료일 오버라이딩
+
+  isDisable       Boolean @default(false)
+
+  proxyUserId     Int
+  ProxyUser       ProxyUser @relation(fields: [proxyUserId], references: [id])
+
+  cafeCouponGroupId     Int
+  CafeCouponGroup       CafeCouponGroup @relation(fields: [cafeCouponGroupId], references: [id])
+
+  CafeCouponHistories   CafeCouponHistory[]
+}
+
+enum CafeCouponEventType {
+  CREATED // 쿠폰 발급됨
+  USED    // 쿠폰 사용됨
+  REVOKED // 관리자에 의해 회수됨
+  EXPIRED // 쿠폰 만료됨됨
+  UPDATE  // 유효기간 연장됨
+}
+
+enum CafeCouponStatus {
+  ACTIVE
+  USED
+  REVOKED
+  EXPIRED
+}
+
+
+// 카페 쿠폰 히스토리
+model CafeCouponHistory {
+  id              Int       @id @default(autoincrement())
+  createdAt       DateTime  @default(now())
+
+  // 어떤 쿠폰에 대한 히스토리인지
+  cafeCouponId    Int
+  CafeCoupon      CafeCoupon @relation(fields: [cafeCouponId], references: [id])
+
+  // 어떤 이벤트가 발생했는지
+  eventType       CafeCouponEventType
+  description     String
+
+  // 변경 주체 (관리자 or 사용자)
+  actorId         Int
+  Actor           User @relation(fields: [actorId], references: [id])
+
+  // 예: 사용됨, 회수됨, 만료됨 등
+  statusBefore    CafeCouponStatus?
+  statusAfter     CafeCouponStatus?
 }

@@ -121,6 +121,7 @@ export type CafeInfo = {
   createdAt: Date
   isDisable: boolean
   name: string
+  code: string | null
   regionCategoryId: number
   address: string
   directions: string
@@ -206,6 +207,79 @@ export type CafeVirtualLinkThumbnailImage = {
   cafeVirtualLinkId: number
 }
 
+/**
+ * Model CafeCouponGroup
+ * 
+ */
+export type CafeCouponGroup = {
+  id: number
+  createdAt: Date
+  code: string
+  name: string
+  tag: string
+  description: string
+  isDisable: boolean
+  startDay: Date
+  endDay: Date
+  issuanceStartDay: Date
+  issuanceEndDay: Date
+}
+
+/**
+ * Model CafeCouponGoupPartner
+ * 
+ */
+export type CafeCouponGoupPartner = {
+  cafeCouponGroupId: number
+  cafeInfoId: number
+}
+
+/**
+ * Model ProxyUser
+ * 
+ */
+export type ProxyUser = {
+  id: number
+  memberId: string
+  createdAt: Date
+  proxyUserType: ProxyUserType
+  name: string
+  token: string
+  userId: number | null
+}
+
+/**
+ * Model CafeCoupon
+ * 
+ */
+export type CafeCoupon = {
+  id: number
+  createdAt: Date
+  name: string
+  content: string
+  serialNumber: string
+  startDay: Date
+  endDay: Date | null
+  isDisable: boolean
+  proxyUserId: number
+  cafeCouponGroupId: number
+}
+
+/**
+ * Model CafeCouponHistory
+ * 
+ */
+export type CafeCouponHistory = {
+  id: number
+  createdAt: Date
+  cafeCouponId: number
+  eventType: CafeCouponEventType
+  description: string
+  actorId: number
+  statusBefore: CafeCouponStatus | null
+  statusAfter: CafeCouponStatus | null
+}
+
 
 /**
  * Enums
@@ -221,6 +295,27 @@ export const BoardType: {
 };
 
 export type BoardType = (typeof BoardType)[keyof typeof BoardType]
+
+
+export const CafeCouponEventType: {
+  CREATED: 'CREATED',
+  USED: 'USED',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED',
+  UPDATE: 'UPDATE'
+};
+
+export type CafeCouponEventType = (typeof CafeCouponEventType)[keyof typeof CafeCouponEventType]
+
+
+export const CafeCouponStatus: {
+  ACTIVE: 'ACTIVE',
+  USED: 'USED',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED'
+};
+
+export type CafeCouponStatus = (typeof CafeCouponStatus)[keyof typeof CafeCouponStatus]
 
 
 export const GovermentType: {
@@ -243,10 +338,25 @@ export type GovermentType = (typeof GovermentType)[keyof typeof GovermentType]
 
 export const LoginType: {
   LOCAL: 'LOCAL',
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  KAKAO: 'KAKAO',
+  NAVER: 'NAVER',
+  GOOGLE: 'GOOGLE',
+  APPLE: 'APPLE',
+  ZEPETO: 'ZEPETO'
 };
 
 export type LoginType = (typeof LoginType)[keyof typeof LoginType]
+
+
+export const ProxyUserType: {
+  ETC: 'ETC',
+  WEB: 'WEB',
+  ZEPETO: 'ZEPETO',
+  WEV_VIEWER: 'WEV_VIEWER'
+};
+
+export type ProxyUserType = (typeof ProxyUserType)[keyof typeof ProxyUserType]
 
 
 export const UserType: {
@@ -505,6 +615,56 @@ export class PrismaClient<
     * ```
     */
   get cafeVirtualLinkThumbnailImage(): Prisma.CafeVirtualLinkThumbnailImageDelegate<GlobalReject>;
+
+  /**
+   * `prisma.cafeCouponGroup`: Exposes CRUD operations for the **CafeCouponGroup** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CafeCouponGroups
+    * const cafeCouponGroups = await prisma.cafeCouponGroup.findMany()
+    * ```
+    */
+  get cafeCouponGroup(): Prisma.CafeCouponGroupDelegate<GlobalReject>;
+
+  /**
+   * `prisma.cafeCouponGoupPartner`: Exposes CRUD operations for the **CafeCouponGoupPartner** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CafeCouponGoupPartners
+    * const cafeCouponGoupPartners = await prisma.cafeCouponGoupPartner.findMany()
+    * ```
+    */
+  get cafeCouponGoupPartner(): Prisma.CafeCouponGoupPartnerDelegate<GlobalReject>;
+
+  /**
+   * `prisma.proxyUser`: Exposes CRUD operations for the **ProxyUser** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProxyUsers
+    * const proxyUsers = await prisma.proxyUser.findMany()
+    * ```
+    */
+  get proxyUser(): Prisma.ProxyUserDelegate<GlobalReject>;
+
+  /**
+   * `prisma.cafeCoupon`: Exposes CRUD operations for the **CafeCoupon** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CafeCoupons
+    * const cafeCoupons = await prisma.cafeCoupon.findMany()
+    * ```
+    */
+  get cafeCoupon(): Prisma.CafeCouponDelegate<GlobalReject>;
+
+  /**
+   * `prisma.cafeCouponHistory`: Exposes CRUD operations for the **CafeCouponHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CafeCouponHistories
+    * const cafeCouponHistories = await prisma.cafeCouponHistory.findMany()
+    * ```
+    */
+  get cafeCouponHistory(): Prisma.CafeCouponHistoryDelegate<GlobalReject>;
 }
 
 export namespace Prisma {
@@ -1001,7 +1161,12 @@ export namespace Prisma {
     CafeVirtualImage: 'CafeVirtualImage',
     CafeRealImage: 'CafeRealImage',
     CafeVirtualLink: 'CafeVirtualLink',
-    CafeVirtualLinkThumbnailImage: 'CafeVirtualLinkThumbnailImage'
+    CafeVirtualLinkThumbnailImage: 'CafeVirtualLinkThumbnailImage',
+    CafeCouponGroup: 'CafeCouponGroup',
+    CafeCouponGoupPartner: 'CafeCouponGoupPartner',
+    ProxyUser: 'ProxyUser',
+    CafeCoupon: 'CafeCoupon',
+    CafeCouponHistory: 'CafeCouponHistory'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1174,12 +1339,16 @@ export namespace Prisma {
     Boards: number
     BoardReplies: number
     Notices: number
+    ProxyUsers: number
+    CafeCouponHistories: number
   }
 
   export type UserCountOutputTypeSelect = {
     Boards?: boolean
     BoardReplies?: boolean
     Notices?: boolean
+    ProxyUsers?: boolean
+    CafeCouponHistories?: boolean
   }
 
   export type UserCountOutputTypeGetPayload<S extends boolean | null | undefined | UserCountOutputTypeArgs> =
@@ -1361,6 +1530,7 @@ export namespace Prisma {
     CafeThumbnailImages: number
     CafeVirtualImages: number
     CafeRealImages: number
+    CafeCouponGroupPartners: number
   }
 
   export type CafeInfoCountOutputTypeSelect = {
@@ -1368,6 +1538,7 @@ export namespace Prisma {
     CafeThumbnailImages?: boolean
     CafeVirtualImages?: boolean
     CafeRealImages?: boolean
+    CafeCouponGroupPartners?: boolean
   }
 
   export type CafeInfoCountOutputTypeGetPayload<S extends boolean | null | undefined | CafeInfoCountOutputTypeArgs> =
@@ -1397,6 +1568,140 @@ export namespace Prisma {
      * 
     **/
     select?: CafeInfoCountOutputTypeSelect | null
+  }
+
+
+
+  /**
+   * Count Type CafeCouponGroupCountOutputType
+   */
+
+
+  export type CafeCouponGroupCountOutputType = {
+    CafeCoupons: number
+    CafeCouponGoupPartners: number
+  }
+
+  export type CafeCouponGroupCountOutputTypeSelect = {
+    CafeCoupons?: boolean
+    CafeCouponGoupPartners?: boolean
+  }
+
+  export type CafeCouponGroupCountOutputTypeGetPayload<S extends boolean | null | undefined | CafeCouponGroupCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeCouponGroupCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeCouponGroupCountOutputTypeArgs)
+    ? CafeCouponGroupCountOutputType 
+    : S extends { select: any } & (CafeCouponGroupCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof CafeCouponGroupCountOutputType ? CafeCouponGroupCountOutputType[P] : never
+  } 
+      : CafeCouponGroupCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * CafeCouponGroupCountOutputType without action
+   */
+  export type CafeCouponGroupCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroupCountOutputType
+     * 
+    **/
+    select?: CafeCouponGroupCountOutputTypeSelect | null
+  }
+
+
+
+  /**
+   * Count Type ProxyUserCountOutputType
+   */
+
+
+  export type ProxyUserCountOutputType = {
+    CafeCoupons: number
+  }
+
+  export type ProxyUserCountOutputTypeSelect = {
+    CafeCoupons?: boolean
+  }
+
+  export type ProxyUserCountOutputTypeGetPayload<S extends boolean | null | undefined | ProxyUserCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ProxyUserCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (ProxyUserCountOutputTypeArgs)
+    ? ProxyUserCountOutputType 
+    : S extends { select: any } & (ProxyUserCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof ProxyUserCountOutputType ? ProxyUserCountOutputType[P] : never
+  } 
+      : ProxyUserCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ProxyUserCountOutputType without action
+   */
+  export type ProxyUserCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the ProxyUserCountOutputType
+     * 
+    **/
+    select?: ProxyUserCountOutputTypeSelect | null
+  }
+
+
+
+  /**
+   * Count Type CafeCouponCountOutputType
+   */
+
+
+  export type CafeCouponCountOutputType = {
+    CafeCouponHistories: number
+  }
+
+  export type CafeCouponCountOutputTypeSelect = {
+    CafeCouponHistories?: boolean
+  }
+
+  export type CafeCouponCountOutputTypeGetPayload<S extends boolean | null | undefined | CafeCouponCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeCouponCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeCouponCountOutputTypeArgs)
+    ? CafeCouponCountOutputType 
+    : S extends { select: any } & (CafeCouponCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof CafeCouponCountOutputType ? CafeCouponCountOutputType[P] : never
+  } 
+      : CafeCouponCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * CafeCouponCountOutputType without action
+   */
+  export type CafeCouponCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponCountOutputType
+     * 
+    **/
+    select?: CafeCouponCountOutputTypeSelect | null
   }
 
 
@@ -1653,6 +1958,8 @@ export namespace Prisma {
     Boards?: boolean | BoardFindManyArgs
     BoardReplies?: boolean | BoardReplyFindManyArgs
     Notices?: boolean | NoticeFindManyArgs
+    ProxyUsers?: boolean | ProxyUserFindManyArgs
+    CafeCouponHistories?: boolean | CafeCouponHistoryFindManyArgs
     _count?: boolean | UserCountOutputTypeArgs
   }
 
@@ -1661,6 +1968,8 @@ export namespace Prisma {
     Boards?: boolean | BoardFindManyArgs
     BoardReplies?: boolean | BoardReplyFindManyArgs
     Notices?: boolean | NoticeFindManyArgs
+    ProxyUsers?: boolean | ProxyUserFindManyArgs
+    CafeCouponHistories?: boolean | CafeCouponHistoryFindManyArgs
     _count?: boolean | UserCountOutputTypeArgs
   } 
 
@@ -1674,6 +1983,8 @@ export namespace Prisma {
         P extends 'Boards' ? Array < BoardGetPayload<S['include'][P]>>  :
         P extends 'BoardReplies' ? Array < BoardReplyGetPayload<S['include'][P]>>  :
         P extends 'Notices' ? Array < NoticeGetPayload<S['include'][P]>>  :
+        P extends 'ProxyUsers' ? Array < ProxyUserGetPayload<S['include'][P]>>  :
+        P extends 'CafeCouponHistories' ? Array < CafeCouponHistoryGetPayload<S['include'][P]>>  :
         P extends '_count' ? UserCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (UserArgs | UserFindManyArgs)
@@ -1682,6 +1993,8 @@ export namespace Prisma {
         P extends 'Boards' ? Array < BoardGetPayload<S['select'][P]>>  :
         P extends 'BoardReplies' ? Array < BoardReplyGetPayload<S['select'][P]>>  :
         P extends 'Notices' ? Array < NoticeGetPayload<S['select'][P]>>  :
+        P extends 'ProxyUsers' ? Array < ProxyUserGetPayload<S['select'][P]>>  :
+        P extends 'CafeCouponHistories' ? Array < CafeCouponHistoryGetPayload<S['select'][P]>>  :
         P extends '_count' ? UserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof User ? User[P] : never
   } 
       : User
@@ -2061,6 +2374,10 @@ export namespace Prisma {
     BoardReplies<T extends BoardReplyFindManyArgs= {}>(args?: Subset<T, BoardReplyFindManyArgs>): PrismaPromise<Array<BoardReplyGetPayload<T>>| Null>;
 
     Notices<T extends NoticeFindManyArgs= {}>(args?: Subset<T, NoticeFindManyArgs>): PrismaPromise<Array<NoticeGetPayload<T>>| Null>;
+
+    ProxyUsers<T extends ProxyUserFindManyArgs= {}>(args?: Subset<T, ProxyUserFindManyArgs>): PrismaPromise<Array<ProxyUserGetPayload<T>>| Null>;
+
+    CafeCouponHistories<T extends CafeCouponHistoryFindManyArgs= {}>(args?: Subset<T, CafeCouponHistoryFindManyArgs>): PrismaPromise<Array<CafeCouponHistoryGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -8835,6 +9152,7 @@ export namespace Prisma {
     createdAt: Date | null
     isDisable: boolean | null
     name: string | null
+    code: string | null
     regionCategoryId: number | null
     address: string | null
     directions: string | null
@@ -8847,6 +9165,7 @@ export namespace Prisma {
     createdAt: Date | null
     isDisable: boolean | null
     name: string | null
+    code: string | null
     regionCategoryId: number | null
     address: string | null
     directions: string | null
@@ -8859,6 +9178,7 @@ export namespace Prisma {
     createdAt: number
     isDisable: number
     name: number
+    code: number
     regionCategoryId: number
     address: number
     directions: number
@@ -8883,6 +9203,7 @@ export namespace Prisma {
     createdAt?: true
     isDisable?: true
     name?: true
+    code?: true
     regionCategoryId?: true
     address?: true
     directions?: true
@@ -8895,6 +9216,7 @@ export namespace Prisma {
     createdAt?: true
     isDisable?: true
     name?: true
+    code?: true
     regionCategoryId?: true
     address?: true
     directions?: true
@@ -8907,6 +9229,7 @@ export namespace Prisma {
     createdAt?: true
     isDisable?: true
     name?: true
+    code?: true
     regionCategoryId?: true
     address?: true
     directions?: true
@@ -9012,6 +9335,7 @@ export namespace Prisma {
     createdAt: Date
     isDisable: boolean
     name: string
+    code: string | null
     regionCategoryId: number
     address: string
     directions: string
@@ -9043,6 +9367,7 @@ export namespace Prisma {
     createdAt?: boolean
     isDisable?: boolean
     name?: boolean
+    code?: boolean
     regionCategoryId?: boolean
     RegionCategory?: boolean | RegionCategoryArgs
     address?: boolean
@@ -9053,6 +9378,7 @@ export namespace Prisma {
     CafeThumbnailImages?: boolean | CafeThumbnailImageFindManyArgs
     CafeVirtualImages?: boolean | CafeVirtualImageFindManyArgs
     CafeRealImages?: boolean | CafeRealImageFindManyArgs
+    CafeCouponGroupPartners?: boolean | CafeCouponGoupPartnerFindManyArgs
     _count?: boolean | CafeInfoCountOutputTypeArgs
   }
 
@@ -9063,6 +9389,7 @@ export namespace Prisma {
     CafeThumbnailImages?: boolean | CafeThumbnailImageFindManyArgs
     CafeVirtualImages?: boolean | CafeVirtualImageFindManyArgs
     CafeRealImages?: boolean | CafeRealImageFindManyArgs
+    CafeCouponGroupPartners?: boolean | CafeCouponGoupPartnerFindManyArgs
     _count?: boolean | CafeInfoCountOutputTypeArgs
   } 
 
@@ -9078,6 +9405,7 @@ export namespace Prisma {
         P extends 'CafeThumbnailImages' ? Array < CafeThumbnailImageGetPayload<S['include'][P]>>  :
         P extends 'CafeVirtualImages' ? Array < CafeVirtualImageGetPayload<S['include'][P]>>  :
         P extends 'CafeRealImages' ? Array < CafeRealImageGetPayload<S['include'][P]>>  :
+        P extends 'CafeCouponGroupPartners' ? Array < CafeCouponGoupPartnerGetPayload<S['include'][P]>>  :
         P extends '_count' ? CafeInfoCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (CafeInfoArgs | CafeInfoFindManyArgs)
@@ -9088,6 +9416,7 @@ export namespace Prisma {
         P extends 'CafeThumbnailImages' ? Array < CafeThumbnailImageGetPayload<S['select'][P]>>  :
         P extends 'CafeVirtualImages' ? Array < CafeVirtualImageGetPayload<S['select'][P]>>  :
         P extends 'CafeRealImages' ? Array < CafeRealImageGetPayload<S['select'][P]>>  :
+        P extends 'CafeCouponGroupPartners' ? Array < CafeCouponGoupPartnerGetPayload<S['select'][P]>>  :
         P extends '_count' ? CafeInfoCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof CafeInfo ? CafeInfo[P] : never
   } 
       : CafeInfo
@@ -9471,6 +9800,8 @@ export namespace Prisma {
     CafeVirtualImages<T extends CafeVirtualImageFindManyArgs= {}>(args?: Subset<T, CafeVirtualImageFindManyArgs>): PrismaPromise<Array<CafeVirtualImageGetPayload<T>>| Null>;
 
     CafeRealImages<T extends CafeRealImageFindManyArgs= {}>(args?: Subset<T, CafeRealImageFindManyArgs>): PrismaPromise<Array<CafeRealImageGetPayload<T>>| Null>;
+
+    CafeCouponGroupPartners<T extends CafeCouponGoupPartnerFindManyArgs= {}>(args?: Subset<T, CafeCouponGoupPartnerFindManyArgs>): PrismaPromise<Array<CafeCouponGoupPartnerGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -15234,6 +15565,5292 @@ export namespace Prisma {
 
 
   /**
+   * Model CafeCouponGroup
+   */
+
+
+  export type AggregateCafeCouponGroup = {
+    _count: CafeCouponGroupCountAggregateOutputType | null
+    _avg: CafeCouponGroupAvgAggregateOutputType | null
+    _sum: CafeCouponGroupSumAggregateOutputType | null
+    _min: CafeCouponGroupMinAggregateOutputType | null
+    _max: CafeCouponGroupMaxAggregateOutputType | null
+  }
+
+  export type CafeCouponGroupAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type CafeCouponGroupSumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type CafeCouponGroupMinAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    code: string | null
+    name: string | null
+    tag: string | null
+    description: string | null
+    isDisable: boolean | null
+    startDay: Date | null
+    endDay: Date | null
+    issuanceStartDay: Date | null
+    issuanceEndDay: Date | null
+  }
+
+  export type CafeCouponGroupMaxAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    code: string | null
+    name: string | null
+    tag: string | null
+    description: string | null
+    isDisable: boolean | null
+    startDay: Date | null
+    endDay: Date | null
+    issuanceStartDay: Date | null
+    issuanceEndDay: Date | null
+  }
+
+  export type CafeCouponGroupCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    code: number
+    name: number
+    tag: number
+    description: number
+    isDisable: number
+    startDay: number
+    endDay: number
+    issuanceStartDay: number
+    issuanceEndDay: number
+    _all: number
+  }
+
+
+  export type CafeCouponGroupAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type CafeCouponGroupSumAggregateInputType = {
+    id?: true
+  }
+
+  export type CafeCouponGroupMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    code?: true
+    name?: true
+    tag?: true
+    description?: true
+    isDisable?: true
+    startDay?: true
+    endDay?: true
+    issuanceStartDay?: true
+    issuanceEndDay?: true
+  }
+
+  export type CafeCouponGroupMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    code?: true
+    name?: true
+    tag?: true
+    description?: true
+    isDisable?: true
+    startDay?: true
+    endDay?: true
+    issuanceStartDay?: true
+    issuanceEndDay?: true
+  }
+
+  export type CafeCouponGroupCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    code?: true
+    name?: true
+    tag?: true
+    description?: true
+    isDisable?: true
+    startDay?: true
+    endDay?: true
+    issuanceStartDay?: true
+    issuanceEndDay?: true
+    _all?: true
+  }
+
+  export type CafeCouponGroupAggregateArgs = {
+    /**
+     * Filter which CafeCouponGroup to aggregate.
+     * 
+    **/
+    where?: CafeCouponGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponGroups to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponGroupOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: CafeCouponGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponGroups from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponGroups.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CafeCouponGroups
+    **/
+    _count?: true | CafeCouponGroupCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CafeCouponGroupAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CafeCouponGroupSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CafeCouponGroupMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CafeCouponGroupMaxAggregateInputType
+  }
+
+  export type GetCafeCouponGroupAggregateType<T extends CafeCouponGroupAggregateArgs> = {
+        [P in keyof T & keyof AggregateCafeCouponGroup]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCafeCouponGroup[P]>
+      : GetScalarType<T[P], AggregateCafeCouponGroup[P]>
+  }
+
+
+
+
+  export type CafeCouponGroupGroupByArgs = {
+    where?: CafeCouponGroupWhereInput
+    orderBy?: Enumerable<CafeCouponGroupOrderByWithAggregationInput>
+    by: Array<CafeCouponGroupScalarFieldEnum>
+    having?: CafeCouponGroupScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CafeCouponGroupCountAggregateInputType | true
+    _avg?: CafeCouponGroupAvgAggregateInputType
+    _sum?: CafeCouponGroupSumAggregateInputType
+    _min?: CafeCouponGroupMinAggregateInputType
+    _max?: CafeCouponGroupMaxAggregateInputType
+  }
+
+
+  export type CafeCouponGroupGroupByOutputType = {
+    id: number
+    createdAt: Date
+    code: string
+    name: string
+    tag: string
+    description: string
+    isDisable: boolean
+    startDay: Date
+    endDay: Date
+    issuanceStartDay: Date
+    issuanceEndDay: Date
+    _count: CafeCouponGroupCountAggregateOutputType | null
+    _avg: CafeCouponGroupAvgAggregateOutputType | null
+    _sum: CafeCouponGroupSumAggregateOutputType | null
+    _min: CafeCouponGroupMinAggregateOutputType | null
+    _max: CafeCouponGroupMaxAggregateOutputType | null
+  }
+
+  type GetCafeCouponGroupGroupByPayload<T extends CafeCouponGroupGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<CafeCouponGroupGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CafeCouponGroupGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CafeCouponGroupGroupByOutputType[P]>
+            : GetScalarType<T[P], CafeCouponGroupGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CafeCouponGroupSelect = {
+    id?: boolean
+    createdAt?: boolean
+    code?: boolean
+    name?: boolean
+    tag?: boolean
+    description?: boolean
+    isDisable?: boolean
+    startDay?: boolean
+    endDay?: boolean
+    issuanceStartDay?: boolean
+    issuanceEndDay?: boolean
+    CafeCoupons?: boolean | CafeCouponFindManyArgs
+    CafeCouponGoupPartners?: boolean | CafeCouponGoupPartnerFindManyArgs
+    _count?: boolean | CafeCouponGroupCountOutputTypeArgs
+  }
+
+
+  export type CafeCouponGroupInclude = {
+    CafeCoupons?: boolean | CafeCouponFindManyArgs
+    CafeCouponGoupPartners?: boolean | CafeCouponGoupPartnerFindManyArgs
+    _count?: boolean | CafeCouponGroupCountOutputTypeArgs
+  } 
+
+  export type CafeCouponGroupGetPayload<S extends boolean | null | undefined | CafeCouponGroupArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeCouponGroup :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeCouponGroupArgs | CafeCouponGroupFindManyArgs)
+    ? CafeCouponGroup  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'CafeCoupons' ? Array < CafeCouponGetPayload<S['include'][P]>>  :
+        P extends 'CafeCouponGoupPartners' ? Array < CafeCouponGoupPartnerGetPayload<S['include'][P]>>  :
+        P extends '_count' ? CafeCouponGroupCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (CafeCouponGroupArgs | CafeCouponGroupFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'CafeCoupons' ? Array < CafeCouponGetPayload<S['select'][P]>>  :
+        P extends 'CafeCouponGoupPartners' ? Array < CafeCouponGoupPartnerGetPayload<S['select'][P]>>  :
+        P extends '_count' ? CafeCouponGroupCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof CafeCouponGroup ? CafeCouponGroup[P] : never
+  } 
+      : CafeCouponGroup
+
+
+  type CafeCouponGroupCountArgs = Merge<
+    Omit<CafeCouponGroupFindManyArgs, 'select' | 'include'> & {
+      select?: CafeCouponGroupCountAggregateInputType | true
+    }
+  >
+
+  export interface CafeCouponGroupDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one CafeCouponGroup that matches the filter.
+     * @param {CafeCouponGroupFindUniqueArgs} args - Arguments to find a CafeCouponGroup
+     * @example
+     * // Get one CafeCouponGroup
+     * const cafeCouponGroup = await prisma.cafeCouponGroup.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends CafeCouponGroupFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, CafeCouponGroupFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeCouponGroup'> extends True ? Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T>> : Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeCouponGroup that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeCouponGroupFindUniqueOrThrowArgs} args - Arguments to find a CafeCouponGroup
+     * @example
+     * // Get one CafeCouponGroup
+     * const cafeCouponGroup = await prisma.cafeCouponGroup.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeCouponGroupFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeCouponGroupFindUniqueOrThrowArgs>
+    ): Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T>>
+
+    /**
+     * Find the first CafeCouponGroup that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGroupFindFirstArgs} args - Arguments to find a CafeCouponGroup
+     * @example
+     * // Get one CafeCouponGroup
+     * const cafeCouponGroup = await prisma.cafeCouponGroup.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends CafeCouponGroupFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, CafeCouponGroupFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeCouponGroup'> extends True ? Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T>> : Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeCouponGroup that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGroupFindFirstOrThrowArgs} args - Arguments to find a CafeCouponGroup
+     * @example
+     * // Get one CafeCouponGroup
+     * const cafeCouponGroup = await prisma.cafeCouponGroup.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeCouponGroupFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeCouponGroupFindFirstOrThrowArgs>
+    ): Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T>>
+
+    /**
+     * Find zero or more CafeCouponGroups that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGroupFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CafeCouponGroups
+     * const cafeCouponGroups = await prisma.cafeCouponGroup.findMany()
+     * 
+     * // Get first 10 CafeCouponGroups
+     * const cafeCouponGroups = await prisma.cafeCouponGroup.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cafeCouponGroupWithIdOnly = await prisma.cafeCouponGroup.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends CafeCouponGroupFindManyArgs>(
+      args?: SelectSubset<T, CafeCouponGroupFindManyArgs>
+    ): PrismaPromise<Array<CafeCouponGroupGetPayload<T>>>
+
+    /**
+     * Create a CafeCouponGroup.
+     * @param {CafeCouponGroupCreateArgs} args - Arguments to create a CafeCouponGroup.
+     * @example
+     * // Create one CafeCouponGroup
+     * const CafeCouponGroup = await prisma.cafeCouponGroup.create({
+     *   data: {
+     *     // ... data to create a CafeCouponGroup
+     *   }
+     * })
+     * 
+    **/
+    create<T extends CafeCouponGroupCreateArgs>(
+      args: SelectSubset<T, CafeCouponGroupCreateArgs>
+    ): Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T>>
+
+    /**
+     * Create many CafeCouponGroups.
+     *     @param {CafeCouponGroupCreateManyArgs} args - Arguments to create many CafeCouponGroups.
+     *     @example
+     *     // Create many CafeCouponGroups
+     *     const cafeCouponGroup = await prisma.cafeCouponGroup.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends CafeCouponGroupCreateManyArgs>(
+      args?: SelectSubset<T, CafeCouponGroupCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CafeCouponGroup.
+     * @param {CafeCouponGroupDeleteArgs} args - Arguments to delete one CafeCouponGroup.
+     * @example
+     * // Delete one CafeCouponGroup
+     * const CafeCouponGroup = await prisma.cafeCouponGroup.delete({
+     *   where: {
+     *     // ... filter to delete one CafeCouponGroup
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends CafeCouponGroupDeleteArgs>(
+      args: SelectSubset<T, CafeCouponGroupDeleteArgs>
+    ): Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T>>
+
+    /**
+     * Update one CafeCouponGroup.
+     * @param {CafeCouponGroupUpdateArgs} args - Arguments to update one CafeCouponGroup.
+     * @example
+     * // Update one CafeCouponGroup
+     * const cafeCouponGroup = await prisma.cafeCouponGroup.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends CafeCouponGroupUpdateArgs>(
+      args: SelectSubset<T, CafeCouponGroupUpdateArgs>
+    ): Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T>>
+
+    /**
+     * Delete zero or more CafeCouponGroups.
+     * @param {CafeCouponGroupDeleteManyArgs} args - Arguments to filter CafeCouponGroups to delete.
+     * @example
+     * // Delete a few CafeCouponGroups
+     * const { count } = await prisma.cafeCouponGroup.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends CafeCouponGroupDeleteManyArgs>(
+      args?: SelectSubset<T, CafeCouponGroupDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CafeCouponGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGroupUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CafeCouponGroups
+     * const cafeCouponGroup = await prisma.cafeCouponGroup.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends CafeCouponGroupUpdateManyArgs>(
+      args: SelectSubset<T, CafeCouponGroupUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CafeCouponGroup.
+     * @param {CafeCouponGroupUpsertArgs} args - Arguments to update or create a CafeCouponGroup.
+     * @example
+     * // Update or create a CafeCouponGroup
+     * const cafeCouponGroup = await prisma.cafeCouponGroup.upsert({
+     *   create: {
+     *     // ... data to create a CafeCouponGroup
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CafeCouponGroup we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends CafeCouponGroupUpsertArgs>(
+      args: SelectSubset<T, CafeCouponGroupUpsertArgs>
+    ): Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T>>
+
+    /**
+     * Count the number of CafeCouponGroups.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGroupCountArgs} args - Arguments to filter CafeCouponGroups to count.
+     * @example
+     * // Count the number of CafeCouponGroups
+     * const count = await prisma.cafeCouponGroup.count({
+     *   where: {
+     *     // ... the filter for the CafeCouponGroups we want to count
+     *   }
+     * })
+    **/
+    count<T extends CafeCouponGroupCountArgs>(
+      args?: Subset<T, CafeCouponGroupCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CafeCouponGroupCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CafeCouponGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGroupAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CafeCouponGroupAggregateArgs>(args: Subset<T, CafeCouponGroupAggregateArgs>): PrismaPromise<GetCafeCouponGroupAggregateType<T>>
+
+    /**
+     * Group by CafeCouponGroup.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGroupGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CafeCouponGroupGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CafeCouponGroupGroupByArgs['orderBy'] }
+        : { orderBy?: CafeCouponGroupGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CafeCouponGroupGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeCouponGroupGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CafeCouponGroup.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__CafeCouponGroupClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    CafeCoupons<T extends CafeCouponFindManyArgs= {}>(args?: Subset<T, CafeCouponFindManyArgs>): PrismaPromise<Array<CafeCouponGetPayload<T>>| Null>;
+
+    CafeCouponGoupPartners<T extends CafeCouponGoupPartnerFindManyArgs= {}>(args?: Subset<T, CafeCouponGoupPartnerFindManyArgs>): PrismaPromise<Array<CafeCouponGoupPartnerGetPayload<T>>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * CafeCouponGroup base type for findUnique actions
+   */
+  export type CafeCouponGroupFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroup
+     * 
+    **/
+    select?: CafeCouponGroupSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGroupInclude | null
+    /**
+     * Filter, which CafeCouponGroup to fetch.
+     * 
+    **/
+    where: CafeCouponGroupWhereUniqueInput
+  }
+
+  /**
+   * CafeCouponGroup: findUnique
+   */
+  export interface CafeCouponGroupFindUniqueArgs extends CafeCouponGroupFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeCouponGroup findUniqueOrThrow
+   */
+  export type CafeCouponGroupFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroup
+     * 
+    **/
+    select?: CafeCouponGroupSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGroupInclude | null
+    /**
+     * Filter, which CafeCouponGroup to fetch.
+     * 
+    **/
+    where: CafeCouponGroupWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponGroup base type for findFirst actions
+   */
+  export type CafeCouponGroupFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroup
+     * 
+    **/
+    select?: CafeCouponGroupSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGroupInclude | null
+    /**
+     * Filter, which CafeCouponGroup to fetch.
+     * 
+    **/
+    where?: CafeCouponGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponGroups to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponGroupOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeCouponGroups.
+     * 
+    **/
+    cursor?: CafeCouponGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponGroups from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponGroups.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeCouponGroups.
+     * 
+    **/
+    distinct?: Enumerable<CafeCouponGroupScalarFieldEnum>
+  }
+
+  /**
+   * CafeCouponGroup: findFirst
+   */
+  export interface CafeCouponGroupFindFirstArgs extends CafeCouponGroupFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeCouponGroup findFirstOrThrow
+   */
+  export type CafeCouponGroupFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroup
+     * 
+    **/
+    select?: CafeCouponGroupSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGroupInclude | null
+    /**
+     * Filter, which CafeCouponGroup to fetch.
+     * 
+    **/
+    where?: CafeCouponGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponGroups to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponGroupOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeCouponGroups.
+     * 
+    **/
+    cursor?: CafeCouponGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponGroups from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponGroups.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeCouponGroups.
+     * 
+    **/
+    distinct?: Enumerable<CafeCouponGroupScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeCouponGroup findMany
+   */
+  export type CafeCouponGroupFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroup
+     * 
+    **/
+    select?: CafeCouponGroupSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGroupInclude | null
+    /**
+     * Filter, which CafeCouponGroups to fetch.
+     * 
+    **/
+    where?: CafeCouponGroupWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponGroups to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponGroupOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CafeCouponGroups.
+     * 
+    **/
+    cursor?: CafeCouponGroupWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponGroups from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponGroups.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<CafeCouponGroupScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeCouponGroup create
+   */
+  export type CafeCouponGroupCreateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroup
+     * 
+    **/
+    select?: CafeCouponGroupSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGroupInclude | null
+    /**
+     * The data needed to create a CafeCouponGroup.
+     * 
+    **/
+    data: XOR<CafeCouponGroupCreateInput, CafeCouponGroupUncheckedCreateInput>
+  }
+
+
+  /**
+   * CafeCouponGroup createMany
+   */
+  export type CafeCouponGroupCreateManyArgs = {
+    /**
+     * The data used to create many CafeCouponGroups.
+     * 
+    **/
+    data: Enumerable<CafeCouponGroupCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * CafeCouponGroup update
+   */
+  export type CafeCouponGroupUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroup
+     * 
+    **/
+    select?: CafeCouponGroupSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGroupInclude | null
+    /**
+     * The data needed to update a CafeCouponGroup.
+     * 
+    **/
+    data: XOR<CafeCouponGroupUpdateInput, CafeCouponGroupUncheckedUpdateInput>
+    /**
+     * Choose, which CafeCouponGroup to update.
+     * 
+    **/
+    where: CafeCouponGroupWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponGroup updateMany
+   */
+  export type CafeCouponGroupUpdateManyArgs = {
+    /**
+     * The data used to update CafeCouponGroups.
+     * 
+    **/
+    data: XOR<CafeCouponGroupUpdateManyMutationInput, CafeCouponGroupUncheckedUpdateManyInput>
+    /**
+     * Filter which CafeCouponGroups to update
+     * 
+    **/
+    where?: CafeCouponGroupWhereInput
+  }
+
+
+  /**
+   * CafeCouponGroup upsert
+   */
+  export type CafeCouponGroupUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroup
+     * 
+    **/
+    select?: CafeCouponGroupSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGroupInclude | null
+    /**
+     * The filter to search for the CafeCouponGroup to update in case it exists.
+     * 
+    **/
+    where: CafeCouponGroupWhereUniqueInput
+    /**
+     * In case the CafeCouponGroup found by the `where` argument doesn't exist, create a new CafeCouponGroup with this data.
+     * 
+    **/
+    create: XOR<CafeCouponGroupCreateInput, CafeCouponGroupUncheckedCreateInput>
+    /**
+     * In case the CafeCouponGroup was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<CafeCouponGroupUpdateInput, CafeCouponGroupUncheckedUpdateInput>
+  }
+
+
+  /**
+   * CafeCouponGroup delete
+   */
+  export type CafeCouponGroupDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroup
+     * 
+    **/
+    select?: CafeCouponGroupSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGroupInclude | null
+    /**
+     * Filter which CafeCouponGroup to delete.
+     * 
+    **/
+    where: CafeCouponGroupWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponGroup deleteMany
+   */
+  export type CafeCouponGroupDeleteManyArgs = {
+    /**
+     * Filter which CafeCouponGroups to delete
+     * 
+    **/
+    where?: CafeCouponGroupWhereInput
+  }
+
+
+  /**
+   * CafeCouponGroup without action
+   */
+  export type CafeCouponGroupArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGroup
+     * 
+    **/
+    select?: CafeCouponGroupSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGroupInclude | null
+  }
+
+
+
+  /**
+   * Model CafeCouponGoupPartner
+   */
+
+
+  export type AggregateCafeCouponGoupPartner = {
+    _count: CafeCouponGoupPartnerCountAggregateOutputType | null
+    _avg: CafeCouponGoupPartnerAvgAggregateOutputType | null
+    _sum: CafeCouponGoupPartnerSumAggregateOutputType | null
+    _min: CafeCouponGoupPartnerMinAggregateOutputType | null
+    _max: CafeCouponGoupPartnerMaxAggregateOutputType | null
+  }
+
+  export type CafeCouponGoupPartnerAvgAggregateOutputType = {
+    cafeCouponGroupId: number | null
+    cafeInfoId: number | null
+  }
+
+  export type CafeCouponGoupPartnerSumAggregateOutputType = {
+    cafeCouponGroupId: number | null
+    cafeInfoId: number | null
+  }
+
+  export type CafeCouponGoupPartnerMinAggregateOutputType = {
+    cafeCouponGroupId: number | null
+    cafeInfoId: number | null
+  }
+
+  export type CafeCouponGoupPartnerMaxAggregateOutputType = {
+    cafeCouponGroupId: number | null
+    cafeInfoId: number | null
+  }
+
+  export type CafeCouponGoupPartnerCountAggregateOutputType = {
+    cafeCouponGroupId: number
+    cafeInfoId: number
+    _all: number
+  }
+
+
+  export type CafeCouponGoupPartnerAvgAggregateInputType = {
+    cafeCouponGroupId?: true
+    cafeInfoId?: true
+  }
+
+  export type CafeCouponGoupPartnerSumAggregateInputType = {
+    cafeCouponGroupId?: true
+    cafeInfoId?: true
+  }
+
+  export type CafeCouponGoupPartnerMinAggregateInputType = {
+    cafeCouponGroupId?: true
+    cafeInfoId?: true
+  }
+
+  export type CafeCouponGoupPartnerMaxAggregateInputType = {
+    cafeCouponGroupId?: true
+    cafeInfoId?: true
+  }
+
+  export type CafeCouponGoupPartnerCountAggregateInputType = {
+    cafeCouponGroupId?: true
+    cafeInfoId?: true
+    _all?: true
+  }
+
+  export type CafeCouponGoupPartnerAggregateArgs = {
+    /**
+     * Filter which CafeCouponGoupPartner to aggregate.
+     * 
+    **/
+    where?: CafeCouponGoupPartnerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponGoupPartners to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponGoupPartnerOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: CafeCouponGoupPartnerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponGoupPartners from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponGoupPartners.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CafeCouponGoupPartners
+    **/
+    _count?: true | CafeCouponGoupPartnerCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CafeCouponGoupPartnerAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CafeCouponGoupPartnerSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CafeCouponGoupPartnerMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CafeCouponGoupPartnerMaxAggregateInputType
+  }
+
+  export type GetCafeCouponGoupPartnerAggregateType<T extends CafeCouponGoupPartnerAggregateArgs> = {
+        [P in keyof T & keyof AggregateCafeCouponGoupPartner]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCafeCouponGoupPartner[P]>
+      : GetScalarType<T[P], AggregateCafeCouponGoupPartner[P]>
+  }
+
+
+
+
+  export type CafeCouponGoupPartnerGroupByArgs = {
+    where?: CafeCouponGoupPartnerWhereInput
+    orderBy?: Enumerable<CafeCouponGoupPartnerOrderByWithAggregationInput>
+    by: Array<CafeCouponGoupPartnerScalarFieldEnum>
+    having?: CafeCouponGoupPartnerScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CafeCouponGoupPartnerCountAggregateInputType | true
+    _avg?: CafeCouponGoupPartnerAvgAggregateInputType
+    _sum?: CafeCouponGoupPartnerSumAggregateInputType
+    _min?: CafeCouponGoupPartnerMinAggregateInputType
+    _max?: CafeCouponGoupPartnerMaxAggregateInputType
+  }
+
+
+  export type CafeCouponGoupPartnerGroupByOutputType = {
+    cafeCouponGroupId: number
+    cafeInfoId: number
+    _count: CafeCouponGoupPartnerCountAggregateOutputType | null
+    _avg: CafeCouponGoupPartnerAvgAggregateOutputType | null
+    _sum: CafeCouponGoupPartnerSumAggregateOutputType | null
+    _min: CafeCouponGoupPartnerMinAggregateOutputType | null
+    _max: CafeCouponGoupPartnerMaxAggregateOutputType | null
+  }
+
+  type GetCafeCouponGoupPartnerGroupByPayload<T extends CafeCouponGoupPartnerGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<CafeCouponGoupPartnerGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CafeCouponGoupPartnerGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CafeCouponGoupPartnerGroupByOutputType[P]>
+            : GetScalarType<T[P], CafeCouponGoupPartnerGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CafeCouponGoupPartnerSelect = {
+    cafeCouponGroupId?: boolean
+    CafeCouponGroup?: boolean | CafeCouponGroupArgs
+    cafeInfoId?: boolean
+    CafeInfo?: boolean | CafeInfoArgs
+  }
+
+
+  export type CafeCouponGoupPartnerInclude = {
+    CafeCouponGroup?: boolean | CafeCouponGroupArgs
+    CafeInfo?: boolean | CafeInfoArgs
+  } 
+
+  export type CafeCouponGoupPartnerGetPayload<S extends boolean | null | undefined | CafeCouponGoupPartnerArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeCouponGoupPartner :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeCouponGoupPartnerArgs | CafeCouponGoupPartnerFindManyArgs)
+    ? CafeCouponGoupPartner  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'CafeCouponGroup' ? CafeCouponGroupGetPayload<S['include'][P]> :
+        P extends 'CafeInfo' ? CafeInfoGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (CafeCouponGoupPartnerArgs | CafeCouponGoupPartnerFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'CafeCouponGroup' ? CafeCouponGroupGetPayload<S['select'][P]> :
+        P extends 'CafeInfo' ? CafeInfoGetPayload<S['select'][P]> :  P extends keyof CafeCouponGoupPartner ? CafeCouponGoupPartner[P] : never
+  } 
+      : CafeCouponGoupPartner
+
+
+  type CafeCouponGoupPartnerCountArgs = Merge<
+    Omit<CafeCouponGoupPartnerFindManyArgs, 'select' | 'include'> & {
+      select?: CafeCouponGoupPartnerCountAggregateInputType | true
+    }
+  >
+
+  export interface CafeCouponGoupPartnerDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one CafeCouponGoupPartner that matches the filter.
+     * @param {CafeCouponGoupPartnerFindUniqueArgs} args - Arguments to find a CafeCouponGoupPartner
+     * @example
+     * // Get one CafeCouponGoupPartner
+     * const cafeCouponGoupPartner = await prisma.cafeCouponGoupPartner.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends CafeCouponGoupPartnerFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, CafeCouponGoupPartnerFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeCouponGoupPartner'> extends True ? Prisma__CafeCouponGoupPartnerClient<CafeCouponGoupPartnerGetPayload<T>> : Prisma__CafeCouponGoupPartnerClient<CafeCouponGoupPartnerGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeCouponGoupPartner that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeCouponGoupPartnerFindUniqueOrThrowArgs} args - Arguments to find a CafeCouponGoupPartner
+     * @example
+     * // Get one CafeCouponGoupPartner
+     * const cafeCouponGoupPartner = await prisma.cafeCouponGoupPartner.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeCouponGoupPartnerFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeCouponGoupPartnerFindUniqueOrThrowArgs>
+    ): Prisma__CafeCouponGoupPartnerClient<CafeCouponGoupPartnerGetPayload<T>>
+
+    /**
+     * Find the first CafeCouponGoupPartner that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGoupPartnerFindFirstArgs} args - Arguments to find a CafeCouponGoupPartner
+     * @example
+     * // Get one CafeCouponGoupPartner
+     * const cafeCouponGoupPartner = await prisma.cafeCouponGoupPartner.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends CafeCouponGoupPartnerFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, CafeCouponGoupPartnerFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeCouponGoupPartner'> extends True ? Prisma__CafeCouponGoupPartnerClient<CafeCouponGoupPartnerGetPayload<T>> : Prisma__CafeCouponGoupPartnerClient<CafeCouponGoupPartnerGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeCouponGoupPartner that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGoupPartnerFindFirstOrThrowArgs} args - Arguments to find a CafeCouponGoupPartner
+     * @example
+     * // Get one CafeCouponGoupPartner
+     * const cafeCouponGoupPartner = await prisma.cafeCouponGoupPartner.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeCouponGoupPartnerFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeCouponGoupPartnerFindFirstOrThrowArgs>
+    ): Prisma__CafeCouponGoupPartnerClient<CafeCouponGoupPartnerGetPayload<T>>
+
+    /**
+     * Find zero or more CafeCouponGoupPartners that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGoupPartnerFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CafeCouponGoupPartners
+     * const cafeCouponGoupPartners = await prisma.cafeCouponGoupPartner.findMany()
+     * 
+     * // Get first 10 CafeCouponGoupPartners
+     * const cafeCouponGoupPartners = await prisma.cafeCouponGoupPartner.findMany({ take: 10 })
+     * 
+     * // Only select the `cafeCouponGroupId`
+     * const cafeCouponGoupPartnerWithCafeCouponGroupIdOnly = await prisma.cafeCouponGoupPartner.findMany({ select: { cafeCouponGroupId: true } })
+     * 
+    **/
+    findMany<T extends CafeCouponGoupPartnerFindManyArgs>(
+      args?: SelectSubset<T, CafeCouponGoupPartnerFindManyArgs>
+    ): PrismaPromise<Array<CafeCouponGoupPartnerGetPayload<T>>>
+
+    /**
+     * Create a CafeCouponGoupPartner.
+     * @param {CafeCouponGoupPartnerCreateArgs} args - Arguments to create a CafeCouponGoupPartner.
+     * @example
+     * // Create one CafeCouponGoupPartner
+     * const CafeCouponGoupPartner = await prisma.cafeCouponGoupPartner.create({
+     *   data: {
+     *     // ... data to create a CafeCouponGoupPartner
+     *   }
+     * })
+     * 
+    **/
+    create<T extends CafeCouponGoupPartnerCreateArgs>(
+      args: SelectSubset<T, CafeCouponGoupPartnerCreateArgs>
+    ): Prisma__CafeCouponGoupPartnerClient<CafeCouponGoupPartnerGetPayload<T>>
+
+    /**
+     * Create many CafeCouponGoupPartners.
+     *     @param {CafeCouponGoupPartnerCreateManyArgs} args - Arguments to create many CafeCouponGoupPartners.
+     *     @example
+     *     // Create many CafeCouponGoupPartners
+     *     const cafeCouponGoupPartner = await prisma.cafeCouponGoupPartner.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends CafeCouponGoupPartnerCreateManyArgs>(
+      args?: SelectSubset<T, CafeCouponGoupPartnerCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CafeCouponGoupPartner.
+     * @param {CafeCouponGoupPartnerDeleteArgs} args - Arguments to delete one CafeCouponGoupPartner.
+     * @example
+     * // Delete one CafeCouponGoupPartner
+     * const CafeCouponGoupPartner = await prisma.cafeCouponGoupPartner.delete({
+     *   where: {
+     *     // ... filter to delete one CafeCouponGoupPartner
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends CafeCouponGoupPartnerDeleteArgs>(
+      args: SelectSubset<T, CafeCouponGoupPartnerDeleteArgs>
+    ): Prisma__CafeCouponGoupPartnerClient<CafeCouponGoupPartnerGetPayload<T>>
+
+    /**
+     * Update one CafeCouponGoupPartner.
+     * @param {CafeCouponGoupPartnerUpdateArgs} args - Arguments to update one CafeCouponGoupPartner.
+     * @example
+     * // Update one CafeCouponGoupPartner
+     * const cafeCouponGoupPartner = await prisma.cafeCouponGoupPartner.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends CafeCouponGoupPartnerUpdateArgs>(
+      args: SelectSubset<T, CafeCouponGoupPartnerUpdateArgs>
+    ): Prisma__CafeCouponGoupPartnerClient<CafeCouponGoupPartnerGetPayload<T>>
+
+    /**
+     * Delete zero or more CafeCouponGoupPartners.
+     * @param {CafeCouponGoupPartnerDeleteManyArgs} args - Arguments to filter CafeCouponGoupPartners to delete.
+     * @example
+     * // Delete a few CafeCouponGoupPartners
+     * const { count } = await prisma.cafeCouponGoupPartner.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends CafeCouponGoupPartnerDeleteManyArgs>(
+      args?: SelectSubset<T, CafeCouponGoupPartnerDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CafeCouponGoupPartners.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGoupPartnerUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CafeCouponGoupPartners
+     * const cafeCouponGoupPartner = await prisma.cafeCouponGoupPartner.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends CafeCouponGoupPartnerUpdateManyArgs>(
+      args: SelectSubset<T, CafeCouponGoupPartnerUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CafeCouponGoupPartner.
+     * @param {CafeCouponGoupPartnerUpsertArgs} args - Arguments to update or create a CafeCouponGoupPartner.
+     * @example
+     * // Update or create a CafeCouponGoupPartner
+     * const cafeCouponGoupPartner = await prisma.cafeCouponGoupPartner.upsert({
+     *   create: {
+     *     // ... data to create a CafeCouponGoupPartner
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CafeCouponGoupPartner we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends CafeCouponGoupPartnerUpsertArgs>(
+      args: SelectSubset<T, CafeCouponGoupPartnerUpsertArgs>
+    ): Prisma__CafeCouponGoupPartnerClient<CafeCouponGoupPartnerGetPayload<T>>
+
+    /**
+     * Count the number of CafeCouponGoupPartners.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGoupPartnerCountArgs} args - Arguments to filter CafeCouponGoupPartners to count.
+     * @example
+     * // Count the number of CafeCouponGoupPartners
+     * const count = await prisma.cafeCouponGoupPartner.count({
+     *   where: {
+     *     // ... the filter for the CafeCouponGoupPartners we want to count
+     *   }
+     * })
+    **/
+    count<T extends CafeCouponGoupPartnerCountArgs>(
+      args?: Subset<T, CafeCouponGoupPartnerCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CafeCouponGoupPartnerCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CafeCouponGoupPartner.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGoupPartnerAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CafeCouponGoupPartnerAggregateArgs>(args: Subset<T, CafeCouponGoupPartnerAggregateArgs>): PrismaPromise<GetCafeCouponGoupPartnerAggregateType<T>>
+
+    /**
+     * Group by CafeCouponGoupPartner.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGoupPartnerGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CafeCouponGoupPartnerGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CafeCouponGoupPartnerGroupByArgs['orderBy'] }
+        : { orderBy?: CafeCouponGoupPartnerGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CafeCouponGoupPartnerGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeCouponGoupPartnerGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CafeCouponGoupPartner.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__CafeCouponGoupPartnerClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    CafeCouponGroup<T extends CafeCouponGroupArgs= {}>(args?: Subset<T, CafeCouponGroupArgs>): Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T> | Null>;
+
+    CafeInfo<T extends CafeInfoArgs= {}>(args?: Subset<T, CafeInfoArgs>): Prisma__CafeInfoClient<CafeInfoGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * CafeCouponGoupPartner base type for findUnique actions
+   */
+  export type CafeCouponGoupPartnerFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGoupPartner
+     * 
+    **/
+    select?: CafeCouponGoupPartnerSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGoupPartnerInclude | null
+    /**
+     * Filter, which CafeCouponGoupPartner to fetch.
+     * 
+    **/
+    where: CafeCouponGoupPartnerWhereUniqueInput
+  }
+
+  /**
+   * CafeCouponGoupPartner: findUnique
+   */
+  export interface CafeCouponGoupPartnerFindUniqueArgs extends CafeCouponGoupPartnerFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeCouponGoupPartner findUniqueOrThrow
+   */
+  export type CafeCouponGoupPartnerFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGoupPartner
+     * 
+    **/
+    select?: CafeCouponGoupPartnerSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGoupPartnerInclude | null
+    /**
+     * Filter, which CafeCouponGoupPartner to fetch.
+     * 
+    **/
+    where: CafeCouponGoupPartnerWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponGoupPartner base type for findFirst actions
+   */
+  export type CafeCouponGoupPartnerFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGoupPartner
+     * 
+    **/
+    select?: CafeCouponGoupPartnerSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGoupPartnerInclude | null
+    /**
+     * Filter, which CafeCouponGoupPartner to fetch.
+     * 
+    **/
+    where?: CafeCouponGoupPartnerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponGoupPartners to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponGoupPartnerOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeCouponGoupPartners.
+     * 
+    **/
+    cursor?: CafeCouponGoupPartnerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponGoupPartners from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponGoupPartners.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeCouponGoupPartners.
+     * 
+    **/
+    distinct?: Enumerable<CafeCouponGoupPartnerScalarFieldEnum>
+  }
+
+  /**
+   * CafeCouponGoupPartner: findFirst
+   */
+  export interface CafeCouponGoupPartnerFindFirstArgs extends CafeCouponGoupPartnerFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeCouponGoupPartner findFirstOrThrow
+   */
+  export type CafeCouponGoupPartnerFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGoupPartner
+     * 
+    **/
+    select?: CafeCouponGoupPartnerSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGoupPartnerInclude | null
+    /**
+     * Filter, which CafeCouponGoupPartner to fetch.
+     * 
+    **/
+    where?: CafeCouponGoupPartnerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponGoupPartners to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponGoupPartnerOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeCouponGoupPartners.
+     * 
+    **/
+    cursor?: CafeCouponGoupPartnerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponGoupPartners from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponGoupPartners.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeCouponGoupPartners.
+     * 
+    **/
+    distinct?: Enumerable<CafeCouponGoupPartnerScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeCouponGoupPartner findMany
+   */
+  export type CafeCouponGoupPartnerFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGoupPartner
+     * 
+    **/
+    select?: CafeCouponGoupPartnerSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGoupPartnerInclude | null
+    /**
+     * Filter, which CafeCouponGoupPartners to fetch.
+     * 
+    **/
+    where?: CafeCouponGoupPartnerWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponGoupPartners to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponGoupPartnerOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CafeCouponGoupPartners.
+     * 
+    **/
+    cursor?: CafeCouponGoupPartnerWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponGoupPartners from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponGoupPartners.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<CafeCouponGoupPartnerScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeCouponGoupPartner create
+   */
+  export type CafeCouponGoupPartnerCreateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGoupPartner
+     * 
+    **/
+    select?: CafeCouponGoupPartnerSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGoupPartnerInclude | null
+    /**
+     * The data needed to create a CafeCouponGoupPartner.
+     * 
+    **/
+    data: XOR<CafeCouponGoupPartnerCreateInput, CafeCouponGoupPartnerUncheckedCreateInput>
+  }
+
+
+  /**
+   * CafeCouponGoupPartner createMany
+   */
+  export type CafeCouponGoupPartnerCreateManyArgs = {
+    /**
+     * The data used to create many CafeCouponGoupPartners.
+     * 
+    **/
+    data: Enumerable<CafeCouponGoupPartnerCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * CafeCouponGoupPartner update
+   */
+  export type CafeCouponGoupPartnerUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGoupPartner
+     * 
+    **/
+    select?: CafeCouponGoupPartnerSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGoupPartnerInclude | null
+    /**
+     * The data needed to update a CafeCouponGoupPartner.
+     * 
+    **/
+    data: XOR<CafeCouponGoupPartnerUpdateInput, CafeCouponGoupPartnerUncheckedUpdateInput>
+    /**
+     * Choose, which CafeCouponGoupPartner to update.
+     * 
+    **/
+    where: CafeCouponGoupPartnerWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponGoupPartner updateMany
+   */
+  export type CafeCouponGoupPartnerUpdateManyArgs = {
+    /**
+     * The data used to update CafeCouponGoupPartners.
+     * 
+    **/
+    data: XOR<CafeCouponGoupPartnerUpdateManyMutationInput, CafeCouponGoupPartnerUncheckedUpdateManyInput>
+    /**
+     * Filter which CafeCouponGoupPartners to update
+     * 
+    **/
+    where?: CafeCouponGoupPartnerWhereInput
+  }
+
+
+  /**
+   * CafeCouponGoupPartner upsert
+   */
+  export type CafeCouponGoupPartnerUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGoupPartner
+     * 
+    **/
+    select?: CafeCouponGoupPartnerSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGoupPartnerInclude | null
+    /**
+     * The filter to search for the CafeCouponGoupPartner to update in case it exists.
+     * 
+    **/
+    where: CafeCouponGoupPartnerWhereUniqueInput
+    /**
+     * In case the CafeCouponGoupPartner found by the `where` argument doesn't exist, create a new CafeCouponGoupPartner with this data.
+     * 
+    **/
+    create: XOR<CafeCouponGoupPartnerCreateInput, CafeCouponGoupPartnerUncheckedCreateInput>
+    /**
+     * In case the CafeCouponGoupPartner was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<CafeCouponGoupPartnerUpdateInput, CafeCouponGoupPartnerUncheckedUpdateInput>
+  }
+
+
+  /**
+   * CafeCouponGoupPartner delete
+   */
+  export type CafeCouponGoupPartnerDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGoupPartner
+     * 
+    **/
+    select?: CafeCouponGoupPartnerSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGoupPartnerInclude | null
+    /**
+     * Filter which CafeCouponGoupPartner to delete.
+     * 
+    **/
+    where: CafeCouponGoupPartnerWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponGoupPartner deleteMany
+   */
+  export type CafeCouponGoupPartnerDeleteManyArgs = {
+    /**
+     * Filter which CafeCouponGoupPartners to delete
+     * 
+    **/
+    where?: CafeCouponGoupPartnerWhereInput
+  }
+
+
+  /**
+   * CafeCouponGoupPartner without action
+   */
+  export type CafeCouponGoupPartnerArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponGoupPartner
+     * 
+    **/
+    select?: CafeCouponGoupPartnerSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponGoupPartnerInclude | null
+  }
+
+
+
+  /**
+   * Model ProxyUser
+   */
+
+
+  export type AggregateProxyUser = {
+    _count: ProxyUserCountAggregateOutputType | null
+    _avg: ProxyUserAvgAggregateOutputType | null
+    _sum: ProxyUserSumAggregateOutputType | null
+    _min: ProxyUserMinAggregateOutputType | null
+    _max: ProxyUserMaxAggregateOutputType | null
+  }
+
+  export type ProxyUserAvgAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type ProxyUserSumAggregateOutputType = {
+    id: number | null
+    userId: number | null
+  }
+
+  export type ProxyUserMinAggregateOutputType = {
+    id: number | null
+    memberId: string | null
+    createdAt: Date | null
+    proxyUserType: ProxyUserType | null
+    name: string | null
+    token: string | null
+    userId: number | null
+  }
+
+  export type ProxyUserMaxAggregateOutputType = {
+    id: number | null
+    memberId: string | null
+    createdAt: Date | null
+    proxyUserType: ProxyUserType | null
+    name: string | null
+    token: string | null
+    userId: number | null
+  }
+
+  export type ProxyUserCountAggregateOutputType = {
+    id: number
+    memberId: number
+    createdAt: number
+    proxyUserType: number
+    name: number
+    token: number
+    userId: number
+    _all: number
+  }
+
+
+  export type ProxyUserAvgAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type ProxyUserSumAggregateInputType = {
+    id?: true
+    userId?: true
+  }
+
+  export type ProxyUserMinAggregateInputType = {
+    id?: true
+    memberId?: true
+    createdAt?: true
+    proxyUserType?: true
+    name?: true
+    token?: true
+    userId?: true
+  }
+
+  export type ProxyUserMaxAggregateInputType = {
+    id?: true
+    memberId?: true
+    createdAt?: true
+    proxyUserType?: true
+    name?: true
+    token?: true
+    userId?: true
+  }
+
+  export type ProxyUserCountAggregateInputType = {
+    id?: true
+    memberId?: true
+    createdAt?: true
+    proxyUserType?: true
+    name?: true
+    token?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type ProxyUserAggregateArgs = {
+    /**
+     * Filter which ProxyUser to aggregate.
+     * 
+    **/
+    where?: ProxyUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProxyUsers to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProxyUserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: ProxyUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProxyUsers from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProxyUsers.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProxyUsers
+    **/
+    _count?: true | ProxyUserCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProxyUserAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProxyUserSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProxyUserMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProxyUserMaxAggregateInputType
+  }
+
+  export type GetProxyUserAggregateType<T extends ProxyUserAggregateArgs> = {
+        [P in keyof T & keyof AggregateProxyUser]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProxyUser[P]>
+      : GetScalarType<T[P], AggregateProxyUser[P]>
+  }
+
+
+
+
+  export type ProxyUserGroupByArgs = {
+    where?: ProxyUserWhereInput
+    orderBy?: Enumerable<ProxyUserOrderByWithAggregationInput>
+    by: Array<ProxyUserScalarFieldEnum>
+    having?: ProxyUserScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProxyUserCountAggregateInputType | true
+    _avg?: ProxyUserAvgAggregateInputType
+    _sum?: ProxyUserSumAggregateInputType
+    _min?: ProxyUserMinAggregateInputType
+    _max?: ProxyUserMaxAggregateInputType
+  }
+
+
+  export type ProxyUserGroupByOutputType = {
+    id: number
+    memberId: string
+    createdAt: Date
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+    userId: number | null
+    _count: ProxyUserCountAggregateOutputType | null
+    _avg: ProxyUserAvgAggregateOutputType | null
+    _sum: ProxyUserSumAggregateOutputType | null
+    _min: ProxyUserMinAggregateOutputType | null
+    _max: ProxyUserMaxAggregateOutputType | null
+  }
+
+  type GetProxyUserGroupByPayload<T extends ProxyUserGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<ProxyUserGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProxyUserGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProxyUserGroupByOutputType[P]>
+            : GetScalarType<T[P], ProxyUserGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProxyUserSelect = {
+    id?: boolean
+    memberId?: boolean
+    createdAt?: boolean
+    proxyUserType?: boolean
+    name?: boolean
+    token?: boolean
+    userId?: boolean
+    User?: boolean | UserArgs
+    CafeCoupons?: boolean | CafeCouponFindManyArgs
+    _count?: boolean | ProxyUserCountOutputTypeArgs
+  }
+
+
+  export type ProxyUserInclude = {
+    User?: boolean | UserArgs
+    CafeCoupons?: boolean | CafeCouponFindManyArgs
+    _count?: boolean | ProxyUserCountOutputTypeArgs
+  } 
+
+  export type ProxyUserGetPayload<S extends boolean | null | undefined | ProxyUserArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ProxyUser :
+    S extends undefined ? never :
+    S extends { include: any } & (ProxyUserArgs | ProxyUserFindManyArgs)
+    ? ProxyUser  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'User' ? UserGetPayload<S['include'][P]> | null :
+        P extends 'CafeCoupons' ? Array < CafeCouponGetPayload<S['include'][P]>>  :
+        P extends '_count' ? ProxyUserCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (ProxyUserArgs | ProxyUserFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'User' ? UserGetPayload<S['select'][P]> | null :
+        P extends 'CafeCoupons' ? Array < CafeCouponGetPayload<S['select'][P]>>  :
+        P extends '_count' ? ProxyUserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof ProxyUser ? ProxyUser[P] : never
+  } 
+      : ProxyUser
+
+
+  type ProxyUserCountArgs = Merge<
+    Omit<ProxyUserFindManyArgs, 'select' | 'include'> & {
+      select?: ProxyUserCountAggregateInputType | true
+    }
+  >
+
+  export interface ProxyUserDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one ProxyUser that matches the filter.
+     * @param {ProxyUserFindUniqueArgs} args - Arguments to find a ProxyUser
+     * @example
+     * // Get one ProxyUser
+     * const proxyUser = await prisma.proxyUser.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ProxyUserFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ProxyUserFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'ProxyUser'> extends True ? Prisma__ProxyUserClient<ProxyUserGetPayload<T>> : Prisma__ProxyUserClient<ProxyUserGetPayload<T> | null, null>
+
+    /**
+     * Find one ProxyUser that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ProxyUserFindUniqueOrThrowArgs} args - Arguments to find a ProxyUser
+     * @example
+     * // Get one ProxyUser
+     * const proxyUser = await prisma.proxyUser.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ProxyUserFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ProxyUserFindUniqueOrThrowArgs>
+    ): Prisma__ProxyUserClient<ProxyUserGetPayload<T>>
+
+    /**
+     * Find the first ProxyUser that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProxyUserFindFirstArgs} args - Arguments to find a ProxyUser
+     * @example
+     * // Get one ProxyUser
+     * const proxyUser = await prisma.proxyUser.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ProxyUserFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ProxyUserFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'ProxyUser'> extends True ? Prisma__ProxyUserClient<ProxyUserGetPayload<T>> : Prisma__ProxyUserClient<ProxyUserGetPayload<T> | null, null>
+
+    /**
+     * Find the first ProxyUser that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProxyUserFindFirstOrThrowArgs} args - Arguments to find a ProxyUser
+     * @example
+     * // Get one ProxyUser
+     * const proxyUser = await prisma.proxyUser.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ProxyUserFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ProxyUserFindFirstOrThrowArgs>
+    ): Prisma__ProxyUserClient<ProxyUserGetPayload<T>>
+
+    /**
+     * Find zero or more ProxyUsers that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProxyUserFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProxyUsers
+     * const proxyUsers = await prisma.proxyUser.findMany()
+     * 
+     * // Get first 10 ProxyUsers
+     * const proxyUsers = await prisma.proxyUser.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const proxyUserWithIdOnly = await prisma.proxyUser.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends ProxyUserFindManyArgs>(
+      args?: SelectSubset<T, ProxyUserFindManyArgs>
+    ): PrismaPromise<Array<ProxyUserGetPayload<T>>>
+
+    /**
+     * Create a ProxyUser.
+     * @param {ProxyUserCreateArgs} args - Arguments to create a ProxyUser.
+     * @example
+     * // Create one ProxyUser
+     * const ProxyUser = await prisma.proxyUser.create({
+     *   data: {
+     *     // ... data to create a ProxyUser
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ProxyUserCreateArgs>(
+      args: SelectSubset<T, ProxyUserCreateArgs>
+    ): Prisma__ProxyUserClient<ProxyUserGetPayload<T>>
+
+    /**
+     * Create many ProxyUsers.
+     *     @param {ProxyUserCreateManyArgs} args - Arguments to create many ProxyUsers.
+     *     @example
+     *     // Create many ProxyUsers
+     *     const proxyUser = await prisma.proxyUser.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ProxyUserCreateManyArgs>(
+      args?: SelectSubset<T, ProxyUserCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ProxyUser.
+     * @param {ProxyUserDeleteArgs} args - Arguments to delete one ProxyUser.
+     * @example
+     * // Delete one ProxyUser
+     * const ProxyUser = await prisma.proxyUser.delete({
+     *   where: {
+     *     // ... filter to delete one ProxyUser
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ProxyUserDeleteArgs>(
+      args: SelectSubset<T, ProxyUserDeleteArgs>
+    ): Prisma__ProxyUserClient<ProxyUserGetPayload<T>>
+
+    /**
+     * Update one ProxyUser.
+     * @param {ProxyUserUpdateArgs} args - Arguments to update one ProxyUser.
+     * @example
+     * // Update one ProxyUser
+     * const proxyUser = await prisma.proxyUser.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ProxyUserUpdateArgs>(
+      args: SelectSubset<T, ProxyUserUpdateArgs>
+    ): Prisma__ProxyUserClient<ProxyUserGetPayload<T>>
+
+    /**
+     * Delete zero or more ProxyUsers.
+     * @param {ProxyUserDeleteManyArgs} args - Arguments to filter ProxyUsers to delete.
+     * @example
+     * // Delete a few ProxyUsers
+     * const { count } = await prisma.proxyUser.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ProxyUserDeleteManyArgs>(
+      args?: SelectSubset<T, ProxyUserDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProxyUsers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProxyUserUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProxyUsers
+     * const proxyUser = await prisma.proxyUser.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ProxyUserUpdateManyArgs>(
+      args: SelectSubset<T, ProxyUserUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ProxyUser.
+     * @param {ProxyUserUpsertArgs} args - Arguments to update or create a ProxyUser.
+     * @example
+     * // Update or create a ProxyUser
+     * const proxyUser = await prisma.proxyUser.upsert({
+     *   create: {
+     *     // ... data to create a ProxyUser
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProxyUser we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ProxyUserUpsertArgs>(
+      args: SelectSubset<T, ProxyUserUpsertArgs>
+    ): Prisma__ProxyUserClient<ProxyUserGetPayload<T>>
+
+    /**
+     * Count the number of ProxyUsers.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProxyUserCountArgs} args - Arguments to filter ProxyUsers to count.
+     * @example
+     * // Count the number of ProxyUsers
+     * const count = await prisma.proxyUser.count({
+     *   where: {
+     *     // ... the filter for the ProxyUsers we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProxyUserCountArgs>(
+      args?: Subset<T, ProxyUserCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProxyUserCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProxyUser.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProxyUserAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProxyUserAggregateArgs>(args: Subset<T, ProxyUserAggregateArgs>): PrismaPromise<GetProxyUserAggregateType<T>>
+
+    /**
+     * Group by ProxyUser.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProxyUserGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProxyUserGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProxyUserGroupByArgs['orderBy'] }
+        : { orderBy?: ProxyUserGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProxyUserGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProxyUserGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProxyUser.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ProxyUserClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    User<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
+
+    CafeCoupons<T extends CafeCouponFindManyArgs= {}>(args?: Subset<T, CafeCouponFindManyArgs>): PrismaPromise<Array<CafeCouponGetPayload<T>>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ProxyUser base type for findUnique actions
+   */
+  export type ProxyUserFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the ProxyUser
+     * 
+    **/
+    select?: ProxyUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProxyUserInclude | null
+    /**
+     * Filter, which ProxyUser to fetch.
+     * 
+    **/
+    where: ProxyUserWhereUniqueInput
+  }
+
+  /**
+   * ProxyUser: findUnique
+   */
+  export interface ProxyUserFindUniqueArgs extends ProxyUserFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ProxyUser findUniqueOrThrow
+   */
+  export type ProxyUserFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ProxyUser
+     * 
+    **/
+    select?: ProxyUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProxyUserInclude | null
+    /**
+     * Filter, which ProxyUser to fetch.
+     * 
+    **/
+    where: ProxyUserWhereUniqueInput
+  }
+
+
+  /**
+   * ProxyUser base type for findFirst actions
+   */
+  export type ProxyUserFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the ProxyUser
+     * 
+    **/
+    select?: ProxyUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProxyUserInclude | null
+    /**
+     * Filter, which ProxyUser to fetch.
+     * 
+    **/
+    where?: ProxyUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProxyUsers to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProxyUserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProxyUsers.
+     * 
+    **/
+    cursor?: ProxyUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProxyUsers from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProxyUsers.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProxyUsers.
+     * 
+    **/
+    distinct?: Enumerable<ProxyUserScalarFieldEnum>
+  }
+
+  /**
+   * ProxyUser: findFirst
+   */
+  export interface ProxyUserFindFirstArgs extends ProxyUserFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ProxyUser findFirstOrThrow
+   */
+  export type ProxyUserFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ProxyUser
+     * 
+    **/
+    select?: ProxyUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProxyUserInclude | null
+    /**
+     * Filter, which ProxyUser to fetch.
+     * 
+    **/
+    where?: ProxyUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProxyUsers to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProxyUserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProxyUsers.
+     * 
+    **/
+    cursor?: ProxyUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProxyUsers from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProxyUsers.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProxyUsers.
+     * 
+    **/
+    distinct?: Enumerable<ProxyUserScalarFieldEnum>
+  }
+
+
+  /**
+   * ProxyUser findMany
+   */
+  export type ProxyUserFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the ProxyUser
+     * 
+    **/
+    select?: ProxyUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProxyUserInclude | null
+    /**
+     * Filter, which ProxyUsers to fetch.
+     * 
+    **/
+    where?: ProxyUserWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProxyUsers to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProxyUserOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProxyUsers.
+     * 
+    **/
+    cursor?: ProxyUserWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProxyUsers from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProxyUsers.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<ProxyUserScalarFieldEnum>
+  }
+
+
+  /**
+   * ProxyUser create
+   */
+  export type ProxyUserCreateArgs = {
+    /**
+     * Select specific fields to fetch from the ProxyUser
+     * 
+    **/
+    select?: ProxyUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProxyUserInclude | null
+    /**
+     * The data needed to create a ProxyUser.
+     * 
+    **/
+    data: XOR<ProxyUserCreateInput, ProxyUserUncheckedCreateInput>
+  }
+
+
+  /**
+   * ProxyUser createMany
+   */
+  export type ProxyUserCreateManyArgs = {
+    /**
+     * The data used to create many ProxyUsers.
+     * 
+    **/
+    data: Enumerable<ProxyUserCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * ProxyUser update
+   */
+  export type ProxyUserUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the ProxyUser
+     * 
+    **/
+    select?: ProxyUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProxyUserInclude | null
+    /**
+     * The data needed to update a ProxyUser.
+     * 
+    **/
+    data: XOR<ProxyUserUpdateInput, ProxyUserUncheckedUpdateInput>
+    /**
+     * Choose, which ProxyUser to update.
+     * 
+    **/
+    where: ProxyUserWhereUniqueInput
+  }
+
+
+  /**
+   * ProxyUser updateMany
+   */
+  export type ProxyUserUpdateManyArgs = {
+    /**
+     * The data used to update ProxyUsers.
+     * 
+    **/
+    data: XOR<ProxyUserUpdateManyMutationInput, ProxyUserUncheckedUpdateManyInput>
+    /**
+     * Filter which ProxyUsers to update
+     * 
+    **/
+    where?: ProxyUserWhereInput
+  }
+
+
+  /**
+   * ProxyUser upsert
+   */
+  export type ProxyUserUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the ProxyUser
+     * 
+    **/
+    select?: ProxyUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProxyUserInclude | null
+    /**
+     * The filter to search for the ProxyUser to update in case it exists.
+     * 
+    **/
+    where: ProxyUserWhereUniqueInput
+    /**
+     * In case the ProxyUser found by the `where` argument doesn't exist, create a new ProxyUser with this data.
+     * 
+    **/
+    create: XOR<ProxyUserCreateInput, ProxyUserUncheckedCreateInput>
+    /**
+     * In case the ProxyUser was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<ProxyUserUpdateInput, ProxyUserUncheckedUpdateInput>
+  }
+
+
+  /**
+   * ProxyUser delete
+   */
+  export type ProxyUserDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the ProxyUser
+     * 
+    **/
+    select?: ProxyUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProxyUserInclude | null
+    /**
+     * Filter which ProxyUser to delete.
+     * 
+    **/
+    where: ProxyUserWhereUniqueInput
+  }
+
+
+  /**
+   * ProxyUser deleteMany
+   */
+  export type ProxyUserDeleteManyArgs = {
+    /**
+     * Filter which ProxyUsers to delete
+     * 
+    **/
+    where?: ProxyUserWhereInput
+  }
+
+
+  /**
+   * ProxyUser without action
+   */
+  export type ProxyUserArgs = {
+    /**
+     * Select specific fields to fetch from the ProxyUser
+     * 
+    **/
+    select?: ProxyUserSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProxyUserInclude | null
+  }
+
+
+
+  /**
+   * Model CafeCoupon
+   */
+
+
+  export type AggregateCafeCoupon = {
+    _count: CafeCouponCountAggregateOutputType | null
+    _avg: CafeCouponAvgAggregateOutputType | null
+    _sum: CafeCouponSumAggregateOutputType | null
+    _min: CafeCouponMinAggregateOutputType | null
+    _max: CafeCouponMaxAggregateOutputType | null
+  }
+
+  export type CafeCouponAvgAggregateOutputType = {
+    id: number | null
+    proxyUserId: number | null
+    cafeCouponGroupId: number | null
+  }
+
+  export type CafeCouponSumAggregateOutputType = {
+    id: number | null
+    proxyUserId: number | null
+    cafeCouponGroupId: number | null
+  }
+
+  export type CafeCouponMinAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    name: string | null
+    content: string | null
+    serialNumber: string | null
+    startDay: Date | null
+    endDay: Date | null
+    isDisable: boolean | null
+    proxyUserId: number | null
+    cafeCouponGroupId: number | null
+  }
+
+  export type CafeCouponMaxAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    name: string | null
+    content: string | null
+    serialNumber: string | null
+    startDay: Date | null
+    endDay: Date | null
+    isDisable: boolean | null
+    proxyUserId: number | null
+    cafeCouponGroupId: number | null
+  }
+
+  export type CafeCouponCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    name: number
+    content: number
+    serialNumber: number
+    startDay: number
+    endDay: number
+    isDisable: number
+    proxyUserId: number
+    cafeCouponGroupId: number
+    _all: number
+  }
+
+
+  export type CafeCouponAvgAggregateInputType = {
+    id?: true
+    proxyUserId?: true
+    cafeCouponGroupId?: true
+  }
+
+  export type CafeCouponSumAggregateInputType = {
+    id?: true
+    proxyUserId?: true
+    cafeCouponGroupId?: true
+  }
+
+  export type CafeCouponMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    content?: true
+    serialNumber?: true
+    startDay?: true
+    endDay?: true
+    isDisable?: true
+    proxyUserId?: true
+    cafeCouponGroupId?: true
+  }
+
+  export type CafeCouponMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    content?: true
+    serialNumber?: true
+    startDay?: true
+    endDay?: true
+    isDisable?: true
+    proxyUserId?: true
+    cafeCouponGroupId?: true
+  }
+
+  export type CafeCouponCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    content?: true
+    serialNumber?: true
+    startDay?: true
+    endDay?: true
+    isDisable?: true
+    proxyUserId?: true
+    cafeCouponGroupId?: true
+    _all?: true
+  }
+
+  export type CafeCouponAggregateArgs = {
+    /**
+     * Filter which CafeCoupon to aggregate.
+     * 
+    **/
+    where?: CafeCouponWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCoupons to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: CafeCouponWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCoupons from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCoupons.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CafeCoupons
+    **/
+    _count?: true | CafeCouponCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CafeCouponAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CafeCouponSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CafeCouponMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CafeCouponMaxAggregateInputType
+  }
+
+  export type GetCafeCouponAggregateType<T extends CafeCouponAggregateArgs> = {
+        [P in keyof T & keyof AggregateCafeCoupon]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCafeCoupon[P]>
+      : GetScalarType<T[P], AggregateCafeCoupon[P]>
+  }
+
+
+
+
+  export type CafeCouponGroupByArgs = {
+    where?: CafeCouponWhereInput
+    orderBy?: Enumerable<CafeCouponOrderByWithAggregationInput>
+    by: Array<CafeCouponScalarFieldEnum>
+    having?: CafeCouponScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CafeCouponCountAggregateInputType | true
+    _avg?: CafeCouponAvgAggregateInputType
+    _sum?: CafeCouponSumAggregateInputType
+    _min?: CafeCouponMinAggregateInputType
+    _max?: CafeCouponMaxAggregateInputType
+  }
+
+
+  export type CafeCouponGroupByOutputType = {
+    id: number
+    createdAt: Date
+    name: string
+    content: string
+    serialNumber: string
+    startDay: Date
+    endDay: Date | null
+    isDisable: boolean
+    proxyUserId: number
+    cafeCouponGroupId: number
+    _count: CafeCouponCountAggregateOutputType | null
+    _avg: CafeCouponAvgAggregateOutputType | null
+    _sum: CafeCouponSumAggregateOutputType | null
+    _min: CafeCouponMinAggregateOutputType | null
+    _max: CafeCouponMaxAggregateOutputType | null
+  }
+
+  type GetCafeCouponGroupByPayload<T extends CafeCouponGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<CafeCouponGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CafeCouponGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CafeCouponGroupByOutputType[P]>
+            : GetScalarType<T[P], CafeCouponGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CafeCouponSelect = {
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    content?: boolean
+    serialNumber?: boolean
+    startDay?: boolean
+    endDay?: boolean
+    isDisable?: boolean
+    proxyUserId?: boolean
+    ProxyUser?: boolean | ProxyUserArgs
+    cafeCouponGroupId?: boolean
+    CafeCouponGroup?: boolean | CafeCouponGroupArgs
+    CafeCouponHistories?: boolean | CafeCouponHistoryFindManyArgs
+    _count?: boolean | CafeCouponCountOutputTypeArgs
+  }
+
+
+  export type CafeCouponInclude = {
+    ProxyUser?: boolean | ProxyUserArgs
+    CafeCouponGroup?: boolean | CafeCouponGroupArgs
+    CafeCouponHistories?: boolean | CafeCouponHistoryFindManyArgs
+    _count?: boolean | CafeCouponCountOutputTypeArgs
+  } 
+
+  export type CafeCouponGetPayload<S extends boolean | null | undefined | CafeCouponArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeCoupon :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeCouponArgs | CafeCouponFindManyArgs)
+    ? CafeCoupon  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'ProxyUser' ? ProxyUserGetPayload<S['include'][P]> :
+        P extends 'CafeCouponGroup' ? CafeCouponGroupGetPayload<S['include'][P]> :
+        P extends 'CafeCouponHistories' ? Array < CafeCouponHistoryGetPayload<S['include'][P]>>  :
+        P extends '_count' ? CafeCouponCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (CafeCouponArgs | CafeCouponFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'ProxyUser' ? ProxyUserGetPayload<S['select'][P]> :
+        P extends 'CafeCouponGroup' ? CafeCouponGroupGetPayload<S['select'][P]> :
+        P extends 'CafeCouponHistories' ? Array < CafeCouponHistoryGetPayload<S['select'][P]>>  :
+        P extends '_count' ? CafeCouponCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof CafeCoupon ? CafeCoupon[P] : never
+  } 
+      : CafeCoupon
+
+
+  type CafeCouponCountArgs = Merge<
+    Omit<CafeCouponFindManyArgs, 'select' | 'include'> & {
+      select?: CafeCouponCountAggregateInputType | true
+    }
+  >
+
+  export interface CafeCouponDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one CafeCoupon that matches the filter.
+     * @param {CafeCouponFindUniqueArgs} args - Arguments to find a CafeCoupon
+     * @example
+     * // Get one CafeCoupon
+     * const cafeCoupon = await prisma.cafeCoupon.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends CafeCouponFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, CafeCouponFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeCoupon'> extends True ? Prisma__CafeCouponClient<CafeCouponGetPayload<T>> : Prisma__CafeCouponClient<CafeCouponGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeCoupon that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeCouponFindUniqueOrThrowArgs} args - Arguments to find a CafeCoupon
+     * @example
+     * // Get one CafeCoupon
+     * const cafeCoupon = await prisma.cafeCoupon.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeCouponFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeCouponFindUniqueOrThrowArgs>
+    ): Prisma__CafeCouponClient<CafeCouponGetPayload<T>>
+
+    /**
+     * Find the first CafeCoupon that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponFindFirstArgs} args - Arguments to find a CafeCoupon
+     * @example
+     * // Get one CafeCoupon
+     * const cafeCoupon = await prisma.cafeCoupon.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends CafeCouponFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, CafeCouponFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeCoupon'> extends True ? Prisma__CafeCouponClient<CafeCouponGetPayload<T>> : Prisma__CafeCouponClient<CafeCouponGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeCoupon that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponFindFirstOrThrowArgs} args - Arguments to find a CafeCoupon
+     * @example
+     * // Get one CafeCoupon
+     * const cafeCoupon = await prisma.cafeCoupon.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeCouponFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeCouponFindFirstOrThrowArgs>
+    ): Prisma__CafeCouponClient<CafeCouponGetPayload<T>>
+
+    /**
+     * Find zero or more CafeCoupons that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CafeCoupons
+     * const cafeCoupons = await prisma.cafeCoupon.findMany()
+     * 
+     * // Get first 10 CafeCoupons
+     * const cafeCoupons = await prisma.cafeCoupon.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cafeCouponWithIdOnly = await prisma.cafeCoupon.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends CafeCouponFindManyArgs>(
+      args?: SelectSubset<T, CafeCouponFindManyArgs>
+    ): PrismaPromise<Array<CafeCouponGetPayload<T>>>
+
+    /**
+     * Create a CafeCoupon.
+     * @param {CafeCouponCreateArgs} args - Arguments to create a CafeCoupon.
+     * @example
+     * // Create one CafeCoupon
+     * const CafeCoupon = await prisma.cafeCoupon.create({
+     *   data: {
+     *     // ... data to create a CafeCoupon
+     *   }
+     * })
+     * 
+    **/
+    create<T extends CafeCouponCreateArgs>(
+      args: SelectSubset<T, CafeCouponCreateArgs>
+    ): Prisma__CafeCouponClient<CafeCouponGetPayload<T>>
+
+    /**
+     * Create many CafeCoupons.
+     *     @param {CafeCouponCreateManyArgs} args - Arguments to create many CafeCoupons.
+     *     @example
+     *     // Create many CafeCoupons
+     *     const cafeCoupon = await prisma.cafeCoupon.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends CafeCouponCreateManyArgs>(
+      args?: SelectSubset<T, CafeCouponCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CafeCoupon.
+     * @param {CafeCouponDeleteArgs} args - Arguments to delete one CafeCoupon.
+     * @example
+     * // Delete one CafeCoupon
+     * const CafeCoupon = await prisma.cafeCoupon.delete({
+     *   where: {
+     *     // ... filter to delete one CafeCoupon
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends CafeCouponDeleteArgs>(
+      args: SelectSubset<T, CafeCouponDeleteArgs>
+    ): Prisma__CafeCouponClient<CafeCouponGetPayload<T>>
+
+    /**
+     * Update one CafeCoupon.
+     * @param {CafeCouponUpdateArgs} args - Arguments to update one CafeCoupon.
+     * @example
+     * // Update one CafeCoupon
+     * const cafeCoupon = await prisma.cafeCoupon.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends CafeCouponUpdateArgs>(
+      args: SelectSubset<T, CafeCouponUpdateArgs>
+    ): Prisma__CafeCouponClient<CafeCouponGetPayload<T>>
+
+    /**
+     * Delete zero or more CafeCoupons.
+     * @param {CafeCouponDeleteManyArgs} args - Arguments to filter CafeCoupons to delete.
+     * @example
+     * // Delete a few CafeCoupons
+     * const { count } = await prisma.cafeCoupon.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends CafeCouponDeleteManyArgs>(
+      args?: SelectSubset<T, CafeCouponDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CafeCoupons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CafeCoupons
+     * const cafeCoupon = await prisma.cafeCoupon.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends CafeCouponUpdateManyArgs>(
+      args: SelectSubset<T, CafeCouponUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CafeCoupon.
+     * @param {CafeCouponUpsertArgs} args - Arguments to update or create a CafeCoupon.
+     * @example
+     * // Update or create a CafeCoupon
+     * const cafeCoupon = await prisma.cafeCoupon.upsert({
+     *   create: {
+     *     // ... data to create a CafeCoupon
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CafeCoupon we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends CafeCouponUpsertArgs>(
+      args: SelectSubset<T, CafeCouponUpsertArgs>
+    ): Prisma__CafeCouponClient<CafeCouponGetPayload<T>>
+
+    /**
+     * Count the number of CafeCoupons.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponCountArgs} args - Arguments to filter CafeCoupons to count.
+     * @example
+     * // Count the number of CafeCoupons
+     * const count = await prisma.cafeCoupon.count({
+     *   where: {
+     *     // ... the filter for the CafeCoupons we want to count
+     *   }
+     * })
+    **/
+    count<T extends CafeCouponCountArgs>(
+      args?: Subset<T, CafeCouponCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CafeCouponCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CafeCoupon.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CafeCouponAggregateArgs>(args: Subset<T, CafeCouponAggregateArgs>): PrismaPromise<GetCafeCouponAggregateType<T>>
+
+    /**
+     * Group by CafeCoupon.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CafeCouponGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CafeCouponGroupByArgs['orderBy'] }
+        : { orderBy?: CafeCouponGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CafeCouponGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeCouponGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CafeCoupon.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__CafeCouponClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    ProxyUser<T extends ProxyUserArgs= {}>(args?: Subset<T, ProxyUserArgs>): Prisma__ProxyUserClient<ProxyUserGetPayload<T> | Null>;
+
+    CafeCouponGroup<T extends CafeCouponGroupArgs= {}>(args?: Subset<T, CafeCouponGroupArgs>): Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T> | Null>;
+
+    CafeCouponHistories<T extends CafeCouponHistoryFindManyArgs= {}>(args?: Subset<T, CafeCouponHistoryFindManyArgs>): PrismaPromise<Array<CafeCouponHistoryGetPayload<T>>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * CafeCoupon base type for findUnique actions
+   */
+  export type CafeCouponFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeCoupon
+     * 
+    **/
+    select?: CafeCouponSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponInclude | null
+    /**
+     * Filter, which CafeCoupon to fetch.
+     * 
+    **/
+    where: CafeCouponWhereUniqueInput
+  }
+
+  /**
+   * CafeCoupon: findUnique
+   */
+  export interface CafeCouponFindUniqueArgs extends CafeCouponFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeCoupon findUniqueOrThrow
+   */
+  export type CafeCouponFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCoupon
+     * 
+    **/
+    select?: CafeCouponSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponInclude | null
+    /**
+     * Filter, which CafeCoupon to fetch.
+     * 
+    **/
+    where: CafeCouponWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCoupon base type for findFirst actions
+   */
+  export type CafeCouponFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeCoupon
+     * 
+    **/
+    select?: CafeCouponSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponInclude | null
+    /**
+     * Filter, which CafeCoupon to fetch.
+     * 
+    **/
+    where?: CafeCouponWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCoupons to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeCoupons.
+     * 
+    **/
+    cursor?: CafeCouponWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCoupons from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCoupons.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeCoupons.
+     * 
+    **/
+    distinct?: Enumerable<CafeCouponScalarFieldEnum>
+  }
+
+  /**
+   * CafeCoupon: findFirst
+   */
+  export interface CafeCouponFindFirstArgs extends CafeCouponFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeCoupon findFirstOrThrow
+   */
+  export type CafeCouponFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCoupon
+     * 
+    **/
+    select?: CafeCouponSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponInclude | null
+    /**
+     * Filter, which CafeCoupon to fetch.
+     * 
+    **/
+    where?: CafeCouponWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCoupons to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeCoupons.
+     * 
+    **/
+    cursor?: CafeCouponWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCoupons from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCoupons.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeCoupons.
+     * 
+    **/
+    distinct?: Enumerable<CafeCouponScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeCoupon findMany
+   */
+  export type CafeCouponFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCoupon
+     * 
+    **/
+    select?: CafeCouponSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponInclude | null
+    /**
+     * Filter, which CafeCoupons to fetch.
+     * 
+    **/
+    where?: CafeCouponWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCoupons to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CafeCoupons.
+     * 
+    **/
+    cursor?: CafeCouponWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCoupons from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCoupons.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<CafeCouponScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeCoupon create
+   */
+  export type CafeCouponCreateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCoupon
+     * 
+    **/
+    select?: CafeCouponSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponInclude | null
+    /**
+     * The data needed to create a CafeCoupon.
+     * 
+    **/
+    data: XOR<CafeCouponCreateInput, CafeCouponUncheckedCreateInput>
+  }
+
+
+  /**
+   * CafeCoupon createMany
+   */
+  export type CafeCouponCreateManyArgs = {
+    /**
+     * The data used to create many CafeCoupons.
+     * 
+    **/
+    data: Enumerable<CafeCouponCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * CafeCoupon update
+   */
+  export type CafeCouponUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCoupon
+     * 
+    **/
+    select?: CafeCouponSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponInclude | null
+    /**
+     * The data needed to update a CafeCoupon.
+     * 
+    **/
+    data: XOR<CafeCouponUpdateInput, CafeCouponUncheckedUpdateInput>
+    /**
+     * Choose, which CafeCoupon to update.
+     * 
+    **/
+    where: CafeCouponWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCoupon updateMany
+   */
+  export type CafeCouponUpdateManyArgs = {
+    /**
+     * The data used to update CafeCoupons.
+     * 
+    **/
+    data: XOR<CafeCouponUpdateManyMutationInput, CafeCouponUncheckedUpdateManyInput>
+    /**
+     * Filter which CafeCoupons to update
+     * 
+    **/
+    where?: CafeCouponWhereInput
+  }
+
+
+  /**
+   * CafeCoupon upsert
+   */
+  export type CafeCouponUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCoupon
+     * 
+    **/
+    select?: CafeCouponSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponInclude | null
+    /**
+     * The filter to search for the CafeCoupon to update in case it exists.
+     * 
+    **/
+    where: CafeCouponWhereUniqueInput
+    /**
+     * In case the CafeCoupon found by the `where` argument doesn't exist, create a new CafeCoupon with this data.
+     * 
+    **/
+    create: XOR<CafeCouponCreateInput, CafeCouponUncheckedCreateInput>
+    /**
+     * In case the CafeCoupon was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<CafeCouponUpdateInput, CafeCouponUncheckedUpdateInput>
+  }
+
+
+  /**
+   * CafeCoupon delete
+   */
+  export type CafeCouponDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCoupon
+     * 
+    **/
+    select?: CafeCouponSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponInclude | null
+    /**
+     * Filter which CafeCoupon to delete.
+     * 
+    **/
+    where: CafeCouponWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCoupon deleteMany
+   */
+  export type CafeCouponDeleteManyArgs = {
+    /**
+     * Filter which CafeCoupons to delete
+     * 
+    **/
+    where?: CafeCouponWhereInput
+  }
+
+
+  /**
+   * CafeCoupon without action
+   */
+  export type CafeCouponArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCoupon
+     * 
+    **/
+    select?: CafeCouponSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponInclude | null
+  }
+
+
+
+  /**
+   * Model CafeCouponHistory
+   */
+
+
+  export type AggregateCafeCouponHistory = {
+    _count: CafeCouponHistoryCountAggregateOutputType | null
+    _avg: CafeCouponHistoryAvgAggregateOutputType | null
+    _sum: CafeCouponHistorySumAggregateOutputType | null
+    _min: CafeCouponHistoryMinAggregateOutputType | null
+    _max: CafeCouponHistoryMaxAggregateOutputType | null
+  }
+
+  export type CafeCouponHistoryAvgAggregateOutputType = {
+    id: number | null
+    cafeCouponId: number | null
+    actorId: number | null
+  }
+
+  export type CafeCouponHistorySumAggregateOutputType = {
+    id: number | null
+    cafeCouponId: number | null
+    actorId: number | null
+  }
+
+  export type CafeCouponHistoryMinAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    cafeCouponId: number | null
+    eventType: CafeCouponEventType | null
+    description: string | null
+    actorId: number | null
+    statusBefore: CafeCouponStatus | null
+    statusAfter: CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryMaxAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    cafeCouponId: number | null
+    eventType: CafeCouponEventType | null
+    description: string | null
+    actorId: number | null
+    statusBefore: CafeCouponStatus | null
+    statusAfter: CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    cafeCouponId: number
+    eventType: number
+    description: number
+    actorId: number
+    statusBefore: number
+    statusAfter: number
+    _all: number
+  }
+
+
+  export type CafeCouponHistoryAvgAggregateInputType = {
+    id?: true
+    cafeCouponId?: true
+    actorId?: true
+  }
+
+  export type CafeCouponHistorySumAggregateInputType = {
+    id?: true
+    cafeCouponId?: true
+    actorId?: true
+  }
+
+  export type CafeCouponHistoryMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    cafeCouponId?: true
+    eventType?: true
+    description?: true
+    actorId?: true
+    statusBefore?: true
+    statusAfter?: true
+  }
+
+  export type CafeCouponHistoryMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    cafeCouponId?: true
+    eventType?: true
+    description?: true
+    actorId?: true
+    statusBefore?: true
+    statusAfter?: true
+  }
+
+  export type CafeCouponHistoryCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    cafeCouponId?: true
+    eventType?: true
+    description?: true
+    actorId?: true
+    statusBefore?: true
+    statusAfter?: true
+    _all?: true
+  }
+
+  export type CafeCouponHistoryAggregateArgs = {
+    /**
+     * Filter which CafeCouponHistory to aggregate.
+     * 
+    **/
+    where?: CafeCouponHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponHistories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponHistoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: CafeCouponHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponHistories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponHistories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CafeCouponHistories
+    **/
+    _count?: true | CafeCouponHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CafeCouponHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CafeCouponHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CafeCouponHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CafeCouponHistoryMaxAggregateInputType
+  }
+
+  export type GetCafeCouponHistoryAggregateType<T extends CafeCouponHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateCafeCouponHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCafeCouponHistory[P]>
+      : GetScalarType<T[P], AggregateCafeCouponHistory[P]>
+  }
+
+
+
+
+  export type CafeCouponHistoryGroupByArgs = {
+    where?: CafeCouponHistoryWhereInput
+    orderBy?: Enumerable<CafeCouponHistoryOrderByWithAggregationInput>
+    by: Array<CafeCouponHistoryScalarFieldEnum>
+    having?: CafeCouponHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CafeCouponHistoryCountAggregateInputType | true
+    _avg?: CafeCouponHistoryAvgAggregateInputType
+    _sum?: CafeCouponHistorySumAggregateInputType
+    _min?: CafeCouponHistoryMinAggregateInputType
+    _max?: CafeCouponHistoryMaxAggregateInputType
+  }
+
+
+  export type CafeCouponHistoryGroupByOutputType = {
+    id: number
+    createdAt: Date
+    cafeCouponId: number
+    eventType: CafeCouponEventType
+    description: string
+    actorId: number
+    statusBefore: CafeCouponStatus | null
+    statusAfter: CafeCouponStatus | null
+    _count: CafeCouponHistoryCountAggregateOutputType | null
+    _avg: CafeCouponHistoryAvgAggregateOutputType | null
+    _sum: CafeCouponHistorySumAggregateOutputType | null
+    _min: CafeCouponHistoryMinAggregateOutputType | null
+    _max: CafeCouponHistoryMaxAggregateOutputType | null
+  }
+
+  type GetCafeCouponHistoryGroupByPayload<T extends CafeCouponHistoryGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<CafeCouponHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CafeCouponHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CafeCouponHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], CafeCouponHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CafeCouponHistorySelect = {
+    id?: boolean
+    createdAt?: boolean
+    cafeCouponId?: boolean
+    CafeCoupon?: boolean | CafeCouponArgs
+    eventType?: boolean
+    description?: boolean
+    actorId?: boolean
+    Actor?: boolean | UserArgs
+    statusBefore?: boolean
+    statusAfter?: boolean
+  }
+
+
+  export type CafeCouponHistoryInclude = {
+    CafeCoupon?: boolean | CafeCouponArgs
+    Actor?: boolean | UserArgs
+  } 
+
+  export type CafeCouponHistoryGetPayload<S extends boolean | null | undefined | CafeCouponHistoryArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeCouponHistory :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeCouponHistoryArgs | CafeCouponHistoryFindManyArgs)
+    ? CafeCouponHistory  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'CafeCoupon' ? CafeCouponGetPayload<S['include'][P]> :
+        P extends 'Actor' ? UserGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (CafeCouponHistoryArgs | CafeCouponHistoryFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'CafeCoupon' ? CafeCouponGetPayload<S['select'][P]> :
+        P extends 'Actor' ? UserGetPayload<S['select'][P]> :  P extends keyof CafeCouponHistory ? CafeCouponHistory[P] : never
+  } 
+      : CafeCouponHistory
+
+
+  type CafeCouponHistoryCountArgs = Merge<
+    Omit<CafeCouponHistoryFindManyArgs, 'select' | 'include'> & {
+      select?: CafeCouponHistoryCountAggregateInputType | true
+    }
+  >
+
+  export interface CafeCouponHistoryDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one CafeCouponHistory that matches the filter.
+     * @param {CafeCouponHistoryFindUniqueArgs} args - Arguments to find a CafeCouponHistory
+     * @example
+     * // Get one CafeCouponHistory
+     * const cafeCouponHistory = await prisma.cafeCouponHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends CafeCouponHistoryFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, CafeCouponHistoryFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeCouponHistory'> extends True ? Prisma__CafeCouponHistoryClient<CafeCouponHistoryGetPayload<T>> : Prisma__CafeCouponHistoryClient<CafeCouponHistoryGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeCouponHistory that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeCouponHistoryFindUniqueOrThrowArgs} args - Arguments to find a CafeCouponHistory
+     * @example
+     * // Get one CafeCouponHistory
+     * const cafeCouponHistory = await prisma.cafeCouponHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeCouponHistoryFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeCouponHistoryFindUniqueOrThrowArgs>
+    ): Prisma__CafeCouponHistoryClient<CafeCouponHistoryGetPayload<T>>
+
+    /**
+     * Find the first CafeCouponHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponHistoryFindFirstArgs} args - Arguments to find a CafeCouponHistory
+     * @example
+     * // Get one CafeCouponHistory
+     * const cafeCouponHistory = await prisma.cafeCouponHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends CafeCouponHistoryFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, CafeCouponHistoryFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeCouponHistory'> extends True ? Prisma__CafeCouponHistoryClient<CafeCouponHistoryGetPayload<T>> : Prisma__CafeCouponHistoryClient<CafeCouponHistoryGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeCouponHistory that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponHistoryFindFirstOrThrowArgs} args - Arguments to find a CafeCouponHistory
+     * @example
+     * // Get one CafeCouponHistory
+     * const cafeCouponHistory = await prisma.cafeCouponHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeCouponHistoryFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeCouponHistoryFindFirstOrThrowArgs>
+    ): Prisma__CafeCouponHistoryClient<CafeCouponHistoryGetPayload<T>>
+
+    /**
+     * Find zero or more CafeCouponHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponHistoryFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CafeCouponHistories
+     * const cafeCouponHistories = await prisma.cafeCouponHistory.findMany()
+     * 
+     * // Get first 10 CafeCouponHistories
+     * const cafeCouponHistories = await prisma.cafeCouponHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cafeCouponHistoryWithIdOnly = await prisma.cafeCouponHistory.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends CafeCouponHistoryFindManyArgs>(
+      args?: SelectSubset<T, CafeCouponHistoryFindManyArgs>
+    ): PrismaPromise<Array<CafeCouponHistoryGetPayload<T>>>
+
+    /**
+     * Create a CafeCouponHistory.
+     * @param {CafeCouponHistoryCreateArgs} args - Arguments to create a CafeCouponHistory.
+     * @example
+     * // Create one CafeCouponHistory
+     * const CafeCouponHistory = await prisma.cafeCouponHistory.create({
+     *   data: {
+     *     // ... data to create a CafeCouponHistory
+     *   }
+     * })
+     * 
+    **/
+    create<T extends CafeCouponHistoryCreateArgs>(
+      args: SelectSubset<T, CafeCouponHistoryCreateArgs>
+    ): Prisma__CafeCouponHistoryClient<CafeCouponHistoryGetPayload<T>>
+
+    /**
+     * Create many CafeCouponHistories.
+     *     @param {CafeCouponHistoryCreateManyArgs} args - Arguments to create many CafeCouponHistories.
+     *     @example
+     *     // Create many CafeCouponHistories
+     *     const cafeCouponHistory = await prisma.cafeCouponHistory.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends CafeCouponHistoryCreateManyArgs>(
+      args?: SelectSubset<T, CafeCouponHistoryCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CafeCouponHistory.
+     * @param {CafeCouponHistoryDeleteArgs} args - Arguments to delete one CafeCouponHistory.
+     * @example
+     * // Delete one CafeCouponHistory
+     * const CafeCouponHistory = await prisma.cafeCouponHistory.delete({
+     *   where: {
+     *     // ... filter to delete one CafeCouponHistory
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends CafeCouponHistoryDeleteArgs>(
+      args: SelectSubset<T, CafeCouponHistoryDeleteArgs>
+    ): Prisma__CafeCouponHistoryClient<CafeCouponHistoryGetPayload<T>>
+
+    /**
+     * Update one CafeCouponHistory.
+     * @param {CafeCouponHistoryUpdateArgs} args - Arguments to update one CafeCouponHistory.
+     * @example
+     * // Update one CafeCouponHistory
+     * const cafeCouponHistory = await prisma.cafeCouponHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends CafeCouponHistoryUpdateArgs>(
+      args: SelectSubset<T, CafeCouponHistoryUpdateArgs>
+    ): Prisma__CafeCouponHistoryClient<CafeCouponHistoryGetPayload<T>>
+
+    /**
+     * Delete zero or more CafeCouponHistories.
+     * @param {CafeCouponHistoryDeleteManyArgs} args - Arguments to filter CafeCouponHistories to delete.
+     * @example
+     * // Delete a few CafeCouponHistories
+     * const { count } = await prisma.cafeCouponHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends CafeCouponHistoryDeleteManyArgs>(
+      args?: SelectSubset<T, CafeCouponHistoryDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CafeCouponHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CafeCouponHistories
+     * const cafeCouponHistory = await prisma.cafeCouponHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends CafeCouponHistoryUpdateManyArgs>(
+      args: SelectSubset<T, CafeCouponHistoryUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CafeCouponHistory.
+     * @param {CafeCouponHistoryUpsertArgs} args - Arguments to update or create a CafeCouponHistory.
+     * @example
+     * // Update or create a CafeCouponHistory
+     * const cafeCouponHistory = await prisma.cafeCouponHistory.upsert({
+     *   create: {
+     *     // ... data to create a CafeCouponHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CafeCouponHistory we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends CafeCouponHistoryUpsertArgs>(
+      args: SelectSubset<T, CafeCouponHistoryUpsertArgs>
+    ): Prisma__CafeCouponHistoryClient<CafeCouponHistoryGetPayload<T>>
+
+    /**
+     * Count the number of CafeCouponHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponHistoryCountArgs} args - Arguments to filter CafeCouponHistories to count.
+     * @example
+     * // Count the number of CafeCouponHistories
+     * const count = await prisma.cafeCouponHistory.count({
+     *   where: {
+     *     // ... the filter for the CafeCouponHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends CafeCouponHistoryCountArgs>(
+      args?: Subset<T, CafeCouponHistoryCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CafeCouponHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CafeCouponHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CafeCouponHistoryAggregateArgs>(args: Subset<T, CafeCouponHistoryAggregateArgs>): PrismaPromise<GetCafeCouponHistoryAggregateType<T>>
+
+    /**
+     * Group by CafeCouponHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CafeCouponHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CafeCouponHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: CafeCouponHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CafeCouponHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeCouponHistoryGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CafeCouponHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__CafeCouponHistoryClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    CafeCoupon<T extends CafeCouponArgs= {}>(args?: Subset<T, CafeCouponArgs>): Prisma__CafeCouponClient<CafeCouponGetPayload<T> | Null>;
+
+    Actor<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * CafeCouponHistory base type for findUnique actions
+   */
+  export type CafeCouponHistoryFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeCouponHistory
+     * 
+    **/
+    select?: CafeCouponHistorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponHistoryInclude | null
+    /**
+     * Filter, which CafeCouponHistory to fetch.
+     * 
+    **/
+    where: CafeCouponHistoryWhereUniqueInput
+  }
+
+  /**
+   * CafeCouponHistory: findUnique
+   */
+  export interface CafeCouponHistoryFindUniqueArgs extends CafeCouponHistoryFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeCouponHistory findUniqueOrThrow
+   */
+  export type CafeCouponHistoryFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponHistory
+     * 
+    **/
+    select?: CafeCouponHistorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponHistoryInclude | null
+    /**
+     * Filter, which CafeCouponHistory to fetch.
+     * 
+    **/
+    where: CafeCouponHistoryWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponHistory base type for findFirst actions
+   */
+  export type CafeCouponHistoryFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeCouponHistory
+     * 
+    **/
+    select?: CafeCouponHistorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponHistoryInclude | null
+    /**
+     * Filter, which CafeCouponHistory to fetch.
+     * 
+    **/
+    where?: CafeCouponHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponHistories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponHistoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeCouponHistories.
+     * 
+    **/
+    cursor?: CafeCouponHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponHistories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponHistories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeCouponHistories.
+     * 
+    **/
+    distinct?: Enumerable<CafeCouponHistoryScalarFieldEnum>
+  }
+
+  /**
+   * CafeCouponHistory: findFirst
+   */
+  export interface CafeCouponHistoryFindFirstArgs extends CafeCouponHistoryFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeCouponHistory findFirstOrThrow
+   */
+  export type CafeCouponHistoryFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponHistory
+     * 
+    **/
+    select?: CafeCouponHistorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponHistoryInclude | null
+    /**
+     * Filter, which CafeCouponHistory to fetch.
+     * 
+    **/
+    where?: CafeCouponHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponHistories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponHistoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeCouponHistories.
+     * 
+    **/
+    cursor?: CafeCouponHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponHistories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponHistories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeCouponHistories.
+     * 
+    **/
+    distinct?: Enumerable<CafeCouponHistoryScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeCouponHistory findMany
+   */
+  export type CafeCouponHistoryFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponHistory
+     * 
+    **/
+    select?: CafeCouponHistorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponHistoryInclude | null
+    /**
+     * Filter, which CafeCouponHistories to fetch.
+     * 
+    **/
+    where?: CafeCouponHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponHistories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponHistoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CafeCouponHistories.
+     * 
+    **/
+    cursor?: CafeCouponHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponHistories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponHistories.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<CafeCouponHistoryScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeCouponHistory create
+   */
+  export type CafeCouponHistoryCreateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponHistory
+     * 
+    **/
+    select?: CafeCouponHistorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponHistoryInclude | null
+    /**
+     * The data needed to create a CafeCouponHistory.
+     * 
+    **/
+    data: XOR<CafeCouponHistoryCreateInput, CafeCouponHistoryUncheckedCreateInput>
+  }
+
+
+  /**
+   * CafeCouponHistory createMany
+   */
+  export type CafeCouponHistoryCreateManyArgs = {
+    /**
+     * The data used to create many CafeCouponHistories.
+     * 
+    **/
+    data: Enumerable<CafeCouponHistoryCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * CafeCouponHistory update
+   */
+  export type CafeCouponHistoryUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponHistory
+     * 
+    **/
+    select?: CafeCouponHistorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponHistoryInclude | null
+    /**
+     * The data needed to update a CafeCouponHistory.
+     * 
+    **/
+    data: XOR<CafeCouponHistoryUpdateInput, CafeCouponHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which CafeCouponHistory to update.
+     * 
+    **/
+    where: CafeCouponHistoryWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponHistory updateMany
+   */
+  export type CafeCouponHistoryUpdateManyArgs = {
+    /**
+     * The data used to update CafeCouponHistories.
+     * 
+    **/
+    data: XOR<CafeCouponHistoryUpdateManyMutationInput, CafeCouponHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which CafeCouponHistories to update
+     * 
+    **/
+    where?: CafeCouponHistoryWhereInput
+  }
+
+
+  /**
+   * CafeCouponHistory upsert
+   */
+  export type CafeCouponHistoryUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponHistory
+     * 
+    **/
+    select?: CafeCouponHistorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponHistoryInclude | null
+    /**
+     * The filter to search for the CafeCouponHistory to update in case it exists.
+     * 
+    **/
+    where: CafeCouponHistoryWhereUniqueInput
+    /**
+     * In case the CafeCouponHistory found by the `where` argument doesn't exist, create a new CafeCouponHistory with this data.
+     * 
+    **/
+    create: XOR<CafeCouponHistoryCreateInput, CafeCouponHistoryUncheckedCreateInput>
+    /**
+     * In case the CafeCouponHistory was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<CafeCouponHistoryUpdateInput, CafeCouponHistoryUncheckedUpdateInput>
+  }
+
+
+  /**
+   * CafeCouponHistory delete
+   */
+  export type CafeCouponHistoryDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponHistory
+     * 
+    **/
+    select?: CafeCouponHistorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponHistoryInclude | null
+    /**
+     * Filter which CafeCouponHistory to delete.
+     * 
+    **/
+    where: CafeCouponHistoryWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponHistory deleteMany
+   */
+  export type CafeCouponHistoryDeleteManyArgs = {
+    /**
+     * Filter which CafeCouponHistories to delete
+     * 
+    **/
+    where?: CafeCouponHistoryWhereInput
+  }
+
+
+  /**
+   * CafeCouponHistory without action
+   */
+  export type CafeCouponHistoryArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponHistory
+     * 
+    **/
+    select?: CafeCouponHistorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponHistoryInclude | null
+  }
+
+
+
+  /**
    * Enums
    */
 
@@ -15285,11 +20902,67 @@ export namespace Prisma {
   export type BoardScalarFieldEnum = (typeof BoardScalarFieldEnum)[keyof typeof BoardScalarFieldEnum]
 
 
+  export const CafeCouponGoupPartnerScalarFieldEnum: {
+    cafeCouponGroupId: 'cafeCouponGroupId',
+    cafeInfoId: 'cafeInfoId'
+  };
+
+  export type CafeCouponGoupPartnerScalarFieldEnum = (typeof CafeCouponGoupPartnerScalarFieldEnum)[keyof typeof CafeCouponGoupPartnerScalarFieldEnum]
+
+
+  export const CafeCouponGroupScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    code: 'code',
+    name: 'name',
+    tag: 'tag',
+    description: 'description',
+    isDisable: 'isDisable',
+    startDay: 'startDay',
+    endDay: 'endDay',
+    issuanceStartDay: 'issuanceStartDay',
+    issuanceEndDay: 'issuanceEndDay'
+  };
+
+  export type CafeCouponGroupScalarFieldEnum = (typeof CafeCouponGroupScalarFieldEnum)[keyof typeof CafeCouponGroupScalarFieldEnum]
+
+
+  export const CafeCouponHistoryScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    cafeCouponId: 'cafeCouponId',
+    eventType: 'eventType',
+    description: 'description',
+    actorId: 'actorId',
+    statusBefore: 'statusBefore',
+    statusAfter: 'statusAfter'
+  };
+
+  export type CafeCouponHistoryScalarFieldEnum = (typeof CafeCouponHistoryScalarFieldEnum)[keyof typeof CafeCouponHistoryScalarFieldEnum]
+
+
+  export const CafeCouponScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    name: 'name',
+    content: 'content',
+    serialNumber: 'serialNumber',
+    startDay: 'startDay',
+    endDay: 'endDay',
+    isDisable: 'isDisable',
+    proxyUserId: 'proxyUserId',
+    cafeCouponGroupId: 'cafeCouponGroupId'
+  };
+
+  export type CafeCouponScalarFieldEnum = (typeof CafeCouponScalarFieldEnum)[keyof typeof CafeCouponScalarFieldEnum]
+
+
   export const CafeInfoScalarFieldEnum: {
     id: 'id',
     createdAt: 'createdAt',
     isDisable: 'isDisable',
     name: 'name',
+    code: 'code',
     regionCategoryId: 'regionCategoryId',
     address: 'address',
     directions: 'directions',
@@ -15394,6 +21067,19 @@ export namespace Prisma {
   export type NoticeScalarFieldEnum = (typeof NoticeScalarFieldEnum)[keyof typeof NoticeScalarFieldEnum]
 
 
+  export const ProxyUserScalarFieldEnum: {
+    id: 'id',
+    memberId: 'memberId',
+    createdAt: 'createdAt',
+    proxyUserType: 'proxyUserType',
+    name: 'name',
+    token: 'token',
+    userId: 'userId'
+  };
+
+  export type ProxyUserScalarFieldEnum = (typeof ProxyUserScalarFieldEnum)[keyof typeof ProxyUserScalarFieldEnum]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -15469,6 +21155,8 @@ export namespace Prisma {
     Boards?: BoardListRelationFilter
     BoardReplies?: BoardReplyListRelationFilter
     Notices?: NoticeListRelationFilter
+    ProxyUsers?: ProxyUserListRelationFilter
+    CafeCouponHistories?: CafeCouponHistoryListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -15485,6 +21173,8 @@ export namespace Prisma {
     Boards?: BoardOrderByRelationAggregateInput
     BoardReplies?: BoardReplyOrderByRelationAggregateInput
     Notices?: NoticeOrderByRelationAggregateInput
+    ProxyUsers?: ProxyUserOrderByRelationAggregateInput
+    CafeCouponHistories?: CafeCouponHistoryOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = {
@@ -15889,6 +21579,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter | Date | string
     isDisable?: BoolFilter | boolean
     name?: StringFilter | string
+    code?: StringNullableFilter | string | null
     regionCategoryId?: IntFilter | number
     RegionCategory?: XOR<RegionCategoryRelationFilter, RegionCategoryWhereInput>
     address?: StringFilter | string
@@ -15899,6 +21590,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageListRelationFilter
     CafeVirtualImages?: CafeVirtualImageListRelationFilter
     CafeRealImages?: CafeRealImageListRelationFilter
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerListRelationFilter
   }
 
   export type CafeInfoOrderByWithRelationInput = {
@@ -15906,6 +21598,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     isDisable?: SortOrder
     name?: SortOrder
+    code?: SortOrder
     regionCategoryId?: SortOrder
     RegionCategory?: RegionCategoryOrderByWithRelationInput
     address?: SortOrder
@@ -15916,10 +21609,12 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageOrderByRelationAggregateInput
     CafeVirtualImages?: CafeVirtualImageOrderByRelationAggregateInput
     CafeRealImages?: CafeRealImageOrderByRelationAggregateInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerOrderByRelationAggregateInput
   }
 
   export type CafeInfoWhereUniqueInput = {
     id?: number
+    code?: string
   }
 
   export type CafeInfoOrderByWithAggregationInput = {
@@ -15927,6 +21622,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     isDisable?: SortOrder
     name?: SortOrder
+    code?: SortOrder
     regionCategoryId?: SortOrder
     address?: SortOrder
     directions?: SortOrder
@@ -15947,6 +21643,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     isDisable?: BoolWithAggregatesFilter | boolean
     name?: StringWithAggregatesFilter | string
+    code?: StringNullableWithAggregatesFilter | string | null
     regionCategoryId?: IntWithAggregatesFilter | number
     address?: StringWithAggregatesFilter | string
     directions?: StringWithAggregatesFilter | string
@@ -16274,6 +21971,318 @@ export namespace Prisma {
     cafeVirtualLinkId?: IntWithAggregatesFilter | number
   }
 
+  export type CafeCouponGroupWhereInput = {
+    AND?: Enumerable<CafeCouponGroupWhereInput>
+    OR?: Enumerable<CafeCouponGroupWhereInput>
+    NOT?: Enumerable<CafeCouponGroupWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    code?: StringFilter | string
+    name?: StringFilter | string
+    tag?: StringFilter | string
+    description?: StringFilter | string
+    isDisable?: BoolFilter | boolean
+    startDay?: DateTimeFilter | Date | string
+    endDay?: DateTimeFilter | Date | string
+    issuanceStartDay?: DateTimeFilter | Date | string
+    issuanceEndDay?: DateTimeFilter | Date | string
+    CafeCoupons?: CafeCouponListRelationFilter
+    CafeCouponGoupPartners?: CafeCouponGoupPartnerListRelationFilter
+  }
+
+  export type CafeCouponGroupOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    tag?: SortOrder
+    description?: SortOrder
+    isDisable?: SortOrder
+    startDay?: SortOrder
+    endDay?: SortOrder
+    issuanceStartDay?: SortOrder
+    issuanceEndDay?: SortOrder
+    CafeCoupons?: CafeCouponOrderByRelationAggregateInput
+    CafeCouponGoupPartners?: CafeCouponGoupPartnerOrderByRelationAggregateInput
+  }
+
+  export type CafeCouponGroupWhereUniqueInput = {
+    id?: number
+    code?: string
+  }
+
+  export type CafeCouponGroupOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    tag?: SortOrder
+    description?: SortOrder
+    isDisable?: SortOrder
+    startDay?: SortOrder
+    endDay?: SortOrder
+    issuanceStartDay?: SortOrder
+    issuanceEndDay?: SortOrder
+    _count?: CafeCouponGroupCountOrderByAggregateInput
+    _avg?: CafeCouponGroupAvgOrderByAggregateInput
+    _max?: CafeCouponGroupMaxOrderByAggregateInput
+    _min?: CafeCouponGroupMinOrderByAggregateInput
+    _sum?: CafeCouponGroupSumOrderByAggregateInput
+  }
+
+  export type CafeCouponGroupScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<CafeCouponGroupScalarWhereWithAggregatesInput>
+    OR?: Enumerable<CafeCouponGroupScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<CafeCouponGroupScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    code?: StringWithAggregatesFilter | string
+    name?: StringWithAggregatesFilter | string
+    tag?: StringWithAggregatesFilter | string
+    description?: StringWithAggregatesFilter | string
+    isDisable?: BoolWithAggregatesFilter | boolean
+    startDay?: DateTimeWithAggregatesFilter | Date | string
+    endDay?: DateTimeWithAggregatesFilter | Date | string
+    issuanceStartDay?: DateTimeWithAggregatesFilter | Date | string
+    issuanceEndDay?: DateTimeWithAggregatesFilter | Date | string
+  }
+
+  export type CafeCouponGoupPartnerWhereInput = {
+    AND?: Enumerable<CafeCouponGoupPartnerWhereInput>
+    OR?: Enumerable<CafeCouponGoupPartnerWhereInput>
+    NOT?: Enumerable<CafeCouponGoupPartnerWhereInput>
+    cafeCouponGroupId?: IntFilter | number
+    CafeCouponGroup?: XOR<CafeCouponGroupRelationFilter, CafeCouponGroupWhereInput>
+    cafeInfoId?: IntFilter | number
+    CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput>
+  }
+
+  export type CafeCouponGoupPartnerOrderByWithRelationInput = {
+    cafeCouponGroupId?: SortOrder
+    CafeCouponGroup?: CafeCouponGroupOrderByWithRelationInput
+    cafeInfoId?: SortOrder
+    CafeInfo?: CafeInfoOrderByWithRelationInput
+  }
+
+  export type CafeCouponGoupPartnerWhereUniqueInput = {
+    cafeCouponGroupPartnerUnique?: CafeCouponGoupPartnerCafeCouponGroupPartnerUniqueCompoundUniqueInput
+  }
+
+  export type CafeCouponGoupPartnerOrderByWithAggregationInput = {
+    cafeCouponGroupId?: SortOrder
+    cafeInfoId?: SortOrder
+    _count?: CafeCouponGoupPartnerCountOrderByAggregateInput
+    _avg?: CafeCouponGoupPartnerAvgOrderByAggregateInput
+    _max?: CafeCouponGoupPartnerMaxOrderByAggregateInput
+    _min?: CafeCouponGoupPartnerMinOrderByAggregateInput
+    _sum?: CafeCouponGoupPartnerSumOrderByAggregateInput
+  }
+
+  export type CafeCouponGoupPartnerScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<CafeCouponGoupPartnerScalarWhereWithAggregatesInput>
+    OR?: Enumerable<CafeCouponGoupPartnerScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<CafeCouponGoupPartnerScalarWhereWithAggregatesInput>
+    cafeCouponGroupId?: IntWithAggregatesFilter | number
+    cafeInfoId?: IntWithAggregatesFilter | number
+  }
+
+  export type ProxyUserWhereInput = {
+    AND?: Enumerable<ProxyUserWhereInput>
+    OR?: Enumerable<ProxyUserWhereInput>
+    NOT?: Enumerable<ProxyUserWhereInput>
+    id?: IntFilter | number
+    memberId?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    proxyUserType?: EnumProxyUserTypeFilter | ProxyUserType
+    name?: StringFilter | string
+    token?: StringFilter | string
+    userId?: IntNullableFilter | number | null
+    User?: XOR<UserRelationFilter, UserWhereInput> | null
+    CafeCoupons?: CafeCouponListRelationFilter
+  }
+
+  export type ProxyUserOrderByWithRelationInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    createdAt?: SortOrder
+    proxyUserType?: SortOrder
+    name?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    User?: UserOrderByWithRelationInput
+    CafeCoupons?: CafeCouponOrderByRelationAggregateInput
+  }
+
+  export type ProxyUserWhereUniqueInput = {
+    id?: number
+    proxyUserUnique?: ProxyUserProxyUserUniqueCompoundUniqueInput
+  }
+
+  export type ProxyUserOrderByWithAggregationInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    createdAt?: SortOrder
+    proxyUserType?: SortOrder
+    name?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+    _count?: ProxyUserCountOrderByAggregateInput
+    _avg?: ProxyUserAvgOrderByAggregateInput
+    _max?: ProxyUserMaxOrderByAggregateInput
+    _min?: ProxyUserMinOrderByAggregateInput
+    _sum?: ProxyUserSumOrderByAggregateInput
+  }
+
+  export type ProxyUserScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ProxyUserScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ProxyUserScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ProxyUserScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    memberId?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    proxyUserType?: EnumProxyUserTypeWithAggregatesFilter | ProxyUserType
+    name?: StringWithAggregatesFilter | string
+    token?: StringWithAggregatesFilter | string
+    userId?: IntNullableWithAggregatesFilter | number | null
+  }
+
+  export type CafeCouponWhereInput = {
+    AND?: Enumerable<CafeCouponWhereInput>
+    OR?: Enumerable<CafeCouponWhereInput>
+    NOT?: Enumerable<CafeCouponWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    name?: StringFilter | string
+    content?: StringFilter | string
+    serialNumber?: StringFilter | string
+    startDay?: DateTimeFilter | Date | string
+    endDay?: DateTimeNullableFilter | Date | string | null
+    isDisable?: BoolFilter | boolean
+    proxyUserId?: IntFilter | number
+    ProxyUser?: XOR<ProxyUserRelationFilter, ProxyUserWhereInput>
+    cafeCouponGroupId?: IntFilter | number
+    CafeCouponGroup?: XOR<CafeCouponGroupRelationFilter, CafeCouponGroupWhereInput>
+    CafeCouponHistories?: CafeCouponHistoryListRelationFilter
+  }
+
+  export type CafeCouponOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    content?: SortOrder
+    serialNumber?: SortOrder
+    startDay?: SortOrder
+    endDay?: SortOrder
+    isDisable?: SortOrder
+    proxyUserId?: SortOrder
+    ProxyUser?: ProxyUserOrderByWithRelationInput
+    cafeCouponGroupId?: SortOrder
+    CafeCouponGroup?: CafeCouponGroupOrderByWithRelationInput
+    CafeCouponHistories?: CafeCouponHistoryOrderByRelationAggregateInput
+  }
+
+  export type CafeCouponWhereUniqueInput = {
+    id?: number
+    serialNumber?: string
+  }
+
+  export type CafeCouponOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    content?: SortOrder
+    serialNumber?: SortOrder
+    startDay?: SortOrder
+    endDay?: SortOrder
+    isDisable?: SortOrder
+    proxyUserId?: SortOrder
+    cafeCouponGroupId?: SortOrder
+    _count?: CafeCouponCountOrderByAggregateInput
+    _avg?: CafeCouponAvgOrderByAggregateInput
+    _max?: CafeCouponMaxOrderByAggregateInput
+    _min?: CafeCouponMinOrderByAggregateInput
+    _sum?: CafeCouponSumOrderByAggregateInput
+  }
+
+  export type CafeCouponScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<CafeCouponScalarWhereWithAggregatesInput>
+    OR?: Enumerable<CafeCouponScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<CafeCouponScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    name?: StringWithAggregatesFilter | string
+    content?: StringWithAggregatesFilter | string
+    serialNumber?: StringWithAggregatesFilter | string
+    startDay?: DateTimeWithAggregatesFilter | Date | string
+    endDay?: DateTimeNullableWithAggregatesFilter | Date | string | null
+    isDisable?: BoolWithAggregatesFilter | boolean
+    proxyUserId?: IntWithAggregatesFilter | number
+    cafeCouponGroupId?: IntWithAggregatesFilter | number
+  }
+
+  export type CafeCouponHistoryWhereInput = {
+    AND?: Enumerable<CafeCouponHistoryWhereInput>
+    OR?: Enumerable<CafeCouponHistoryWhereInput>
+    NOT?: Enumerable<CafeCouponHistoryWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    cafeCouponId?: IntFilter | number
+    CafeCoupon?: XOR<CafeCouponRelationFilter, CafeCouponWhereInput>
+    eventType?: EnumCafeCouponEventTypeFilter | CafeCouponEventType
+    description?: StringFilter | string
+    actorId?: IntFilter | number
+    Actor?: XOR<UserRelationFilter, UserWhereInput>
+    statusBefore?: EnumCafeCouponStatusNullableFilter | CafeCouponStatus | null
+    statusAfter?: EnumCafeCouponStatusNullableFilter | CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    cafeCouponId?: SortOrder
+    CafeCoupon?: CafeCouponOrderByWithRelationInput
+    eventType?: SortOrder
+    description?: SortOrder
+    actorId?: SortOrder
+    Actor?: UserOrderByWithRelationInput
+    statusBefore?: SortOrder
+    statusAfter?: SortOrder
+  }
+
+  export type CafeCouponHistoryWhereUniqueInput = {
+    id?: number
+  }
+
+  export type CafeCouponHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    cafeCouponId?: SortOrder
+    eventType?: SortOrder
+    description?: SortOrder
+    actorId?: SortOrder
+    statusBefore?: SortOrder
+    statusAfter?: SortOrder
+    _count?: CafeCouponHistoryCountOrderByAggregateInput
+    _avg?: CafeCouponHistoryAvgOrderByAggregateInput
+    _max?: CafeCouponHistoryMaxOrderByAggregateInput
+    _min?: CafeCouponHistoryMinOrderByAggregateInput
+    _sum?: CafeCouponHistorySumOrderByAggregateInput
+  }
+
+  export type CafeCouponHistoryScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<CafeCouponHistoryScalarWhereWithAggregatesInput>
+    OR?: Enumerable<CafeCouponHistoryScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<CafeCouponHistoryScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    cafeCouponId?: IntWithAggregatesFilter | number
+    eventType?: EnumCafeCouponEventTypeWithAggregatesFilter | CafeCouponEventType
+    description?: StringWithAggregatesFilter | string
+    actorId?: IntWithAggregatesFilter | number
+    statusBefore?: EnumCafeCouponStatusNullableWithAggregatesFilter | CafeCouponStatus | null
+    statusAfter?: EnumCafeCouponStatusNullableWithAggregatesFilter | CafeCouponStatus | null
+  }
+
   export type UserCreateInput = {
     createdAt?: Date | string
     loginId: string
@@ -16287,6 +22296,8 @@ export namespace Prisma {
     Boards?: BoardCreateNestedManyWithoutUserInput
     BoardReplies?: BoardReplyCreateNestedManyWithoutUserInput
     Notices?: NoticeCreateNestedManyWithoutUserInput
+    ProxyUsers?: ProxyUserCreateNestedManyWithoutUserInput
+    CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -16303,6 +22314,8 @@ export namespace Prisma {
     Boards?: BoardUncheckedCreateNestedManyWithoutUserInput
     BoardReplies?: BoardReplyUncheckedCreateNestedManyWithoutUserInput
     Notices?: NoticeUncheckedCreateNestedManyWithoutUserInput
+    ProxyUsers?: ProxyUserUncheckedCreateNestedManyWithoutUserInput
+    CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserUpdateInput = {
@@ -16318,6 +22331,8 @@ export namespace Prisma {
     Boards?: BoardUpdateManyWithoutUserNestedInput
     BoardReplies?: BoardReplyUpdateManyWithoutUserNestedInput
     Notices?: NoticeUpdateManyWithoutUserNestedInput
+    ProxyUsers?: ProxyUserUpdateManyWithoutUserNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -16334,6 +22349,8 @@ export namespace Prisma {
     Boards?: BoardUncheckedUpdateManyWithoutUserNestedInput
     BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserNestedInput
     Notices?: NoticeUncheckedUpdateManyWithoutUserNestedInput
+    ProxyUsers?: ProxyUserUncheckedUpdateManyWithoutUserNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -16792,6 +22809,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
     address: string
     directions: string
@@ -16801,6 +22819,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateInput = {
@@ -16808,6 +22827,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     regionCategoryId: number
     address: string
     directions: string
@@ -16817,12 +22837,14 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUpdateInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -16832,6 +22854,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateInput = {
@@ -16839,6 +22862,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     regionCategoryId?: IntFieldUpdateOperationsInput | number
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -16848,6 +22872,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateManyInput = {
@@ -16855,6 +22880,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     regionCategoryId: number
     address: string
     directions: string
@@ -16866,6 +22892,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
@@ -16877,6 +22904,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     regionCategoryId?: IntFieldUpdateOperationsInput | number
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -17274,6 +23302,375 @@ export namespace Prisma {
     cafeVirtualLinkId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type CafeCouponGroupCreateInput = {
+    createdAt?: Date | string
+    code: string
+    name: string
+    tag: string
+    description: string
+    isDisable?: boolean
+    startDay?: Date | string
+    endDay: Date | string
+    issuanceStartDay: Date | string
+    issuanceEndDay: Date | string
+    CafeCoupons?: CafeCouponCreateNestedManyWithoutCafeCouponGroupInput
+    CafeCouponGoupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeCouponGroupInput
+  }
+
+  export type CafeCouponGroupUncheckedCreateInput = {
+    id?: number
+    createdAt?: Date | string
+    code: string
+    name: string
+    tag: string
+    description: string
+    isDisable?: boolean
+    startDay?: Date | string
+    endDay: Date | string
+    issuanceStartDay: Date | string
+    issuanceEndDay: Date | string
+    CafeCoupons?: CafeCouponUncheckedCreateNestedManyWithoutCafeCouponGroupInput
+    CafeCouponGoupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeCouponGroupInput
+  }
+
+  export type CafeCouponGroupUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tag?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceStartDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceEndDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    CafeCoupons?: CafeCouponUpdateManyWithoutCafeCouponGroupNestedInput
+    CafeCouponGoupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeCouponGroupNestedInput
+  }
+
+  export type CafeCouponGroupUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tag?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceStartDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceEndDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    CafeCoupons?: CafeCouponUncheckedUpdateManyWithoutCafeCouponGroupNestedInput
+    CafeCouponGoupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeCouponGroupNestedInput
+  }
+
+  export type CafeCouponGroupCreateManyInput = {
+    id?: number
+    createdAt?: Date | string
+    code: string
+    name: string
+    tag: string
+    description: string
+    isDisable?: boolean
+    startDay?: Date | string
+    endDay: Date | string
+    issuanceStartDay: Date | string
+    issuanceEndDay: Date | string
+  }
+
+  export type CafeCouponGroupUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tag?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceStartDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceEndDay?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CafeCouponGroupUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tag?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceStartDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceEndDay?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CafeCouponGoupPartnerCreateInput = {
+    CafeCouponGroup: CafeCouponGroupCreateNestedOneWithoutCafeCouponGoupPartnersInput
+    CafeInfo: CafeInfoCreateNestedOneWithoutCafeCouponGroupPartnersInput
+  }
+
+  export type CafeCouponGoupPartnerUncheckedCreateInput = {
+    cafeCouponGroupId: number
+    cafeInfoId: number
+  }
+
+  export type CafeCouponGoupPartnerUpdateInput = {
+    CafeCouponGroup?: CafeCouponGroupUpdateOneRequiredWithoutCafeCouponGoupPartnersNestedInput
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeCouponGroupPartnersNestedInput
+  }
+
+  export type CafeCouponGoupPartnerUncheckedUpdateInput = {
+    cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CafeCouponGoupPartnerCreateManyInput = {
+    cafeCouponGroupId: number
+    cafeInfoId: number
+  }
+
+  export type CafeCouponGoupPartnerUpdateManyMutationInput = {
+
+  }
+
+  export type CafeCouponGoupPartnerUncheckedUpdateManyInput = {
+    cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProxyUserCreateInput = {
+    memberId: string
+    createdAt?: Date | string
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+    User?: UserCreateNestedOneWithoutProxyUsersInput
+    CafeCoupons?: CafeCouponCreateNestedManyWithoutProxyUserInput
+  }
+
+  export type ProxyUserUncheckedCreateInput = {
+    id?: number
+    memberId: string
+    createdAt?: Date | string
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+    userId?: number | null
+    CafeCoupons?: CafeCouponUncheckedCreateNestedManyWithoutProxyUserInput
+  }
+
+  export type ProxyUserUpdateInput = {
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    User?: UserUpdateOneWithoutProxyUsersNestedInput
+    CafeCoupons?: CafeCouponUpdateManyWithoutProxyUserNestedInput
+  }
+
+  export type ProxyUserUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    CafeCoupons?: CafeCouponUncheckedUpdateManyWithoutProxyUserNestedInput
+  }
+
+  export type ProxyUserCreateManyInput = {
+    id?: number
+    memberId: string
+    createdAt?: Date | string
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+    userId?: number | null
+  }
+
+  export type ProxyUserUpdateManyMutationInput = {
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProxyUserUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type CafeCouponCreateInput = {
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    ProxyUser: ProxyUserCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponGroup: CafeCouponGroupCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutCafeCouponInput
+  }
+
+  export type CafeCouponUncheckedCreateInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    proxyUserId: number
+    cafeCouponGroupId: number
+    CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutCafeCouponInput
+  }
+
+  export type CafeCouponUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    ProxyUser?: ProxyUserUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponGroup?: CafeCouponGroupUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutCafeCouponNestedInput
+  }
+
+  export type CafeCouponUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    proxyUserId?: IntFieldUpdateOperationsInput | number
+    cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+    CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput
+  }
+
+  export type CafeCouponCreateManyInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    proxyUserId: number
+    cafeCouponGroupId: number
+  }
+
+  export type CafeCouponUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type CafeCouponUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    proxyUserId?: IntFieldUpdateOperationsInput | number
+    cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CafeCouponHistoryCreateInput = {
+    createdAt?: Date | string
+    CafeCoupon: CafeCouponCreateNestedOneWithoutCafeCouponHistoriesInput
+    eventType: CafeCouponEventType
+    description: string
+    Actor: UserCreateNestedOneWithoutCafeCouponHistoriesInput
+    statusBefore?: CafeCouponStatus | null
+    statusAfter?: CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUncheckedCreateInput = {
+    id?: number
+    createdAt?: Date | string
+    cafeCouponId: number
+    eventType: CafeCouponEventType
+    description: string
+    actorId: number
+    statusBefore?: CafeCouponStatus | null
+    statusAfter?: CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    CafeCoupon?: CafeCouponUpdateOneRequiredWithoutCafeCouponHistoriesNestedInput
+    eventType?: EnumCafeCouponEventTypeFieldUpdateOperationsInput | CafeCouponEventType
+    description?: StringFieldUpdateOperationsInput | string
+    Actor?: UserUpdateOneRequiredWithoutCafeCouponHistoriesNestedInput
+    statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+    statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafeCouponId?: IntFieldUpdateOperationsInput | number
+    eventType?: EnumCafeCouponEventTypeFieldUpdateOperationsInput | CafeCouponEventType
+    description?: StringFieldUpdateOperationsInput | string
+    actorId?: IntFieldUpdateOperationsInput | number
+    statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+    statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryCreateManyInput = {
+    id?: number
+    createdAt?: Date | string
+    cafeCouponId: number
+    eventType: CafeCouponEventType
+    description: string
+    actorId: number
+    statusBefore?: CafeCouponStatus | null
+    statusAfter?: CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: EnumCafeCouponEventTypeFieldUpdateOperationsInput | CafeCouponEventType
+    description?: StringFieldUpdateOperationsInput | string
+    statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+    statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafeCouponId?: IntFieldUpdateOperationsInput | number
+    eventType?: EnumCafeCouponEventTypeFieldUpdateOperationsInput | CafeCouponEventType
+    description?: StringFieldUpdateOperationsInput | string
+    actorId?: IntFieldUpdateOperationsInput | number
+    statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+    statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+  }
+
   export type IntFilter = {
     equals?: number
     in?: Enumerable<number>
@@ -17363,6 +23760,18 @@ export namespace Prisma {
     none?: NoticeWhereInput
   }
 
+  export type ProxyUserListRelationFilter = {
+    every?: ProxyUserWhereInput
+    some?: ProxyUserWhereInput
+    none?: ProxyUserWhereInput
+  }
+
+  export type CafeCouponHistoryListRelationFilter = {
+    every?: CafeCouponHistoryWhereInput
+    some?: CafeCouponHistoryWhereInput
+    none?: CafeCouponHistoryWhereInput
+  }
+
   export type BoardOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -17372,6 +23781,14 @@ export namespace Prisma {
   }
 
   export type NoticeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProxyUserOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CafeCouponHistoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -17934,6 +24351,12 @@ export namespace Prisma {
     none?: CafeRealImageWhereInput
   }
 
+  export type CafeCouponGoupPartnerListRelationFilter = {
+    every?: CafeCouponGoupPartnerWhereInput
+    some?: CafeCouponGoupPartnerWhereInput
+    none?: CafeCouponGoupPartnerWhereInput
+  }
+
   export type CafeVirtualLinkOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -17950,11 +24373,16 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type CafeCouponGoupPartnerOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type CafeInfoCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
     isDisable?: SortOrder
     name?: SortOrder
+    code?: SortOrder
     regionCategoryId?: SortOrder
     address?: SortOrder
     directions?: SortOrder
@@ -17972,6 +24400,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     isDisable?: SortOrder
     name?: SortOrder
+    code?: SortOrder
     regionCategoryId?: SortOrder
     address?: SortOrder
     directions?: SortOrder
@@ -17984,6 +24413,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     isDisable?: SortOrder
     name?: SortOrder
+    code?: SortOrder
     regionCategoryId?: SortOrder
     address?: SortOrder
     directions?: SortOrder
@@ -18265,6 +24695,303 @@ export namespace Prisma {
     cafeVirtualLinkId?: SortOrder
   }
 
+  export type CafeCouponListRelationFilter = {
+    every?: CafeCouponWhereInput
+    some?: CafeCouponWhereInput
+    none?: CafeCouponWhereInput
+  }
+
+  export type CafeCouponOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CafeCouponGroupCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    tag?: SortOrder
+    description?: SortOrder
+    isDisable?: SortOrder
+    startDay?: SortOrder
+    endDay?: SortOrder
+    issuanceStartDay?: SortOrder
+    issuanceEndDay?: SortOrder
+  }
+
+  export type CafeCouponGroupAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type CafeCouponGroupMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    tag?: SortOrder
+    description?: SortOrder
+    isDisable?: SortOrder
+    startDay?: SortOrder
+    endDay?: SortOrder
+    issuanceStartDay?: SortOrder
+    issuanceEndDay?: SortOrder
+  }
+
+  export type CafeCouponGroupMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    code?: SortOrder
+    name?: SortOrder
+    tag?: SortOrder
+    description?: SortOrder
+    isDisable?: SortOrder
+    startDay?: SortOrder
+    endDay?: SortOrder
+    issuanceStartDay?: SortOrder
+    issuanceEndDay?: SortOrder
+  }
+
+  export type CafeCouponGroupSumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type CafeCouponGroupRelationFilter = {
+    is?: CafeCouponGroupWhereInput
+    isNot?: CafeCouponGroupWhereInput
+  }
+
+  export type CafeCouponGoupPartnerCafeCouponGroupPartnerUniqueCompoundUniqueInput = {
+    cafeCouponGroupId: number
+    cafeInfoId: number
+  }
+
+  export type CafeCouponGoupPartnerCountOrderByAggregateInput = {
+    cafeCouponGroupId?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type CafeCouponGoupPartnerAvgOrderByAggregateInput = {
+    cafeCouponGroupId?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type CafeCouponGoupPartnerMaxOrderByAggregateInput = {
+    cafeCouponGroupId?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type CafeCouponGoupPartnerMinOrderByAggregateInput = {
+    cafeCouponGroupId?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type CafeCouponGoupPartnerSumOrderByAggregateInput = {
+    cafeCouponGroupId?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type EnumProxyUserTypeFilter = {
+    equals?: ProxyUserType
+    in?: Enumerable<ProxyUserType>
+    notIn?: Enumerable<ProxyUserType>
+    not?: NestedEnumProxyUserTypeFilter | ProxyUserType
+  }
+
+  export type ProxyUserProxyUserUniqueCompoundUniqueInput = {
+    memberId: string
+    proxyUserType: ProxyUserType
+  }
+
+  export type ProxyUserCountOrderByAggregateInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    createdAt?: SortOrder
+    proxyUserType?: SortOrder
+    name?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type ProxyUserAvgOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type ProxyUserMaxOrderByAggregateInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    createdAt?: SortOrder
+    proxyUserType?: SortOrder
+    name?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type ProxyUserMinOrderByAggregateInput = {
+    id?: SortOrder
+    memberId?: SortOrder
+    createdAt?: SortOrder
+    proxyUserType?: SortOrder
+    name?: SortOrder
+    token?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type ProxyUserSumOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type EnumProxyUserTypeWithAggregatesFilter = {
+    equals?: ProxyUserType
+    in?: Enumerable<ProxyUserType>
+    notIn?: Enumerable<ProxyUserType>
+    not?: NestedEnumProxyUserTypeWithAggregatesFilter | ProxyUserType
+    _count?: NestedIntFilter
+    _min?: NestedEnumProxyUserTypeFilter
+    _max?: NestedEnumProxyUserTypeFilter
+  }
+
+  export type ProxyUserRelationFilter = {
+    is?: ProxyUserWhereInput
+    isNot?: ProxyUserWhereInput
+  }
+
+  export type CafeCouponCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    content?: SortOrder
+    serialNumber?: SortOrder
+    startDay?: SortOrder
+    endDay?: SortOrder
+    isDisable?: SortOrder
+    proxyUserId?: SortOrder
+    cafeCouponGroupId?: SortOrder
+  }
+
+  export type CafeCouponAvgOrderByAggregateInput = {
+    id?: SortOrder
+    proxyUserId?: SortOrder
+    cafeCouponGroupId?: SortOrder
+  }
+
+  export type CafeCouponMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    content?: SortOrder
+    serialNumber?: SortOrder
+    startDay?: SortOrder
+    endDay?: SortOrder
+    isDisable?: SortOrder
+    proxyUserId?: SortOrder
+    cafeCouponGroupId?: SortOrder
+  }
+
+  export type CafeCouponMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    content?: SortOrder
+    serialNumber?: SortOrder
+    startDay?: SortOrder
+    endDay?: SortOrder
+    isDisable?: SortOrder
+    proxyUserId?: SortOrder
+    cafeCouponGroupId?: SortOrder
+  }
+
+  export type CafeCouponSumOrderByAggregateInput = {
+    id?: SortOrder
+    proxyUserId?: SortOrder
+    cafeCouponGroupId?: SortOrder
+  }
+
+  export type CafeCouponRelationFilter = {
+    is?: CafeCouponWhereInput
+    isNot?: CafeCouponWhereInput
+  }
+
+  export type EnumCafeCouponEventTypeFilter = {
+    equals?: CafeCouponEventType
+    in?: Enumerable<CafeCouponEventType>
+    notIn?: Enumerable<CafeCouponEventType>
+    not?: NestedEnumCafeCouponEventTypeFilter | CafeCouponEventType
+  }
+
+  export type EnumCafeCouponStatusNullableFilter = {
+    equals?: CafeCouponStatus | null
+    in?: Enumerable<CafeCouponStatus> | null
+    notIn?: Enumerable<CafeCouponStatus> | null
+    not?: NestedEnumCafeCouponStatusNullableFilter | CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    cafeCouponId?: SortOrder
+    eventType?: SortOrder
+    description?: SortOrder
+    actorId?: SortOrder
+    statusBefore?: SortOrder
+    statusAfter?: SortOrder
+  }
+
+  export type CafeCouponHistoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+    cafeCouponId?: SortOrder
+    actorId?: SortOrder
+  }
+
+  export type CafeCouponHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    cafeCouponId?: SortOrder
+    eventType?: SortOrder
+    description?: SortOrder
+    actorId?: SortOrder
+    statusBefore?: SortOrder
+    statusAfter?: SortOrder
+  }
+
+  export type CafeCouponHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    cafeCouponId?: SortOrder
+    eventType?: SortOrder
+    description?: SortOrder
+    actorId?: SortOrder
+    statusBefore?: SortOrder
+    statusAfter?: SortOrder
+  }
+
+  export type CafeCouponHistorySumOrderByAggregateInput = {
+    id?: SortOrder
+    cafeCouponId?: SortOrder
+    actorId?: SortOrder
+  }
+
+  export type EnumCafeCouponEventTypeWithAggregatesFilter = {
+    equals?: CafeCouponEventType
+    in?: Enumerable<CafeCouponEventType>
+    notIn?: Enumerable<CafeCouponEventType>
+    not?: NestedEnumCafeCouponEventTypeWithAggregatesFilter | CafeCouponEventType
+    _count?: NestedIntFilter
+    _min?: NestedEnumCafeCouponEventTypeFilter
+    _max?: NestedEnumCafeCouponEventTypeFilter
+  }
+
+  export type EnumCafeCouponStatusNullableWithAggregatesFilter = {
+    equals?: CafeCouponStatus | null
+    in?: Enumerable<CafeCouponStatus> | null
+    notIn?: Enumerable<CafeCouponStatus> | null
+    not?: NestedEnumCafeCouponStatusNullableWithAggregatesFilter | CafeCouponStatus | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedEnumCafeCouponStatusNullableFilter
+    _max?: NestedEnumCafeCouponStatusNullableFilter
+  }
+
   export type BoardCreateNestedManyWithoutUserInput = {
     create?: XOR<Enumerable<BoardCreateWithoutUserInput>, Enumerable<BoardUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<BoardCreateOrConnectWithoutUserInput>
@@ -18286,6 +25013,20 @@ export namespace Prisma {
     connect?: Enumerable<NoticeWhereUniqueInput>
   }
 
+  export type ProxyUserCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<ProxyUserCreateWithoutUserInput>, Enumerable<ProxyUserUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<ProxyUserCreateOrConnectWithoutUserInput>
+    createMany?: ProxyUserCreateManyUserInputEnvelope
+    connect?: Enumerable<ProxyUserWhereUniqueInput>
+  }
+
+  export type CafeCouponHistoryCreateNestedManyWithoutActorInput = {
+    create?: XOR<Enumerable<CafeCouponHistoryCreateWithoutActorInput>, Enumerable<CafeCouponHistoryUncheckedCreateWithoutActorInput>>
+    connectOrCreate?: Enumerable<CafeCouponHistoryCreateOrConnectWithoutActorInput>
+    createMany?: CafeCouponHistoryCreateManyActorInputEnvelope
+    connect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+  }
+
   export type BoardUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<Enumerable<BoardCreateWithoutUserInput>, Enumerable<BoardUncheckedCreateWithoutUserInput>>
     connectOrCreate?: Enumerable<BoardCreateOrConnectWithoutUserInput>
@@ -18305,6 +25046,20 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<NoticeCreateOrConnectWithoutUserInput>
     createMany?: NoticeCreateManyUserInputEnvelope
     connect?: Enumerable<NoticeWhereUniqueInput>
+  }
+
+  export type ProxyUserUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<Enumerable<ProxyUserCreateWithoutUserInput>, Enumerable<ProxyUserUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<ProxyUserCreateOrConnectWithoutUserInput>
+    createMany?: ProxyUserCreateManyUserInputEnvelope
+    connect?: Enumerable<ProxyUserWhereUniqueInput>
+  }
+
+  export type CafeCouponHistoryUncheckedCreateNestedManyWithoutActorInput = {
+    create?: XOR<Enumerable<CafeCouponHistoryCreateWithoutActorInput>, Enumerable<CafeCouponHistoryUncheckedCreateWithoutActorInput>>
+    connectOrCreate?: Enumerable<CafeCouponHistoryCreateOrConnectWithoutActorInput>
+    createMany?: CafeCouponHistoryCreateManyActorInputEnvelope
+    connect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
   }
 
   export type DateTimeFieldUpdateOperationsInput = {
@@ -18373,6 +25128,34 @@ export namespace Prisma {
     deleteMany?: Enumerable<NoticeScalarWhereInput>
   }
 
+  export type ProxyUserUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<ProxyUserCreateWithoutUserInput>, Enumerable<ProxyUserUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<ProxyUserCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<ProxyUserUpsertWithWhereUniqueWithoutUserInput>
+    createMany?: ProxyUserCreateManyUserInputEnvelope
+    set?: Enumerable<ProxyUserWhereUniqueInput>
+    disconnect?: Enumerable<ProxyUserWhereUniqueInput>
+    delete?: Enumerable<ProxyUserWhereUniqueInput>
+    connect?: Enumerable<ProxyUserWhereUniqueInput>
+    update?: Enumerable<ProxyUserUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<ProxyUserUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<ProxyUserScalarWhereInput>
+  }
+
+  export type CafeCouponHistoryUpdateManyWithoutActorNestedInput = {
+    create?: XOR<Enumerable<CafeCouponHistoryCreateWithoutActorInput>, Enumerable<CafeCouponHistoryUncheckedCreateWithoutActorInput>>
+    connectOrCreate?: Enumerable<CafeCouponHistoryCreateOrConnectWithoutActorInput>
+    upsert?: Enumerable<CafeCouponHistoryUpsertWithWhereUniqueWithoutActorInput>
+    createMany?: CafeCouponHistoryCreateManyActorInputEnvelope
+    set?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    delete?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    connect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    update?: Enumerable<CafeCouponHistoryUpdateWithWhereUniqueWithoutActorInput>
+    updateMany?: Enumerable<CafeCouponHistoryUpdateManyWithWhereWithoutActorInput>
+    deleteMany?: Enumerable<CafeCouponHistoryScalarWhereInput>
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -18421,6 +25204,34 @@ export namespace Prisma {
     update?: Enumerable<NoticeUpdateWithWhereUniqueWithoutUserInput>
     updateMany?: Enumerable<NoticeUpdateManyWithWhereWithoutUserInput>
     deleteMany?: Enumerable<NoticeScalarWhereInput>
+  }
+
+  export type ProxyUserUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<Enumerable<ProxyUserCreateWithoutUserInput>, Enumerable<ProxyUserUncheckedCreateWithoutUserInput>>
+    connectOrCreate?: Enumerable<ProxyUserCreateOrConnectWithoutUserInput>
+    upsert?: Enumerable<ProxyUserUpsertWithWhereUniqueWithoutUserInput>
+    createMany?: ProxyUserCreateManyUserInputEnvelope
+    set?: Enumerable<ProxyUserWhereUniqueInput>
+    disconnect?: Enumerable<ProxyUserWhereUniqueInput>
+    delete?: Enumerable<ProxyUserWhereUniqueInput>
+    connect?: Enumerable<ProxyUserWhereUniqueInput>
+    update?: Enumerable<ProxyUserUpdateWithWhereUniqueWithoutUserInput>
+    updateMany?: Enumerable<ProxyUserUpdateManyWithWhereWithoutUserInput>
+    deleteMany?: Enumerable<ProxyUserScalarWhereInput>
+  }
+
+  export type CafeCouponHistoryUncheckedUpdateManyWithoutActorNestedInput = {
+    create?: XOR<Enumerable<CafeCouponHistoryCreateWithoutActorInput>, Enumerable<CafeCouponHistoryUncheckedCreateWithoutActorInput>>
+    connectOrCreate?: Enumerable<CafeCouponHistoryCreateOrConnectWithoutActorInput>
+    upsert?: Enumerable<CafeCouponHistoryUpsertWithWhereUniqueWithoutActorInput>
+    createMany?: CafeCouponHistoryCreateManyActorInputEnvelope
+    set?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    delete?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    connect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    update?: Enumerable<CafeCouponHistoryUpdateWithWhereUniqueWithoutActorInput>
+    updateMany?: Enumerable<CafeCouponHistoryUpdateManyWithWhereWithoutActorInput>
+    deleteMany?: Enumerable<CafeCouponHistoryScalarWhereInput>
   }
 
   export type UserCreateNestedOneWithoutNoticesInput = {
@@ -18843,6 +25654,13 @@ export namespace Prisma {
     connect?: Enumerable<CafeRealImageWhereUniqueInput>
   }
 
+  export type CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput = {
+    create?: XOR<Enumerable<CafeCouponGoupPartnerCreateWithoutCafeInfoInput>, Enumerable<CafeCouponGoupPartnerUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<CafeCouponGoupPartnerCreateOrConnectWithoutCafeInfoInput>
+    createMany?: CafeCouponGoupPartnerCreateManyCafeInfoInputEnvelope
+    connect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+  }
+
   export type CafeVirtualLinkUncheckedCreateNestedManyWithoutCafeInfoInput = {
     create?: XOR<Enumerable<CafeVirtualLinkCreateWithoutCafeInfoInput>, Enumerable<CafeVirtualLinkUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeVirtualLinkCreateOrConnectWithoutCafeInfoInput>
@@ -18869,6 +25687,13 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<CafeRealImageCreateOrConnectWithoutCafeInfoInput>
     createMany?: CafeRealImageCreateManyCafeInfoInputEnvelope
     connect?: Enumerable<CafeRealImageWhereUniqueInput>
+  }
+
+  export type CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput = {
+    create?: XOR<Enumerable<CafeCouponGoupPartnerCreateWithoutCafeInfoInput>, Enumerable<CafeCouponGoupPartnerUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<CafeCouponGoupPartnerCreateOrConnectWithoutCafeInfoInput>
+    createMany?: CafeCouponGoupPartnerCreateManyCafeInfoInputEnvelope
+    connect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
   }
 
   export type RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput = {
@@ -18935,6 +25760,20 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeRealImageScalarWhereInput>
   }
 
+  export type CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput = {
+    create?: XOR<Enumerable<CafeCouponGoupPartnerCreateWithoutCafeInfoInput>, Enumerable<CafeCouponGoupPartnerUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<CafeCouponGoupPartnerCreateOrConnectWithoutCafeInfoInput>
+    upsert?: Enumerable<CafeCouponGoupPartnerUpsertWithWhereUniqueWithoutCafeInfoInput>
+    createMany?: CafeCouponGoupPartnerCreateManyCafeInfoInputEnvelope
+    set?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    delete?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    connect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    update?: Enumerable<CafeCouponGoupPartnerUpdateWithWhereUniqueWithoutCafeInfoInput>
+    updateMany?: Enumerable<CafeCouponGoupPartnerUpdateManyWithWhereWithoutCafeInfoInput>
+    deleteMany?: Enumerable<CafeCouponGoupPartnerScalarWhereInput>
+  }
+
   export type CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeVirtualLinkCreateWithoutCafeInfoInput>, Enumerable<CafeVirtualLinkUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeVirtualLinkCreateOrConnectWithoutCafeInfoInput>
@@ -18989,6 +25828,20 @@ export namespace Prisma {
     update?: Enumerable<CafeRealImageUpdateWithWhereUniqueWithoutCafeInfoInput>
     updateMany?: Enumerable<CafeRealImageUpdateManyWithWhereWithoutCafeInfoInput>
     deleteMany?: Enumerable<CafeRealImageScalarWhereInput>
+  }
+
+  export type CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput = {
+    create?: XOR<Enumerable<CafeCouponGoupPartnerCreateWithoutCafeInfoInput>, Enumerable<CafeCouponGoupPartnerUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<CafeCouponGoupPartnerCreateOrConnectWithoutCafeInfoInput>
+    upsert?: Enumerable<CafeCouponGoupPartnerUpsertWithWhereUniqueWithoutCafeInfoInput>
+    createMany?: CafeCouponGoupPartnerCreateManyCafeInfoInputEnvelope
+    set?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    delete?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    connect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    update?: Enumerable<CafeCouponGoupPartnerUpdateWithWhereUniqueWithoutCafeInfoInput>
+    updateMany?: Enumerable<CafeCouponGoupPartnerUpdateManyWithWhereWithoutCafeInfoInput>
+    deleteMany?: Enumerable<CafeCouponGoupPartnerScalarWhereInput>
   }
 
   export type CafeInfoCreateNestedOneWithoutCafeThumbnailImagesInput = {
@@ -19091,6 +25944,286 @@ export namespace Prisma {
     upsert?: CafeVirtualLinkUpsertWithoutCafeVirtualLinkThumbnailImageInput
     connect?: CafeVirtualLinkWhereUniqueInput
     update?: XOR<CafeVirtualLinkUpdateWithoutCafeVirtualLinkThumbnailImageInput, CafeVirtualLinkUncheckedUpdateWithoutCafeVirtualLinkThumbnailImageInput>
+  }
+
+  export type CafeCouponCreateNestedManyWithoutCafeCouponGroupInput = {
+    create?: XOR<Enumerable<CafeCouponCreateWithoutCafeCouponGroupInput>, Enumerable<CafeCouponUncheckedCreateWithoutCafeCouponGroupInput>>
+    connectOrCreate?: Enumerable<CafeCouponCreateOrConnectWithoutCafeCouponGroupInput>
+    createMany?: CafeCouponCreateManyCafeCouponGroupInputEnvelope
+    connect?: Enumerable<CafeCouponWhereUniqueInput>
+  }
+
+  export type CafeCouponGoupPartnerCreateNestedManyWithoutCafeCouponGroupInput = {
+    create?: XOR<Enumerable<CafeCouponGoupPartnerCreateWithoutCafeCouponGroupInput>, Enumerable<CafeCouponGoupPartnerUncheckedCreateWithoutCafeCouponGroupInput>>
+    connectOrCreate?: Enumerable<CafeCouponGoupPartnerCreateOrConnectWithoutCafeCouponGroupInput>
+    createMany?: CafeCouponGoupPartnerCreateManyCafeCouponGroupInputEnvelope
+    connect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+  }
+
+  export type CafeCouponUncheckedCreateNestedManyWithoutCafeCouponGroupInput = {
+    create?: XOR<Enumerable<CafeCouponCreateWithoutCafeCouponGroupInput>, Enumerable<CafeCouponUncheckedCreateWithoutCafeCouponGroupInput>>
+    connectOrCreate?: Enumerable<CafeCouponCreateOrConnectWithoutCafeCouponGroupInput>
+    createMany?: CafeCouponCreateManyCafeCouponGroupInputEnvelope
+    connect?: Enumerable<CafeCouponWhereUniqueInput>
+  }
+
+  export type CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeCouponGroupInput = {
+    create?: XOR<Enumerable<CafeCouponGoupPartnerCreateWithoutCafeCouponGroupInput>, Enumerable<CafeCouponGoupPartnerUncheckedCreateWithoutCafeCouponGroupInput>>
+    connectOrCreate?: Enumerable<CafeCouponGoupPartnerCreateOrConnectWithoutCafeCouponGroupInput>
+    createMany?: CafeCouponGoupPartnerCreateManyCafeCouponGroupInputEnvelope
+    connect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+  }
+
+  export type CafeCouponUpdateManyWithoutCafeCouponGroupNestedInput = {
+    create?: XOR<Enumerable<CafeCouponCreateWithoutCafeCouponGroupInput>, Enumerable<CafeCouponUncheckedCreateWithoutCafeCouponGroupInput>>
+    connectOrCreate?: Enumerable<CafeCouponCreateOrConnectWithoutCafeCouponGroupInput>
+    upsert?: Enumerable<CafeCouponUpsertWithWhereUniqueWithoutCafeCouponGroupInput>
+    createMany?: CafeCouponCreateManyCafeCouponGroupInputEnvelope
+    set?: Enumerable<CafeCouponWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponWhereUniqueInput>
+    delete?: Enumerable<CafeCouponWhereUniqueInput>
+    connect?: Enumerable<CafeCouponWhereUniqueInput>
+    update?: Enumerable<CafeCouponUpdateWithWhereUniqueWithoutCafeCouponGroupInput>
+    updateMany?: Enumerable<CafeCouponUpdateManyWithWhereWithoutCafeCouponGroupInput>
+    deleteMany?: Enumerable<CafeCouponScalarWhereInput>
+  }
+
+  export type CafeCouponGoupPartnerUpdateManyWithoutCafeCouponGroupNestedInput = {
+    create?: XOR<Enumerable<CafeCouponGoupPartnerCreateWithoutCafeCouponGroupInput>, Enumerable<CafeCouponGoupPartnerUncheckedCreateWithoutCafeCouponGroupInput>>
+    connectOrCreate?: Enumerable<CafeCouponGoupPartnerCreateOrConnectWithoutCafeCouponGroupInput>
+    upsert?: Enumerable<CafeCouponGoupPartnerUpsertWithWhereUniqueWithoutCafeCouponGroupInput>
+    createMany?: CafeCouponGoupPartnerCreateManyCafeCouponGroupInputEnvelope
+    set?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    delete?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    connect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    update?: Enumerable<CafeCouponGoupPartnerUpdateWithWhereUniqueWithoutCafeCouponGroupInput>
+    updateMany?: Enumerable<CafeCouponGoupPartnerUpdateManyWithWhereWithoutCafeCouponGroupInput>
+    deleteMany?: Enumerable<CafeCouponGoupPartnerScalarWhereInput>
+  }
+
+  export type CafeCouponUncheckedUpdateManyWithoutCafeCouponGroupNestedInput = {
+    create?: XOR<Enumerable<CafeCouponCreateWithoutCafeCouponGroupInput>, Enumerable<CafeCouponUncheckedCreateWithoutCafeCouponGroupInput>>
+    connectOrCreate?: Enumerable<CafeCouponCreateOrConnectWithoutCafeCouponGroupInput>
+    upsert?: Enumerable<CafeCouponUpsertWithWhereUniqueWithoutCafeCouponGroupInput>
+    createMany?: CafeCouponCreateManyCafeCouponGroupInputEnvelope
+    set?: Enumerable<CafeCouponWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponWhereUniqueInput>
+    delete?: Enumerable<CafeCouponWhereUniqueInput>
+    connect?: Enumerable<CafeCouponWhereUniqueInput>
+    update?: Enumerable<CafeCouponUpdateWithWhereUniqueWithoutCafeCouponGroupInput>
+    updateMany?: Enumerable<CafeCouponUpdateManyWithWhereWithoutCafeCouponGroupInput>
+    deleteMany?: Enumerable<CafeCouponScalarWhereInput>
+  }
+
+  export type CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeCouponGroupNestedInput = {
+    create?: XOR<Enumerable<CafeCouponGoupPartnerCreateWithoutCafeCouponGroupInput>, Enumerable<CafeCouponGoupPartnerUncheckedCreateWithoutCafeCouponGroupInput>>
+    connectOrCreate?: Enumerable<CafeCouponGoupPartnerCreateOrConnectWithoutCafeCouponGroupInput>
+    upsert?: Enumerable<CafeCouponGoupPartnerUpsertWithWhereUniqueWithoutCafeCouponGroupInput>
+    createMany?: CafeCouponGoupPartnerCreateManyCafeCouponGroupInputEnvelope
+    set?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    delete?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    connect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+    update?: Enumerable<CafeCouponGoupPartnerUpdateWithWhereUniqueWithoutCafeCouponGroupInput>
+    updateMany?: Enumerable<CafeCouponGoupPartnerUpdateManyWithWhereWithoutCafeCouponGroupInput>
+    deleteMany?: Enumerable<CafeCouponGoupPartnerScalarWhereInput>
+  }
+
+  export type CafeCouponGroupCreateNestedOneWithoutCafeCouponGoupPartnersInput = {
+    create?: XOR<CafeCouponGroupCreateWithoutCafeCouponGoupPartnersInput, CafeCouponGroupUncheckedCreateWithoutCafeCouponGoupPartnersInput>
+    connectOrCreate?: CafeCouponGroupCreateOrConnectWithoutCafeCouponGoupPartnersInput
+    connect?: CafeCouponGroupWhereUniqueInput
+  }
+
+  export type CafeInfoCreateNestedOneWithoutCafeCouponGroupPartnersInput = {
+    create?: XOR<CafeInfoCreateWithoutCafeCouponGroupPartnersInput, CafeInfoUncheckedCreateWithoutCafeCouponGroupPartnersInput>
+    connectOrCreate?: CafeInfoCreateOrConnectWithoutCafeCouponGroupPartnersInput
+    connect?: CafeInfoWhereUniqueInput
+  }
+
+  export type CafeCouponGroupUpdateOneRequiredWithoutCafeCouponGoupPartnersNestedInput = {
+    create?: XOR<CafeCouponGroupCreateWithoutCafeCouponGoupPartnersInput, CafeCouponGroupUncheckedCreateWithoutCafeCouponGoupPartnersInput>
+    connectOrCreate?: CafeCouponGroupCreateOrConnectWithoutCafeCouponGoupPartnersInput
+    upsert?: CafeCouponGroupUpsertWithoutCafeCouponGoupPartnersInput
+    connect?: CafeCouponGroupWhereUniqueInput
+    update?: XOR<CafeCouponGroupUpdateWithoutCafeCouponGoupPartnersInput, CafeCouponGroupUncheckedUpdateWithoutCafeCouponGoupPartnersInput>
+  }
+
+  export type CafeInfoUpdateOneRequiredWithoutCafeCouponGroupPartnersNestedInput = {
+    create?: XOR<CafeInfoCreateWithoutCafeCouponGroupPartnersInput, CafeInfoUncheckedCreateWithoutCafeCouponGroupPartnersInput>
+    connectOrCreate?: CafeInfoCreateOrConnectWithoutCafeCouponGroupPartnersInput
+    upsert?: CafeInfoUpsertWithoutCafeCouponGroupPartnersInput
+    connect?: CafeInfoWhereUniqueInput
+    update?: XOR<CafeInfoUpdateWithoutCafeCouponGroupPartnersInput, CafeInfoUncheckedUpdateWithoutCafeCouponGroupPartnersInput>
+  }
+
+  export type UserCreateNestedOneWithoutProxyUsersInput = {
+    create?: XOR<UserCreateWithoutProxyUsersInput, UserUncheckedCreateWithoutProxyUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProxyUsersInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type CafeCouponCreateNestedManyWithoutProxyUserInput = {
+    create?: XOR<Enumerable<CafeCouponCreateWithoutProxyUserInput>, Enumerable<CafeCouponUncheckedCreateWithoutProxyUserInput>>
+    connectOrCreate?: Enumerable<CafeCouponCreateOrConnectWithoutProxyUserInput>
+    createMany?: CafeCouponCreateManyProxyUserInputEnvelope
+    connect?: Enumerable<CafeCouponWhereUniqueInput>
+  }
+
+  export type CafeCouponUncheckedCreateNestedManyWithoutProxyUserInput = {
+    create?: XOR<Enumerable<CafeCouponCreateWithoutProxyUserInput>, Enumerable<CafeCouponUncheckedCreateWithoutProxyUserInput>>
+    connectOrCreate?: Enumerable<CafeCouponCreateOrConnectWithoutProxyUserInput>
+    createMany?: CafeCouponCreateManyProxyUserInputEnvelope
+    connect?: Enumerable<CafeCouponWhereUniqueInput>
+  }
+
+  export type EnumProxyUserTypeFieldUpdateOperationsInput = {
+    set?: ProxyUserType
+  }
+
+  export type UserUpdateOneWithoutProxyUsersNestedInput = {
+    create?: XOR<UserCreateWithoutProxyUsersInput, UserUncheckedCreateWithoutProxyUsersInput>
+    connectOrCreate?: UserCreateOrConnectWithoutProxyUsersInput
+    upsert?: UserUpsertWithoutProxyUsersInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<UserUpdateWithoutProxyUsersInput, UserUncheckedUpdateWithoutProxyUsersInput>
+  }
+
+  export type CafeCouponUpdateManyWithoutProxyUserNestedInput = {
+    create?: XOR<Enumerable<CafeCouponCreateWithoutProxyUserInput>, Enumerable<CafeCouponUncheckedCreateWithoutProxyUserInput>>
+    connectOrCreate?: Enumerable<CafeCouponCreateOrConnectWithoutProxyUserInput>
+    upsert?: Enumerable<CafeCouponUpsertWithWhereUniqueWithoutProxyUserInput>
+    createMany?: CafeCouponCreateManyProxyUserInputEnvelope
+    set?: Enumerable<CafeCouponWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponWhereUniqueInput>
+    delete?: Enumerable<CafeCouponWhereUniqueInput>
+    connect?: Enumerable<CafeCouponWhereUniqueInput>
+    update?: Enumerable<CafeCouponUpdateWithWhereUniqueWithoutProxyUserInput>
+    updateMany?: Enumerable<CafeCouponUpdateManyWithWhereWithoutProxyUserInput>
+    deleteMany?: Enumerable<CafeCouponScalarWhereInput>
+  }
+
+  export type CafeCouponUncheckedUpdateManyWithoutProxyUserNestedInput = {
+    create?: XOR<Enumerable<CafeCouponCreateWithoutProxyUserInput>, Enumerable<CafeCouponUncheckedCreateWithoutProxyUserInput>>
+    connectOrCreate?: Enumerable<CafeCouponCreateOrConnectWithoutProxyUserInput>
+    upsert?: Enumerable<CafeCouponUpsertWithWhereUniqueWithoutProxyUserInput>
+    createMany?: CafeCouponCreateManyProxyUserInputEnvelope
+    set?: Enumerable<CafeCouponWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponWhereUniqueInput>
+    delete?: Enumerable<CafeCouponWhereUniqueInput>
+    connect?: Enumerable<CafeCouponWhereUniqueInput>
+    update?: Enumerable<CafeCouponUpdateWithWhereUniqueWithoutProxyUserInput>
+    updateMany?: Enumerable<CafeCouponUpdateManyWithWhereWithoutProxyUserInput>
+    deleteMany?: Enumerable<CafeCouponScalarWhereInput>
+  }
+
+  export type ProxyUserCreateNestedOneWithoutCafeCouponsInput = {
+    create?: XOR<ProxyUserCreateWithoutCafeCouponsInput, ProxyUserUncheckedCreateWithoutCafeCouponsInput>
+    connectOrCreate?: ProxyUserCreateOrConnectWithoutCafeCouponsInput
+    connect?: ProxyUserWhereUniqueInput
+  }
+
+  export type CafeCouponGroupCreateNestedOneWithoutCafeCouponsInput = {
+    create?: XOR<CafeCouponGroupCreateWithoutCafeCouponsInput, CafeCouponGroupUncheckedCreateWithoutCafeCouponsInput>
+    connectOrCreate?: CafeCouponGroupCreateOrConnectWithoutCafeCouponsInput
+    connect?: CafeCouponGroupWhereUniqueInput
+  }
+
+  export type CafeCouponHistoryCreateNestedManyWithoutCafeCouponInput = {
+    create?: XOR<Enumerable<CafeCouponHistoryCreateWithoutCafeCouponInput>, Enumerable<CafeCouponHistoryUncheckedCreateWithoutCafeCouponInput>>
+    connectOrCreate?: Enumerable<CafeCouponHistoryCreateOrConnectWithoutCafeCouponInput>
+    createMany?: CafeCouponHistoryCreateManyCafeCouponInputEnvelope
+    connect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+  }
+
+  export type CafeCouponHistoryUncheckedCreateNestedManyWithoutCafeCouponInput = {
+    create?: XOR<Enumerable<CafeCouponHistoryCreateWithoutCafeCouponInput>, Enumerable<CafeCouponHistoryUncheckedCreateWithoutCafeCouponInput>>
+    connectOrCreate?: Enumerable<CafeCouponHistoryCreateOrConnectWithoutCafeCouponInput>
+    createMany?: CafeCouponHistoryCreateManyCafeCouponInputEnvelope
+    connect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+  }
+
+  export type ProxyUserUpdateOneRequiredWithoutCafeCouponsNestedInput = {
+    create?: XOR<ProxyUserCreateWithoutCafeCouponsInput, ProxyUserUncheckedCreateWithoutCafeCouponsInput>
+    connectOrCreate?: ProxyUserCreateOrConnectWithoutCafeCouponsInput
+    upsert?: ProxyUserUpsertWithoutCafeCouponsInput
+    connect?: ProxyUserWhereUniqueInput
+    update?: XOR<ProxyUserUpdateWithoutCafeCouponsInput, ProxyUserUncheckedUpdateWithoutCafeCouponsInput>
+  }
+
+  export type CafeCouponGroupUpdateOneRequiredWithoutCafeCouponsNestedInput = {
+    create?: XOR<CafeCouponGroupCreateWithoutCafeCouponsInput, CafeCouponGroupUncheckedCreateWithoutCafeCouponsInput>
+    connectOrCreate?: CafeCouponGroupCreateOrConnectWithoutCafeCouponsInput
+    upsert?: CafeCouponGroupUpsertWithoutCafeCouponsInput
+    connect?: CafeCouponGroupWhereUniqueInput
+    update?: XOR<CafeCouponGroupUpdateWithoutCafeCouponsInput, CafeCouponGroupUncheckedUpdateWithoutCafeCouponsInput>
+  }
+
+  export type CafeCouponHistoryUpdateManyWithoutCafeCouponNestedInput = {
+    create?: XOR<Enumerable<CafeCouponHistoryCreateWithoutCafeCouponInput>, Enumerable<CafeCouponHistoryUncheckedCreateWithoutCafeCouponInput>>
+    connectOrCreate?: Enumerable<CafeCouponHistoryCreateOrConnectWithoutCafeCouponInput>
+    upsert?: Enumerable<CafeCouponHistoryUpsertWithWhereUniqueWithoutCafeCouponInput>
+    createMany?: CafeCouponHistoryCreateManyCafeCouponInputEnvelope
+    set?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    delete?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    connect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    update?: Enumerable<CafeCouponHistoryUpdateWithWhereUniqueWithoutCafeCouponInput>
+    updateMany?: Enumerable<CafeCouponHistoryUpdateManyWithWhereWithoutCafeCouponInput>
+    deleteMany?: Enumerable<CafeCouponHistoryScalarWhereInput>
+  }
+
+  export type CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput = {
+    create?: XOR<Enumerable<CafeCouponHistoryCreateWithoutCafeCouponInput>, Enumerable<CafeCouponHistoryUncheckedCreateWithoutCafeCouponInput>>
+    connectOrCreate?: Enumerable<CafeCouponHistoryCreateOrConnectWithoutCafeCouponInput>
+    upsert?: Enumerable<CafeCouponHistoryUpsertWithWhereUniqueWithoutCafeCouponInput>
+    createMany?: CafeCouponHistoryCreateManyCafeCouponInputEnvelope
+    set?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    delete?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    connect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+    update?: Enumerable<CafeCouponHistoryUpdateWithWhereUniqueWithoutCafeCouponInput>
+    updateMany?: Enumerable<CafeCouponHistoryUpdateManyWithWhereWithoutCafeCouponInput>
+    deleteMany?: Enumerable<CafeCouponHistoryScalarWhereInput>
+  }
+
+  export type CafeCouponCreateNestedOneWithoutCafeCouponHistoriesInput = {
+    create?: XOR<CafeCouponCreateWithoutCafeCouponHistoriesInput, CafeCouponUncheckedCreateWithoutCafeCouponHistoriesInput>
+    connectOrCreate?: CafeCouponCreateOrConnectWithoutCafeCouponHistoriesInput
+    connect?: CafeCouponWhereUniqueInput
+  }
+
+  export type UserCreateNestedOneWithoutCafeCouponHistoriesInput = {
+    create?: XOR<UserCreateWithoutCafeCouponHistoriesInput, UserUncheckedCreateWithoutCafeCouponHistoriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCafeCouponHistoriesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type CafeCouponUpdateOneRequiredWithoutCafeCouponHistoriesNestedInput = {
+    create?: XOR<CafeCouponCreateWithoutCafeCouponHistoriesInput, CafeCouponUncheckedCreateWithoutCafeCouponHistoriesInput>
+    connectOrCreate?: CafeCouponCreateOrConnectWithoutCafeCouponHistoriesInput
+    upsert?: CafeCouponUpsertWithoutCafeCouponHistoriesInput
+    connect?: CafeCouponWhereUniqueInput
+    update?: XOR<CafeCouponUpdateWithoutCafeCouponHistoriesInput, CafeCouponUncheckedUpdateWithoutCafeCouponHistoriesInput>
+  }
+
+  export type EnumCafeCouponEventTypeFieldUpdateOperationsInput = {
+    set?: CafeCouponEventType
+  }
+
+  export type UserUpdateOneRequiredWithoutCafeCouponHistoriesNestedInput = {
+    create?: XOR<UserCreateWithoutCafeCouponHistoriesInput, UserUncheckedCreateWithoutCafeCouponHistoriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutCafeCouponHistoriesInput
+    upsert?: UserUpsertWithoutCafeCouponHistoriesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<UserUpdateWithoutCafeCouponHistoriesInput, UserUncheckedUpdateWithoutCafeCouponHistoriesInput>
+  }
+
+  export type NullableEnumCafeCouponStatusFieldUpdateOperationsInput = {
+    set?: CafeCouponStatus | null
   }
 
   export type NestedIntFilter = {
@@ -19362,6 +26495,57 @@ export namespace Prisma {
     _max?: NestedEnumGovermentTypeFilter
   }
 
+  export type NestedEnumProxyUserTypeFilter = {
+    equals?: ProxyUserType
+    in?: Enumerable<ProxyUserType>
+    notIn?: Enumerable<ProxyUserType>
+    not?: NestedEnumProxyUserTypeFilter | ProxyUserType
+  }
+
+  export type NestedEnumProxyUserTypeWithAggregatesFilter = {
+    equals?: ProxyUserType
+    in?: Enumerable<ProxyUserType>
+    notIn?: Enumerable<ProxyUserType>
+    not?: NestedEnumProxyUserTypeWithAggregatesFilter | ProxyUserType
+    _count?: NestedIntFilter
+    _min?: NestedEnumProxyUserTypeFilter
+    _max?: NestedEnumProxyUserTypeFilter
+  }
+
+  export type NestedEnumCafeCouponEventTypeFilter = {
+    equals?: CafeCouponEventType
+    in?: Enumerable<CafeCouponEventType>
+    notIn?: Enumerable<CafeCouponEventType>
+    not?: NestedEnumCafeCouponEventTypeFilter | CafeCouponEventType
+  }
+
+  export type NestedEnumCafeCouponStatusNullableFilter = {
+    equals?: CafeCouponStatus | null
+    in?: Enumerable<CafeCouponStatus> | null
+    notIn?: Enumerable<CafeCouponStatus> | null
+    not?: NestedEnumCafeCouponStatusNullableFilter | CafeCouponStatus | null
+  }
+
+  export type NestedEnumCafeCouponEventTypeWithAggregatesFilter = {
+    equals?: CafeCouponEventType
+    in?: Enumerable<CafeCouponEventType>
+    notIn?: Enumerable<CafeCouponEventType>
+    not?: NestedEnumCafeCouponEventTypeWithAggregatesFilter | CafeCouponEventType
+    _count?: NestedIntFilter
+    _min?: NestedEnumCafeCouponEventTypeFilter
+    _max?: NestedEnumCafeCouponEventTypeFilter
+  }
+
+  export type NestedEnumCafeCouponStatusNullableWithAggregatesFilter = {
+    equals?: CafeCouponStatus | null
+    in?: Enumerable<CafeCouponStatus> | null
+    notIn?: Enumerable<CafeCouponStatus> | null
+    not?: NestedEnumCafeCouponStatusNullableWithAggregatesFilter | CafeCouponStatus | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedEnumCafeCouponStatusNullableFilter
+    _max?: NestedEnumCafeCouponStatusNullableFilter
+  }
+
   export type BoardCreateWithoutUserInput = {
     createdAt?: Date | string
     title: string
@@ -19457,6 +26641,64 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProxyUserCreateWithoutUserInput = {
+    memberId: string
+    createdAt?: Date | string
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+    CafeCoupons?: CafeCouponCreateNestedManyWithoutProxyUserInput
+  }
+
+  export type ProxyUserUncheckedCreateWithoutUserInput = {
+    id?: number
+    memberId: string
+    createdAt?: Date | string
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+    CafeCoupons?: CafeCouponUncheckedCreateNestedManyWithoutProxyUserInput
+  }
+
+  export type ProxyUserCreateOrConnectWithoutUserInput = {
+    where: ProxyUserWhereUniqueInput
+    create: XOR<ProxyUserCreateWithoutUserInput, ProxyUserUncheckedCreateWithoutUserInput>
+  }
+
+  export type ProxyUserCreateManyUserInputEnvelope = {
+    data: Enumerable<ProxyUserCreateManyUserInput>
+    skipDuplicates?: boolean
+  }
+
+  export type CafeCouponHistoryCreateWithoutActorInput = {
+    createdAt?: Date | string
+    CafeCoupon: CafeCouponCreateNestedOneWithoutCafeCouponHistoriesInput
+    eventType: CafeCouponEventType
+    description: string
+    statusBefore?: CafeCouponStatus | null
+    statusAfter?: CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUncheckedCreateWithoutActorInput = {
+    id?: number
+    createdAt?: Date | string
+    cafeCouponId: number
+    eventType: CafeCouponEventType
+    description: string
+    statusBefore?: CafeCouponStatus | null
+    statusAfter?: CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryCreateOrConnectWithoutActorInput = {
+    where: CafeCouponHistoryWhereUniqueInput
+    create: XOR<CafeCouponHistoryCreateWithoutActorInput, CafeCouponHistoryUncheckedCreateWithoutActorInput>
+  }
+
+  export type CafeCouponHistoryCreateManyActorInputEnvelope = {
+    data: Enumerable<CafeCouponHistoryCreateManyActorInput>
+    skipDuplicates?: boolean
+  }
+
   export type BoardUpsertWithWhereUniqueWithoutUserInput = {
     where: BoardWhereUniqueInput
     update: XOR<BoardUpdateWithoutUserInput, BoardUncheckedUpdateWithoutUserInput>
@@ -19548,6 +26790,65 @@ export namespace Prisma {
     userId?: IntFilter | number
   }
 
+  export type ProxyUserUpsertWithWhereUniqueWithoutUserInput = {
+    where: ProxyUserWhereUniqueInput
+    update: XOR<ProxyUserUpdateWithoutUserInput, ProxyUserUncheckedUpdateWithoutUserInput>
+    create: XOR<ProxyUserCreateWithoutUserInput, ProxyUserUncheckedCreateWithoutUserInput>
+  }
+
+  export type ProxyUserUpdateWithWhereUniqueWithoutUserInput = {
+    where: ProxyUserWhereUniqueInput
+    data: XOR<ProxyUserUpdateWithoutUserInput, ProxyUserUncheckedUpdateWithoutUserInput>
+  }
+
+  export type ProxyUserUpdateManyWithWhereWithoutUserInput = {
+    where: ProxyUserScalarWhereInput
+    data: XOR<ProxyUserUpdateManyMutationInput, ProxyUserUncheckedUpdateManyWithoutProxyUsersInput>
+  }
+
+  export type ProxyUserScalarWhereInput = {
+    AND?: Enumerable<ProxyUserScalarWhereInput>
+    OR?: Enumerable<ProxyUserScalarWhereInput>
+    NOT?: Enumerable<ProxyUserScalarWhereInput>
+    id?: IntFilter | number
+    memberId?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    proxyUserType?: EnumProxyUserTypeFilter | ProxyUserType
+    name?: StringFilter | string
+    token?: StringFilter | string
+    userId?: IntNullableFilter | number | null
+  }
+
+  export type CafeCouponHistoryUpsertWithWhereUniqueWithoutActorInput = {
+    where: CafeCouponHistoryWhereUniqueInput
+    update: XOR<CafeCouponHistoryUpdateWithoutActorInput, CafeCouponHistoryUncheckedUpdateWithoutActorInput>
+    create: XOR<CafeCouponHistoryCreateWithoutActorInput, CafeCouponHistoryUncheckedCreateWithoutActorInput>
+  }
+
+  export type CafeCouponHistoryUpdateWithWhereUniqueWithoutActorInput = {
+    where: CafeCouponHistoryWhereUniqueInput
+    data: XOR<CafeCouponHistoryUpdateWithoutActorInput, CafeCouponHistoryUncheckedUpdateWithoutActorInput>
+  }
+
+  export type CafeCouponHistoryUpdateManyWithWhereWithoutActorInput = {
+    where: CafeCouponHistoryScalarWhereInput
+    data: XOR<CafeCouponHistoryUpdateManyMutationInput, CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponHistoriesInput>
+  }
+
+  export type CafeCouponHistoryScalarWhereInput = {
+    AND?: Enumerable<CafeCouponHistoryScalarWhereInput>
+    OR?: Enumerable<CafeCouponHistoryScalarWhereInput>
+    NOT?: Enumerable<CafeCouponHistoryScalarWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    cafeCouponId?: IntFilter | number
+    eventType?: EnumCafeCouponEventTypeFilter | CafeCouponEventType
+    description?: StringFilter | string
+    actorId?: IntFilter | number
+    statusBefore?: EnumCafeCouponStatusNullableFilter | CafeCouponStatus | null
+    statusAfter?: EnumCafeCouponStatusNullableFilter | CafeCouponStatus | null
+  }
+
   export type UserCreateWithoutNoticesInput = {
     createdAt?: Date | string
     loginId: string
@@ -19560,6 +26861,8 @@ export namespace Prisma {
     isDisable?: boolean
     Boards?: BoardCreateNestedManyWithoutUserInput
     BoardReplies?: BoardReplyCreateNestedManyWithoutUserInput
+    ProxyUsers?: ProxyUserCreateNestedManyWithoutUserInput
+    CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutNoticesInput = {
@@ -19575,6 +26878,8 @@ export namespace Prisma {
     isDisable?: boolean
     Boards?: BoardUncheckedCreateNestedManyWithoutUserInput
     BoardReplies?: BoardReplyUncheckedCreateNestedManyWithoutUserInput
+    ProxyUsers?: ProxyUserUncheckedCreateNestedManyWithoutUserInput
+    CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutNoticesInput = {
@@ -19599,6 +26904,8 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     Boards?: BoardUpdateManyWithoutUserNestedInput
     BoardReplies?: BoardReplyUpdateManyWithoutUserNestedInput
+    ProxyUsers?: ProxyUserUpdateManyWithoutUserNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNoticesInput = {
@@ -19614,6 +26921,8 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     Boards?: BoardUncheckedUpdateManyWithoutUserNestedInput
     BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserNestedInput
+    ProxyUsers?: ProxyUserUncheckedUpdateManyWithoutUserNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type BoardImageCreateWithoutBoardInput = {
@@ -19690,6 +26999,8 @@ export namespace Prisma {
     isDisable?: boolean
     BoardReplies?: BoardReplyCreateNestedManyWithoutUserInput
     Notices?: NoticeCreateNestedManyWithoutUserInput
+    ProxyUsers?: ProxyUserCreateNestedManyWithoutUserInput
+    CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutBoardsInput = {
@@ -19705,6 +27016,8 @@ export namespace Prisma {
     isDisable?: boolean
     BoardReplies?: BoardReplyUncheckedCreateNestedManyWithoutUserInput
     Notices?: NoticeUncheckedCreateNestedManyWithoutUserInput
+    ProxyUsers?: ProxyUserUncheckedCreateNestedManyWithoutUserInput
+    CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutBoardsInput = {
@@ -19775,6 +27088,8 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     BoardReplies?: BoardReplyUpdateManyWithoutUserNestedInput
     Notices?: NoticeUpdateManyWithoutUserNestedInput
+    ProxyUsers?: ProxyUserUpdateManyWithoutUserNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBoardsInput = {
@@ -19790,6 +27105,8 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserNestedInput
     Notices?: NoticeUncheckedUpdateManyWithoutUserNestedInput
+    ProxyUsers?: ProxyUserUncheckedUpdateManyWithoutUserNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type BoardCreateWithoutBoardImagesInput = {
@@ -19868,6 +27185,8 @@ export namespace Prisma {
     isDisable?: boolean
     Boards?: BoardCreateNestedManyWithoutUserInput
     Notices?: NoticeCreateNestedManyWithoutUserInput
+    ProxyUsers?: ProxyUserCreateNestedManyWithoutUserInput
+    CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutActorInput
   }
 
   export type UserUncheckedCreateWithoutBoardRepliesInput = {
@@ -19883,6 +27202,8 @@ export namespace Prisma {
     isDisable?: boolean
     Boards?: BoardUncheckedCreateNestedManyWithoutUserInput
     Notices?: NoticeUncheckedCreateNestedManyWithoutUserInput
+    ProxyUsers?: ProxyUserUncheckedCreateNestedManyWithoutUserInput
+    CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutActorInput
   }
 
   export type UserCreateOrConnectWithoutBoardRepliesInput = {
@@ -20000,6 +27321,8 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     Boards?: BoardUpdateManyWithoutUserNestedInput
     Notices?: NoticeUpdateManyWithoutUserNestedInput
+    ProxyUsers?: ProxyUserUpdateManyWithoutUserNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutActorNestedInput
   }
 
   export type UserUncheckedUpdateWithoutBoardRepliesInput = {
@@ -20015,6 +27338,8 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     Boards?: BoardUncheckedUpdateManyWithoutUserNestedInput
     Notices?: NoticeUncheckedUpdateManyWithoutUserNestedInput
+    ProxyUsers?: ProxyUserUncheckedUpdateManyWithoutUserNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutActorNestedInput
   }
 
   export type BoardUpsertWithoutBoardRepliesInput = {
@@ -20097,6 +27422,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     address: string
     directions: string
     businessNumber: string
@@ -20105,6 +27431,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutRegionCategoryInput = {
@@ -20112,6 +27439,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     address: string
     directions: string
     businessNumber: string
@@ -20120,6 +27448,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutRegionCategoryInput = {
@@ -20196,6 +27525,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter | Date | string
     isDisable?: BoolFilter | boolean
     name?: StringFilter | string
+    code?: StringNullableFilter | string | null
     regionCategoryId?: IntFilter | number
     address?: StringFilter | string
     directions?: StringFilter | string
@@ -20490,6 +27820,24 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CafeCouponGoupPartnerCreateWithoutCafeInfoInput = {
+    CafeCouponGroup: CafeCouponGroupCreateNestedOneWithoutCafeCouponGoupPartnersInput
+  }
+
+  export type CafeCouponGoupPartnerUncheckedCreateWithoutCafeInfoInput = {
+    cafeCouponGroupId: number
+  }
+
+  export type CafeCouponGoupPartnerCreateOrConnectWithoutCafeInfoInput = {
+    where: CafeCouponGoupPartnerWhereUniqueInput
+    create: XOR<CafeCouponGoupPartnerCreateWithoutCafeInfoInput, CafeCouponGoupPartnerUncheckedCreateWithoutCafeInfoInput>
+  }
+
+  export type CafeCouponGoupPartnerCreateManyCafeInfoInputEnvelope = {
+    data: Enumerable<CafeCouponGoupPartnerCreateManyCafeInfoInput>
+    skipDuplicates?: boolean
+  }
+
   export type RegionCategoryUpsertWithoutCafeInfosInput = {
     update: XOR<RegionCategoryUpdateWithoutCafeInfosInput, RegionCategoryUncheckedUpdateWithoutCafeInfosInput>
     create: XOR<RegionCategoryCreateWithoutCafeInfosInput, RegionCategoryUncheckedCreateWithoutCafeInfosInput>
@@ -20638,10 +27986,35 @@ export namespace Prisma {
     cafeInfoId?: IntFilter | number
   }
 
+  export type CafeCouponGoupPartnerUpsertWithWhereUniqueWithoutCafeInfoInput = {
+    where: CafeCouponGoupPartnerWhereUniqueInput
+    update: XOR<CafeCouponGoupPartnerUpdateWithoutCafeInfoInput, CafeCouponGoupPartnerUncheckedUpdateWithoutCafeInfoInput>
+    create: XOR<CafeCouponGoupPartnerCreateWithoutCafeInfoInput, CafeCouponGoupPartnerUncheckedCreateWithoutCafeInfoInput>
+  }
+
+  export type CafeCouponGoupPartnerUpdateWithWhereUniqueWithoutCafeInfoInput = {
+    where: CafeCouponGoupPartnerWhereUniqueInput
+    data: XOR<CafeCouponGoupPartnerUpdateWithoutCafeInfoInput, CafeCouponGoupPartnerUncheckedUpdateWithoutCafeInfoInput>
+  }
+
+  export type CafeCouponGoupPartnerUpdateManyWithWhereWithoutCafeInfoInput = {
+    where: CafeCouponGoupPartnerScalarWhereInput
+    data: XOR<CafeCouponGoupPartnerUpdateManyMutationInput, CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeCouponGroupPartnersInput>
+  }
+
+  export type CafeCouponGoupPartnerScalarWhereInput = {
+    AND?: Enumerable<CafeCouponGoupPartnerScalarWhereInput>
+    OR?: Enumerable<CafeCouponGoupPartnerScalarWhereInput>
+    NOT?: Enumerable<CafeCouponGoupPartnerScalarWhereInput>
+    cafeCouponGroupId?: IntFilter | number
+    cafeInfoId?: IntFilter | number
+  }
+
   export type CafeInfoCreateWithoutCafeThumbnailImagesInput = {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
     address: string
     directions: string
@@ -20650,6 +28023,7 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeThumbnailImagesInput = {
@@ -20657,6 +28031,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     regionCategoryId: number
     address: string
     directions: string
@@ -20665,6 +28040,7 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeThumbnailImagesInput = {
@@ -20681,6 +28057,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -20689,6 +28066,7 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeThumbnailImagesInput = {
@@ -20696,6 +28074,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     regionCategoryId?: IntFieldUpdateOperationsInput | number
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -20704,12 +28083,14 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeVirtualImagesInput = {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
     address: string
     directions: string
@@ -20718,6 +28099,7 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkCreateNestedManyWithoutCafeInfoInput
     CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeVirtualImagesInput = {
@@ -20725,6 +28107,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     regionCategoryId: number
     address: string
     directions: string
@@ -20733,6 +28116,7 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeVirtualImagesInput = {
@@ -20749,6 +28133,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -20757,6 +28142,7 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
     CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeVirtualImagesInput = {
@@ -20764,6 +28150,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     regionCategoryId?: IntFieldUpdateOperationsInput | number
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -20772,12 +28159,14 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeRealImagesInput = {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
     address: string
     directions: string
@@ -20786,6 +28175,7 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkCreateNestedManyWithoutCafeInfoInput
     CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeRealImagesInput = {
@@ -20793,6 +28183,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     regionCategoryId: number
     address: string
     directions: string
@@ -20801,6 +28192,7 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeRealImagesInput = {
@@ -20817,6 +28209,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -20825,6 +28218,7 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
     CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeRealImagesInput = {
@@ -20832,6 +28226,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     regionCategoryId?: IntFieldUpdateOperationsInput | number
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -20840,12 +28235,14 @@ export namespace Prisma {
     CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeVirtualLinksInput = {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
     address: string
     directions: string
@@ -20854,6 +28251,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeVirtualLinksInput = {
@@ -20861,6 +28259,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     regionCategoryId: number
     address: string
     directions: string
@@ -20869,6 +28268,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeVirtualLinksInput = {
@@ -20907,6 +28307,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -20915,6 +28316,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeVirtualLinksInput = {
@@ -20922,6 +28324,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     regionCategoryId?: IntFieldUpdateOperationsInput | number
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
@@ -20930,6 +28333,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeVirtualLinkThumbnailImageUpsertWithoutCafeVirtualLinkInput = {
@@ -21006,6 +28410,675 @@ export namespace Prisma {
     cafeInfoId?: IntFieldUpdateOperationsInput | number
   }
 
+  export type CafeCouponCreateWithoutCafeCouponGroupInput = {
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    ProxyUser: ProxyUserCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutCafeCouponInput
+  }
+
+  export type CafeCouponUncheckedCreateWithoutCafeCouponGroupInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    proxyUserId: number
+    CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutCafeCouponInput
+  }
+
+  export type CafeCouponCreateOrConnectWithoutCafeCouponGroupInput = {
+    where: CafeCouponWhereUniqueInput
+    create: XOR<CafeCouponCreateWithoutCafeCouponGroupInput, CafeCouponUncheckedCreateWithoutCafeCouponGroupInput>
+  }
+
+  export type CafeCouponCreateManyCafeCouponGroupInputEnvelope = {
+    data: Enumerable<CafeCouponCreateManyCafeCouponGroupInput>
+    skipDuplicates?: boolean
+  }
+
+  export type CafeCouponGoupPartnerCreateWithoutCafeCouponGroupInput = {
+    CafeInfo: CafeInfoCreateNestedOneWithoutCafeCouponGroupPartnersInput
+  }
+
+  export type CafeCouponGoupPartnerUncheckedCreateWithoutCafeCouponGroupInput = {
+    cafeInfoId: number
+  }
+
+  export type CafeCouponGoupPartnerCreateOrConnectWithoutCafeCouponGroupInput = {
+    where: CafeCouponGoupPartnerWhereUniqueInput
+    create: XOR<CafeCouponGoupPartnerCreateWithoutCafeCouponGroupInput, CafeCouponGoupPartnerUncheckedCreateWithoutCafeCouponGroupInput>
+  }
+
+  export type CafeCouponGoupPartnerCreateManyCafeCouponGroupInputEnvelope = {
+    data: Enumerable<CafeCouponGoupPartnerCreateManyCafeCouponGroupInput>
+    skipDuplicates?: boolean
+  }
+
+  export type CafeCouponUpsertWithWhereUniqueWithoutCafeCouponGroupInput = {
+    where: CafeCouponWhereUniqueInput
+    update: XOR<CafeCouponUpdateWithoutCafeCouponGroupInput, CafeCouponUncheckedUpdateWithoutCafeCouponGroupInput>
+    create: XOR<CafeCouponCreateWithoutCafeCouponGroupInput, CafeCouponUncheckedCreateWithoutCafeCouponGroupInput>
+  }
+
+  export type CafeCouponUpdateWithWhereUniqueWithoutCafeCouponGroupInput = {
+    where: CafeCouponWhereUniqueInput
+    data: XOR<CafeCouponUpdateWithoutCafeCouponGroupInput, CafeCouponUncheckedUpdateWithoutCafeCouponGroupInput>
+  }
+
+  export type CafeCouponUpdateManyWithWhereWithoutCafeCouponGroupInput = {
+    where: CafeCouponScalarWhereInput
+    data: XOR<CafeCouponUpdateManyMutationInput, CafeCouponUncheckedUpdateManyWithoutCafeCouponsInput>
+  }
+
+  export type CafeCouponScalarWhereInput = {
+    AND?: Enumerable<CafeCouponScalarWhereInput>
+    OR?: Enumerable<CafeCouponScalarWhereInput>
+    NOT?: Enumerable<CafeCouponScalarWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    name?: StringFilter | string
+    content?: StringFilter | string
+    serialNumber?: StringFilter | string
+    startDay?: DateTimeFilter | Date | string
+    endDay?: DateTimeNullableFilter | Date | string | null
+    isDisable?: BoolFilter | boolean
+    proxyUserId?: IntFilter | number
+    cafeCouponGroupId?: IntFilter | number
+  }
+
+  export type CafeCouponGoupPartnerUpsertWithWhereUniqueWithoutCafeCouponGroupInput = {
+    where: CafeCouponGoupPartnerWhereUniqueInput
+    update: XOR<CafeCouponGoupPartnerUpdateWithoutCafeCouponGroupInput, CafeCouponGoupPartnerUncheckedUpdateWithoutCafeCouponGroupInput>
+    create: XOR<CafeCouponGoupPartnerCreateWithoutCafeCouponGroupInput, CafeCouponGoupPartnerUncheckedCreateWithoutCafeCouponGroupInput>
+  }
+
+  export type CafeCouponGoupPartnerUpdateWithWhereUniqueWithoutCafeCouponGroupInput = {
+    where: CafeCouponGoupPartnerWhereUniqueInput
+    data: XOR<CafeCouponGoupPartnerUpdateWithoutCafeCouponGroupInput, CafeCouponGoupPartnerUncheckedUpdateWithoutCafeCouponGroupInput>
+  }
+
+  export type CafeCouponGoupPartnerUpdateManyWithWhereWithoutCafeCouponGroupInput = {
+    where: CafeCouponGoupPartnerScalarWhereInput
+    data: XOR<CafeCouponGoupPartnerUpdateManyMutationInput, CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeCouponGoupPartnersInput>
+  }
+
+  export type CafeCouponGroupCreateWithoutCafeCouponGoupPartnersInput = {
+    createdAt?: Date | string
+    code: string
+    name: string
+    tag: string
+    description: string
+    isDisable?: boolean
+    startDay?: Date | string
+    endDay: Date | string
+    issuanceStartDay: Date | string
+    issuanceEndDay: Date | string
+    CafeCoupons?: CafeCouponCreateNestedManyWithoutCafeCouponGroupInput
+  }
+
+  export type CafeCouponGroupUncheckedCreateWithoutCafeCouponGoupPartnersInput = {
+    id?: number
+    createdAt?: Date | string
+    code: string
+    name: string
+    tag: string
+    description: string
+    isDisable?: boolean
+    startDay?: Date | string
+    endDay: Date | string
+    issuanceStartDay: Date | string
+    issuanceEndDay: Date | string
+    CafeCoupons?: CafeCouponUncheckedCreateNestedManyWithoutCafeCouponGroupInput
+  }
+
+  export type CafeCouponGroupCreateOrConnectWithoutCafeCouponGoupPartnersInput = {
+    where: CafeCouponGroupWhereUniqueInput
+    create: XOR<CafeCouponGroupCreateWithoutCafeCouponGoupPartnersInput, CafeCouponGroupUncheckedCreateWithoutCafeCouponGoupPartnersInput>
+  }
+
+  export type CafeInfoCreateWithoutCafeCouponGroupPartnersInput = {
+    createdAt?: Date | string
+    isDisable?: boolean
+    name: string
+    code?: string | null
+    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
+    address: string
+    directions: string
+    businessNumber: string
+    ceoName: string
+    CafeVirtualLinks?: CafeVirtualLinkCreateNestedManyWithoutCafeInfoInput
+    CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
+    CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
+    CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
+  }
+
+  export type CafeInfoUncheckedCreateWithoutCafeCouponGroupPartnersInput = {
+    id?: number
+    createdAt?: Date | string
+    isDisable?: boolean
+    name: string
+    code?: string | null
+    regionCategoryId: number
+    address: string
+    directions: string
+    businessNumber: string
+    ceoName: string
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
+  }
+
+  export type CafeInfoCreateOrConnectWithoutCafeCouponGroupPartnersInput = {
+    where: CafeInfoWhereUniqueInput
+    create: XOR<CafeInfoCreateWithoutCafeCouponGroupPartnersInput, CafeInfoUncheckedCreateWithoutCafeCouponGroupPartnersInput>
+  }
+
+  export type CafeCouponGroupUpsertWithoutCafeCouponGoupPartnersInput = {
+    update: XOR<CafeCouponGroupUpdateWithoutCafeCouponGoupPartnersInput, CafeCouponGroupUncheckedUpdateWithoutCafeCouponGoupPartnersInput>
+    create: XOR<CafeCouponGroupCreateWithoutCafeCouponGoupPartnersInput, CafeCouponGroupUncheckedCreateWithoutCafeCouponGoupPartnersInput>
+  }
+
+  export type CafeCouponGroupUpdateWithoutCafeCouponGoupPartnersInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tag?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceStartDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceEndDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    CafeCoupons?: CafeCouponUpdateManyWithoutCafeCouponGroupNestedInput
+  }
+
+  export type CafeCouponGroupUncheckedUpdateWithoutCafeCouponGoupPartnersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tag?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceStartDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceEndDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    CafeCoupons?: CafeCouponUncheckedUpdateManyWithoutCafeCouponGroupNestedInput
+  }
+
+  export type CafeInfoUpsertWithoutCafeCouponGroupPartnersInput = {
+    update: XOR<CafeInfoUpdateWithoutCafeCouponGroupPartnersInput, CafeInfoUncheckedUpdateWithoutCafeCouponGroupPartnersInput>
+    create: XOR<CafeInfoCreateWithoutCafeCouponGroupPartnersInput, CafeInfoUncheckedCreateWithoutCafeCouponGroupPartnersInput>
+  }
+
+  export type CafeInfoUpdateWithoutCafeCouponGroupPartnersInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
+    address?: StringFieldUpdateOperationsInput | string
+    directions?: StringFieldUpdateOperationsInput | string
+    businessNumber?: StringFieldUpdateOperationsInput | string
+    ceoName?: StringFieldUpdateOperationsInput | string
+    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
+  }
+
+  export type CafeInfoUncheckedUpdateWithoutCafeCouponGroupPartnersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    regionCategoryId?: IntFieldUpdateOperationsInput | number
+    address?: StringFieldUpdateOperationsInput | string
+    directions?: StringFieldUpdateOperationsInput | string
+    businessNumber?: StringFieldUpdateOperationsInput | string
+    ceoName?: StringFieldUpdateOperationsInput | string
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+  }
+
+  export type UserCreateWithoutProxyUsersInput = {
+    createdAt?: Date | string
+    loginId: string
+    loginPw?: string | null
+    username: string
+    loginType: LoginType
+    userType: UserType
+    nickname: string
+    email: string
+    isDisable?: boolean
+    Boards?: BoardCreateNestedManyWithoutUserInput
+    BoardReplies?: BoardReplyCreateNestedManyWithoutUserInput
+    Notices?: NoticeCreateNestedManyWithoutUserInput
+    CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutActorInput
+  }
+
+  export type UserUncheckedCreateWithoutProxyUsersInput = {
+    id?: number
+    createdAt?: Date | string
+    loginId: string
+    loginPw?: string | null
+    username: string
+    loginType: LoginType
+    userType: UserType
+    nickname: string
+    email: string
+    isDisable?: boolean
+    Boards?: BoardUncheckedCreateNestedManyWithoutUserInput
+    BoardReplies?: BoardReplyUncheckedCreateNestedManyWithoutUserInput
+    Notices?: NoticeUncheckedCreateNestedManyWithoutUserInput
+    CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutActorInput
+  }
+
+  export type UserCreateOrConnectWithoutProxyUsersInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutProxyUsersInput, UserUncheckedCreateWithoutProxyUsersInput>
+  }
+
+  export type CafeCouponCreateWithoutProxyUserInput = {
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    CafeCouponGroup: CafeCouponGroupCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutCafeCouponInput
+  }
+
+  export type CafeCouponUncheckedCreateWithoutProxyUserInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    cafeCouponGroupId: number
+    CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutCafeCouponInput
+  }
+
+  export type CafeCouponCreateOrConnectWithoutProxyUserInput = {
+    where: CafeCouponWhereUniqueInput
+    create: XOR<CafeCouponCreateWithoutProxyUserInput, CafeCouponUncheckedCreateWithoutProxyUserInput>
+  }
+
+  export type CafeCouponCreateManyProxyUserInputEnvelope = {
+    data: Enumerable<CafeCouponCreateManyProxyUserInput>
+    skipDuplicates?: boolean
+  }
+
+  export type UserUpsertWithoutProxyUsersInput = {
+    update: XOR<UserUpdateWithoutProxyUsersInput, UserUncheckedUpdateWithoutProxyUsersInput>
+    create: XOR<UserCreateWithoutProxyUsersInput, UserUncheckedCreateWithoutProxyUsersInput>
+  }
+
+  export type UserUpdateWithoutProxyUsersInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    loginId?: StringFieldUpdateOperationsInput | string
+    loginPw?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: StringFieldUpdateOperationsInput | string
+    loginType?: EnumLoginTypeFieldUpdateOperationsInput | LoginType
+    userType?: EnumUserTypeFieldUpdateOperationsInput | UserType
+    nickname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    Boards?: BoardUpdateManyWithoutUserNestedInput
+    BoardReplies?: BoardReplyUpdateManyWithoutUserNestedInput
+    Notices?: NoticeUpdateManyWithoutUserNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutActorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutProxyUsersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    loginId?: StringFieldUpdateOperationsInput | string
+    loginPw?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: StringFieldUpdateOperationsInput | string
+    loginType?: EnumLoginTypeFieldUpdateOperationsInput | LoginType
+    userType?: EnumUserTypeFieldUpdateOperationsInput | UserType
+    nickname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    Boards?: BoardUncheckedUpdateManyWithoutUserNestedInput
+    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserNestedInput
+    Notices?: NoticeUncheckedUpdateManyWithoutUserNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutActorNestedInput
+  }
+
+  export type CafeCouponUpsertWithWhereUniqueWithoutProxyUserInput = {
+    where: CafeCouponWhereUniqueInput
+    update: XOR<CafeCouponUpdateWithoutProxyUserInput, CafeCouponUncheckedUpdateWithoutProxyUserInput>
+    create: XOR<CafeCouponCreateWithoutProxyUserInput, CafeCouponUncheckedCreateWithoutProxyUserInput>
+  }
+
+  export type CafeCouponUpdateWithWhereUniqueWithoutProxyUserInput = {
+    where: CafeCouponWhereUniqueInput
+    data: XOR<CafeCouponUpdateWithoutProxyUserInput, CafeCouponUncheckedUpdateWithoutProxyUserInput>
+  }
+
+  export type CafeCouponUpdateManyWithWhereWithoutProxyUserInput = {
+    where: CafeCouponScalarWhereInput
+    data: XOR<CafeCouponUpdateManyMutationInput, CafeCouponUncheckedUpdateManyWithoutCafeCouponsInput>
+  }
+
+  export type ProxyUserCreateWithoutCafeCouponsInput = {
+    memberId: string
+    createdAt?: Date | string
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+    User?: UserCreateNestedOneWithoutProxyUsersInput
+  }
+
+  export type ProxyUserUncheckedCreateWithoutCafeCouponsInput = {
+    id?: number
+    memberId: string
+    createdAt?: Date | string
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+    userId?: number | null
+  }
+
+  export type ProxyUserCreateOrConnectWithoutCafeCouponsInput = {
+    where: ProxyUserWhereUniqueInput
+    create: XOR<ProxyUserCreateWithoutCafeCouponsInput, ProxyUserUncheckedCreateWithoutCafeCouponsInput>
+  }
+
+  export type CafeCouponGroupCreateWithoutCafeCouponsInput = {
+    createdAt?: Date | string
+    code: string
+    name: string
+    tag: string
+    description: string
+    isDisable?: boolean
+    startDay?: Date | string
+    endDay: Date | string
+    issuanceStartDay: Date | string
+    issuanceEndDay: Date | string
+    CafeCouponGoupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeCouponGroupInput
+  }
+
+  export type CafeCouponGroupUncheckedCreateWithoutCafeCouponsInput = {
+    id?: number
+    createdAt?: Date | string
+    code: string
+    name: string
+    tag: string
+    description: string
+    isDisable?: boolean
+    startDay?: Date | string
+    endDay: Date | string
+    issuanceStartDay: Date | string
+    issuanceEndDay: Date | string
+    CafeCouponGoupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeCouponGroupInput
+  }
+
+  export type CafeCouponGroupCreateOrConnectWithoutCafeCouponsInput = {
+    where: CafeCouponGroupWhereUniqueInput
+    create: XOR<CafeCouponGroupCreateWithoutCafeCouponsInput, CafeCouponGroupUncheckedCreateWithoutCafeCouponsInput>
+  }
+
+  export type CafeCouponHistoryCreateWithoutCafeCouponInput = {
+    createdAt?: Date | string
+    eventType: CafeCouponEventType
+    description: string
+    Actor: UserCreateNestedOneWithoutCafeCouponHistoriesInput
+    statusBefore?: CafeCouponStatus | null
+    statusAfter?: CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUncheckedCreateWithoutCafeCouponInput = {
+    id?: number
+    createdAt?: Date | string
+    eventType: CafeCouponEventType
+    description: string
+    actorId: number
+    statusBefore?: CafeCouponStatus | null
+    statusAfter?: CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryCreateOrConnectWithoutCafeCouponInput = {
+    where: CafeCouponHistoryWhereUniqueInput
+    create: XOR<CafeCouponHistoryCreateWithoutCafeCouponInput, CafeCouponHistoryUncheckedCreateWithoutCafeCouponInput>
+  }
+
+  export type CafeCouponHistoryCreateManyCafeCouponInputEnvelope = {
+    data: Enumerable<CafeCouponHistoryCreateManyCafeCouponInput>
+    skipDuplicates?: boolean
+  }
+
+  export type ProxyUserUpsertWithoutCafeCouponsInput = {
+    update: XOR<ProxyUserUpdateWithoutCafeCouponsInput, ProxyUserUncheckedUpdateWithoutCafeCouponsInput>
+    create: XOR<ProxyUserCreateWithoutCafeCouponsInput, ProxyUserUncheckedCreateWithoutCafeCouponsInput>
+  }
+
+  export type ProxyUserUpdateWithoutCafeCouponsInput = {
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    User?: UserUpdateOneWithoutProxyUsersNestedInput
+  }
+
+  export type ProxyUserUncheckedUpdateWithoutCafeCouponsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type CafeCouponGroupUpsertWithoutCafeCouponsInput = {
+    update: XOR<CafeCouponGroupUpdateWithoutCafeCouponsInput, CafeCouponGroupUncheckedUpdateWithoutCafeCouponsInput>
+    create: XOR<CafeCouponGroupCreateWithoutCafeCouponsInput, CafeCouponGroupUncheckedCreateWithoutCafeCouponsInput>
+  }
+
+  export type CafeCouponGroupUpdateWithoutCafeCouponsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tag?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceStartDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceEndDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    CafeCouponGoupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeCouponGroupNestedInput
+  }
+
+  export type CafeCouponGroupUncheckedUpdateWithoutCafeCouponsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    tag?: StringFieldUpdateOperationsInput | string
+    description?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceStartDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    issuanceEndDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    CafeCouponGoupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeCouponGroupNestedInput
+  }
+
+  export type CafeCouponHistoryUpsertWithWhereUniqueWithoutCafeCouponInput = {
+    where: CafeCouponHistoryWhereUniqueInput
+    update: XOR<CafeCouponHistoryUpdateWithoutCafeCouponInput, CafeCouponHistoryUncheckedUpdateWithoutCafeCouponInput>
+    create: XOR<CafeCouponHistoryCreateWithoutCafeCouponInput, CafeCouponHistoryUncheckedCreateWithoutCafeCouponInput>
+  }
+
+  export type CafeCouponHistoryUpdateWithWhereUniqueWithoutCafeCouponInput = {
+    where: CafeCouponHistoryWhereUniqueInput
+    data: XOR<CafeCouponHistoryUpdateWithoutCafeCouponInput, CafeCouponHistoryUncheckedUpdateWithoutCafeCouponInput>
+  }
+
+  export type CafeCouponHistoryUpdateManyWithWhereWithoutCafeCouponInput = {
+    where: CafeCouponHistoryScalarWhereInput
+    data: XOR<CafeCouponHistoryUpdateManyMutationInput, CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponHistoriesInput>
+  }
+
+  export type CafeCouponCreateWithoutCafeCouponHistoriesInput = {
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    ProxyUser: ProxyUserCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponGroup: CafeCouponGroupCreateNestedOneWithoutCafeCouponsInput
+  }
+
+  export type CafeCouponUncheckedCreateWithoutCafeCouponHistoriesInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    proxyUserId: number
+    cafeCouponGroupId: number
+  }
+
+  export type CafeCouponCreateOrConnectWithoutCafeCouponHistoriesInput = {
+    where: CafeCouponWhereUniqueInput
+    create: XOR<CafeCouponCreateWithoutCafeCouponHistoriesInput, CafeCouponUncheckedCreateWithoutCafeCouponHistoriesInput>
+  }
+
+  export type UserCreateWithoutCafeCouponHistoriesInput = {
+    createdAt?: Date | string
+    loginId: string
+    loginPw?: string | null
+    username: string
+    loginType: LoginType
+    userType: UserType
+    nickname: string
+    email: string
+    isDisable?: boolean
+    Boards?: BoardCreateNestedManyWithoutUserInput
+    BoardReplies?: BoardReplyCreateNestedManyWithoutUserInput
+    Notices?: NoticeCreateNestedManyWithoutUserInput
+    ProxyUsers?: ProxyUserCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutCafeCouponHistoriesInput = {
+    id?: number
+    createdAt?: Date | string
+    loginId: string
+    loginPw?: string | null
+    username: string
+    loginType: LoginType
+    userType: UserType
+    nickname: string
+    email: string
+    isDisable?: boolean
+    Boards?: BoardUncheckedCreateNestedManyWithoutUserInput
+    BoardReplies?: BoardReplyUncheckedCreateNestedManyWithoutUserInput
+    Notices?: NoticeUncheckedCreateNestedManyWithoutUserInput
+    ProxyUsers?: ProxyUserUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutCafeCouponHistoriesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutCafeCouponHistoriesInput, UserUncheckedCreateWithoutCafeCouponHistoriesInput>
+  }
+
+  export type CafeCouponUpsertWithoutCafeCouponHistoriesInput = {
+    update: XOR<CafeCouponUpdateWithoutCafeCouponHistoriesInput, CafeCouponUncheckedUpdateWithoutCafeCouponHistoriesInput>
+    create: XOR<CafeCouponCreateWithoutCafeCouponHistoriesInput, CafeCouponUncheckedCreateWithoutCafeCouponHistoriesInput>
+  }
+
+  export type CafeCouponUpdateWithoutCafeCouponHistoriesInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    ProxyUser?: ProxyUserUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponGroup?: CafeCouponGroupUpdateOneRequiredWithoutCafeCouponsNestedInput
+  }
+
+  export type CafeCouponUncheckedUpdateWithoutCafeCouponHistoriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    proxyUserId?: IntFieldUpdateOperationsInput | number
+    cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type UserUpsertWithoutCafeCouponHistoriesInput = {
+    update: XOR<UserUpdateWithoutCafeCouponHistoriesInput, UserUncheckedUpdateWithoutCafeCouponHistoriesInput>
+    create: XOR<UserCreateWithoutCafeCouponHistoriesInput, UserUncheckedCreateWithoutCafeCouponHistoriesInput>
+  }
+
+  export type UserUpdateWithoutCafeCouponHistoriesInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    loginId?: StringFieldUpdateOperationsInput | string
+    loginPw?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: StringFieldUpdateOperationsInput | string
+    loginType?: EnumLoginTypeFieldUpdateOperationsInput | LoginType
+    userType?: EnumUserTypeFieldUpdateOperationsInput | UserType
+    nickname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    Boards?: BoardUpdateManyWithoutUserNestedInput
+    BoardReplies?: BoardReplyUpdateManyWithoutUserNestedInput
+    Notices?: NoticeUpdateManyWithoutUserNestedInput
+    ProxyUsers?: ProxyUserUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutCafeCouponHistoriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    loginId?: StringFieldUpdateOperationsInput | string
+    loginPw?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: StringFieldUpdateOperationsInput | string
+    loginType?: EnumLoginTypeFieldUpdateOperationsInput | LoginType
+    userType?: EnumUserTypeFieldUpdateOperationsInput | UserType
+    nickname?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    Boards?: BoardUncheckedUpdateManyWithoutUserNestedInput
+    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserNestedInput
+    Notices?: NoticeUncheckedUpdateManyWithoutUserNestedInput
+    ProxyUsers?: ProxyUserUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type BoardCreateManyUserInput = {
     id?: number
     createdAt?: Date | string
@@ -21035,6 +29108,25 @@ export namespace Prisma {
     title: string
     content?: string | null
     link?: string | null
+  }
+
+  export type ProxyUserCreateManyUserInput = {
+    id?: number
+    memberId: string
+    createdAt?: Date | string
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+  }
+
+  export type CafeCouponHistoryCreateManyActorInput = {
+    id?: number
+    createdAt?: Date | string
+    cafeCouponId: number
+    eventType: CafeCouponEventType
+    description: string
+    statusBefore?: CafeCouponStatus | null
+    statusAfter?: CafeCouponStatus | null
   }
 
   export type BoardUpdateWithoutUserInput = {
@@ -21131,6 +29223,63 @@ export namespace Prisma {
     title?: StringFieldUpdateOperationsInput | string
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type ProxyUserUpdateWithoutUserInput = {
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    CafeCoupons?: CafeCouponUpdateManyWithoutProxyUserNestedInput
+  }
+
+  export type ProxyUserUncheckedUpdateWithoutUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    CafeCoupons?: CafeCouponUncheckedUpdateManyWithoutProxyUserNestedInput
+  }
+
+  export type ProxyUserUncheckedUpdateManyWithoutProxyUsersInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CafeCouponHistoryUpdateWithoutActorInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    CafeCoupon?: CafeCouponUpdateOneRequiredWithoutCafeCouponHistoriesNestedInput
+    eventType?: EnumCafeCouponEventTypeFieldUpdateOperationsInput | CafeCouponEventType
+    description?: StringFieldUpdateOperationsInput | string
+    statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+    statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUncheckedUpdateWithoutActorInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafeCouponId?: IntFieldUpdateOperationsInput | number
+    eventType?: EnumCafeCouponEventTypeFieldUpdateOperationsInput | CafeCouponEventType
+    description?: StringFieldUpdateOperationsInput | string
+    statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+    statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponHistoriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cafeCouponId?: IntFieldUpdateOperationsInput | number
+    eventType?: EnumCafeCouponEventTypeFieldUpdateOperationsInput | CafeCouponEventType
+    description?: StringFieldUpdateOperationsInput | string
+    statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+    statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
   }
 
   export type BoardImageCreateManyBoardInput = {
@@ -21256,6 +29405,7 @@ export namespace Prisma {
     createdAt?: Date | string
     isDisable?: boolean
     name: string
+    code?: string | null
     address: string
     directions: string
     businessNumber: string
@@ -21276,6 +29426,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
@@ -21284,6 +29435,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutRegionCategoryInput = {
@@ -21291,6 +29443,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
@@ -21299,6 +29452,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateManyWithoutCafeInfosInput = {
@@ -21306,6 +29460,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
     address?: StringFieldUpdateOperationsInput | string
     directions?: StringFieldUpdateOperationsInput | string
     businessNumber?: StringFieldUpdateOperationsInput | string
@@ -21384,6 +29539,10 @@ export namespace Prisma {
     size: number
     priority?: number
     isDisable?: boolean
+  }
+
+  export type CafeCouponGoupPartnerCreateManyCafeInfoInput = {
+    cafeCouponGroupId: number
   }
 
   export type CafeVirtualLinkUpdateWithoutCafeInfoInput = {
@@ -21514,6 +29673,149 @@ export namespace Prisma {
     size?: IntFieldUpdateOperationsInput | number
     priority?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type CafeCouponGoupPartnerUpdateWithoutCafeInfoInput = {
+    CafeCouponGroup?: CafeCouponGroupUpdateOneRequiredWithoutCafeCouponGoupPartnersNestedInput
+  }
+
+  export type CafeCouponGoupPartnerUncheckedUpdateWithoutCafeInfoInput = {
+    cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeCouponGroupPartnersInput = {
+    cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CafeCouponCreateManyCafeCouponGroupInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    proxyUserId: number
+  }
+
+  export type CafeCouponGoupPartnerCreateManyCafeCouponGroupInput = {
+    cafeInfoId: number
+  }
+
+  export type CafeCouponUpdateWithoutCafeCouponGroupInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    ProxyUser?: ProxyUserUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutCafeCouponNestedInput
+  }
+
+  export type CafeCouponUncheckedUpdateWithoutCafeCouponGroupInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    proxyUserId?: IntFieldUpdateOperationsInput | number
+    CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput
+  }
+
+  export type CafeCouponUncheckedUpdateManyWithoutCafeCouponsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    proxyUserId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CafeCouponGoupPartnerUpdateWithoutCafeCouponGroupInput = {
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeCouponGroupPartnersNestedInput
+  }
+
+  export type CafeCouponGoupPartnerUncheckedUpdateWithoutCafeCouponGroupInput = {
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeCouponGoupPartnersInput = {
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CafeCouponCreateManyProxyUserInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    cafeCouponGroupId: number
+  }
+
+  export type CafeCouponUpdateWithoutProxyUserInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    CafeCouponGroup?: CafeCouponGroupUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutCafeCouponNestedInput
+  }
+
+  export type CafeCouponUncheckedUpdateWithoutProxyUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+    CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput
+  }
+
+  export type CafeCouponHistoryCreateManyCafeCouponInput = {
+    id?: number
+    createdAt?: Date | string
+    eventType: CafeCouponEventType
+    description: string
+    actorId: number
+    statusBefore?: CafeCouponStatus | null
+    statusAfter?: CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUpdateWithoutCafeCouponInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: EnumCafeCouponEventTypeFieldUpdateOperationsInput | CafeCouponEventType
+    description?: StringFieldUpdateOperationsInput | string
+    Actor?: UserUpdateOneRequiredWithoutCafeCouponHistoriesNestedInput
+    statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+    statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+  }
+
+  export type CafeCouponHistoryUncheckedUpdateWithoutCafeCouponInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    eventType?: EnumCafeCouponEventTypeFieldUpdateOperationsInput | CafeCouponEventType
+    description?: StringFieldUpdateOperationsInput | string
+    actorId?: IntFieldUpdateOperationsInput | number
+    statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+    statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
   }
 
 

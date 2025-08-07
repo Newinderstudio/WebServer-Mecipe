@@ -125,11 +125,55 @@ exports.Prisma.BoardScalarFieldEnum = makeEnum({
   boardType: 'boardType'
 });
 
+exports.Prisma.CafeCouponGoupPartnerScalarFieldEnum = makeEnum({
+  cafeCouponGroupId: 'cafeCouponGroupId',
+  cafeInfoId: 'cafeInfoId'
+});
+
+exports.Prisma.CafeCouponGroupScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  code: 'code',
+  name: 'name',
+  tag: 'tag',
+  description: 'description',
+  isDisable: 'isDisable',
+  startDay: 'startDay',
+  endDay: 'endDay',
+  issuanceStartDay: 'issuanceStartDay',
+  issuanceEndDay: 'issuanceEndDay'
+});
+
+exports.Prisma.CafeCouponHistoryScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  cafeCouponId: 'cafeCouponId',
+  eventType: 'eventType',
+  description: 'description',
+  actorId: 'actorId',
+  statusBefore: 'statusBefore',
+  statusAfter: 'statusAfter'
+});
+
+exports.Prisma.CafeCouponScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  name: 'name',
+  content: 'content',
+  serialNumber: 'serialNumber',
+  startDay: 'startDay',
+  endDay: 'endDay',
+  isDisable: 'isDisable',
+  proxyUserId: 'proxyUserId',
+  cafeCouponGroupId: 'cafeCouponGroupId'
+});
+
 exports.Prisma.CafeInfoScalarFieldEnum = makeEnum({
   id: 'id',
   createdAt: 'createdAt',
   isDisable: 'isDisable',
   name: 'name',
+  code: 'code',
   regionCategoryId: 'regionCategoryId',
   address: 'address',
   directions: 'directions',
@@ -210,6 +254,16 @@ exports.Prisma.NoticeScalarFieldEnum = makeEnum({
   userId: 'userId'
 });
 
+exports.Prisma.ProxyUserScalarFieldEnum = makeEnum({
+  id: 'id',
+  memberId: 'memberId',
+  createdAt: 'createdAt',
+  proxyUserType: 'proxyUserType',
+  name: 'name',
+  token: 'token',
+  userId: 'userId'
+});
+
 exports.Prisma.QueryMode = makeEnum({
   default: 'default',
   insensitive: 'insensitive'
@@ -253,6 +307,21 @@ exports.BoardType = makeEnum({
   BQUESTION: 'BQUESTION'
 });
 
+exports.CafeCouponEventType = makeEnum({
+  CREATED: 'CREATED',
+  USED: 'USED',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED',
+  UPDATE: 'UPDATE'
+});
+
+exports.CafeCouponStatus = makeEnum({
+  ACTIVE: 'ACTIVE',
+  USED: 'USED',
+  REVOKED: 'REVOKED',
+  EXPIRED: 'EXPIRED'
+});
+
 exports.GovermentType = makeEnum({
   SPECIAL_CITY: 'SPECIAL_CITY',
   METROPOLITAN_CITY: 'METROPOLITAN_CITY',
@@ -270,7 +339,19 @@ exports.GovermentType = makeEnum({
 
 exports.LoginType = makeEnum({
   LOCAL: 'LOCAL',
-  ADMIN: 'ADMIN'
+  ADMIN: 'ADMIN',
+  KAKAO: 'KAKAO',
+  NAVER: 'NAVER',
+  GOOGLE: 'GOOGLE',
+  APPLE: 'APPLE',
+  ZEPETO: 'ZEPETO'
+});
+
+exports.ProxyUserType = makeEnum({
+  ETC: 'ETC',
+  WEB: 'WEB',
+  ZEPETO: 'ZEPETO',
+  WEV_VIEWER: 'WEV_VIEWER'
 });
 
 exports.UserType = makeEnum({
@@ -293,7 +374,12 @@ exports.Prisma.ModelName = makeEnum({
   CafeVirtualImage: 'CafeVirtualImage',
   CafeRealImage: 'CafeRealImage',
   CafeVirtualLink: 'CafeVirtualLink',
-  CafeVirtualLinkThumbnailImage: 'CafeVirtualLinkThumbnailImage'
+  CafeVirtualLinkThumbnailImage: 'CafeVirtualLinkThumbnailImage',
+  CafeCouponGroup: 'CafeCouponGroup',
+  CafeCouponGoupPartner: 'CafeCouponGoupPartner',
+  ProxyUser: 'ProxyUser',
+  CafeCoupon: 'CafeCoupon',
+  CafeCouponHistory: 'CafeCouponHistory'
 });
 
 /**
