@@ -155,6 +155,15 @@ exports.Prisma.CafeCouponHistoryScalarFieldEnum = makeEnum({
   statusAfter: 'statusAfter'
 });
 
+exports.Prisma.CafeCouponQRCodeScalarFieldEnum = makeEnum({
+  serialNumber: 'serialNumber',
+  createdAt: 'createdAt',
+  isDisable: 'isDisable',
+  cafeCouponId: 'cafeCouponId',
+  size: 'size',
+  base64Data: 'base64Data'
+});
+
 exports.Prisma.CafeCouponScalarFieldEnum = makeEnum({
   id: 'id',
   createdAt: 'createdAt',
@@ -379,7 +388,8 @@ exports.Prisma.ModelName = makeEnum({
   CafeCouponGoupPartner: 'CafeCouponGoupPartner',
   ProxyUser: 'ProxyUser',
   CafeCoupon: 'CafeCoupon',
-  CafeCouponHistory: 'CafeCouponHistory'
+  CafeCouponHistory: 'CafeCouponHistory',
+  CafeCouponQRCode: 'CafeCouponQRCode'
 });
 
 /**

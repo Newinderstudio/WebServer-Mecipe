@@ -1,4 +1,5 @@
-import { Controller, Post, Get, Body, Param, BadGatewayException, UseGuards } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, BadGatewayException, UseGuards, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { AppService } from './app.service';
 import { Public } from './util/decorators';
 import { LoginType } from 'prisma/basic';

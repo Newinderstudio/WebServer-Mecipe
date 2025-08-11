@@ -356,6 +356,8 @@ model CafeCoupon {
   cafeCouponGroupId     Int
   CafeCouponGroup       CafeCouponGroup @relation(fields: [cafeCouponGroupId], references: [id])
 
+  CafeCouponQRCodes     CafeCouponQRCode[]
+
   CafeCouponHistories   CafeCouponHistory[]
 }
 
@@ -395,4 +397,17 @@ model CafeCouponHistory {
   // 예: 사용됨, 회수됨, 만료됨 등
   statusBefore    CafeCouponStatus?
   statusAfter     CafeCouponStatus?
+}
+
+// 쿠폰 QR
+model CafeCouponQRCode{
+  serialNumber    String    @id
+  createdAt       DateTime  @default(now())
+
+  isDisable       Boolean @default(false)
+  cafeCouponId    Int?
+  CafeCoupon      CafeCoupon? @relation(fields: [cafeCouponId], references: [id])
+
+  size            Int
+  base64Data      String
 }

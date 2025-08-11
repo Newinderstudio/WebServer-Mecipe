@@ -280,6 +280,19 @@ export type CafeCouponHistory = {
   statusAfter: CafeCouponStatus | null
 }
 
+/**
+ * Model CafeCouponQRCode
+ * 
+ */
+export type CafeCouponQRCode = {
+  serialNumber: string
+  createdAt: Date
+  isDisable: boolean
+  cafeCouponId: number | null
+  size: number
+  base64Data: string
+}
+
 
 /**
  * Enums
@@ -665,6 +678,16 @@ export class PrismaClient<
     * ```
     */
   get cafeCouponHistory(): Prisma.CafeCouponHistoryDelegate<GlobalReject>;
+
+  /**
+   * `prisma.cafeCouponQRCode`: Exposes CRUD operations for the **CafeCouponQRCode** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CafeCouponQRCodes
+    * const cafeCouponQRCodes = await prisma.cafeCouponQRCode.findMany()
+    * ```
+    */
+  get cafeCouponQRCode(): Prisma.CafeCouponQRCodeDelegate<GlobalReject>;
 }
 
 export namespace Prisma {
@@ -1166,7 +1189,8 @@ export namespace Prisma {
     CafeCouponGoupPartner: 'CafeCouponGoupPartner',
     ProxyUser: 'ProxyUser',
     CafeCoupon: 'CafeCoupon',
-    CafeCouponHistory: 'CafeCouponHistory'
+    CafeCouponHistory: 'CafeCouponHistory',
+    CafeCouponQRCode: 'CafeCouponQRCode'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1668,10 +1692,12 @@ export namespace Prisma {
 
 
   export type CafeCouponCountOutputType = {
+    CafeCouponQRCodes: number
     CafeCouponHistories: number
   }
 
   export type CafeCouponCountOutputTypeSelect = {
+    CafeCouponQRCodes?: boolean
     CafeCouponHistories?: boolean
   }
 
@@ -18959,6 +18985,7 @@ export namespace Prisma {
     ProxyUser?: boolean | ProxyUserArgs
     cafeCouponGroupId?: boolean
     CafeCouponGroup?: boolean | CafeCouponGroupArgs
+    CafeCouponQRCodes?: boolean | CafeCouponQRCodeFindManyArgs
     CafeCouponHistories?: boolean | CafeCouponHistoryFindManyArgs
     _count?: boolean | CafeCouponCountOutputTypeArgs
   }
@@ -18967,6 +18994,7 @@ export namespace Prisma {
   export type CafeCouponInclude = {
     ProxyUser?: boolean | ProxyUserArgs
     CafeCouponGroup?: boolean | CafeCouponGroupArgs
+    CafeCouponQRCodes?: boolean | CafeCouponQRCodeFindManyArgs
     CafeCouponHistories?: boolean | CafeCouponHistoryFindManyArgs
     _count?: boolean | CafeCouponCountOutputTypeArgs
   } 
@@ -18980,6 +19008,7 @@ export namespace Prisma {
     [P in TruthyKeys<S['include']>]:
         P extends 'ProxyUser' ? ProxyUserGetPayload<S['include'][P]> :
         P extends 'CafeCouponGroup' ? CafeCouponGroupGetPayload<S['include'][P]> :
+        P extends 'CafeCouponQRCodes' ? Array < CafeCouponQRCodeGetPayload<S['include'][P]>>  :
         P extends 'CafeCouponHistories' ? Array < CafeCouponHistoryGetPayload<S['include'][P]>>  :
         P extends '_count' ? CafeCouponCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
@@ -18988,6 +19017,7 @@ export namespace Prisma {
     [P in TruthyKeys<S['select']>]:
         P extends 'ProxyUser' ? ProxyUserGetPayload<S['select'][P]> :
         P extends 'CafeCouponGroup' ? CafeCouponGroupGetPayload<S['select'][P]> :
+        P extends 'CafeCouponQRCodes' ? Array < CafeCouponQRCodeGetPayload<S['select'][P]>>  :
         P extends 'CafeCouponHistories' ? Array < CafeCouponHistoryGetPayload<S['select'][P]>>  :
         P extends '_count' ? CafeCouponCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof CafeCoupon ? CafeCoupon[P] : never
   } 
@@ -19366,6 +19396,8 @@ export namespace Prisma {
     ProxyUser<T extends ProxyUserArgs= {}>(args?: Subset<T, ProxyUserArgs>): Prisma__ProxyUserClient<ProxyUserGetPayload<T> | Null>;
 
     CafeCouponGroup<T extends CafeCouponGroupArgs= {}>(args?: Subset<T, CafeCouponGroupArgs>): Prisma__CafeCouponGroupClient<CafeCouponGroupGetPayload<T> | Null>;
+
+    CafeCouponQRCodes<T extends CafeCouponQRCodeFindManyArgs= {}>(args?: Subset<T, CafeCouponQRCodeFindManyArgs>): PrismaPromise<Array<CafeCouponQRCodeGetPayload<T>>| Null>;
 
     CafeCouponHistories<T extends CafeCouponHistoryFindManyArgs= {}>(args?: Subset<T, CafeCouponHistoryFindManyArgs>): PrismaPromise<Array<CafeCouponHistoryGetPayload<T>>| Null>;
 
@@ -20851,6 +20883,1040 @@ export namespace Prisma {
 
 
   /**
+   * Model CafeCouponQRCode
+   */
+
+
+  export type AggregateCafeCouponQRCode = {
+    _count: CafeCouponQRCodeCountAggregateOutputType | null
+    _avg: CafeCouponQRCodeAvgAggregateOutputType | null
+    _sum: CafeCouponQRCodeSumAggregateOutputType | null
+    _min: CafeCouponQRCodeMinAggregateOutputType | null
+    _max: CafeCouponQRCodeMaxAggregateOutputType | null
+  }
+
+  export type CafeCouponQRCodeAvgAggregateOutputType = {
+    cafeCouponId: number | null
+    size: number | null
+  }
+
+  export type CafeCouponQRCodeSumAggregateOutputType = {
+    cafeCouponId: number | null
+    size: number | null
+  }
+
+  export type CafeCouponQRCodeMinAggregateOutputType = {
+    serialNumber: string | null
+    createdAt: Date | null
+    isDisable: boolean | null
+    cafeCouponId: number | null
+    size: number | null
+    base64Data: string | null
+  }
+
+  export type CafeCouponQRCodeMaxAggregateOutputType = {
+    serialNumber: string | null
+    createdAt: Date | null
+    isDisable: boolean | null
+    cafeCouponId: number | null
+    size: number | null
+    base64Data: string | null
+  }
+
+  export type CafeCouponQRCodeCountAggregateOutputType = {
+    serialNumber: number
+    createdAt: number
+    isDisable: number
+    cafeCouponId: number
+    size: number
+    base64Data: number
+    _all: number
+  }
+
+
+  export type CafeCouponQRCodeAvgAggregateInputType = {
+    cafeCouponId?: true
+    size?: true
+  }
+
+  export type CafeCouponQRCodeSumAggregateInputType = {
+    cafeCouponId?: true
+    size?: true
+  }
+
+  export type CafeCouponQRCodeMinAggregateInputType = {
+    serialNumber?: true
+    createdAt?: true
+    isDisable?: true
+    cafeCouponId?: true
+    size?: true
+    base64Data?: true
+  }
+
+  export type CafeCouponQRCodeMaxAggregateInputType = {
+    serialNumber?: true
+    createdAt?: true
+    isDisable?: true
+    cafeCouponId?: true
+    size?: true
+    base64Data?: true
+  }
+
+  export type CafeCouponQRCodeCountAggregateInputType = {
+    serialNumber?: true
+    createdAt?: true
+    isDisable?: true
+    cafeCouponId?: true
+    size?: true
+    base64Data?: true
+    _all?: true
+  }
+
+  export type CafeCouponQRCodeAggregateArgs = {
+    /**
+     * Filter which CafeCouponQRCode to aggregate.
+     * 
+    **/
+    where?: CafeCouponQRCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponQRCodes to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponQRCodeOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: CafeCouponQRCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponQRCodes from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponQRCodes.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CafeCouponQRCodes
+    **/
+    _count?: true | CafeCouponQRCodeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CafeCouponQRCodeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CafeCouponQRCodeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CafeCouponQRCodeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CafeCouponQRCodeMaxAggregateInputType
+  }
+
+  export type GetCafeCouponQRCodeAggregateType<T extends CafeCouponQRCodeAggregateArgs> = {
+        [P in keyof T & keyof AggregateCafeCouponQRCode]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCafeCouponQRCode[P]>
+      : GetScalarType<T[P], AggregateCafeCouponQRCode[P]>
+  }
+
+
+
+
+  export type CafeCouponQRCodeGroupByArgs = {
+    where?: CafeCouponQRCodeWhereInput
+    orderBy?: Enumerable<CafeCouponQRCodeOrderByWithAggregationInput>
+    by: Array<CafeCouponQRCodeScalarFieldEnum>
+    having?: CafeCouponQRCodeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CafeCouponQRCodeCountAggregateInputType | true
+    _avg?: CafeCouponQRCodeAvgAggregateInputType
+    _sum?: CafeCouponQRCodeSumAggregateInputType
+    _min?: CafeCouponQRCodeMinAggregateInputType
+    _max?: CafeCouponQRCodeMaxAggregateInputType
+  }
+
+
+  export type CafeCouponQRCodeGroupByOutputType = {
+    serialNumber: string
+    createdAt: Date
+    isDisable: boolean
+    cafeCouponId: number | null
+    size: number
+    base64Data: string
+    _count: CafeCouponQRCodeCountAggregateOutputType | null
+    _avg: CafeCouponQRCodeAvgAggregateOutputType | null
+    _sum: CafeCouponQRCodeSumAggregateOutputType | null
+    _min: CafeCouponQRCodeMinAggregateOutputType | null
+    _max: CafeCouponQRCodeMaxAggregateOutputType | null
+  }
+
+  type GetCafeCouponQRCodeGroupByPayload<T extends CafeCouponQRCodeGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<CafeCouponQRCodeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CafeCouponQRCodeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CafeCouponQRCodeGroupByOutputType[P]>
+            : GetScalarType<T[P], CafeCouponQRCodeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CafeCouponQRCodeSelect = {
+    serialNumber?: boolean
+    createdAt?: boolean
+    isDisable?: boolean
+    cafeCouponId?: boolean
+    CafeCoupon?: boolean | CafeCouponArgs
+    size?: boolean
+    base64Data?: boolean
+  }
+
+
+  export type CafeCouponQRCodeInclude = {
+    CafeCoupon?: boolean | CafeCouponArgs
+  } 
+
+  export type CafeCouponQRCodeGetPayload<S extends boolean | null | undefined | CafeCouponQRCodeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeCouponQRCode :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeCouponQRCodeArgs | CafeCouponQRCodeFindManyArgs)
+    ? CafeCouponQRCode  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'CafeCoupon' ? CafeCouponGetPayload<S['include'][P]> | null :  never
+  } 
+    : S extends { select: any } & (CafeCouponQRCodeArgs | CafeCouponQRCodeFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'CafeCoupon' ? CafeCouponGetPayload<S['select'][P]> | null :  P extends keyof CafeCouponQRCode ? CafeCouponQRCode[P] : never
+  } 
+      : CafeCouponQRCode
+
+
+  type CafeCouponQRCodeCountArgs = Merge<
+    Omit<CafeCouponQRCodeFindManyArgs, 'select' | 'include'> & {
+      select?: CafeCouponQRCodeCountAggregateInputType | true
+    }
+  >
+
+  export interface CafeCouponQRCodeDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one CafeCouponQRCode that matches the filter.
+     * @param {CafeCouponQRCodeFindUniqueArgs} args - Arguments to find a CafeCouponQRCode
+     * @example
+     * // Get one CafeCouponQRCode
+     * const cafeCouponQRCode = await prisma.cafeCouponQRCode.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends CafeCouponQRCodeFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, CafeCouponQRCodeFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeCouponQRCode'> extends True ? Prisma__CafeCouponQRCodeClient<CafeCouponQRCodeGetPayload<T>> : Prisma__CafeCouponQRCodeClient<CafeCouponQRCodeGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeCouponQRCode that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeCouponQRCodeFindUniqueOrThrowArgs} args - Arguments to find a CafeCouponQRCode
+     * @example
+     * // Get one CafeCouponQRCode
+     * const cafeCouponQRCode = await prisma.cafeCouponQRCode.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeCouponQRCodeFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeCouponQRCodeFindUniqueOrThrowArgs>
+    ): Prisma__CafeCouponQRCodeClient<CafeCouponQRCodeGetPayload<T>>
+
+    /**
+     * Find the first CafeCouponQRCode that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponQRCodeFindFirstArgs} args - Arguments to find a CafeCouponQRCode
+     * @example
+     * // Get one CafeCouponQRCode
+     * const cafeCouponQRCode = await prisma.cafeCouponQRCode.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends CafeCouponQRCodeFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, CafeCouponQRCodeFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeCouponQRCode'> extends True ? Prisma__CafeCouponQRCodeClient<CafeCouponQRCodeGetPayload<T>> : Prisma__CafeCouponQRCodeClient<CafeCouponQRCodeGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeCouponQRCode that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponQRCodeFindFirstOrThrowArgs} args - Arguments to find a CafeCouponQRCode
+     * @example
+     * // Get one CafeCouponQRCode
+     * const cafeCouponQRCode = await prisma.cafeCouponQRCode.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeCouponQRCodeFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeCouponQRCodeFindFirstOrThrowArgs>
+    ): Prisma__CafeCouponQRCodeClient<CafeCouponQRCodeGetPayload<T>>
+
+    /**
+     * Find zero or more CafeCouponQRCodes that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponQRCodeFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CafeCouponQRCodes
+     * const cafeCouponQRCodes = await prisma.cafeCouponQRCode.findMany()
+     * 
+     * // Get first 10 CafeCouponQRCodes
+     * const cafeCouponQRCodes = await prisma.cafeCouponQRCode.findMany({ take: 10 })
+     * 
+     * // Only select the `serialNumber`
+     * const cafeCouponQRCodeWithSerialNumberOnly = await prisma.cafeCouponQRCode.findMany({ select: { serialNumber: true } })
+     * 
+    **/
+    findMany<T extends CafeCouponQRCodeFindManyArgs>(
+      args?: SelectSubset<T, CafeCouponQRCodeFindManyArgs>
+    ): PrismaPromise<Array<CafeCouponQRCodeGetPayload<T>>>
+
+    /**
+     * Create a CafeCouponQRCode.
+     * @param {CafeCouponQRCodeCreateArgs} args - Arguments to create a CafeCouponQRCode.
+     * @example
+     * // Create one CafeCouponQRCode
+     * const CafeCouponQRCode = await prisma.cafeCouponQRCode.create({
+     *   data: {
+     *     // ... data to create a CafeCouponQRCode
+     *   }
+     * })
+     * 
+    **/
+    create<T extends CafeCouponQRCodeCreateArgs>(
+      args: SelectSubset<T, CafeCouponQRCodeCreateArgs>
+    ): Prisma__CafeCouponQRCodeClient<CafeCouponQRCodeGetPayload<T>>
+
+    /**
+     * Create many CafeCouponQRCodes.
+     *     @param {CafeCouponQRCodeCreateManyArgs} args - Arguments to create many CafeCouponQRCodes.
+     *     @example
+     *     // Create many CafeCouponQRCodes
+     *     const cafeCouponQRCode = await prisma.cafeCouponQRCode.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends CafeCouponQRCodeCreateManyArgs>(
+      args?: SelectSubset<T, CafeCouponQRCodeCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CafeCouponQRCode.
+     * @param {CafeCouponQRCodeDeleteArgs} args - Arguments to delete one CafeCouponQRCode.
+     * @example
+     * // Delete one CafeCouponQRCode
+     * const CafeCouponQRCode = await prisma.cafeCouponQRCode.delete({
+     *   where: {
+     *     // ... filter to delete one CafeCouponQRCode
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends CafeCouponQRCodeDeleteArgs>(
+      args: SelectSubset<T, CafeCouponQRCodeDeleteArgs>
+    ): Prisma__CafeCouponQRCodeClient<CafeCouponQRCodeGetPayload<T>>
+
+    /**
+     * Update one CafeCouponQRCode.
+     * @param {CafeCouponQRCodeUpdateArgs} args - Arguments to update one CafeCouponQRCode.
+     * @example
+     * // Update one CafeCouponQRCode
+     * const cafeCouponQRCode = await prisma.cafeCouponQRCode.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends CafeCouponQRCodeUpdateArgs>(
+      args: SelectSubset<T, CafeCouponQRCodeUpdateArgs>
+    ): Prisma__CafeCouponQRCodeClient<CafeCouponQRCodeGetPayload<T>>
+
+    /**
+     * Delete zero or more CafeCouponQRCodes.
+     * @param {CafeCouponQRCodeDeleteManyArgs} args - Arguments to filter CafeCouponQRCodes to delete.
+     * @example
+     * // Delete a few CafeCouponQRCodes
+     * const { count } = await prisma.cafeCouponQRCode.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends CafeCouponQRCodeDeleteManyArgs>(
+      args?: SelectSubset<T, CafeCouponQRCodeDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CafeCouponQRCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponQRCodeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CafeCouponQRCodes
+     * const cafeCouponQRCode = await prisma.cafeCouponQRCode.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends CafeCouponQRCodeUpdateManyArgs>(
+      args: SelectSubset<T, CafeCouponQRCodeUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CafeCouponQRCode.
+     * @param {CafeCouponQRCodeUpsertArgs} args - Arguments to update or create a CafeCouponQRCode.
+     * @example
+     * // Update or create a CafeCouponQRCode
+     * const cafeCouponQRCode = await prisma.cafeCouponQRCode.upsert({
+     *   create: {
+     *     // ... data to create a CafeCouponQRCode
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CafeCouponQRCode we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends CafeCouponQRCodeUpsertArgs>(
+      args: SelectSubset<T, CafeCouponQRCodeUpsertArgs>
+    ): Prisma__CafeCouponQRCodeClient<CafeCouponQRCodeGetPayload<T>>
+
+    /**
+     * Count the number of CafeCouponQRCodes.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponQRCodeCountArgs} args - Arguments to filter CafeCouponQRCodes to count.
+     * @example
+     * // Count the number of CafeCouponQRCodes
+     * const count = await prisma.cafeCouponQRCode.count({
+     *   where: {
+     *     // ... the filter for the CafeCouponQRCodes we want to count
+     *   }
+     * })
+    **/
+    count<T extends CafeCouponQRCodeCountArgs>(
+      args?: Subset<T, CafeCouponQRCodeCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CafeCouponQRCodeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CafeCouponQRCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponQRCodeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CafeCouponQRCodeAggregateArgs>(args: Subset<T, CafeCouponQRCodeAggregateArgs>): PrismaPromise<GetCafeCouponQRCodeAggregateType<T>>
+
+    /**
+     * Group by CafeCouponQRCode.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeCouponQRCodeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CafeCouponQRCodeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CafeCouponQRCodeGroupByArgs['orderBy'] }
+        : { orderBy?: CafeCouponQRCodeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CafeCouponQRCodeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeCouponQRCodeGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CafeCouponQRCode.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__CafeCouponQRCodeClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    CafeCoupon<T extends CafeCouponArgs= {}>(args?: Subset<T, CafeCouponArgs>): Prisma__CafeCouponClient<CafeCouponGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * CafeCouponQRCode base type for findUnique actions
+   */
+  export type CafeCouponQRCodeFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeCouponQRCode
+     * 
+    **/
+    select?: CafeCouponQRCodeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponQRCodeInclude | null
+    /**
+     * Filter, which CafeCouponQRCode to fetch.
+     * 
+    **/
+    where: CafeCouponQRCodeWhereUniqueInput
+  }
+
+  /**
+   * CafeCouponQRCode: findUnique
+   */
+  export interface CafeCouponQRCodeFindUniqueArgs extends CafeCouponQRCodeFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeCouponQRCode findUniqueOrThrow
+   */
+  export type CafeCouponQRCodeFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponQRCode
+     * 
+    **/
+    select?: CafeCouponQRCodeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponQRCodeInclude | null
+    /**
+     * Filter, which CafeCouponQRCode to fetch.
+     * 
+    **/
+    where: CafeCouponQRCodeWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponQRCode base type for findFirst actions
+   */
+  export type CafeCouponQRCodeFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeCouponQRCode
+     * 
+    **/
+    select?: CafeCouponQRCodeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponQRCodeInclude | null
+    /**
+     * Filter, which CafeCouponQRCode to fetch.
+     * 
+    **/
+    where?: CafeCouponQRCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponQRCodes to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponQRCodeOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeCouponQRCodes.
+     * 
+    **/
+    cursor?: CafeCouponQRCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponQRCodes from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponQRCodes.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeCouponQRCodes.
+     * 
+    **/
+    distinct?: Enumerable<CafeCouponQRCodeScalarFieldEnum>
+  }
+
+  /**
+   * CafeCouponQRCode: findFirst
+   */
+  export interface CafeCouponQRCodeFindFirstArgs extends CafeCouponQRCodeFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeCouponQRCode findFirstOrThrow
+   */
+  export type CafeCouponQRCodeFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponQRCode
+     * 
+    **/
+    select?: CafeCouponQRCodeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponQRCodeInclude | null
+    /**
+     * Filter, which CafeCouponQRCode to fetch.
+     * 
+    **/
+    where?: CafeCouponQRCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponQRCodes to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponQRCodeOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeCouponQRCodes.
+     * 
+    **/
+    cursor?: CafeCouponQRCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponQRCodes from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponQRCodes.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeCouponQRCodes.
+     * 
+    **/
+    distinct?: Enumerable<CafeCouponQRCodeScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeCouponQRCode findMany
+   */
+  export type CafeCouponQRCodeFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponQRCode
+     * 
+    **/
+    select?: CafeCouponQRCodeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponQRCodeInclude | null
+    /**
+     * Filter, which CafeCouponQRCodes to fetch.
+     * 
+    **/
+    where?: CafeCouponQRCodeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeCouponQRCodes to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeCouponQRCodeOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CafeCouponQRCodes.
+     * 
+    **/
+    cursor?: CafeCouponQRCodeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeCouponQRCodes from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeCouponQRCodes.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<CafeCouponQRCodeScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeCouponQRCode create
+   */
+  export type CafeCouponQRCodeCreateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponQRCode
+     * 
+    **/
+    select?: CafeCouponQRCodeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponQRCodeInclude | null
+    /**
+     * The data needed to create a CafeCouponQRCode.
+     * 
+    **/
+    data: XOR<CafeCouponQRCodeCreateInput, CafeCouponQRCodeUncheckedCreateInput>
+  }
+
+
+  /**
+   * CafeCouponQRCode createMany
+   */
+  export type CafeCouponQRCodeCreateManyArgs = {
+    /**
+     * The data used to create many CafeCouponQRCodes.
+     * 
+    **/
+    data: Enumerable<CafeCouponQRCodeCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * CafeCouponQRCode update
+   */
+  export type CafeCouponQRCodeUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponQRCode
+     * 
+    **/
+    select?: CafeCouponQRCodeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponQRCodeInclude | null
+    /**
+     * The data needed to update a CafeCouponQRCode.
+     * 
+    **/
+    data: XOR<CafeCouponQRCodeUpdateInput, CafeCouponQRCodeUncheckedUpdateInput>
+    /**
+     * Choose, which CafeCouponQRCode to update.
+     * 
+    **/
+    where: CafeCouponQRCodeWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponQRCode updateMany
+   */
+  export type CafeCouponQRCodeUpdateManyArgs = {
+    /**
+     * The data used to update CafeCouponQRCodes.
+     * 
+    **/
+    data: XOR<CafeCouponQRCodeUpdateManyMutationInput, CafeCouponQRCodeUncheckedUpdateManyInput>
+    /**
+     * Filter which CafeCouponQRCodes to update
+     * 
+    **/
+    where?: CafeCouponQRCodeWhereInput
+  }
+
+
+  /**
+   * CafeCouponQRCode upsert
+   */
+  export type CafeCouponQRCodeUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponQRCode
+     * 
+    **/
+    select?: CafeCouponQRCodeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponQRCodeInclude | null
+    /**
+     * The filter to search for the CafeCouponQRCode to update in case it exists.
+     * 
+    **/
+    where: CafeCouponQRCodeWhereUniqueInput
+    /**
+     * In case the CafeCouponQRCode found by the `where` argument doesn't exist, create a new CafeCouponQRCode with this data.
+     * 
+    **/
+    create: XOR<CafeCouponQRCodeCreateInput, CafeCouponQRCodeUncheckedCreateInput>
+    /**
+     * In case the CafeCouponQRCode was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<CafeCouponQRCodeUpdateInput, CafeCouponQRCodeUncheckedUpdateInput>
+  }
+
+
+  /**
+   * CafeCouponQRCode delete
+   */
+  export type CafeCouponQRCodeDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponQRCode
+     * 
+    **/
+    select?: CafeCouponQRCodeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponQRCodeInclude | null
+    /**
+     * Filter which CafeCouponQRCode to delete.
+     * 
+    **/
+    where: CafeCouponQRCodeWhereUniqueInput
+  }
+
+
+  /**
+   * CafeCouponQRCode deleteMany
+   */
+  export type CafeCouponQRCodeDeleteManyArgs = {
+    /**
+     * Filter which CafeCouponQRCodes to delete
+     * 
+    **/
+    where?: CafeCouponQRCodeWhereInput
+  }
+
+
+  /**
+   * CafeCouponQRCode without action
+   */
+  export type CafeCouponQRCodeArgs = {
+    /**
+     * Select specific fields to fetch from the CafeCouponQRCode
+     * 
+    **/
+    select?: CafeCouponQRCodeSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeCouponQRCodeInclude | null
+  }
+
+
+
+  /**
    * Enums
    */
 
@@ -20939,6 +22005,18 @@ export namespace Prisma {
   };
 
   export type CafeCouponHistoryScalarFieldEnum = (typeof CafeCouponHistoryScalarFieldEnum)[keyof typeof CafeCouponHistoryScalarFieldEnum]
+
+
+  export const CafeCouponQRCodeScalarFieldEnum: {
+    serialNumber: 'serialNumber',
+    createdAt: 'createdAt',
+    isDisable: 'isDisable',
+    cafeCouponId: 'cafeCouponId',
+    size: 'size',
+    base64Data: 'base64Data'
+  };
+
+  export type CafeCouponQRCodeScalarFieldEnum = (typeof CafeCouponQRCodeScalarFieldEnum)[keyof typeof CafeCouponQRCodeScalarFieldEnum]
 
 
   export const CafeCouponScalarFieldEnum: {
@@ -22162,6 +23240,7 @@ export namespace Prisma {
     ProxyUser?: XOR<ProxyUserRelationFilter, ProxyUserWhereInput>
     cafeCouponGroupId?: IntFilter | number
     CafeCouponGroup?: XOR<CafeCouponGroupRelationFilter, CafeCouponGroupWhereInput>
+    CafeCouponQRCodes?: CafeCouponQRCodeListRelationFilter
     CafeCouponHistories?: CafeCouponHistoryListRelationFilter
   }
 
@@ -22178,6 +23257,7 @@ export namespace Prisma {
     ProxyUser?: ProxyUserOrderByWithRelationInput
     cafeCouponGroupId?: SortOrder
     CafeCouponGroup?: CafeCouponGroupOrderByWithRelationInput
+    CafeCouponQRCodes?: CafeCouponQRCodeOrderByRelationAggregateInput
     CafeCouponHistories?: CafeCouponHistoryOrderByRelationAggregateInput
   }
 
@@ -22281,6 +23361,59 @@ export namespace Prisma {
     actorId?: IntWithAggregatesFilter | number
     statusBefore?: EnumCafeCouponStatusNullableWithAggregatesFilter | CafeCouponStatus | null
     statusAfter?: EnumCafeCouponStatusNullableWithAggregatesFilter | CafeCouponStatus | null
+  }
+
+  export type CafeCouponQRCodeWhereInput = {
+    AND?: Enumerable<CafeCouponQRCodeWhereInput>
+    OR?: Enumerable<CafeCouponQRCodeWhereInput>
+    NOT?: Enumerable<CafeCouponQRCodeWhereInput>
+    serialNumber?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    isDisable?: BoolFilter | boolean
+    cafeCouponId?: IntNullableFilter | number | null
+    CafeCoupon?: XOR<CafeCouponRelationFilter, CafeCouponWhereInput> | null
+    size?: IntFilter | number
+    base64Data?: StringFilter | string
+  }
+
+  export type CafeCouponQRCodeOrderByWithRelationInput = {
+    serialNumber?: SortOrder
+    createdAt?: SortOrder
+    isDisable?: SortOrder
+    cafeCouponId?: SortOrder
+    CafeCoupon?: CafeCouponOrderByWithRelationInput
+    size?: SortOrder
+    base64Data?: SortOrder
+  }
+
+  export type CafeCouponQRCodeWhereUniqueInput = {
+    serialNumber?: string
+  }
+
+  export type CafeCouponQRCodeOrderByWithAggregationInput = {
+    serialNumber?: SortOrder
+    createdAt?: SortOrder
+    isDisable?: SortOrder
+    cafeCouponId?: SortOrder
+    size?: SortOrder
+    base64Data?: SortOrder
+    _count?: CafeCouponQRCodeCountOrderByAggregateInput
+    _avg?: CafeCouponQRCodeAvgOrderByAggregateInput
+    _max?: CafeCouponQRCodeMaxOrderByAggregateInput
+    _min?: CafeCouponQRCodeMinOrderByAggregateInput
+    _sum?: CafeCouponQRCodeSumOrderByAggregateInput
+  }
+
+  export type CafeCouponQRCodeScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<CafeCouponQRCodeScalarWhereWithAggregatesInput>
+    OR?: Enumerable<CafeCouponQRCodeScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<CafeCouponQRCodeScalarWhereWithAggregatesInput>
+    serialNumber?: StringWithAggregatesFilter | string
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    isDisable?: BoolWithAggregatesFilter | boolean
+    cafeCouponId?: IntNullableWithAggregatesFilter | number | null
+    size?: IntWithAggregatesFilter | number
+    base64Data?: StringWithAggregatesFilter | string
   }
 
   export type UserCreateInput = {
@@ -23519,6 +24652,7 @@ export namespace Prisma {
     isDisable?: boolean
     ProxyUser: ProxyUserCreateNestedOneWithoutCafeCouponsInput
     CafeCouponGroup: CafeCouponGroupCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponQRCodes?: CafeCouponQRCodeCreateNestedManyWithoutCafeCouponInput
     CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutCafeCouponInput
   }
 
@@ -23533,6 +24667,7 @@ export namespace Prisma {
     isDisable?: boolean
     proxyUserId: number
     cafeCouponGroupId: number
+    CafeCouponQRCodes?: CafeCouponQRCodeUncheckedCreateNestedManyWithoutCafeCouponInput
     CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutCafeCouponInput
   }
 
@@ -23546,6 +24681,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     ProxyUser?: ProxyUserUpdateOneRequiredWithoutCafeCouponsNestedInput
     CafeCouponGroup?: CafeCouponGroupUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponQRCodes?: CafeCouponQRCodeUpdateManyWithoutCafeCouponNestedInput
     CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutCafeCouponNestedInput
   }
 
@@ -23560,6 +24696,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     proxyUserId?: IntFieldUpdateOperationsInput | number
     cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+    CafeCouponQRCodes?: CafeCouponQRCodeUncheckedUpdateManyWithoutCafeCouponNestedInput
     CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput
   }
 
@@ -23669,6 +24806,68 @@ export namespace Prisma {
     actorId?: IntFieldUpdateOperationsInput | number
     statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
     statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+  }
+
+  export type CafeCouponQRCodeCreateInput = {
+    serialNumber: string
+    createdAt?: Date | string
+    isDisable?: boolean
+    CafeCoupon?: CafeCouponCreateNestedOneWithoutCafeCouponQRCodesInput
+    size: number
+    base64Data: string
+  }
+
+  export type CafeCouponQRCodeUncheckedCreateInput = {
+    serialNumber: string
+    createdAt?: Date | string
+    isDisable?: boolean
+    cafeCouponId?: number | null
+    size: number
+    base64Data: string
+  }
+
+  export type CafeCouponQRCodeUpdateInput = {
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    CafeCoupon?: CafeCouponUpdateOneWithoutCafeCouponQRCodesNestedInput
+    size?: IntFieldUpdateOperationsInput | number
+    base64Data?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CafeCouponQRCodeUncheckedUpdateInput = {
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    cafeCouponId?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: IntFieldUpdateOperationsInput | number
+    base64Data?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CafeCouponQRCodeCreateManyInput = {
+    serialNumber: string
+    createdAt?: Date | string
+    isDisable?: boolean
+    cafeCouponId?: number | null
+    size: number
+    base64Data: string
+  }
+
+  export type CafeCouponQRCodeUpdateManyMutationInput = {
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    size?: IntFieldUpdateOperationsInput | number
+    base64Data?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CafeCouponQRCodeUncheckedUpdateManyInput = {
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    cafeCouponId?: NullableIntFieldUpdateOperationsInput | number | null
+    size?: IntFieldUpdateOperationsInput | number
+    base64Data?: StringFieldUpdateOperationsInput | string
   }
 
   export type IntFilter = {
@@ -24857,6 +26056,16 @@ export namespace Prisma {
     isNot?: ProxyUserWhereInput
   }
 
+  export type CafeCouponQRCodeListRelationFilter = {
+    every?: CafeCouponQRCodeWhereInput
+    some?: CafeCouponQRCodeWhereInput
+    none?: CafeCouponQRCodeWhereInput
+  }
+
+  export type CafeCouponQRCodeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type CafeCouponCountOrderByAggregateInput = {
     id?: SortOrder
     createdAt?: SortOrder
@@ -24909,8 +26118,8 @@ export namespace Prisma {
   }
 
   export type CafeCouponRelationFilter = {
-    is?: CafeCouponWhereInput
-    isNot?: CafeCouponWhereInput
+    is?: CafeCouponWhereInput | null
+    isNot?: CafeCouponWhereInput | null
   }
 
   export type EnumCafeCouponEventTypeFilter = {
@@ -24990,6 +26199,43 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter
     _min?: NestedEnumCafeCouponStatusNullableFilter
     _max?: NestedEnumCafeCouponStatusNullableFilter
+  }
+
+  export type CafeCouponQRCodeCountOrderByAggregateInput = {
+    serialNumber?: SortOrder
+    createdAt?: SortOrder
+    isDisable?: SortOrder
+    cafeCouponId?: SortOrder
+    size?: SortOrder
+    base64Data?: SortOrder
+  }
+
+  export type CafeCouponQRCodeAvgOrderByAggregateInput = {
+    cafeCouponId?: SortOrder
+    size?: SortOrder
+  }
+
+  export type CafeCouponQRCodeMaxOrderByAggregateInput = {
+    serialNumber?: SortOrder
+    createdAt?: SortOrder
+    isDisable?: SortOrder
+    cafeCouponId?: SortOrder
+    size?: SortOrder
+    base64Data?: SortOrder
+  }
+
+  export type CafeCouponQRCodeMinOrderByAggregateInput = {
+    serialNumber?: SortOrder
+    createdAt?: SortOrder
+    isDisable?: SortOrder
+    cafeCouponId?: SortOrder
+    size?: SortOrder
+    base64Data?: SortOrder
+  }
+
+  export type CafeCouponQRCodeSumOrderByAggregateInput = {
+    cafeCouponId?: SortOrder
+    size?: SortOrder
   }
 
   export type BoardCreateNestedManyWithoutUserInput = {
@@ -26132,11 +27378,25 @@ export namespace Prisma {
     connect?: CafeCouponGroupWhereUniqueInput
   }
 
+  export type CafeCouponQRCodeCreateNestedManyWithoutCafeCouponInput = {
+    create?: XOR<Enumerable<CafeCouponQRCodeCreateWithoutCafeCouponInput>, Enumerable<CafeCouponQRCodeUncheckedCreateWithoutCafeCouponInput>>
+    connectOrCreate?: Enumerable<CafeCouponQRCodeCreateOrConnectWithoutCafeCouponInput>
+    createMany?: CafeCouponQRCodeCreateManyCafeCouponInputEnvelope
+    connect?: Enumerable<CafeCouponQRCodeWhereUniqueInput>
+  }
+
   export type CafeCouponHistoryCreateNestedManyWithoutCafeCouponInput = {
     create?: XOR<Enumerable<CafeCouponHistoryCreateWithoutCafeCouponInput>, Enumerable<CafeCouponHistoryUncheckedCreateWithoutCafeCouponInput>>
     connectOrCreate?: Enumerable<CafeCouponHistoryCreateOrConnectWithoutCafeCouponInput>
     createMany?: CafeCouponHistoryCreateManyCafeCouponInputEnvelope
     connect?: Enumerable<CafeCouponHistoryWhereUniqueInput>
+  }
+
+  export type CafeCouponQRCodeUncheckedCreateNestedManyWithoutCafeCouponInput = {
+    create?: XOR<Enumerable<CafeCouponQRCodeCreateWithoutCafeCouponInput>, Enumerable<CafeCouponQRCodeUncheckedCreateWithoutCafeCouponInput>>
+    connectOrCreate?: Enumerable<CafeCouponQRCodeCreateOrConnectWithoutCafeCouponInput>
+    createMany?: CafeCouponQRCodeCreateManyCafeCouponInputEnvelope
+    connect?: Enumerable<CafeCouponQRCodeWhereUniqueInput>
   }
 
   export type CafeCouponHistoryUncheckedCreateNestedManyWithoutCafeCouponInput = {
@@ -26162,6 +27422,20 @@ export namespace Prisma {
     update?: XOR<CafeCouponGroupUpdateWithoutCafeCouponsInput, CafeCouponGroupUncheckedUpdateWithoutCafeCouponsInput>
   }
 
+  export type CafeCouponQRCodeUpdateManyWithoutCafeCouponNestedInput = {
+    create?: XOR<Enumerable<CafeCouponQRCodeCreateWithoutCafeCouponInput>, Enumerable<CafeCouponQRCodeUncheckedCreateWithoutCafeCouponInput>>
+    connectOrCreate?: Enumerable<CafeCouponQRCodeCreateOrConnectWithoutCafeCouponInput>
+    upsert?: Enumerable<CafeCouponQRCodeUpsertWithWhereUniqueWithoutCafeCouponInput>
+    createMany?: CafeCouponQRCodeCreateManyCafeCouponInputEnvelope
+    set?: Enumerable<CafeCouponQRCodeWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponQRCodeWhereUniqueInput>
+    delete?: Enumerable<CafeCouponQRCodeWhereUniqueInput>
+    connect?: Enumerable<CafeCouponQRCodeWhereUniqueInput>
+    update?: Enumerable<CafeCouponQRCodeUpdateWithWhereUniqueWithoutCafeCouponInput>
+    updateMany?: Enumerable<CafeCouponQRCodeUpdateManyWithWhereWithoutCafeCouponInput>
+    deleteMany?: Enumerable<CafeCouponQRCodeScalarWhereInput>
+  }
+
   export type CafeCouponHistoryUpdateManyWithoutCafeCouponNestedInput = {
     create?: XOR<Enumerable<CafeCouponHistoryCreateWithoutCafeCouponInput>, Enumerable<CafeCouponHistoryUncheckedCreateWithoutCafeCouponInput>>
     connectOrCreate?: Enumerable<CafeCouponHistoryCreateOrConnectWithoutCafeCouponInput>
@@ -26174,6 +27448,20 @@ export namespace Prisma {
     update?: Enumerable<CafeCouponHistoryUpdateWithWhereUniqueWithoutCafeCouponInput>
     updateMany?: Enumerable<CafeCouponHistoryUpdateManyWithWhereWithoutCafeCouponInput>
     deleteMany?: Enumerable<CafeCouponHistoryScalarWhereInput>
+  }
+
+  export type CafeCouponQRCodeUncheckedUpdateManyWithoutCafeCouponNestedInput = {
+    create?: XOR<Enumerable<CafeCouponQRCodeCreateWithoutCafeCouponInput>, Enumerable<CafeCouponQRCodeUncheckedCreateWithoutCafeCouponInput>>
+    connectOrCreate?: Enumerable<CafeCouponQRCodeCreateOrConnectWithoutCafeCouponInput>
+    upsert?: Enumerable<CafeCouponQRCodeUpsertWithWhereUniqueWithoutCafeCouponInput>
+    createMany?: CafeCouponQRCodeCreateManyCafeCouponInputEnvelope
+    set?: Enumerable<CafeCouponQRCodeWhereUniqueInput>
+    disconnect?: Enumerable<CafeCouponQRCodeWhereUniqueInput>
+    delete?: Enumerable<CafeCouponQRCodeWhereUniqueInput>
+    connect?: Enumerable<CafeCouponQRCodeWhereUniqueInput>
+    update?: Enumerable<CafeCouponQRCodeUpdateWithWhereUniqueWithoutCafeCouponInput>
+    updateMany?: Enumerable<CafeCouponQRCodeUpdateManyWithWhereWithoutCafeCouponInput>
+    deleteMany?: Enumerable<CafeCouponQRCodeScalarWhereInput>
   }
 
   export type CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput = {
@@ -26224,6 +27512,22 @@ export namespace Prisma {
 
   export type NullableEnumCafeCouponStatusFieldUpdateOperationsInput = {
     set?: CafeCouponStatus | null
+  }
+
+  export type CafeCouponCreateNestedOneWithoutCafeCouponQRCodesInput = {
+    create?: XOR<CafeCouponCreateWithoutCafeCouponQRCodesInput, CafeCouponUncheckedCreateWithoutCafeCouponQRCodesInput>
+    connectOrCreate?: CafeCouponCreateOrConnectWithoutCafeCouponQRCodesInput
+    connect?: CafeCouponWhereUniqueInput
+  }
+
+  export type CafeCouponUpdateOneWithoutCafeCouponQRCodesNestedInput = {
+    create?: XOR<CafeCouponCreateWithoutCafeCouponQRCodesInput, CafeCouponUncheckedCreateWithoutCafeCouponQRCodesInput>
+    connectOrCreate?: CafeCouponCreateOrConnectWithoutCafeCouponQRCodesInput
+    upsert?: CafeCouponUpsertWithoutCafeCouponQRCodesInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: CafeCouponWhereUniqueInput
+    update?: XOR<CafeCouponUpdateWithoutCafeCouponQRCodesInput, CafeCouponUncheckedUpdateWithoutCafeCouponQRCodesInput>
   }
 
   export type NestedIntFilter = {
@@ -28419,6 +29723,7 @@ export namespace Prisma {
     endDay?: Date | string | null
     isDisable?: boolean
     ProxyUser: ProxyUserCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponQRCodes?: CafeCouponQRCodeCreateNestedManyWithoutCafeCouponInput
     CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutCafeCouponInput
   }
 
@@ -28432,6 +29737,7 @@ export namespace Prisma {
     endDay?: Date | string | null
     isDisable?: boolean
     proxyUserId: number
+    CafeCouponQRCodes?: CafeCouponQRCodeUncheckedCreateNestedManyWithoutCafeCouponInput
     CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutCafeCouponInput
   }
 
@@ -28702,6 +30008,7 @@ export namespace Prisma {
     endDay?: Date | string | null
     isDisable?: boolean
     CafeCouponGroup: CafeCouponGroupCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponQRCodes?: CafeCouponQRCodeCreateNestedManyWithoutCafeCouponInput
     CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutCafeCouponInput
   }
 
@@ -28715,6 +30022,7 @@ export namespace Prisma {
     endDay?: Date | string | null
     isDisable?: boolean
     cafeCouponGroupId: number
+    CafeCouponQRCodes?: CafeCouponQRCodeUncheckedCreateNestedManyWithoutCafeCouponInput
     CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutCafeCouponInput
   }
 
@@ -28840,6 +30148,32 @@ export namespace Prisma {
     create: XOR<CafeCouponGroupCreateWithoutCafeCouponsInput, CafeCouponGroupUncheckedCreateWithoutCafeCouponsInput>
   }
 
+  export type CafeCouponQRCodeCreateWithoutCafeCouponInput = {
+    serialNumber: string
+    createdAt?: Date | string
+    isDisable?: boolean
+    size: number
+    base64Data: string
+  }
+
+  export type CafeCouponQRCodeUncheckedCreateWithoutCafeCouponInput = {
+    serialNumber: string
+    createdAt?: Date | string
+    isDisable?: boolean
+    size: number
+    base64Data: string
+  }
+
+  export type CafeCouponQRCodeCreateOrConnectWithoutCafeCouponInput = {
+    where: CafeCouponQRCodeWhereUniqueInput
+    create: XOR<CafeCouponQRCodeCreateWithoutCafeCouponInput, CafeCouponQRCodeUncheckedCreateWithoutCafeCouponInput>
+  }
+
+  export type CafeCouponQRCodeCreateManyCafeCouponInputEnvelope = {
+    data: Enumerable<CafeCouponQRCodeCreateManyCafeCouponInput>
+    skipDuplicates?: boolean
+  }
+
   export type CafeCouponHistoryCreateWithoutCafeCouponInput = {
     createdAt?: Date | string
     eventType: CafeCouponEventType
@@ -28927,6 +30261,34 @@ export namespace Prisma {
     CafeCouponGoupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeCouponGroupNestedInput
   }
 
+  export type CafeCouponQRCodeUpsertWithWhereUniqueWithoutCafeCouponInput = {
+    where: CafeCouponQRCodeWhereUniqueInput
+    update: XOR<CafeCouponQRCodeUpdateWithoutCafeCouponInput, CafeCouponQRCodeUncheckedUpdateWithoutCafeCouponInput>
+    create: XOR<CafeCouponQRCodeCreateWithoutCafeCouponInput, CafeCouponQRCodeUncheckedCreateWithoutCafeCouponInput>
+  }
+
+  export type CafeCouponQRCodeUpdateWithWhereUniqueWithoutCafeCouponInput = {
+    where: CafeCouponQRCodeWhereUniqueInput
+    data: XOR<CafeCouponQRCodeUpdateWithoutCafeCouponInput, CafeCouponQRCodeUncheckedUpdateWithoutCafeCouponInput>
+  }
+
+  export type CafeCouponQRCodeUpdateManyWithWhereWithoutCafeCouponInput = {
+    where: CafeCouponQRCodeScalarWhereInput
+    data: XOR<CafeCouponQRCodeUpdateManyMutationInput, CafeCouponQRCodeUncheckedUpdateManyWithoutCafeCouponQRCodesInput>
+  }
+
+  export type CafeCouponQRCodeScalarWhereInput = {
+    AND?: Enumerable<CafeCouponQRCodeScalarWhereInput>
+    OR?: Enumerable<CafeCouponQRCodeScalarWhereInput>
+    NOT?: Enumerable<CafeCouponQRCodeScalarWhereInput>
+    serialNumber?: StringFilter | string
+    createdAt?: DateTimeFilter | Date | string
+    isDisable?: BoolFilter | boolean
+    cafeCouponId?: IntNullableFilter | number | null
+    size?: IntFilter | number
+    base64Data?: StringFilter | string
+  }
+
   export type CafeCouponHistoryUpsertWithWhereUniqueWithoutCafeCouponInput = {
     where: CafeCouponHistoryWhereUniqueInput
     update: XOR<CafeCouponHistoryUpdateWithoutCafeCouponInput, CafeCouponHistoryUncheckedUpdateWithoutCafeCouponInput>
@@ -28953,6 +30315,7 @@ export namespace Prisma {
     isDisable?: boolean
     ProxyUser: ProxyUserCreateNestedOneWithoutCafeCouponsInput
     CafeCouponGroup: CafeCouponGroupCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponQRCodes?: CafeCouponQRCodeCreateNestedManyWithoutCafeCouponInput
   }
 
   export type CafeCouponUncheckedCreateWithoutCafeCouponHistoriesInput = {
@@ -28966,6 +30329,7 @@ export namespace Prisma {
     isDisable?: boolean
     proxyUserId: number
     cafeCouponGroupId: number
+    CafeCouponQRCodes?: CafeCouponQRCodeUncheckedCreateNestedManyWithoutCafeCouponInput
   }
 
   export type CafeCouponCreateOrConnectWithoutCafeCouponHistoriesInput = {
@@ -29026,6 +30390,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     ProxyUser?: ProxyUserUpdateOneRequiredWithoutCafeCouponsNestedInput
     CafeCouponGroup?: CafeCouponGroupUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponQRCodes?: CafeCouponQRCodeUpdateManyWithoutCafeCouponNestedInput
   }
 
   export type CafeCouponUncheckedUpdateWithoutCafeCouponHistoriesInput = {
@@ -29039,6 +30404,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     proxyUserId?: IntFieldUpdateOperationsInput | number
     cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+    CafeCouponQRCodes?: CafeCouponQRCodeUncheckedUpdateManyWithoutCafeCouponNestedInput
   }
 
   export type UserUpsertWithoutCafeCouponHistoriesInput = {
@@ -29077,6 +30443,70 @@ export namespace Prisma {
     BoardReplies?: BoardReplyUncheckedUpdateManyWithoutUserNestedInput
     Notices?: NoticeUncheckedUpdateManyWithoutUserNestedInput
     ProxyUsers?: ProxyUserUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type CafeCouponCreateWithoutCafeCouponQRCodesInput = {
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    ProxyUser: ProxyUserCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponGroup: CafeCouponGroupCreateNestedOneWithoutCafeCouponsInput
+    CafeCouponHistories?: CafeCouponHistoryCreateNestedManyWithoutCafeCouponInput
+  }
+
+  export type CafeCouponUncheckedCreateWithoutCafeCouponQRCodesInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    content: string
+    serialNumber: string
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    proxyUserId: number
+    cafeCouponGroupId: number
+    CafeCouponHistories?: CafeCouponHistoryUncheckedCreateNestedManyWithoutCafeCouponInput
+  }
+
+  export type CafeCouponCreateOrConnectWithoutCafeCouponQRCodesInput = {
+    where: CafeCouponWhereUniqueInput
+    create: XOR<CafeCouponCreateWithoutCafeCouponQRCodesInput, CafeCouponUncheckedCreateWithoutCafeCouponQRCodesInput>
+  }
+
+  export type CafeCouponUpsertWithoutCafeCouponQRCodesInput = {
+    update: XOR<CafeCouponUpdateWithoutCafeCouponQRCodesInput, CafeCouponUncheckedUpdateWithoutCafeCouponQRCodesInput>
+    create: XOR<CafeCouponCreateWithoutCafeCouponQRCodesInput, CafeCouponUncheckedCreateWithoutCafeCouponQRCodesInput>
+  }
+
+  export type CafeCouponUpdateWithoutCafeCouponQRCodesInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    ProxyUser?: ProxyUserUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponGroup?: CafeCouponGroupUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutCafeCouponNestedInput
+  }
+
+  export type CafeCouponUncheckedUpdateWithoutCafeCouponQRCodesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    content?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    proxyUserId?: IntFieldUpdateOperationsInput | number
+    cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+    CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput
   }
 
   export type BoardCreateManyUserInput = {
@@ -29712,6 +31142,7 @@ export namespace Prisma {
     endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     ProxyUser?: ProxyUserUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponQRCodes?: CafeCouponQRCodeUpdateManyWithoutCafeCouponNestedInput
     CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutCafeCouponNestedInput
   }
 
@@ -29725,6 +31156,7 @@ export namespace Prisma {
     endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     proxyUserId?: IntFieldUpdateOperationsInput | number
+    CafeCouponQRCodes?: CafeCouponQRCodeUncheckedUpdateManyWithoutCafeCouponNestedInput
     CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput
   }
 
@@ -29773,6 +31205,7 @@ export namespace Prisma {
     endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     CafeCouponGroup?: CafeCouponGroupUpdateOneRequiredWithoutCafeCouponsNestedInput
+    CafeCouponQRCodes?: CafeCouponQRCodeUpdateManyWithoutCafeCouponNestedInput
     CafeCouponHistories?: CafeCouponHistoryUpdateManyWithoutCafeCouponNestedInput
   }
 
@@ -29786,7 +31219,16 @@ export namespace Prisma {
     endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+    CafeCouponQRCodes?: CafeCouponQRCodeUncheckedUpdateManyWithoutCafeCouponNestedInput
     CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput
+  }
+
+  export type CafeCouponQRCodeCreateManyCafeCouponInput = {
+    serialNumber: string
+    createdAt?: Date | string
+    isDisable?: boolean
+    size: number
+    base64Data: string
   }
 
   export type CafeCouponHistoryCreateManyCafeCouponInput = {
@@ -29797,6 +31239,30 @@ export namespace Prisma {
     actorId: number
     statusBefore?: CafeCouponStatus | null
     statusAfter?: CafeCouponStatus | null
+  }
+
+  export type CafeCouponQRCodeUpdateWithoutCafeCouponInput = {
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    size?: IntFieldUpdateOperationsInput | number
+    base64Data?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CafeCouponQRCodeUncheckedUpdateWithoutCafeCouponInput = {
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    size?: IntFieldUpdateOperationsInput | number
+    base64Data?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type CafeCouponQRCodeUncheckedUpdateManyWithoutCafeCouponQRCodesInput = {
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    size?: IntFieldUpdateOperationsInput | number
+    base64Data?: StringFieldUpdateOperationsInput | string
   }
 
   export type CafeCouponHistoryUpdateWithoutCafeCouponInput = {
