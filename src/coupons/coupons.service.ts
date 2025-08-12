@@ -56,12 +56,12 @@ export class CouponsService {
     throw new Error('Failed to generate unique serial number after maximum attempts');
   }
 
-  async createRawCoupon(name: string, content: string, startDay: Date, endDay: Date, groupCode: string, memberId: string, nickname: string, userType: ProxyUserType, eventDescription: string, duplicate: boolean) {
+  async createRawCoupon(name: string, content: string, startDay: Date, endDay: Date, groupCode: string, memberId: string, nickname: string, userType: ProxyUserType, eventDescription: string, duplicate: boolean, force: boolean) {
 
     if (!duplicate) {
       const coupons = await this.findRawByCouponByGroupCodeWithUserId(groupCode, memberId, userType as ProxyUserType);
 
-      if (coupons.length > 0) {
+      if (coupons.length > 0 && !force) {
         throw new ConflictException('Coupon already exists');
       }
     }
@@ -76,33 +76,36 @@ export class CouponsService {
       throw new BadRequestException('Invalid groupCode');
     }
 
-    // 비활성화 체크
-    if (group.isDisable) {
-      throw new BadRequestException('Coupon group is disabled');
-    }
+    if (force) {
 
-    if (!Object.values(ProxyUserType).includes(userType as ProxyUserType)) {
-      throw new BadRequestException('Invalid userType');
-    }
+      // 비활성화 체크
+      if (group.isDisable) {
+        throw new BadRequestException('Coupon group is disabled');
+      }
 
-    const today = new Date();
-    // 발급 시작일 체크
-    if (group.issuanceStartDay > today) {
-      throw new BadRequestException('Issuance start day is not started');
-    }
+      if (!Object.values(ProxyUserType).includes(userType as ProxyUserType)) {
+        throw new BadRequestException('Invalid userType');
+      }
 
-    // 발급 종료일 체크
-    if (group.issuanceEndDay < today) {
-      throw new BadRequestException('Issuance end day is expired');
-    }
+      const today = new Date();
+      // 발급 시작일 체크
+      if (group.issuanceStartDay > today) {
+        throw new BadRequestException('Issuance start day is not started');
+      }
 
-    // 쿠폰 시작일 체크
-    if (group.startDay > today) {
-      throw new BadRequestException('Coupon start day is not started');
-    }
-    // 쿠폰 종료일 체크
-    if (group.endDay < today) {
-      throw new BadRequestException('Coupon end day is expired');
+      // 발급 종료일 체크
+      if (group.issuanceEndDay < today) {
+        throw new BadRequestException('Issuance end day is expired');
+      }
+
+      // 쿠폰 시작일 체크
+      if (group.startDay > today) {
+        throw new BadRequestException('Coupon start day is not started');
+      }
+      // 쿠폰 종료일 체크
+      if (group.endDay < today) {
+        throw new BadRequestException('Coupon end day is expired');
+      }
     }
 
     try {
@@ -140,7 +143,7 @@ export class CouponsService {
             name: name ?? group.name,
             content: content ?? group.description,
             serialNumber,
-            startDay,
+            startDay: startDay ?? new Date(),
             endDay: endDay ?? group.endDay,
             ProxyUser: {
               connect: {
@@ -207,14 +210,14 @@ export class CouponsService {
       throw new UnauthorizedException('Invalid signature');
     }
 
-    const { name, content, startDay, endDay, groupCode, memberId, nickname, userType, eventDescription, duplicate } = JSON.parse(payload);
+    const { name, content, startDay, endDay, groupCode, memberId, nickname, userType, eventDescription, duplicate, force } = JSON.parse(payload);
 
-    if (!startDay || !groupCode || !memberId || !nickname || !userType) {
+    if (!groupCode || !memberId || !nickname || !userType) {
       throw new BadRequestException('Invalid payload');
     }
 
     try {
-      const coupon = await this.createRawCoupon(name ?? null, content ?? null, startDay, endDay ?? null, groupCode, memberId, nickname, userType as ProxyUserType, eventDescription ?? null, duplicate ?? null);
+      const coupon = await this.createRawCoupon(name ?? null, content ?? null, startDay, endDay ?? null, groupCode, memberId, nickname, userType as ProxyUserType, eventDescription ?? null, duplicate ?? null, force ?? false);
       return coupon;
     } catch (error) {
       throw error;
