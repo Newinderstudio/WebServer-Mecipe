@@ -76,7 +76,8 @@ export class CouponsService {
       throw new BadRequestException('Invalid groupCode');
     }
 
-    if (force) {
+    // 강제 생성 시, 체크 건너뛰기
+    if (!force) {
 
       // 비활성화 체크
       if (group.isDisable) {
