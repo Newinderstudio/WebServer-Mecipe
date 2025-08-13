@@ -71,27 +71,31 @@ enum BoardType {
   BTALK //잡담
   BINFORM //정보
   BQUESTION //질문
+  BEVENT // 이벤트
 }
 
 // 게시물
 model Board {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
+  id                Int           @id @default(autoincrement())
+  createdAt         DateTime      @default(now())
 
-  title    String
-  content  String?  @db.Text
-  link     String?
-  startDay DateTime @default(now())
-  endDay   DateTime @default(now())
+  title             String
+  content           String?       @db.Text
+  link              String?
+  startDay          DateTime      @default(now())
+  endDay            DateTime?
 
-  isDisable  Boolean      @default(false) // 노출 여부 false 노출 true 비노출
-  BoardImages BoardImage[]
-  BoardReplies BoardReply[]
+  isDisable         Boolean       @default(false) // 노출 여부 false 노출 true 비노출
+  isReplyAvaliable  Boolean       @default(true)
+  BoardImages       BoardImage[]
+  BoardReplies      BoardReply[]
 
   userId  Int
   User    User  @relation(fields: [userId], references: [id])
 
   boardType  BoardType    @default(BTALK) //처음에는 보드타입(잡담)
+
+  CafeBoards CafeBoard[]
 }
 
 // 게시물 이미지
@@ -100,13 +104,15 @@ model BoardImage {
   createdAt DateTime  @default(now())
 
   url    String       @db.Text
+  thumbnailUrl        String       @db.Text
   width  Int
   height Int
   size   Int
 
-  isThumb Boolean     @default(false) // 썸네일이미지 여부 true 썸네일 false 상세
+  isThumb   Boolean   @default(false) // 썸네일이미지 여부 true 썸네일 false 상세
+  isDisable Boolean   @default(false)
 
-  boardId Int         @unique
+  boardId Int        
   Board   Board       @relation(fields: [boardId], references: [id])
 }
 
@@ -126,8 +132,20 @@ model BoardReply {
   boardReplyId Int?
   BoardReply BoardReply? @relation("BoardNestedReply",fields: [boardReplyId], references: [id])
   BoardNestedReplies BoardReply[] @relation("BoardNestedReply")
+}
 
-  boardType  BoardType    @default(BTALK) //처음에는 보드타입(잡담)
+// 카페 관련 게시물
+model CafeBoard {
+  boardId         Int
+  cafeInfoId      Int
+
+  Board           Board       @relation(fields: [boardId], references: [id])
+  CafeInfo        CafeInfo    @relation(fields: [cafeInfoId], references: [id])
+
+  createdAt       DateTime    @default(now())
+
+  @@unique([boardId, cafeInfoId], name: "cafeBoardUnique")
+
 }
 
 enum GovermentType {
@@ -195,6 +213,8 @@ model CafeInfo {
   CafeRealImages        CafeRealImage[]
 
   CafeCouponGroupPartners      CafeCouponGoupPartner[]
+
+  CafeBoards            CafeBoard[]
 }
 
 // 카페 썸네일 이미지

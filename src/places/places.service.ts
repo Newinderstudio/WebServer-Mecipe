@@ -204,6 +204,8 @@ export class PlacesService {
 
     if (searchText.trim().length > 0) where.name = { contains: searchText };
 
+    console.log("findAllPlacesBySearch", where);
+
     const count = await this.prisma.cafeInfo.count({
       where: {
         ...where,

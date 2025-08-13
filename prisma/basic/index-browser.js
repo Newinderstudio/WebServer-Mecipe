@@ -93,10 +93,12 @@ exports.Prisma.BoardImageScalarFieldEnum = makeEnum({
   id: 'id',
   createdAt: 'createdAt',
   url: 'url',
+  thumbnailUrl: 'thumbnailUrl',
   width: 'width',
   height: 'height',
   size: 'size',
   isThumb: 'isThumb',
+  isDisable: 'isDisable',
   boardId: 'boardId'
 });
 
@@ -108,8 +110,7 @@ exports.Prisma.BoardReplyScalarFieldEnum = makeEnum({
   isDisable: 'isDisable',
   userId: 'userId',
   boardId: 'boardId',
-  boardReplyId: 'boardReplyId',
-  boardType: 'boardType'
+  boardReplyId: 'boardReplyId'
 });
 
 exports.Prisma.BoardScalarFieldEnum = makeEnum({
@@ -121,8 +122,15 @@ exports.Prisma.BoardScalarFieldEnum = makeEnum({
   startDay: 'startDay',
   endDay: 'endDay',
   isDisable: 'isDisable',
+  isReplyAvaliable: 'isReplyAvaliable',
   userId: 'userId',
   boardType: 'boardType'
+});
+
+exports.Prisma.CafeBoardScalarFieldEnum = makeEnum({
+  boardId: 'boardId',
+  cafeInfoId: 'cafeInfoId',
+  createdAt: 'createdAt'
 });
 
 exports.Prisma.CafeCouponGoupPartnerScalarFieldEnum = makeEnum({
@@ -313,7 +321,8 @@ exports.Prisma.UserScalarFieldEnum = makeEnum({
 exports.BoardType = makeEnum({
   BTALK: 'BTALK',
   BINFORM: 'BINFORM',
-  BQUESTION: 'BQUESTION'
+  BQUESTION: 'BQUESTION',
+  BEVENT: 'BEVENT'
 });
 
 exports.CafeCouponEventType = makeEnum({
@@ -376,6 +385,7 @@ exports.Prisma.ModelName = makeEnum({
   Board: 'Board',
   BoardImage: 'BoardImage',
   BoardReply: 'BoardReply',
+  CafeBoard: 'CafeBoard',
   RegionCategory: 'RegionCategory',
   ClosureRegionCategory: 'ClosureRegionCategory',
   CafeInfo: 'CafeInfo',

@@ -53,8 +53,9 @@ export type Board = {
   content: string | null
   link: string | null
   startDay: Date
-  endDay: Date
+  endDay: Date | null
   isDisable: boolean
+  isReplyAvaliable: boolean
   userId: number
   boardType: BoardType
 }
@@ -67,10 +68,12 @@ export type BoardImage = {
   id: number
   createdAt: Date
   url: string
+  thumbnailUrl: string
   width: number
   height: number
   size: number
   isThumb: boolean
+  isDisable: boolean
   boardId: number
 }
 
@@ -87,7 +90,16 @@ export type BoardReply = {
   userId: number
   boardId: number
   boardReplyId: number | null
-  boardType: BoardType
+}
+
+/**
+ * Model CafeBoard
+ * 
+ */
+export type CafeBoard = {
+  boardId: number
+  cafeInfoId: number
+  createdAt: Date
 }
 
 /**
@@ -304,7 +316,8 @@ export type CafeCouponQRCode = {
 export const BoardType: {
   BTALK: 'BTALK',
   BINFORM: 'BINFORM',
-  BQUESTION: 'BQUESTION'
+  BQUESTION: 'BQUESTION',
+  BEVENT: 'BEVENT'
 };
 
 export type BoardType = (typeof BoardType)[keyof typeof BoardType]
@@ -548,6 +561,16 @@ export class PrismaClient<
     * ```
     */
   get boardReply(): Prisma.BoardReplyDelegate<GlobalReject>;
+
+  /**
+   * `prisma.cafeBoard`: Exposes CRUD operations for the **CafeBoard** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CafeBoards
+    * const cafeBoards = await prisma.cafeBoard.findMany()
+    * ```
+    */
+  get cafeBoard(): Prisma.CafeBoardDelegate<GlobalReject>;
 
   /**
    * `prisma.regionCategory`: Exposes CRUD operations for the **RegionCategory** model.
@@ -1177,6 +1200,7 @@ export namespace Prisma {
     Board: 'Board',
     BoardImage: 'BoardImage',
     BoardReply: 'BoardReply',
+    CafeBoard: 'CafeBoard',
     RegionCategory: 'RegionCategory',
     ClosureRegionCategory: 'ClosureRegionCategory',
     CafeInfo: 'CafeInfo',
@@ -1414,11 +1438,13 @@ export namespace Prisma {
   export type BoardCountOutputType = {
     BoardImages: number
     BoardReplies: number
+    CafeBoards: number
   }
 
   export type BoardCountOutputTypeSelect = {
     BoardImages?: boolean
     BoardReplies?: boolean
+    CafeBoards?: boolean
   }
 
   export type BoardCountOutputTypeGetPayload<S extends boolean | null | undefined | BoardCountOutputTypeArgs> =
@@ -1555,6 +1581,7 @@ export namespace Prisma {
     CafeVirtualImages: number
     CafeRealImages: number
     CafeCouponGroupPartners: number
+    CafeBoards: number
   }
 
   export type CafeInfoCountOutputTypeSelect = {
@@ -1563,6 +1590,7 @@ export namespace Prisma {
     CafeVirtualImages?: boolean
     CafeRealImages?: boolean
     CafeCouponGroupPartners?: boolean
+    CafeBoards?: boolean
   }
 
   export type CafeInfoCountOutputTypeGetPayload<S extends boolean | null | undefined | CafeInfoCountOutputTypeArgs> =
@@ -3892,6 +3920,7 @@ export namespace Prisma {
     startDay: Date | null
     endDay: Date | null
     isDisable: boolean | null
+    isReplyAvaliable: boolean | null
     userId: number | null
     boardType: BoardType | null
   }
@@ -3905,6 +3934,7 @@ export namespace Prisma {
     startDay: Date | null
     endDay: Date | null
     isDisable: boolean | null
+    isReplyAvaliable: boolean | null
     userId: number | null
     boardType: BoardType | null
   }
@@ -3918,6 +3948,7 @@ export namespace Prisma {
     startDay: number
     endDay: number
     isDisable: number
+    isReplyAvaliable: number
     userId: number
     boardType: number
     _all: number
@@ -3943,6 +3974,7 @@ export namespace Prisma {
     startDay?: true
     endDay?: true
     isDisable?: true
+    isReplyAvaliable?: true
     userId?: true
     boardType?: true
   }
@@ -3956,6 +3988,7 @@ export namespace Prisma {
     startDay?: true
     endDay?: true
     isDisable?: true
+    isReplyAvaliable?: true
     userId?: true
     boardType?: true
   }
@@ -3969,6 +4002,7 @@ export namespace Prisma {
     startDay?: true
     endDay?: true
     isDisable?: true
+    isReplyAvaliable?: true
     userId?: true
     boardType?: true
     _all?: true
@@ -4073,8 +4107,9 @@ export namespace Prisma {
     content: string | null
     link: string | null
     startDay: Date
-    endDay: Date
+    endDay: Date | null
     isDisable: boolean
+    isReplyAvaliable: boolean
     userId: number
     boardType: BoardType
     _count: BoardCountAggregateOutputType | null
@@ -4107,11 +4142,13 @@ export namespace Prisma {
     startDay?: boolean
     endDay?: boolean
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     BoardImages?: boolean | BoardImageFindManyArgs
     BoardReplies?: boolean | BoardReplyFindManyArgs
     userId?: boolean
     User?: boolean | UserArgs
     boardType?: boolean
+    CafeBoards?: boolean | CafeBoardFindManyArgs
     _count?: boolean | BoardCountOutputTypeArgs
   }
 
@@ -4120,6 +4157,7 @@ export namespace Prisma {
     BoardImages?: boolean | BoardImageFindManyArgs
     BoardReplies?: boolean | BoardReplyFindManyArgs
     User?: boolean | UserArgs
+    CafeBoards?: boolean | CafeBoardFindManyArgs
     _count?: boolean | BoardCountOutputTypeArgs
   } 
 
@@ -4133,6 +4171,7 @@ export namespace Prisma {
         P extends 'BoardImages' ? Array < BoardImageGetPayload<S['include'][P]>>  :
         P extends 'BoardReplies' ? Array < BoardReplyGetPayload<S['include'][P]>>  :
         P extends 'User' ? UserGetPayload<S['include'][P]> :
+        P extends 'CafeBoards' ? Array < CafeBoardGetPayload<S['include'][P]>>  :
         P extends '_count' ? BoardCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (BoardArgs | BoardFindManyArgs)
@@ -4141,6 +4180,7 @@ export namespace Prisma {
         P extends 'BoardImages' ? Array < BoardImageGetPayload<S['select'][P]>>  :
         P extends 'BoardReplies' ? Array < BoardReplyGetPayload<S['select'][P]>>  :
         P extends 'User' ? UserGetPayload<S['select'][P]> :
+        P extends 'CafeBoards' ? Array < CafeBoardGetPayload<S['select'][P]>>  :
         P extends '_count' ? BoardCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Board ? Board[P] : never
   } 
       : Board
@@ -4520,6 +4560,8 @@ export namespace Prisma {
     BoardReplies<T extends BoardReplyFindManyArgs= {}>(args?: Subset<T, BoardReplyFindManyArgs>): PrismaPromise<Array<BoardReplyGetPayload<T>>| Null>;
 
     User<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
+
+    CafeBoards<T extends CafeBoardFindManyArgs= {}>(args?: Subset<T, CafeBoardFindManyArgs>): PrismaPromise<Array<CafeBoardGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -4975,10 +5017,12 @@ export namespace Prisma {
     id: number | null
     createdAt: Date | null
     url: string | null
+    thumbnailUrl: string | null
     width: number | null
     height: number | null
     size: number | null
     isThumb: boolean | null
+    isDisable: boolean | null
     boardId: number | null
   }
 
@@ -4986,10 +5030,12 @@ export namespace Prisma {
     id: number | null
     createdAt: Date | null
     url: string | null
+    thumbnailUrl: string | null
     width: number | null
     height: number | null
     size: number | null
     isThumb: boolean | null
+    isDisable: boolean | null
     boardId: number | null
   }
 
@@ -4997,10 +5043,12 @@ export namespace Prisma {
     id: number
     createdAt: number
     url: number
+    thumbnailUrl: number
     width: number
     height: number
     size: number
     isThumb: number
+    isDisable: number
     boardId: number
     _all: number
   }
@@ -5026,10 +5074,12 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     url?: true
+    thumbnailUrl?: true
     width?: true
     height?: true
     size?: true
     isThumb?: true
+    isDisable?: true
     boardId?: true
   }
 
@@ -5037,10 +5087,12 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     url?: true
+    thumbnailUrl?: true
     width?: true
     height?: true
     size?: true
     isThumb?: true
+    isDisable?: true
     boardId?: true
   }
 
@@ -5048,10 +5100,12 @@ export namespace Prisma {
     id?: true
     createdAt?: true
     url?: true
+    thumbnailUrl?: true
     width?: true
     height?: true
     size?: true
     isThumb?: true
+    isDisable?: true
     boardId?: true
     _all?: true
   }
@@ -5152,10 +5206,12 @@ export namespace Prisma {
     id: number
     createdAt: Date
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
     isThumb: boolean
+    isDisable: boolean
     boardId: number
     _count: BoardImageCountAggregateOutputType | null
     _avg: BoardImageAvgAggregateOutputType | null
@@ -5182,10 +5238,12 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     url?: boolean
+    thumbnailUrl?: boolean
     width?: boolean
     height?: boolean
     size?: boolean
     isThumb?: boolean
+    isDisable?: boolean
     boardId?: boolean
     Board?: boolean | BoardArgs
   }
@@ -6040,7 +6098,6 @@ export namespace Prisma {
     userId: number | null
     boardId: number | null
     boardReplyId: number | null
-    boardType: BoardType | null
   }
 
   export type BoardReplyMaxAggregateOutputType = {
@@ -6052,7 +6109,6 @@ export namespace Prisma {
     userId: number | null
     boardId: number | null
     boardReplyId: number | null
-    boardType: BoardType | null
   }
 
   export type BoardReplyCountAggregateOutputType = {
@@ -6064,7 +6120,6 @@ export namespace Prisma {
     userId: number
     boardId: number
     boardReplyId: number
-    boardType: number
     _all: number
   }
 
@@ -6092,7 +6147,6 @@ export namespace Prisma {
     userId?: true
     boardId?: true
     boardReplyId?: true
-    boardType?: true
   }
 
   export type BoardReplyMaxAggregateInputType = {
@@ -6104,7 +6158,6 @@ export namespace Prisma {
     userId?: true
     boardId?: true
     boardReplyId?: true
-    boardType?: true
   }
 
   export type BoardReplyCountAggregateInputType = {
@@ -6116,7 +6169,6 @@ export namespace Prisma {
     userId?: true
     boardId?: true
     boardReplyId?: true
-    boardType?: true
     _all?: true
   }
 
@@ -6221,7 +6273,6 @@ export namespace Prisma {
     userId: number
     boardId: number
     boardReplyId: number | null
-    boardType: BoardType
     _count: BoardReplyCountAggregateOutputType | null
     _avg: BoardReplyAvgAggregateOutputType | null
     _sum: BoardReplySumAggregateOutputType | null
@@ -6256,7 +6307,6 @@ export namespace Prisma {
     boardReplyId?: boolean
     BoardReply?: boolean | BoardReplyArgs
     BoardNestedReplies?: boolean | BoardReplyFindManyArgs
-    boardType?: boolean
     _count?: boolean | BoardReplyCountOutputTypeArgs
   }
 
@@ -7088,6 +7138,1022 @@ export namespace Prisma {
      * 
     **/
     include?: BoardReplyInclude | null
+  }
+
+
+
+  /**
+   * Model CafeBoard
+   */
+
+
+  export type AggregateCafeBoard = {
+    _count: CafeBoardCountAggregateOutputType | null
+    _avg: CafeBoardAvgAggregateOutputType | null
+    _sum: CafeBoardSumAggregateOutputType | null
+    _min: CafeBoardMinAggregateOutputType | null
+    _max: CafeBoardMaxAggregateOutputType | null
+  }
+
+  export type CafeBoardAvgAggregateOutputType = {
+    boardId: number | null
+    cafeInfoId: number | null
+  }
+
+  export type CafeBoardSumAggregateOutputType = {
+    boardId: number | null
+    cafeInfoId: number | null
+  }
+
+  export type CafeBoardMinAggregateOutputType = {
+    boardId: number | null
+    cafeInfoId: number | null
+    createdAt: Date | null
+  }
+
+  export type CafeBoardMaxAggregateOutputType = {
+    boardId: number | null
+    cafeInfoId: number | null
+    createdAt: Date | null
+  }
+
+  export type CafeBoardCountAggregateOutputType = {
+    boardId: number
+    cafeInfoId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type CafeBoardAvgAggregateInputType = {
+    boardId?: true
+    cafeInfoId?: true
+  }
+
+  export type CafeBoardSumAggregateInputType = {
+    boardId?: true
+    cafeInfoId?: true
+  }
+
+  export type CafeBoardMinAggregateInputType = {
+    boardId?: true
+    cafeInfoId?: true
+    createdAt?: true
+  }
+
+  export type CafeBoardMaxAggregateInputType = {
+    boardId?: true
+    cafeInfoId?: true
+    createdAt?: true
+  }
+
+  export type CafeBoardCountAggregateInputType = {
+    boardId?: true
+    cafeInfoId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type CafeBoardAggregateArgs = {
+    /**
+     * Filter which CafeBoard to aggregate.
+     * 
+    **/
+    where?: CafeBoardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeBoards to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeBoardOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: CafeBoardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeBoards from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeBoards.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CafeBoards
+    **/
+    _count?: true | CafeBoardCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CafeBoardAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CafeBoardSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CafeBoardMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CafeBoardMaxAggregateInputType
+  }
+
+  export type GetCafeBoardAggregateType<T extends CafeBoardAggregateArgs> = {
+        [P in keyof T & keyof AggregateCafeBoard]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCafeBoard[P]>
+      : GetScalarType<T[P], AggregateCafeBoard[P]>
+  }
+
+
+
+
+  export type CafeBoardGroupByArgs = {
+    where?: CafeBoardWhereInput
+    orderBy?: Enumerable<CafeBoardOrderByWithAggregationInput>
+    by: Array<CafeBoardScalarFieldEnum>
+    having?: CafeBoardScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CafeBoardCountAggregateInputType | true
+    _avg?: CafeBoardAvgAggregateInputType
+    _sum?: CafeBoardSumAggregateInputType
+    _min?: CafeBoardMinAggregateInputType
+    _max?: CafeBoardMaxAggregateInputType
+  }
+
+
+  export type CafeBoardGroupByOutputType = {
+    boardId: number
+    cafeInfoId: number
+    createdAt: Date
+    _count: CafeBoardCountAggregateOutputType | null
+    _avg: CafeBoardAvgAggregateOutputType | null
+    _sum: CafeBoardSumAggregateOutputType | null
+    _min: CafeBoardMinAggregateOutputType | null
+    _max: CafeBoardMaxAggregateOutputType | null
+  }
+
+  type GetCafeBoardGroupByPayload<T extends CafeBoardGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<CafeBoardGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CafeBoardGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CafeBoardGroupByOutputType[P]>
+            : GetScalarType<T[P], CafeBoardGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CafeBoardSelect = {
+    boardId?: boolean
+    cafeInfoId?: boolean
+    Board?: boolean | BoardArgs
+    CafeInfo?: boolean | CafeInfoArgs
+    createdAt?: boolean
+  }
+
+
+  export type CafeBoardInclude = {
+    Board?: boolean | BoardArgs
+    CafeInfo?: boolean | CafeInfoArgs
+  } 
+
+  export type CafeBoardGetPayload<S extends boolean | null | undefined | CafeBoardArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? CafeBoard :
+    S extends undefined ? never :
+    S extends { include: any } & (CafeBoardArgs | CafeBoardFindManyArgs)
+    ? CafeBoard  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'Board' ? BoardGetPayload<S['include'][P]> :
+        P extends 'CafeInfo' ? CafeInfoGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (CafeBoardArgs | CafeBoardFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'Board' ? BoardGetPayload<S['select'][P]> :
+        P extends 'CafeInfo' ? CafeInfoGetPayload<S['select'][P]> :  P extends keyof CafeBoard ? CafeBoard[P] : never
+  } 
+      : CafeBoard
+
+
+  type CafeBoardCountArgs = Merge<
+    Omit<CafeBoardFindManyArgs, 'select' | 'include'> & {
+      select?: CafeBoardCountAggregateInputType | true
+    }
+  >
+
+  export interface CafeBoardDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one CafeBoard that matches the filter.
+     * @param {CafeBoardFindUniqueArgs} args - Arguments to find a CafeBoard
+     * @example
+     * // Get one CafeBoard
+     * const cafeBoard = await prisma.cafeBoard.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends CafeBoardFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, CafeBoardFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'CafeBoard'> extends True ? Prisma__CafeBoardClient<CafeBoardGetPayload<T>> : Prisma__CafeBoardClient<CafeBoardGetPayload<T> | null, null>
+
+    /**
+     * Find one CafeBoard that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {CafeBoardFindUniqueOrThrowArgs} args - Arguments to find a CafeBoard
+     * @example
+     * // Get one CafeBoard
+     * const cafeBoard = await prisma.cafeBoard.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends CafeBoardFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, CafeBoardFindUniqueOrThrowArgs>
+    ): Prisma__CafeBoardClient<CafeBoardGetPayload<T>>
+
+    /**
+     * Find the first CafeBoard that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeBoardFindFirstArgs} args - Arguments to find a CafeBoard
+     * @example
+     * // Get one CafeBoard
+     * const cafeBoard = await prisma.cafeBoard.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends CafeBoardFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, CafeBoardFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'CafeBoard'> extends True ? Prisma__CafeBoardClient<CafeBoardGetPayload<T>> : Prisma__CafeBoardClient<CafeBoardGetPayload<T> | null, null>
+
+    /**
+     * Find the first CafeBoard that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeBoardFindFirstOrThrowArgs} args - Arguments to find a CafeBoard
+     * @example
+     * // Get one CafeBoard
+     * const cafeBoard = await prisma.cafeBoard.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends CafeBoardFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, CafeBoardFindFirstOrThrowArgs>
+    ): Prisma__CafeBoardClient<CafeBoardGetPayload<T>>
+
+    /**
+     * Find zero or more CafeBoards that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeBoardFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CafeBoards
+     * const cafeBoards = await prisma.cafeBoard.findMany()
+     * 
+     * // Get first 10 CafeBoards
+     * const cafeBoards = await prisma.cafeBoard.findMany({ take: 10 })
+     * 
+     * // Only select the `boardId`
+     * const cafeBoardWithBoardIdOnly = await prisma.cafeBoard.findMany({ select: { boardId: true } })
+     * 
+    **/
+    findMany<T extends CafeBoardFindManyArgs>(
+      args?: SelectSubset<T, CafeBoardFindManyArgs>
+    ): PrismaPromise<Array<CafeBoardGetPayload<T>>>
+
+    /**
+     * Create a CafeBoard.
+     * @param {CafeBoardCreateArgs} args - Arguments to create a CafeBoard.
+     * @example
+     * // Create one CafeBoard
+     * const CafeBoard = await prisma.cafeBoard.create({
+     *   data: {
+     *     // ... data to create a CafeBoard
+     *   }
+     * })
+     * 
+    **/
+    create<T extends CafeBoardCreateArgs>(
+      args: SelectSubset<T, CafeBoardCreateArgs>
+    ): Prisma__CafeBoardClient<CafeBoardGetPayload<T>>
+
+    /**
+     * Create many CafeBoards.
+     *     @param {CafeBoardCreateManyArgs} args - Arguments to create many CafeBoards.
+     *     @example
+     *     // Create many CafeBoards
+     *     const cafeBoard = await prisma.cafeBoard.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends CafeBoardCreateManyArgs>(
+      args?: SelectSubset<T, CafeBoardCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a CafeBoard.
+     * @param {CafeBoardDeleteArgs} args - Arguments to delete one CafeBoard.
+     * @example
+     * // Delete one CafeBoard
+     * const CafeBoard = await prisma.cafeBoard.delete({
+     *   where: {
+     *     // ... filter to delete one CafeBoard
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends CafeBoardDeleteArgs>(
+      args: SelectSubset<T, CafeBoardDeleteArgs>
+    ): Prisma__CafeBoardClient<CafeBoardGetPayload<T>>
+
+    /**
+     * Update one CafeBoard.
+     * @param {CafeBoardUpdateArgs} args - Arguments to update one CafeBoard.
+     * @example
+     * // Update one CafeBoard
+     * const cafeBoard = await prisma.cafeBoard.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends CafeBoardUpdateArgs>(
+      args: SelectSubset<T, CafeBoardUpdateArgs>
+    ): Prisma__CafeBoardClient<CafeBoardGetPayload<T>>
+
+    /**
+     * Delete zero or more CafeBoards.
+     * @param {CafeBoardDeleteManyArgs} args - Arguments to filter CafeBoards to delete.
+     * @example
+     * // Delete a few CafeBoards
+     * const { count } = await prisma.cafeBoard.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends CafeBoardDeleteManyArgs>(
+      args?: SelectSubset<T, CafeBoardDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CafeBoards.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeBoardUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CafeBoards
+     * const cafeBoard = await prisma.cafeBoard.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends CafeBoardUpdateManyArgs>(
+      args: SelectSubset<T, CafeBoardUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one CafeBoard.
+     * @param {CafeBoardUpsertArgs} args - Arguments to update or create a CafeBoard.
+     * @example
+     * // Update or create a CafeBoard
+     * const cafeBoard = await prisma.cafeBoard.upsert({
+     *   create: {
+     *     // ... data to create a CafeBoard
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CafeBoard we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends CafeBoardUpsertArgs>(
+      args: SelectSubset<T, CafeBoardUpsertArgs>
+    ): Prisma__CafeBoardClient<CafeBoardGetPayload<T>>
+
+    /**
+     * Count the number of CafeBoards.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeBoardCountArgs} args - Arguments to filter CafeBoards to count.
+     * @example
+     * // Count the number of CafeBoards
+     * const count = await prisma.cafeBoard.count({
+     *   where: {
+     *     // ... the filter for the CafeBoards we want to count
+     *   }
+     * })
+    **/
+    count<T extends CafeBoardCountArgs>(
+      args?: Subset<T, CafeBoardCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CafeBoardCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CafeBoard.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeBoardAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CafeBoardAggregateArgs>(args: Subset<T, CafeBoardAggregateArgs>): PrismaPromise<GetCafeBoardAggregateType<T>>
+
+    /**
+     * Group by CafeBoard.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CafeBoardGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CafeBoardGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CafeBoardGroupByArgs['orderBy'] }
+        : { orderBy?: CafeBoardGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CafeBoardGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCafeBoardGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CafeBoard.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__CafeBoardClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    Board<T extends BoardArgs= {}>(args?: Subset<T, BoardArgs>): Prisma__BoardClient<BoardGetPayload<T> | Null>;
+
+    CafeInfo<T extends CafeInfoArgs= {}>(args?: Subset<T, CafeInfoArgs>): Prisma__CafeInfoClient<CafeInfoGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * CafeBoard base type for findUnique actions
+   */
+  export type CafeBoardFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeBoard
+     * 
+    **/
+    select?: CafeBoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeBoardInclude | null
+    /**
+     * Filter, which CafeBoard to fetch.
+     * 
+    **/
+    where: CafeBoardWhereUniqueInput
+  }
+
+  /**
+   * CafeBoard: findUnique
+   */
+  export interface CafeBoardFindUniqueArgs extends CafeBoardFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeBoard findUniqueOrThrow
+   */
+  export type CafeBoardFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeBoard
+     * 
+    **/
+    select?: CafeBoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeBoardInclude | null
+    /**
+     * Filter, which CafeBoard to fetch.
+     * 
+    **/
+    where: CafeBoardWhereUniqueInput
+  }
+
+
+  /**
+   * CafeBoard base type for findFirst actions
+   */
+  export type CafeBoardFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the CafeBoard
+     * 
+    **/
+    select?: CafeBoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeBoardInclude | null
+    /**
+     * Filter, which CafeBoard to fetch.
+     * 
+    **/
+    where?: CafeBoardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeBoards to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeBoardOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeBoards.
+     * 
+    **/
+    cursor?: CafeBoardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeBoards from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeBoards.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeBoards.
+     * 
+    **/
+    distinct?: Enumerable<CafeBoardScalarFieldEnum>
+  }
+
+  /**
+   * CafeBoard: findFirst
+   */
+  export interface CafeBoardFindFirstArgs extends CafeBoardFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * CafeBoard findFirstOrThrow
+   */
+  export type CafeBoardFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the CafeBoard
+     * 
+    **/
+    select?: CafeBoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeBoardInclude | null
+    /**
+     * Filter, which CafeBoard to fetch.
+     * 
+    **/
+    where?: CafeBoardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeBoards to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeBoardOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CafeBoards.
+     * 
+    **/
+    cursor?: CafeBoardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeBoards from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeBoards.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CafeBoards.
+     * 
+    **/
+    distinct?: Enumerable<CafeBoardScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeBoard findMany
+   */
+  export type CafeBoardFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the CafeBoard
+     * 
+    **/
+    select?: CafeBoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeBoardInclude | null
+    /**
+     * Filter, which CafeBoards to fetch.
+     * 
+    **/
+    where?: CafeBoardWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CafeBoards to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<CafeBoardOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CafeBoards.
+     * 
+    **/
+    cursor?: CafeBoardWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CafeBoards from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CafeBoards.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<CafeBoardScalarFieldEnum>
+  }
+
+
+  /**
+   * CafeBoard create
+   */
+  export type CafeBoardCreateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeBoard
+     * 
+    **/
+    select?: CafeBoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeBoardInclude | null
+    /**
+     * The data needed to create a CafeBoard.
+     * 
+    **/
+    data: XOR<CafeBoardCreateInput, CafeBoardUncheckedCreateInput>
+  }
+
+
+  /**
+   * CafeBoard createMany
+   */
+  export type CafeBoardCreateManyArgs = {
+    /**
+     * The data used to create many CafeBoards.
+     * 
+    **/
+    data: Enumerable<CafeBoardCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * CafeBoard update
+   */
+  export type CafeBoardUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the CafeBoard
+     * 
+    **/
+    select?: CafeBoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeBoardInclude | null
+    /**
+     * The data needed to update a CafeBoard.
+     * 
+    **/
+    data: XOR<CafeBoardUpdateInput, CafeBoardUncheckedUpdateInput>
+    /**
+     * Choose, which CafeBoard to update.
+     * 
+    **/
+    where: CafeBoardWhereUniqueInput
+  }
+
+
+  /**
+   * CafeBoard updateMany
+   */
+  export type CafeBoardUpdateManyArgs = {
+    /**
+     * The data used to update CafeBoards.
+     * 
+    **/
+    data: XOR<CafeBoardUpdateManyMutationInput, CafeBoardUncheckedUpdateManyInput>
+    /**
+     * Filter which CafeBoards to update
+     * 
+    **/
+    where?: CafeBoardWhereInput
+  }
+
+
+  /**
+   * CafeBoard upsert
+   */
+  export type CafeBoardUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the CafeBoard
+     * 
+    **/
+    select?: CafeBoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeBoardInclude | null
+    /**
+     * The filter to search for the CafeBoard to update in case it exists.
+     * 
+    **/
+    where: CafeBoardWhereUniqueInput
+    /**
+     * In case the CafeBoard found by the `where` argument doesn't exist, create a new CafeBoard with this data.
+     * 
+    **/
+    create: XOR<CafeBoardCreateInput, CafeBoardUncheckedCreateInput>
+    /**
+     * In case the CafeBoard was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<CafeBoardUpdateInput, CafeBoardUncheckedUpdateInput>
+  }
+
+
+  /**
+   * CafeBoard delete
+   */
+  export type CafeBoardDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the CafeBoard
+     * 
+    **/
+    select?: CafeBoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeBoardInclude | null
+    /**
+     * Filter which CafeBoard to delete.
+     * 
+    **/
+    where: CafeBoardWhereUniqueInput
+  }
+
+
+  /**
+   * CafeBoard deleteMany
+   */
+  export type CafeBoardDeleteManyArgs = {
+    /**
+     * Filter which CafeBoards to delete
+     * 
+    **/
+    where?: CafeBoardWhereInput
+  }
+
+
+  /**
+   * CafeBoard without action
+   */
+  export type CafeBoardArgs = {
+    /**
+     * Select specific fields to fetch from the CafeBoard
+     * 
+    **/
+    select?: CafeBoardSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: CafeBoardInclude | null
   }
 
 
@@ -9405,6 +10471,7 @@ export namespace Prisma {
     CafeVirtualImages?: boolean | CafeVirtualImageFindManyArgs
     CafeRealImages?: boolean | CafeRealImageFindManyArgs
     CafeCouponGroupPartners?: boolean | CafeCouponGoupPartnerFindManyArgs
+    CafeBoards?: boolean | CafeBoardFindManyArgs
     _count?: boolean | CafeInfoCountOutputTypeArgs
   }
 
@@ -9416,6 +10483,7 @@ export namespace Prisma {
     CafeVirtualImages?: boolean | CafeVirtualImageFindManyArgs
     CafeRealImages?: boolean | CafeRealImageFindManyArgs
     CafeCouponGroupPartners?: boolean | CafeCouponGoupPartnerFindManyArgs
+    CafeBoards?: boolean | CafeBoardFindManyArgs
     _count?: boolean | CafeInfoCountOutputTypeArgs
   } 
 
@@ -9432,6 +10500,7 @@ export namespace Prisma {
         P extends 'CafeVirtualImages' ? Array < CafeVirtualImageGetPayload<S['include'][P]>>  :
         P extends 'CafeRealImages' ? Array < CafeRealImageGetPayload<S['include'][P]>>  :
         P extends 'CafeCouponGroupPartners' ? Array < CafeCouponGoupPartnerGetPayload<S['include'][P]>>  :
+        P extends 'CafeBoards' ? Array < CafeBoardGetPayload<S['include'][P]>>  :
         P extends '_count' ? CafeInfoCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (CafeInfoArgs | CafeInfoFindManyArgs)
@@ -9443,6 +10512,7 @@ export namespace Prisma {
         P extends 'CafeVirtualImages' ? Array < CafeVirtualImageGetPayload<S['select'][P]>>  :
         P extends 'CafeRealImages' ? Array < CafeRealImageGetPayload<S['select'][P]>>  :
         P extends 'CafeCouponGroupPartners' ? Array < CafeCouponGoupPartnerGetPayload<S['select'][P]>>  :
+        P extends 'CafeBoards' ? Array < CafeBoardGetPayload<S['select'][P]>>  :
         P extends '_count' ? CafeInfoCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof CafeInfo ? CafeInfo[P] : never
   } 
       : CafeInfo
@@ -9828,6 +10898,8 @@ export namespace Prisma {
     CafeRealImages<T extends CafeRealImageFindManyArgs= {}>(args?: Subset<T, CafeRealImageFindManyArgs>): PrismaPromise<Array<CafeRealImageGetPayload<T>>| Null>;
 
     CafeCouponGroupPartners<T extends CafeCouponGoupPartnerFindManyArgs= {}>(args?: Subset<T, CafeCouponGoupPartnerFindManyArgs>): PrismaPromise<Array<CafeCouponGoupPartnerGetPayload<T>>| Null>;
+
+    CafeBoards<T extends CafeBoardFindManyArgs= {}>(args?: Subset<T, CafeBoardFindManyArgs>): PrismaPromise<Array<CafeBoardGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -21927,10 +22999,12 @@ export namespace Prisma {
     id: 'id',
     createdAt: 'createdAt',
     url: 'url',
+    thumbnailUrl: 'thumbnailUrl',
     width: 'width',
     height: 'height',
     size: 'size',
     isThumb: 'isThumb',
+    isDisable: 'isDisable',
     boardId: 'boardId'
   };
 
@@ -21945,8 +23019,7 @@ export namespace Prisma {
     isDisable: 'isDisable',
     userId: 'userId',
     boardId: 'boardId',
-    boardReplyId: 'boardReplyId',
-    boardType: 'boardType'
+    boardReplyId: 'boardReplyId'
   };
 
   export type BoardReplyScalarFieldEnum = (typeof BoardReplyScalarFieldEnum)[keyof typeof BoardReplyScalarFieldEnum]
@@ -21961,11 +23034,21 @@ export namespace Prisma {
     startDay: 'startDay',
     endDay: 'endDay',
     isDisable: 'isDisable',
+    isReplyAvaliable: 'isReplyAvaliable',
     userId: 'userId',
     boardType: 'boardType'
   };
 
   export type BoardScalarFieldEnum = (typeof BoardScalarFieldEnum)[keyof typeof BoardScalarFieldEnum]
+
+
+  export const CafeBoardScalarFieldEnum: {
+    boardId: 'boardId',
+    cafeInfoId: 'cafeInfoId',
+    createdAt: 'createdAt'
+  };
+
+  export type CafeBoardScalarFieldEnum = (typeof CafeBoardScalarFieldEnum)[keyof typeof CafeBoardScalarFieldEnum]
 
 
   export const CafeCouponGoupPartnerScalarFieldEnum: {
@@ -22357,13 +23440,15 @@ export namespace Prisma {
     content?: StringNullableFilter | string | null
     link?: StringNullableFilter | string | null
     startDay?: DateTimeFilter | Date | string
-    endDay?: DateTimeFilter | Date | string
+    endDay?: DateTimeNullableFilter | Date | string | null
     isDisable?: BoolFilter | boolean
+    isReplyAvaliable?: BoolFilter | boolean
     BoardImages?: BoardImageListRelationFilter
     BoardReplies?: BoardReplyListRelationFilter
     userId?: IntFilter | number
     User?: XOR<UserRelationFilter, UserWhereInput>
     boardType?: EnumBoardTypeFilter | BoardType
+    CafeBoards?: CafeBoardListRelationFilter
   }
 
   export type BoardOrderByWithRelationInput = {
@@ -22375,11 +23460,13 @@ export namespace Prisma {
     startDay?: SortOrder
     endDay?: SortOrder
     isDisable?: SortOrder
+    isReplyAvaliable?: SortOrder
     BoardImages?: BoardImageOrderByRelationAggregateInput
     BoardReplies?: BoardReplyOrderByRelationAggregateInput
     userId?: SortOrder
     User?: UserOrderByWithRelationInput
     boardType?: SortOrder
+    CafeBoards?: CafeBoardOrderByRelationAggregateInput
   }
 
   export type BoardWhereUniqueInput = {
@@ -22395,6 +23482,7 @@ export namespace Prisma {
     startDay?: SortOrder
     endDay?: SortOrder
     isDisable?: SortOrder
+    isReplyAvaliable?: SortOrder
     userId?: SortOrder
     boardType?: SortOrder
     _count?: BoardCountOrderByAggregateInput
@@ -22414,8 +23502,9 @@ export namespace Prisma {
     content?: StringNullableWithAggregatesFilter | string | null
     link?: StringNullableWithAggregatesFilter | string | null
     startDay?: DateTimeWithAggregatesFilter | Date | string
-    endDay?: DateTimeWithAggregatesFilter | Date | string
+    endDay?: DateTimeNullableWithAggregatesFilter | Date | string | null
     isDisable?: BoolWithAggregatesFilter | boolean
+    isReplyAvaliable?: BoolWithAggregatesFilter | boolean
     userId?: IntWithAggregatesFilter | number
     boardType?: EnumBoardTypeWithAggregatesFilter | BoardType
   }
@@ -22427,10 +23516,12 @@ export namespace Prisma {
     id?: IntFilter | number
     createdAt?: DateTimeFilter | Date | string
     url?: StringFilter | string
+    thumbnailUrl?: StringFilter | string
     width?: IntFilter | number
     height?: IntFilter | number
     size?: IntFilter | number
     isThumb?: BoolFilter | boolean
+    isDisable?: BoolFilter | boolean
     boardId?: IntFilter | number
     Board?: XOR<BoardRelationFilter, BoardWhereInput>
   }
@@ -22439,27 +23530,30 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     url?: SortOrder
+    thumbnailUrl?: SortOrder
     width?: SortOrder
     height?: SortOrder
     size?: SortOrder
     isThumb?: SortOrder
+    isDisable?: SortOrder
     boardId?: SortOrder
     Board?: BoardOrderByWithRelationInput
   }
 
   export type BoardImageWhereUniqueInput = {
     id?: number
-    boardId?: number
   }
 
   export type BoardImageOrderByWithAggregationInput = {
     id?: SortOrder
     createdAt?: SortOrder
     url?: SortOrder
+    thumbnailUrl?: SortOrder
     width?: SortOrder
     height?: SortOrder
     size?: SortOrder
     isThumb?: SortOrder
+    isDisable?: SortOrder
     boardId?: SortOrder
     _count?: BoardImageCountOrderByAggregateInput
     _avg?: BoardImageAvgOrderByAggregateInput
@@ -22475,10 +23569,12 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter | number
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     url?: StringWithAggregatesFilter | string
+    thumbnailUrl?: StringWithAggregatesFilter | string
     width?: IntWithAggregatesFilter | number
     height?: IntWithAggregatesFilter | number
     size?: IntWithAggregatesFilter | number
     isThumb?: BoolWithAggregatesFilter | boolean
+    isDisable?: BoolWithAggregatesFilter | boolean
     boardId?: IntWithAggregatesFilter | number
   }
 
@@ -22498,7 +23594,6 @@ export namespace Prisma {
     boardReplyId?: IntNullableFilter | number | null
     BoardReply?: XOR<BoardReplyRelationFilter, BoardReplyWhereInput> | null
     BoardNestedReplies?: BoardReplyListRelationFilter
-    boardType?: EnumBoardTypeFilter | BoardType
   }
 
   export type BoardReplyOrderByWithRelationInput = {
@@ -22514,7 +23609,6 @@ export namespace Prisma {
     boardReplyId?: SortOrder
     BoardReply?: BoardReplyOrderByWithRelationInput
     BoardNestedReplies?: BoardReplyOrderByRelationAggregateInput
-    boardType?: SortOrder
   }
 
   export type BoardReplyWhereUniqueInput = {
@@ -22530,7 +23624,6 @@ export namespace Prisma {
     userId?: SortOrder
     boardId?: SortOrder
     boardReplyId?: SortOrder
-    boardType?: SortOrder
     _count?: BoardReplyCountOrderByAggregateInput
     _avg?: BoardReplyAvgOrderByAggregateInput
     _max?: BoardReplyMaxOrderByAggregateInput
@@ -22550,7 +23643,49 @@ export namespace Prisma {
     userId?: IntWithAggregatesFilter | number
     boardId?: IntWithAggregatesFilter | number
     boardReplyId?: IntNullableWithAggregatesFilter | number | null
-    boardType?: EnumBoardTypeWithAggregatesFilter | BoardType
+  }
+
+  export type CafeBoardWhereInput = {
+    AND?: Enumerable<CafeBoardWhereInput>
+    OR?: Enumerable<CafeBoardWhereInput>
+    NOT?: Enumerable<CafeBoardWhereInput>
+    boardId?: IntFilter | number
+    cafeInfoId?: IntFilter | number
+    Board?: XOR<BoardRelationFilter, BoardWhereInput>
+    CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput>
+    createdAt?: DateTimeFilter | Date | string
+  }
+
+  export type CafeBoardOrderByWithRelationInput = {
+    boardId?: SortOrder
+    cafeInfoId?: SortOrder
+    Board?: BoardOrderByWithRelationInput
+    CafeInfo?: CafeInfoOrderByWithRelationInput
+    createdAt?: SortOrder
+  }
+
+  export type CafeBoardWhereUniqueInput = {
+    cafeBoardUnique?: CafeBoardCafeBoardUniqueCompoundUniqueInput
+  }
+
+  export type CafeBoardOrderByWithAggregationInput = {
+    boardId?: SortOrder
+    cafeInfoId?: SortOrder
+    createdAt?: SortOrder
+    _count?: CafeBoardCountOrderByAggregateInput
+    _avg?: CafeBoardAvgOrderByAggregateInput
+    _max?: CafeBoardMaxOrderByAggregateInput
+    _min?: CafeBoardMinOrderByAggregateInput
+    _sum?: CafeBoardSumOrderByAggregateInput
+  }
+
+  export type CafeBoardScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<CafeBoardScalarWhereWithAggregatesInput>
+    OR?: Enumerable<CafeBoardScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<CafeBoardScalarWhereWithAggregatesInput>
+    boardId?: IntWithAggregatesFilter | number
+    cafeInfoId?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
   }
 
   export type RegionCategoryWhereInput = {
@@ -22669,6 +23804,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageListRelationFilter
     CafeRealImages?: CafeRealImageListRelationFilter
     CafeCouponGroupPartners?: CafeCouponGoupPartnerListRelationFilter
+    CafeBoards?: CafeBoardListRelationFilter
   }
 
   export type CafeInfoOrderByWithRelationInput = {
@@ -22688,6 +23824,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageOrderByRelationAggregateInput
     CafeRealImages?: CafeRealImageOrderByRelationAggregateInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerOrderByRelationAggregateInput
+    CafeBoards?: CafeBoardOrderByRelationAggregateInput
   }
 
   export type CafeInfoWhereUniqueInput = {
@@ -23589,12 +24726,14 @@ export namespace Prisma {
     content?: string | null
     link?: string | null
     startDay?: Date | string
-    endDay?: Date | string
+    endDay?: Date | string | null
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     BoardImages?: BoardImageCreateNestedManyWithoutBoardInput
     BoardReplies?: BoardReplyCreateNestedManyWithoutBoardInput
     User: UserCreateNestedOneWithoutBoardsInput
     boardType?: BoardType
+    CafeBoards?: CafeBoardCreateNestedManyWithoutBoardInput
   }
 
   export type BoardUncheckedCreateInput = {
@@ -23604,12 +24743,14 @@ export namespace Prisma {
     content?: string | null
     link?: string | null
     startDay?: Date | string
-    endDay?: Date | string
+    endDay?: Date | string | null
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     BoardImages?: BoardImageUncheckedCreateNestedManyWithoutBoardInput
     BoardReplies?: BoardReplyUncheckedCreateNestedManyWithoutBoardInput
     userId: number
     boardType?: BoardType
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutBoardInput
   }
 
   export type BoardUpdateInput = {
@@ -23618,12 +24759,14 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     BoardImages?: BoardImageUpdateManyWithoutBoardNestedInput
     BoardReplies?: BoardReplyUpdateManyWithoutBoardNestedInput
     User?: UserUpdateOneRequiredWithoutBoardsNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+    CafeBoards?: CafeBoardUpdateManyWithoutBoardNestedInput
   }
 
   export type BoardUncheckedUpdateInput = {
@@ -23633,12 +24776,14 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     BoardImages?: BoardImageUncheckedUpdateManyWithoutBoardNestedInput
     BoardReplies?: BoardReplyUncheckedUpdateManyWithoutBoardNestedInput
     userId?: IntFieldUpdateOperationsInput | number
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutBoardNestedInput
   }
 
   export type BoardCreateManyInput = {
@@ -23648,8 +24793,9 @@ export namespace Prisma {
     content?: string | null
     link?: string | null
     startDay?: Date | string
-    endDay?: Date | string
+    endDay?: Date | string | null
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     userId: number
     boardType?: BoardType
   }
@@ -23660,8 +24806,9 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -23672,8 +24819,9 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     userId?: IntFieldUpdateOperationsInput | number
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
@@ -23681,10 +24829,12 @@ export namespace Prisma {
   export type BoardImageCreateInput = {
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
     isThumb?: boolean
+    isDisable?: boolean
     Board: BoardCreateNestedOneWithoutBoardImagesInput
   }
 
@@ -23692,20 +24842,24 @@ export namespace Prisma {
     id?: number
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
     isThumb?: boolean
+    isDisable?: boolean
     boardId: number
   }
 
   export type BoardImageUpdateInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isThumb?: BoolFieldUpdateOperationsInput | boolean
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
     Board?: BoardUpdateOneRequiredWithoutBoardImagesNestedInput
   }
 
@@ -23713,10 +24867,12 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isThumb?: BoolFieldUpdateOperationsInput | boolean
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
     boardId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -23724,30 +24880,36 @@ export namespace Prisma {
     id?: number
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
     isThumb?: boolean
+    isDisable?: boolean
     boardId: number
   }
 
   export type BoardImageUpdateManyMutationInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isThumb?: BoolFieldUpdateOperationsInput | boolean
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BoardImageUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isThumb?: BoolFieldUpdateOperationsInput | boolean
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
     boardId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -23760,7 +24922,6 @@ export namespace Prisma {
     Board: BoardCreateNestedOneWithoutBoardRepliesInput
     BoardReply?: BoardReplyCreateNestedOneWithoutBoardNestedRepliesInput
     BoardNestedReplies?: BoardReplyCreateNestedManyWithoutBoardReplyInput
-    boardType?: BoardType
   }
 
   export type BoardReplyUncheckedCreateInput = {
@@ -23773,7 +24934,6 @@ export namespace Prisma {
     boardId: number
     boardReplyId?: number | null
     BoardNestedReplies?: BoardReplyUncheckedCreateNestedManyWithoutBoardReplyInput
-    boardType?: BoardType
   }
 
   export type BoardReplyUpdateInput = {
@@ -23785,7 +24945,6 @@ export namespace Prisma {
     Board?: BoardUpdateOneRequiredWithoutBoardRepliesNestedInput
     BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesNestedInput
     BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyNestedInput
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type BoardReplyUncheckedUpdateInput = {
@@ -23798,7 +24957,6 @@ export namespace Prisma {
     boardId?: IntFieldUpdateOperationsInput | number
     boardReplyId?: NullableIntFieldUpdateOperationsInput | number | null
     BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyNestedInput
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type BoardReplyCreateManyInput = {
@@ -23810,7 +24968,6 @@ export namespace Prisma {
     userId: number
     boardId: number
     boardReplyId?: number | null
-    boardType?: BoardType
   }
 
   export type BoardReplyUpdateManyMutationInput = {
@@ -23818,7 +24975,6 @@ export namespace Prisma {
     updatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     content?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type BoardReplyUncheckedUpdateManyInput = {
@@ -23830,7 +24986,46 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     boardId?: IntFieldUpdateOperationsInput | number
     boardReplyId?: NullableIntFieldUpdateOperationsInput | number | null
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+  }
+
+  export type CafeBoardCreateInput = {
+    Board: BoardCreateNestedOneWithoutCafeBoardsInput
+    CafeInfo: CafeInfoCreateNestedOneWithoutCafeBoardsInput
+    createdAt?: Date | string
+  }
+
+  export type CafeBoardUncheckedCreateInput = {
+    boardId: number
+    cafeInfoId: number
+    createdAt?: Date | string
+  }
+
+  export type CafeBoardUpdateInput = {
+    Board?: BoardUpdateOneRequiredWithoutCafeBoardsNestedInput
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeBoardsNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CafeBoardUncheckedUpdateInput = {
+    boardId?: IntFieldUpdateOperationsInput | number
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CafeBoardCreateManyInput = {
+    boardId: number
+    cafeInfoId: number
+    createdAt?: Date | string
+  }
+
+  export type CafeBoardUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CafeBoardUncheckedUpdateManyInput = {
+    boardId?: IntFieldUpdateOperationsInput | number
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type RegionCategoryCreateInput = {
@@ -23953,6 +25148,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateInput = {
@@ -23971,6 +25167,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUpdateInput = {
@@ -23988,6 +25185,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateInput = {
@@ -24006,6 +25204,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateManyInput = {
@@ -25179,6 +26378,17 @@ export namespace Prisma {
     userId?: SortOrder
   }
 
+  export type DateTimeNullableFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | null
+    notIn?: Enumerable<Date> | Enumerable<string> | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableFilter | Date | string | null
+  }
+
   export type BoardImageListRelationFilter = {
     every?: BoardImageWhereInput
     some?: BoardImageWhereInput
@@ -25192,7 +26402,17 @@ export namespace Prisma {
     not?: NestedEnumBoardTypeFilter | BoardType
   }
 
+  export type CafeBoardListRelationFilter = {
+    every?: CafeBoardWhereInput
+    some?: CafeBoardWhereInput
+    none?: CafeBoardWhereInput
+  }
+
   export type BoardImageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type CafeBoardOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -25205,6 +26425,7 @@ export namespace Prisma {
     startDay?: SortOrder
     endDay?: SortOrder
     isDisable?: SortOrder
+    isReplyAvaliable?: SortOrder
     userId?: SortOrder
     boardType?: SortOrder
   }
@@ -25223,6 +26444,7 @@ export namespace Prisma {
     startDay?: SortOrder
     endDay?: SortOrder
     isDisable?: SortOrder
+    isReplyAvaliable?: SortOrder
     userId?: SortOrder
     boardType?: SortOrder
   }
@@ -25236,6 +26458,7 @@ export namespace Prisma {
     startDay?: SortOrder
     endDay?: SortOrder
     isDisable?: SortOrder
+    isReplyAvaliable?: SortOrder
     userId?: SortOrder
     boardType?: SortOrder
   }
@@ -25243,6 +26466,20 @@ export namespace Prisma {
   export type BoardSumOrderByAggregateInput = {
     id?: SortOrder
     userId?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter = {
+    equals?: Date | string | null
+    in?: Enumerable<Date> | Enumerable<string> | null
+    notIn?: Enumerable<Date> | Enumerable<string> | null
+    lt?: Date | string
+    lte?: Date | string
+    gt?: Date | string
+    gte?: Date | string
+    not?: NestedDateTimeNullableWithAggregatesFilter | Date | string | null
+    _count?: NestedIntNullableFilter
+    _min?: NestedDateTimeNullableFilter
+    _max?: NestedDateTimeNullableFilter
   }
 
   export type EnumBoardTypeWithAggregatesFilter = {
@@ -25264,10 +26501,12 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     url?: SortOrder
+    thumbnailUrl?: SortOrder
     width?: SortOrder
     height?: SortOrder
     size?: SortOrder
     isThumb?: SortOrder
+    isDisable?: SortOrder
     boardId?: SortOrder
   }
 
@@ -25283,10 +26522,12 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     url?: SortOrder
+    thumbnailUrl?: SortOrder
     width?: SortOrder
     height?: SortOrder
     size?: SortOrder
     isThumb?: SortOrder
+    isDisable?: SortOrder
     boardId?: SortOrder
   }
 
@@ -25294,10 +26535,12 @@ export namespace Prisma {
     id?: SortOrder
     createdAt?: SortOrder
     url?: SortOrder
+    thumbnailUrl?: SortOrder
     width?: SortOrder
     height?: SortOrder
     size?: SortOrder
     isThumb?: SortOrder
+    isDisable?: SortOrder
     boardId?: SortOrder
   }
 
@@ -25307,17 +26550,6 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     boardId?: SortOrder
-  }
-
-  export type DateTimeNullableFilter = {
-    equals?: Date | string | null
-    in?: Enumerable<Date> | Enumerable<string> | null
-    notIn?: Enumerable<Date> | Enumerable<string> | null
-    lt?: Date | string
-    lte?: Date | string
-    gt?: Date | string
-    gte?: Date | string
-    not?: NestedDateTimeNullableFilter | Date | string | null
   }
 
   export type IntNullableFilter = {
@@ -25345,7 +26577,6 @@ export namespace Prisma {
     userId?: SortOrder
     boardId?: SortOrder
     boardReplyId?: SortOrder
-    boardType?: SortOrder
   }
 
   export type BoardReplyAvgOrderByAggregateInput = {
@@ -25364,7 +26595,6 @@ export namespace Prisma {
     userId?: SortOrder
     boardId?: SortOrder
     boardReplyId?: SortOrder
-    boardType?: SortOrder
   }
 
   export type BoardReplyMinOrderByAggregateInput = {
@@ -25376,7 +26606,6 @@ export namespace Prisma {
     userId?: SortOrder
     boardId?: SortOrder
     boardReplyId?: SortOrder
-    boardType?: SortOrder
   }
 
   export type BoardReplySumOrderByAggregateInput = {
@@ -25384,20 +26613,6 @@ export namespace Prisma {
     userId?: SortOrder
     boardId?: SortOrder
     boardReplyId?: SortOrder
-  }
-
-  export type DateTimeNullableWithAggregatesFilter = {
-    equals?: Date | string | null
-    in?: Enumerable<Date> | Enumerable<string> | null
-    notIn?: Enumerable<Date> | Enumerable<string> | null
-    lt?: Date | string
-    lte?: Date | string
-    gt?: Date | string
-    gte?: Date | string
-    not?: NestedDateTimeNullableWithAggregatesFilter | Date | string | null
-    _count?: NestedIntNullableFilter
-    _min?: NestedDateTimeNullableFilter
-    _max?: NestedDateTimeNullableFilter
   }
 
   export type IntNullableWithAggregatesFilter = {
@@ -25414,6 +26629,44 @@ export namespace Prisma {
     _sum?: NestedIntNullableFilter
     _min?: NestedIntNullableFilter
     _max?: NestedIntNullableFilter
+  }
+
+  export type CafeInfoRelationFilter = {
+    is?: CafeInfoWhereInput
+    isNot?: CafeInfoWhereInput
+  }
+
+  export type CafeBoardCafeBoardUniqueCompoundUniqueInput = {
+    boardId: number
+    cafeInfoId: number
+  }
+
+  export type CafeBoardCountOrderByAggregateInput = {
+    boardId?: SortOrder
+    cafeInfoId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CafeBoardAvgOrderByAggregateInput = {
+    boardId?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type CafeBoardMaxOrderByAggregateInput = {
+    boardId?: SortOrder
+    cafeInfoId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CafeBoardMinOrderByAggregateInput = {
+    boardId?: SortOrder
+    cafeInfoId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type CafeBoardSumOrderByAggregateInput = {
+    boardId?: SortOrder
+    cafeInfoId?: SortOrder
   }
 
   export type EnumGovermentTypeFilter = {
@@ -25623,11 +26876,6 @@ export namespace Prisma {
   export type CafeInfoSumOrderByAggregateInput = {
     id?: SortOrder
     regionCategoryId?: SortOrder
-  }
-
-  export type CafeInfoRelationFilter = {
-    is?: CafeInfoWhereInput
-    isNot?: CafeInfoWhereInput
   }
 
   export type CafeThumbnailImageCountOrderByAggregateInput = {
@@ -26514,6 +27762,13 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type CafeBoardCreateNestedManyWithoutBoardInput = {
+    create?: XOR<Enumerable<CafeBoardCreateWithoutBoardInput>, Enumerable<CafeBoardUncheckedCreateWithoutBoardInput>>
+    connectOrCreate?: Enumerable<CafeBoardCreateOrConnectWithoutBoardInput>
+    createMany?: CafeBoardCreateManyBoardInputEnvelope
+    connect?: Enumerable<CafeBoardWhereUniqueInput>
+  }
+
   export type BoardImageUncheckedCreateNestedManyWithoutBoardInput = {
     create?: XOR<Enumerable<BoardImageCreateWithoutBoardInput>, Enumerable<BoardImageUncheckedCreateWithoutBoardInput>>
     connectOrCreate?: Enumerable<BoardImageCreateOrConnectWithoutBoardInput>
@@ -26526,6 +27781,17 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<BoardReplyCreateOrConnectWithoutBoardInput>
     createMany?: BoardReplyCreateManyBoardInputEnvelope
     connect?: Enumerable<BoardReplyWhereUniqueInput>
+  }
+
+  export type CafeBoardUncheckedCreateNestedManyWithoutBoardInput = {
+    create?: XOR<Enumerable<CafeBoardCreateWithoutBoardInput>, Enumerable<CafeBoardUncheckedCreateWithoutBoardInput>>
+    connectOrCreate?: Enumerable<CafeBoardCreateOrConnectWithoutBoardInput>
+    createMany?: CafeBoardCreateManyBoardInputEnvelope
+    connect?: Enumerable<CafeBoardWhereUniqueInput>
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
   }
 
   export type BoardImageUpdateManyWithoutBoardNestedInput = {
@@ -26568,6 +27834,20 @@ export namespace Prisma {
     set?: BoardType
   }
 
+  export type CafeBoardUpdateManyWithoutBoardNestedInput = {
+    create?: XOR<Enumerable<CafeBoardCreateWithoutBoardInput>, Enumerable<CafeBoardUncheckedCreateWithoutBoardInput>>
+    connectOrCreate?: Enumerable<CafeBoardCreateOrConnectWithoutBoardInput>
+    upsert?: Enumerable<CafeBoardUpsertWithWhereUniqueWithoutBoardInput>
+    createMany?: CafeBoardCreateManyBoardInputEnvelope
+    set?: Enumerable<CafeBoardWhereUniqueInput>
+    disconnect?: Enumerable<CafeBoardWhereUniqueInput>
+    delete?: Enumerable<CafeBoardWhereUniqueInput>
+    connect?: Enumerable<CafeBoardWhereUniqueInput>
+    update?: Enumerable<CafeBoardUpdateWithWhereUniqueWithoutBoardInput>
+    updateMany?: Enumerable<CafeBoardUpdateManyWithWhereWithoutBoardInput>
+    deleteMany?: Enumerable<CafeBoardScalarWhereInput>
+  }
+
   export type BoardImageUncheckedUpdateManyWithoutBoardNestedInput = {
     create?: XOR<Enumerable<BoardImageCreateWithoutBoardInput>, Enumerable<BoardImageUncheckedCreateWithoutBoardInput>>
     connectOrCreate?: Enumerable<BoardImageCreateOrConnectWithoutBoardInput>
@@ -26594,6 +27874,20 @@ export namespace Prisma {
     update?: Enumerable<BoardReplyUpdateWithWhereUniqueWithoutBoardInput>
     updateMany?: Enumerable<BoardReplyUpdateManyWithWhereWithoutBoardInput>
     deleteMany?: Enumerable<BoardReplyScalarWhereInput>
+  }
+
+  export type CafeBoardUncheckedUpdateManyWithoutBoardNestedInput = {
+    create?: XOR<Enumerable<CafeBoardCreateWithoutBoardInput>, Enumerable<CafeBoardUncheckedCreateWithoutBoardInput>>
+    connectOrCreate?: Enumerable<CafeBoardCreateOrConnectWithoutBoardInput>
+    upsert?: Enumerable<CafeBoardUpsertWithWhereUniqueWithoutBoardInput>
+    createMany?: CafeBoardCreateManyBoardInputEnvelope
+    set?: Enumerable<CafeBoardWhereUniqueInput>
+    disconnect?: Enumerable<CafeBoardWhereUniqueInput>
+    delete?: Enumerable<CafeBoardWhereUniqueInput>
+    connect?: Enumerable<CafeBoardWhereUniqueInput>
+    update?: Enumerable<CafeBoardUpdateWithWhereUniqueWithoutBoardInput>
+    updateMany?: Enumerable<CafeBoardUpdateManyWithWhereWithoutBoardInput>
+    deleteMany?: Enumerable<CafeBoardScalarWhereInput>
   }
 
   export type BoardCreateNestedOneWithoutBoardImagesInput = {
@@ -26640,10 +27934,6 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<BoardReplyCreateOrConnectWithoutBoardReplyInput>
     createMany?: BoardReplyCreateManyBoardReplyInputEnvelope
     connect?: Enumerable<BoardReplyWhereUniqueInput>
-  }
-
-  export type NullableDateTimeFieldUpdateOperationsInput = {
-    set?: Date | string | null
   }
 
   export type UserUpdateOneRequiredWithoutBoardRepliesNestedInput = {
@@ -26706,6 +27996,34 @@ export namespace Prisma {
     update?: Enumerable<BoardReplyUpdateWithWhereUniqueWithoutBoardReplyInput>
     updateMany?: Enumerable<BoardReplyUpdateManyWithWhereWithoutBoardReplyInput>
     deleteMany?: Enumerable<BoardReplyScalarWhereInput>
+  }
+
+  export type BoardCreateNestedOneWithoutCafeBoardsInput = {
+    create?: XOR<BoardCreateWithoutCafeBoardsInput, BoardUncheckedCreateWithoutCafeBoardsInput>
+    connectOrCreate?: BoardCreateOrConnectWithoutCafeBoardsInput
+    connect?: BoardWhereUniqueInput
+  }
+
+  export type CafeInfoCreateNestedOneWithoutCafeBoardsInput = {
+    create?: XOR<CafeInfoCreateWithoutCafeBoardsInput, CafeInfoUncheckedCreateWithoutCafeBoardsInput>
+    connectOrCreate?: CafeInfoCreateOrConnectWithoutCafeBoardsInput
+    connect?: CafeInfoWhereUniqueInput
+  }
+
+  export type BoardUpdateOneRequiredWithoutCafeBoardsNestedInput = {
+    create?: XOR<BoardCreateWithoutCafeBoardsInput, BoardUncheckedCreateWithoutCafeBoardsInput>
+    connectOrCreate?: BoardCreateOrConnectWithoutCafeBoardsInput
+    upsert?: BoardUpsertWithoutCafeBoardsInput
+    connect?: BoardWhereUniqueInput
+    update?: XOR<BoardUpdateWithoutCafeBoardsInput, BoardUncheckedUpdateWithoutCafeBoardsInput>
+  }
+
+  export type CafeInfoUpdateOneRequiredWithoutCafeBoardsNestedInput = {
+    create?: XOR<CafeInfoCreateWithoutCafeBoardsInput, CafeInfoUncheckedCreateWithoutCafeBoardsInput>
+    connectOrCreate?: CafeInfoCreateOrConnectWithoutCafeBoardsInput
+    upsert?: CafeInfoUpsertWithoutCafeBoardsInput
+    connect?: CafeInfoWhereUniqueInput
+    update?: XOR<CafeInfoUpdateWithoutCafeBoardsInput, CafeInfoUncheckedUpdateWithoutCafeBoardsInput>
   }
 
   export type CafeInfoCreateNestedManyWithoutRegionCategoryInput = {
@@ -26907,6 +28225,13 @@ export namespace Prisma {
     connect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
   }
 
+  export type CafeBoardCreateNestedManyWithoutCafeInfoInput = {
+    create?: XOR<Enumerable<CafeBoardCreateWithoutCafeInfoInput>, Enumerable<CafeBoardUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<CafeBoardCreateOrConnectWithoutCafeInfoInput>
+    createMany?: CafeBoardCreateManyCafeInfoInputEnvelope
+    connect?: Enumerable<CafeBoardWhereUniqueInput>
+  }
+
   export type CafeVirtualLinkUncheckedCreateNestedManyWithoutCafeInfoInput = {
     create?: XOR<Enumerable<CafeVirtualLinkCreateWithoutCafeInfoInput>, Enumerable<CafeVirtualLinkUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeVirtualLinkCreateOrConnectWithoutCafeInfoInput>
@@ -26940,6 +28265,13 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<CafeCouponGoupPartnerCreateOrConnectWithoutCafeInfoInput>
     createMany?: CafeCouponGoupPartnerCreateManyCafeInfoInputEnvelope
     connect?: Enumerable<CafeCouponGoupPartnerWhereUniqueInput>
+  }
+
+  export type CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput = {
+    create?: XOR<Enumerable<CafeBoardCreateWithoutCafeInfoInput>, Enumerable<CafeBoardUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<CafeBoardCreateOrConnectWithoutCafeInfoInput>
+    createMany?: CafeBoardCreateManyCafeInfoInputEnvelope
+    connect?: Enumerable<CafeBoardWhereUniqueInput>
   }
 
   export type RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput = {
@@ -27020,6 +28352,20 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeCouponGoupPartnerScalarWhereInput>
   }
 
+  export type CafeBoardUpdateManyWithoutCafeInfoNestedInput = {
+    create?: XOR<Enumerable<CafeBoardCreateWithoutCafeInfoInput>, Enumerable<CafeBoardUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<CafeBoardCreateOrConnectWithoutCafeInfoInput>
+    upsert?: Enumerable<CafeBoardUpsertWithWhereUniqueWithoutCafeInfoInput>
+    createMany?: CafeBoardCreateManyCafeInfoInputEnvelope
+    set?: Enumerable<CafeBoardWhereUniqueInput>
+    disconnect?: Enumerable<CafeBoardWhereUniqueInput>
+    delete?: Enumerable<CafeBoardWhereUniqueInput>
+    connect?: Enumerable<CafeBoardWhereUniqueInput>
+    update?: Enumerable<CafeBoardUpdateWithWhereUniqueWithoutCafeInfoInput>
+    updateMany?: Enumerable<CafeBoardUpdateManyWithWhereWithoutCafeInfoInput>
+    deleteMany?: Enumerable<CafeBoardScalarWhereInput>
+  }
+
   export type CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeVirtualLinkCreateWithoutCafeInfoInput>, Enumerable<CafeVirtualLinkUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeVirtualLinkCreateOrConnectWithoutCafeInfoInput>
@@ -27088,6 +28434,20 @@ export namespace Prisma {
     update?: Enumerable<CafeCouponGoupPartnerUpdateWithWhereUniqueWithoutCafeInfoInput>
     updateMany?: Enumerable<CafeCouponGoupPartnerUpdateManyWithWhereWithoutCafeInfoInput>
     deleteMany?: Enumerable<CafeCouponGoupPartnerScalarWhereInput>
+  }
+
+  export type CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput = {
+    create?: XOR<Enumerable<CafeBoardCreateWithoutCafeInfoInput>, Enumerable<CafeBoardUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<CafeBoardCreateOrConnectWithoutCafeInfoInput>
+    upsert?: Enumerable<CafeBoardUpsertWithWhereUniqueWithoutCafeInfoInput>
+    createMany?: CafeBoardCreateManyCafeInfoInputEnvelope
+    set?: Enumerable<CafeBoardWhereUniqueInput>
+    disconnect?: Enumerable<CafeBoardWhereUniqueInput>
+    delete?: Enumerable<CafeBoardWhereUniqueInput>
+    connect?: Enumerable<CafeBoardWhereUniqueInput>
+    update?: Enumerable<CafeBoardUpdateWithWhereUniqueWithoutCafeInfoInput>
+    updateMany?: Enumerable<CafeBoardUpdateManyWithWhereWithoutCafeInfoInput>
+    deleteMany?: Enumerable<CafeBoardScalarWhereInput>
   }
 
   export type CafeInfoCreateNestedOneWithoutCafeThumbnailImagesInput = {
@@ -27713,23 +29073,6 @@ export namespace Prisma {
     _max?: NestedBoolFilter
   }
 
-  export type NestedEnumBoardTypeFilter = {
-    equals?: BoardType
-    in?: Enumerable<BoardType>
-    notIn?: Enumerable<BoardType>
-    not?: NestedEnumBoardTypeFilter | BoardType
-  }
-
-  export type NestedEnumBoardTypeWithAggregatesFilter = {
-    equals?: BoardType
-    in?: Enumerable<BoardType>
-    notIn?: Enumerable<BoardType>
-    not?: NestedEnumBoardTypeWithAggregatesFilter | BoardType
-    _count?: NestedIntFilter
-    _min?: NestedEnumBoardTypeFilter
-    _max?: NestedEnumBoardTypeFilter
-  }
-
   export type NestedDateTimeNullableFilter = {
     equals?: Date | string | null
     in?: Enumerable<Date> | Enumerable<string> | null
@@ -27739,6 +29082,13 @@ export namespace Prisma {
     gt?: Date | string
     gte?: Date | string
     not?: NestedDateTimeNullableFilter | Date | string | null
+  }
+
+  export type NestedEnumBoardTypeFilter = {
+    equals?: BoardType
+    in?: Enumerable<BoardType>
+    notIn?: Enumerable<BoardType>
+    not?: NestedEnumBoardTypeFilter | BoardType
   }
 
   export type NestedDateTimeNullableWithAggregatesFilter = {
@@ -27753,6 +29103,16 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter
     _min?: NestedDateTimeNullableFilter
     _max?: NestedDateTimeNullableFilter
+  }
+
+  export type NestedEnumBoardTypeWithAggregatesFilter = {
+    equals?: BoardType
+    in?: Enumerable<BoardType>
+    notIn?: Enumerable<BoardType>
+    not?: NestedEnumBoardTypeWithAggregatesFilter | BoardType
+    _count?: NestedIntFilter
+    _min?: NestedEnumBoardTypeFilter
+    _max?: NestedEnumBoardTypeFilter
   }
 
   export type NestedIntNullableWithAggregatesFilter = {
@@ -27856,11 +29216,13 @@ export namespace Prisma {
     content?: string | null
     link?: string | null
     startDay?: Date | string
-    endDay?: Date | string
+    endDay?: Date | string | null
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     BoardImages?: BoardImageCreateNestedManyWithoutBoardInput
     BoardReplies?: BoardReplyCreateNestedManyWithoutBoardInput
     boardType?: BoardType
+    CafeBoards?: CafeBoardCreateNestedManyWithoutBoardInput
   }
 
   export type BoardUncheckedCreateWithoutUserInput = {
@@ -27870,11 +29232,13 @@ export namespace Prisma {
     content?: string | null
     link?: string | null
     startDay?: Date | string
-    endDay?: Date | string
+    endDay?: Date | string | null
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     BoardImages?: BoardImageUncheckedCreateNestedManyWithoutBoardInput
     BoardReplies?: BoardReplyUncheckedCreateNestedManyWithoutBoardInput
     boardType?: BoardType
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutBoardInput
   }
 
   export type BoardCreateOrConnectWithoutUserInput = {
@@ -27895,7 +29259,6 @@ export namespace Prisma {
     Board: BoardCreateNestedOneWithoutBoardRepliesInput
     BoardReply?: BoardReplyCreateNestedOneWithoutBoardNestedRepliesInput
     BoardNestedReplies?: BoardReplyCreateNestedManyWithoutBoardReplyInput
-    boardType?: BoardType
   }
 
   export type BoardReplyUncheckedCreateWithoutUserInput = {
@@ -27907,7 +29270,6 @@ export namespace Prisma {
     boardId: number
     boardReplyId?: number | null
     BoardNestedReplies?: BoardReplyUncheckedCreateNestedManyWithoutBoardReplyInput
-    boardType?: BoardType
   }
 
   export type BoardReplyCreateOrConnectWithoutUserInput = {
@@ -28029,8 +29391,9 @@ export namespace Prisma {
     content?: StringNullableFilter | string | null
     link?: StringNullableFilter | string | null
     startDay?: DateTimeFilter | Date | string
-    endDay?: DateTimeFilter | Date | string
+    endDay?: DateTimeNullableFilter | Date | string | null
     isDisable?: BoolFilter | boolean
+    isReplyAvaliable?: BoolFilter | boolean
     userId?: IntFilter | number
     boardType?: EnumBoardTypeFilter | BoardType
   }
@@ -28063,7 +29426,6 @@ export namespace Prisma {
     userId?: IntFilter | number
     boardId?: IntFilter | number
     boardReplyId?: IntNullableFilter | number | null
-    boardType?: EnumBoardTypeFilter | BoardType
   }
 
   export type NoticeUpsertWithWhereUniqueWithoutUserInput = {
@@ -28232,20 +29594,24 @@ export namespace Prisma {
   export type BoardImageCreateWithoutBoardInput = {
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
     isThumb?: boolean
+    isDisable?: boolean
   }
 
   export type BoardImageUncheckedCreateWithoutBoardInput = {
     id?: number
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
     isThumb?: boolean
+    isDisable?: boolean
   }
 
   export type BoardImageCreateOrConnectWithoutBoardInput = {
@@ -28266,7 +29632,6 @@ export namespace Prisma {
     User: UserCreateNestedOneWithoutBoardRepliesInput
     BoardReply?: BoardReplyCreateNestedOneWithoutBoardNestedRepliesInput
     BoardNestedReplies?: BoardReplyCreateNestedManyWithoutBoardReplyInput
-    boardType?: BoardType
   }
 
   export type BoardReplyUncheckedCreateWithoutBoardInput = {
@@ -28278,7 +29643,6 @@ export namespace Prisma {
     userId: number
     boardReplyId?: number | null
     BoardNestedReplies?: BoardReplyUncheckedCreateNestedManyWithoutBoardReplyInput
-    boardType?: BoardType
   }
 
   export type BoardReplyCreateOrConnectWithoutBoardInput = {
@@ -28329,6 +29693,26 @@ export namespace Prisma {
     create: XOR<UserCreateWithoutBoardsInput, UserUncheckedCreateWithoutBoardsInput>
   }
 
+  export type CafeBoardCreateWithoutBoardInput = {
+    CafeInfo: CafeInfoCreateNestedOneWithoutCafeBoardsInput
+    createdAt?: Date | string
+  }
+
+  export type CafeBoardUncheckedCreateWithoutBoardInput = {
+    cafeInfoId: number
+    createdAt?: Date | string
+  }
+
+  export type CafeBoardCreateOrConnectWithoutBoardInput = {
+    where: CafeBoardWhereUniqueInput
+    create: XOR<CafeBoardCreateWithoutBoardInput, CafeBoardUncheckedCreateWithoutBoardInput>
+  }
+
+  export type CafeBoardCreateManyBoardInputEnvelope = {
+    data: Enumerable<CafeBoardCreateManyBoardInput>
+    skipDuplicates?: boolean
+  }
+
   export type BoardImageUpsertWithWhereUniqueWithoutBoardInput = {
     where: BoardImageWhereUniqueInput
     update: XOR<BoardImageUpdateWithoutBoardInput, BoardImageUncheckedUpdateWithoutBoardInput>
@@ -28352,10 +29736,12 @@ export namespace Prisma {
     id?: IntFilter | number
     createdAt?: DateTimeFilter | Date | string
     url?: StringFilter | string
+    thumbnailUrl?: StringFilter | string
     width?: IntFilter | number
     height?: IntFilter | number
     size?: IntFilter | number
     isThumb?: BoolFilter | boolean
+    isDisable?: BoolFilter | boolean
     boardId?: IntFilter | number
   }
 
@@ -28413,17 +29799,44 @@ export namespace Prisma {
     CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutActorNestedInput
   }
 
+  export type CafeBoardUpsertWithWhereUniqueWithoutBoardInput = {
+    where: CafeBoardWhereUniqueInput
+    update: XOR<CafeBoardUpdateWithoutBoardInput, CafeBoardUncheckedUpdateWithoutBoardInput>
+    create: XOR<CafeBoardCreateWithoutBoardInput, CafeBoardUncheckedCreateWithoutBoardInput>
+  }
+
+  export type CafeBoardUpdateWithWhereUniqueWithoutBoardInput = {
+    where: CafeBoardWhereUniqueInput
+    data: XOR<CafeBoardUpdateWithoutBoardInput, CafeBoardUncheckedUpdateWithoutBoardInput>
+  }
+
+  export type CafeBoardUpdateManyWithWhereWithoutBoardInput = {
+    where: CafeBoardScalarWhereInput
+    data: XOR<CafeBoardUpdateManyMutationInput, CafeBoardUncheckedUpdateManyWithoutCafeBoardsInput>
+  }
+
+  export type CafeBoardScalarWhereInput = {
+    AND?: Enumerable<CafeBoardScalarWhereInput>
+    OR?: Enumerable<CafeBoardScalarWhereInput>
+    NOT?: Enumerable<CafeBoardScalarWhereInput>
+    boardId?: IntFilter | number
+    cafeInfoId?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+  }
+
   export type BoardCreateWithoutBoardImagesInput = {
     createdAt?: Date | string
     title: string
     content?: string | null
     link?: string | null
     startDay?: Date | string
-    endDay?: Date | string
+    endDay?: Date | string | null
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     BoardReplies?: BoardReplyCreateNestedManyWithoutBoardInput
     User: UserCreateNestedOneWithoutBoardsInput
     boardType?: BoardType
+    CafeBoards?: CafeBoardCreateNestedManyWithoutBoardInput
   }
 
   export type BoardUncheckedCreateWithoutBoardImagesInput = {
@@ -28433,11 +29846,13 @@ export namespace Prisma {
     content?: string | null
     link?: string | null
     startDay?: Date | string
-    endDay?: Date | string
+    endDay?: Date | string | null
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     BoardReplies?: BoardReplyUncheckedCreateNestedManyWithoutBoardInput
     userId: number
     boardType?: BoardType
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutBoardInput
   }
 
   export type BoardCreateOrConnectWithoutBoardImagesInput = {
@@ -28456,11 +29871,13 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     BoardReplies?: BoardReplyUpdateManyWithoutBoardNestedInput
     User?: UserUpdateOneRequiredWithoutBoardsNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+    CafeBoards?: CafeBoardUpdateManyWithoutBoardNestedInput
   }
 
   export type BoardUncheckedUpdateWithoutBoardImagesInput = {
@@ -28470,11 +29887,13 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     BoardReplies?: BoardReplyUncheckedUpdateManyWithoutBoardNestedInput
     userId?: IntFieldUpdateOperationsInput | number
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutBoardNestedInput
   }
 
   export type UserCreateWithoutBoardRepliesInput = {
@@ -28521,11 +29940,13 @@ export namespace Prisma {
     content?: string | null
     link?: string | null
     startDay?: Date | string
-    endDay?: Date | string
+    endDay?: Date | string | null
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     BoardImages?: BoardImageCreateNestedManyWithoutBoardInput
     User: UserCreateNestedOneWithoutBoardsInput
     boardType?: BoardType
+    CafeBoards?: CafeBoardCreateNestedManyWithoutBoardInput
   }
 
   export type BoardUncheckedCreateWithoutBoardRepliesInput = {
@@ -28535,11 +29956,13 @@ export namespace Prisma {
     content?: string | null
     link?: string | null
     startDay?: Date | string
-    endDay?: Date | string
+    endDay?: Date | string | null
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     BoardImages?: BoardImageUncheckedCreateNestedManyWithoutBoardInput
     userId: number
     boardType?: BoardType
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutBoardInput
   }
 
   export type BoardCreateOrConnectWithoutBoardRepliesInput = {
@@ -28555,7 +29978,6 @@ export namespace Prisma {
     User: UserCreateNestedOneWithoutBoardRepliesInput
     Board: BoardCreateNestedOneWithoutBoardRepliesInput
     BoardReply?: BoardReplyCreateNestedOneWithoutBoardNestedRepliesInput
-    boardType?: BoardType
   }
 
   export type BoardReplyUncheckedCreateWithoutBoardNestedRepliesInput = {
@@ -28567,7 +29989,6 @@ export namespace Prisma {
     userId: number
     boardId: number
     boardReplyId?: number | null
-    boardType?: BoardType
   }
 
   export type BoardReplyCreateOrConnectWithoutBoardNestedRepliesInput = {
@@ -28583,7 +30004,6 @@ export namespace Prisma {
     User: UserCreateNestedOneWithoutBoardRepliesInput
     Board: BoardCreateNestedOneWithoutBoardRepliesInput
     BoardNestedReplies?: BoardReplyCreateNestedManyWithoutBoardReplyInput
-    boardType?: BoardType
   }
 
   export type BoardReplyUncheckedCreateWithoutBoardReplyInput = {
@@ -28595,7 +30015,6 @@ export namespace Prisma {
     userId: number
     boardId: number
     BoardNestedReplies?: BoardReplyUncheckedCreateNestedManyWithoutBoardReplyInput
-    boardType?: BoardType
   }
 
   export type BoardReplyCreateOrConnectWithoutBoardReplyInput = {
@@ -28657,11 +30076,13 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     BoardImages?: BoardImageUpdateManyWithoutBoardNestedInput
     User?: UserUpdateOneRequiredWithoutBoardsNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+    CafeBoards?: CafeBoardUpdateManyWithoutBoardNestedInput
   }
 
   export type BoardUncheckedUpdateWithoutBoardRepliesInput = {
@@ -28671,11 +30092,13 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     BoardImages?: BoardImageUncheckedUpdateManyWithoutBoardNestedInput
     userId?: IntFieldUpdateOperationsInput | number
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutBoardNestedInput
   }
 
   export type BoardReplyUpsertWithoutBoardNestedRepliesInput = {
@@ -28691,7 +30114,6 @@ export namespace Prisma {
     User?: UserUpdateOneRequiredWithoutBoardRepliesNestedInput
     Board?: BoardUpdateOneRequiredWithoutBoardRepliesNestedInput
     BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesNestedInput
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type BoardReplyUncheckedUpdateWithoutBoardNestedRepliesInput = {
@@ -28703,7 +30125,6 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     boardId?: IntFieldUpdateOperationsInput | number
     boardReplyId?: NullableIntFieldUpdateOperationsInput | number | null
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type BoardReplyUpsertWithWhereUniqueWithoutBoardReplyInput = {
@@ -28722,6 +30143,158 @@ export namespace Prisma {
     data: XOR<BoardReplyUpdateManyMutationInput, BoardReplyUncheckedUpdateManyWithoutBoardNestedRepliesInput>
   }
 
+  export type BoardCreateWithoutCafeBoardsInput = {
+    createdAt?: Date | string
+    title: string
+    content?: string | null
+    link?: string | null
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    isReplyAvaliable?: boolean
+    BoardImages?: BoardImageCreateNestedManyWithoutBoardInput
+    BoardReplies?: BoardReplyCreateNestedManyWithoutBoardInput
+    User: UserCreateNestedOneWithoutBoardsInput
+    boardType?: BoardType
+  }
+
+  export type BoardUncheckedCreateWithoutCafeBoardsInput = {
+    id?: number
+    createdAt?: Date | string
+    title: string
+    content?: string | null
+    link?: string | null
+    startDay?: Date | string
+    endDay?: Date | string | null
+    isDisable?: boolean
+    isReplyAvaliable?: boolean
+    BoardImages?: BoardImageUncheckedCreateNestedManyWithoutBoardInput
+    BoardReplies?: BoardReplyUncheckedCreateNestedManyWithoutBoardInput
+    userId: number
+    boardType?: BoardType
+  }
+
+  export type BoardCreateOrConnectWithoutCafeBoardsInput = {
+    where: BoardWhereUniqueInput
+    create: XOR<BoardCreateWithoutCafeBoardsInput, BoardUncheckedCreateWithoutCafeBoardsInput>
+  }
+
+  export type CafeInfoCreateWithoutCafeBoardsInput = {
+    createdAt?: Date | string
+    isDisable?: boolean
+    name: string
+    code?: string | null
+    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
+    address: string
+    directions: string
+    businessNumber: string
+    ceoName: string
+    CafeVirtualLinks?: CafeVirtualLinkCreateNestedManyWithoutCafeInfoInput
+    CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
+    CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
+    CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
+  }
+
+  export type CafeInfoUncheckedCreateWithoutCafeBoardsInput = {
+    id?: number
+    createdAt?: Date | string
+    isDisable?: boolean
+    name: string
+    code?: string | null
+    regionCategoryId: number
+    address: string
+    directions: string
+    businessNumber: string
+    ceoName: string
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
+  }
+
+  export type CafeInfoCreateOrConnectWithoutCafeBoardsInput = {
+    where: CafeInfoWhereUniqueInput
+    create: XOR<CafeInfoCreateWithoutCafeBoardsInput, CafeInfoUncheckedCreateWithoutCafeBoardsInput>
+  }
+
+  export type BoardUpsertWithoutCafeBoardsInput = {
+    update: XOR<BoardUpdateWithoutCafeBoardsInput, BoardUncheckedUpdateWithoutCafeBoardsInput>
+    create: XOR<BoardCreateWithoutCafeBoardsInput, BoardUncheckedCreateWithoutCafeBoardsInput>
+  }
+
+  export type BoardUpdateWithoutCafeBoardsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
+    BoardImages?: BoardImageUpdateManyWithoutBoardNestedInput
+    BoardReplies?: BoardReplyUpdateManyWithoutBoardNestedInput
+    User?: UserUpdateOneRequiredWithoutBoardsNestedInput
+    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+  }
+
+  export type BoardUncheckedUpdateWithoutCafeBoardsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    title?: StringFieldUpdateOperationsInput | string
+    content?: NullableStringFieldUpdateOperationsInput | string | null
+    link?: NullableStringFieldUpdateOperationsInput | string | null
+    startDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
+    BoardImages?: BoardImageUncheckedUpdateManyWithoutBoardNestedInput
+    BoardReplies?: BoardReplyUncheckedUpdateManyWithoutBoardNestedInput
+    userId?: IntFieldUpdateOperationsInput | number
+    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+  }
+
+  export type CafeInfoUpsertWithoutCafeBoardsInput = {
+    update: XOR<CafeInfoUpdateWithoutCafeBoardsInput, CafeInfoUncheckedUpdateWithoutCafeBoardsInput>
+    create: XOR<CafeInfoCreateWithoutCafeBoardsInput, CafeInfoUncheckedCreateWithoutCafeBoardsInput>
+  }
+
+  export type CafeInfoUpdateWithoutCafeBoardsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
+    address?: StringFieldUpdateOperationsInput | string
+    directions?: StringFieldUpdateOperationsInput | string
+    businessNumber?: StringFieldUpdateOperationsInput | string
+    ceoName?: StringFieldUpdateOperationsInput | string
+    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
+  }
+
+  export type CafeInfoUncheckedUpdateWithoutCafeBoardsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    regionCategoryId?: IntFieldUpdateOperationsInput | number
+    address?: StringFieldUpdateOperationsInput | string
+    directions?: StringFieldUpdateOperationsInput | string
+    businessNumber?: StringFieldUpdateOperationsInput | string
+    ceoName?: StringFieldUpdateOperationsInput | string
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
+  }
+
   export type CafeInfoCreateWithoutRegionCategoryInput = {
     createdAt?: Date | string
     isDisable?: boolean
@@ -28736,6 +30309,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutRegionCategoryInput = {
@@ -28753,6 +30327,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutRegionCategoryInput = {
@@ -29142,6 +30717,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CafeBoardCreateWithoutCafeInfoInput = {
+    Board: BoardCreateNestedOneWithoutCafeBoardsInput
+    createdAt?: Date | string
+  }
+
+  export type CafeBoardUncheckedCreateWithoutCafeInfoInput = {
+    boardId: number
+    createdAt?: Date | string
+  }
+
+  export type CafeBoardCreateOrConnectWithoutCafeInfoInput = {
+    where: CafeBoardWhereUniqueInput
+    create: XOR<CafeBoardCreateWithoutCafeInfoInput, CafeBoardUncheckedCreateWithoutCafeInfoInput>
+  }
+
+  export type CafeBoardCreateManyCafeInfoInputEnvelope = {
+    data: Enumerable<CafeBoardCreateManyCafeInfoInput>
+    skipDuplicates?: boolean
+  }
+
   export type RegionCategoryUpsertWithoutCafeInfosInput = {
     update: XOR<RegionCategoryUpdateWithoutCafeInfosInput, RegionCategoryUncheckedUpdateWithoutCafeInfosInput>
     create: XOR<RegionCategoryCreateWithoutCafeInfosInput, RegionCategoryUncheckedCreateWithoutCafeInfosInput>
@@ -29314,6 +30909,22 @@ export namespace Prisma {
     cafeInfoId?: IntFilter | number
   }
 
+  export type CafeBoardUpsertWithWhereUniqueWithoutCafeInfoInput = {
+    where: CafeBoardWhereUniqueInput
+    update: XOR<CafeBoardUpdateWithoutCafeInfoInput, CafeBoardUncheckedUpdateWithoutCafeInfoInput>
+    create: XOR<CafeBoardCreateWithoutCafeInfoInput, CafeBoardUncheckedCreateWithoutCafeInfoInput>
+  }
+
+  export type CafeBoardUpdateWithWhereUniqueWithoutCafeInfoInput = {
+    where: CafeBoardWhereUniqueInput
+    data: XOR<CafeBoardUpdateWithoutCafeInfoInput, CafeBoardUncheckedUpdateWithoutCafeInfoInput>
+  }
+
+  export type CafeBoardUpdateManyWithWhereWithoutCafeInfoInput = {
+    where: CafeBoardScalarWhereInput
+    data: XOR<CafeBoardUpdateManyMutationInput, CafeBoardUncheckedUpdateManyWithoutCafeBoardsInput>
+  }
+
   export type CafeInfoCreateWithoutCafeThumbnailImagesInput = {
     createdAt?: Date | string
     isDisable?: boolean
@@ -29328,6 +30939,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeThumbnailImagesInput = {
@@ -29345,6 +30957,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeThumbnailImagesInput = {
@@ -29371,6 +30984,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeThumbnailImagesInput = {
@@ -29388,6 +31002,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeVirtualImagesInput = {
@@ -29404,6 +31019,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeVirtualImagesInput = {
@@ -29421,6 +31037,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeVirtualImagesInput = {
@@ -29447,6 +31064,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeVirtualImagesInput = {
@@ -29464,6 +31082,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeRealImagesInput = {
@@ -29480,6 +31099,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeRealImagesInput = {
@@ -29497,6 +31117,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeRealImagesInput = {
@@ -29523,6 +31144,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeRealImagesInput = {
@@ -29540,6 +31162,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeVirtualLinksInput = {
@@ -29556,6 +31179,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeVirtualLinksInput = {
@@ -29573,6 +31197,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeVirtualLinksInput = {
@@ -29621,6 +31246,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeVirtualLinksInput = {
@@ -29638,6 +31264,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeVirtualLinkThumbnailImageUpsertWithoutCafeVirtualLinkInput = {
@@ -29865,6 +31492,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeCouponGroupPartnersInput = {
@@ -29882,6 +31510,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeCouponGroupPartnersInput = {
@@ -29942,6 +31571,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeCouponGroupPartnersInput = {
@@ -29959,6 +31589,7 @@ export namespace Prisma {
     CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type UserCreateWithoutProxyUsersInput = {
@@ -30516,8 +32147,9 @@ export namespace Prisma {
     content?: string | null
     link?: string | null
     startDay?: Date | string
-    endDay?: Date | string
+    endDay?: Date | string | null
     isDisable?: boolean
+    isReplyAvaliable?: boolean
     boardType?: BoardType
   }
 
@@ -30529,7 +32161,6 @@ export namespace Prisma {
     isDisable?: boolean
     boardId: number
     boardReplyId?: number | null
-    boardType?: BoardType
   }
 
   export type NoticeCreateManyUserInput = {
@@ -30565,11 +32196,13 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     BoardImages?: BoardImageUpdateManyWithoutBoardNestedInput
     BoardReplies?: BoardReplyUpdateManyWithoutBoardNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+    CafeBoards?: CafeBoardUpdateManyWithoutBoardNestedInput
   }
 
   export type BoardUncheckedUpdateWithoutUserInput = {
@@ -30579,11 +32212,13 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     BoardImages?: BoardImageUncheckedUpdateManyWithoutBoardNestedInput
     BoardReplies?: BoardReplyUncheckedUpdateManyWithoutBoardNestedInput
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutBoardNestedInput
   }
 
   export type BoardUncheckedUpdateManyWithoutBoardsInput = {
@@ -30593,8 +32228,9 @@ export namespace Prisma {
     content?: NullableStringFieldUpdateOperationsInput | string | null
     link?: NullableStringFieldUpdateOperationsInput | string | null
     startDay?: DateTimeFieldUpdateOperationsInput | Date | string
-    endDay?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDay?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isReplyAvaliable?: BoolFieldUpdateOperationsInput | boolean
     boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
@@ -30606,7 +32242,6 @@ export namespace Prisma {
     Board?: BoardUpdateOneRequiredWithoutBoardRepliesNestedInput
     BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesNestedInput
     BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyNestedInput
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type BoardReplyUncheckedUpdateWithoutUserInput = {
@@ -30618,7 +32253,6 @@ export namespace Prisma {
     boardId?: IntFieldUpdateOperationsInput | number
     boardReplyId?: NullableIntFieldUpdateOperationsInput | number | null
     BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyNestedInput
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type BoardReplyUncheckedUpdateManyWithoutBoardRepliesInput = {
@@ -30629,7 +32263,6 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     boardId?: IntFieldUpdateOperationsInput | number
     boardReplyId?: NullableIntFieldUpdateOperationsInput | number | null
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type NoticeUpdateWithoutUserInput = {
@@ -30716,10 +32349,12 @@ export namespace Prisma {
     id?: number
     createdAt?: Date | string
     url: string
+    thumbnailUrl: string
     width: number
     height: number
     size: number
     isThumb?: boolean
+    isDisable?: boolean
   }
 
   export type BoardReplyCreateManyBoardInput = {
@@ -30730,36 +32365,46 @@ export namespace Prisma {
     isDisable?: boolean
     userId: number
     boardReplyId?: number | null
-    boardType?: BoardType
+  }
+
+  export type CafeBoardCreateManyBoardInput = {
+    cafeInfoId: number
+    createdAt?: Date | string
   }
 
   export type BoardImageUpdateWithoutBoardInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isThumb?: BoolFieldUpdateOperationsInput | boolean
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BoardImageUncheckedUpdateWithoutBoardInput = {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isThumb?: BoolFieldUpdateOperationsInput | boolean
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BoardImageUncheckedUpdateManyWithoutBoardImagesInput = {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
     width?: IntFieldUpdateOperationsInput | number
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isThumb?: BoolFieldUpdateOperationsInput | boolean
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BoardReplyUpdateWithoutBoardInput = {
@@ -30770,7 +32415,6 @@ export namespace Prisma {
     User?: UserUpdateOneRequiredWithoutBoardRepliesNestedInput
     BoardReply?: BoardReplyUpdateOneWithoutBoardNestedRepliesNestedInput
     BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyNestedInput
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type BoardReplyUncheckedUpdateWithoutBoardInput = {
@@ -30782,7 +32426,21 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     boardReplyId?: NullableIntFieldUpdateOperationsInput | number | null
     BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyNestedInput
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
+  }
+
+  export type CafeBoardUpdateWithoutBoardInput = {
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutCafeBoardsNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CafeBoardUncheckedUpdateWithoutBoardInput = {
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CafeBoardUncheckedUpdateManyWithoutCafeBoardsInput = {
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BoardReplyCreateManyBoardReplyInput = {
@@ -30793,7 +32451,6 @@ export namespace Prisma {
     isDisable?: boolean
     userId: number
     boardId: number
-    boardType?: BoardType
   }
 
   export type BoardReplyUpdateWithoutBoardReplyInput = {
@@ -30804,7 +32461,6 @@ export namespace Prisma {
     User?: UserUpdateOneRequiredWithoutBoardRepliesNestedInput
     Board?: BoardUpdateOneRequiredWithoutBoardRepliesNestedInput
     BoardNestedReplies?: BoardReplyUpdateManyWithoutBoardReplyNestedInput
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type BoardReplyUncheckedUpdateWithoutBoardReplyInput = {
@@ -30816,7 +32472,6 @@ export namespace Prisma {
     userId?: IntFieldUpdateOperationsInput | number
     boardId?: IntFieldUpdateOperationsInput | number
     BoardNestedReplies?: BoardReplyUncheckedUpdateManyWithoutBoardReplyNestedInput
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type BoardReplyUncheckedUpdateManyWithoutBoardNestedRepliesInput = {
@@ -30827,7 +32482,6 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     userId?: IntFieldUpdateOperationsInput | number
     boardId?: IntFieldUpdateOperationsInput | number
-    boardType?: EnumBoardTypeFieldUpdateOperationsInput | BoardType
   }
 
   export type CafeInfoCreateManyRegionCategoryInput = {
@@ -30866,6 +32520,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutRegionCategoryInput = {
@@ -30883,6 +32538,7 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateManyWithoutCafeInfosInput = {
@@ -30973,6 +32629,11 @@ export namespace Prisma {
 
   export type CafeCouponGoupPartnerCreateManyCafeInfoInput = {
     cafeCouponGroupId: number
+  }
+
+  export type CafeBoardCreateManyCafeInfoInput = {
+    boardId: number
+    createdAt?: Date | string
   }
 
   export type CafeVirtualLinkUpdateWithoutCafeInfoInput = {
@@ -31115,6 +32776,16 @@ export namespace Prisma {
 
   export type CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeCouponGroupPartnersInput = {
     cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type CafeBoardUpdateWithoutCafeInfoInput = {
+    Board?: BoardUpdateOneRequiredWithoutCafeBoardsNestedInput
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CafeBoardUncheckedUpdateWithoutCafeInfoInput = {
+    boardId?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type CafeCouponCreateManyCafeCouponGroupInput = {

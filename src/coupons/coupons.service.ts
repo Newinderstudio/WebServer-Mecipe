@@ -111,7 +111,7 @@ export class CouponsService {
 
     try {
       return await this.prisma.$transaction(async (tx) => {
-        let user = await this.prisma.proxyUser.findUnique({
+        let user = await tx.proxyUser.findUnique({
           where: {
             proxyUserUnique: {
               memberId: memberId,
@@ -122,7 +122,7 @@ export class CouponsService {
 
         if (!user) {
           // 존재하지 않으면 생성
-          user = await this.prisma.proxyUser.create({
+          user = await tx.proxyUser.create({
             data: {
               name: nickname,
               token: memberId,
