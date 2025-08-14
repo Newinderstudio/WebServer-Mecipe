@@ -139,7 +139,7 @@ export class CouponsService {
         // 16자리 시리얼 넘버 생성 (CafeCoupon과 CafeCouponQRCode 모두에서 중복되지 않음)
         const serialNumber = await this.generateUniqueSerialNumber();
 
-        const coupon = await this.prisma.cafeCoupon.create({
+        const coupon = await tx.cafeCoupon.create({
           data: {
             name: name ?? group.name,
             content: content ?? group.description,
@@ -167,7 +167,7 @@ export class CouponsService {
         });
 
         // 관리자 Actor
-        const actor = await this.prisma.user.findFirst({
+        const actor = await tx.user.findFirst({
           where: {
             userType: 'ADMIN'
           }
@@ -178,7 +178,7 @@ export class CouponsService {
         }
 
         // 쿠폰 히스토리 작성
-        const couponHistory = await this.prisma.cafeCouponHistory.create({
+        const couponHistory = await tx.cafeCouponHistory.create({
           data: {
             CafeCoupon: {
               connect: {
