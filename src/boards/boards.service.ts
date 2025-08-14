@@ -150,48 +150,47 @@ export class BoardsService {
       }
     }
 
-    const [boards, total] = await Promise.all([
-      this.prisma.board.findMany({
-        where,
-        skip,
-        take: limit,
-        orderBy: { createdAt: 'desc' },
-        include: {
-          User: {
-            select: {
-              id: true,
-              username: true,
-              nickname: true,
-            },
-          },
-          BoardImages: {
-            orderBy: { isThumb: 'desc' },
-            take: 1,
-          },
-          // BoardReplies: {
-          //   where: { isDisable: false },
-          //   include: {
-          //     User: {
-          //       select: {
-          //         id: true,
-          //         username: true,
-          //         nickname: true,
-          //       },
-          //     },
-          //   },
-          // },
-          CafeBoards: {
-            include: {
-              CafeInfo: true,
-            },
+    const total = await this.prisma.board.count({ where });
+
+    const boards = total > 0 ? await this.prisma.board.findMany({
+      where,
+      skip,
+      take: limit,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        User: {
+          select: {
+            id: true,
+            username: true,
+            nickname: true,
           },
         },
-      }),
-      this.prisma.board.count({ where }),
-    ]);
+        BoardImages: {
+          orderBy: { isThumb: 'desc' },
+          take: 1,
+        },
+        // BoardReplies: {
+        //   where: { isDisable: false },
+        //   include: {
+        //     User: {
+        //       select: {
+        //         id: true,
+        //         username: true,
+        //         nickname: true,
+        //       },
+        //     },
+        //   },
+        // },
+        CafeBoards: {
+          include: {
+            CafeInfo: true,
+          },
+        },
+      },
+    }) : [];
 
     return {
-      boards: boards ?? [],
+      boards: boards,
       pagination: {
         page,
         limit,
