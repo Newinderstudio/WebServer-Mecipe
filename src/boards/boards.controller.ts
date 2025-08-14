@@ -19,7 +19,7 @@ interface RequestWithUser extends Request {
 
 // 응답 타입 정의
 interface BoardListResponse {
-  boards: Board[];
+  boards: BoardWithUserAndCafeInfo[];
   pagination: {
     page: number;
     limit: number;
@@ -28,9 +28,7 @@ interface BoardListResponse {
   };
 }
 
-interface DeleteResponse {
-  message: string;
-}
+type BoardWithUserAndCafeInfo = Omit<Board, "BoardReplies">;
 
 @Controller('boards')
 @UsePipes(new ValidationPipe({
@@ -95,7 +93,7 @@ export class BoardsController {
   // Board 삭제
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  async remove(@Param('id') id: string, @Request() req: RequestWithUser): Promise<DeleteResponse> {
+  async remove(@Param('id') id: string, @Request() req: RequestWithUser): Promise<{ message: string }> {
     const userId = req.user.id;
     const isAdmin = req.user.userType === 'ADMIN' || req.user.userType === 'MANAGER';
     return this.boardsService.remove(+id, userId, isAdmin);
@@ -128,7 +126,7 @@ export class BoardsController {
   // BoardImage 삭제
   @Delete('images/:imageId')
   @UseGuards(JwtAuthGuard)
-  async removeBoardImage(@Param('imageId') imageId: string, @Request() req: RequestWithUser): Promise<DeleteResponse> {
+  async removeBoardImage(@Param('imageId') imageId: string, @Request() req: RequestWithUser): Promise<{ message: string }> {
     const userId = req.user.id;
     return this.boardsService.removeBoardImage(+imageId, userId);
   }
@@ -160,7 +158,7 @@ export class BoardsController {
   // BoardReply 삭제
   @Delete('replies/:replyId')
   @UseGuards(JwtAuthGuard)
-  async removeBoardReply(@Param('replyId') replyId: string, @Request() req: RequestWithUser): Promise<DeleteResponse> {
+  async removeBoardReply(@Param('replyId') replyId: string, @Request() req: RequestWithUser): Promise<{ message: string }> {
     const userId = req.user.id;
     return this.boardsService.removeBoardReply(+replyId, userId);
   }

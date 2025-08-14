@@ -37,6 +37,15 @@ export class SearchBoardDto {
   @Transform(({ value }) => parseInt(value))
   @IsNumber()
   cafeInfoId?: number;
+
+  @IsOptional()
+  @IsDateString()
+  notInProgressDay?: string;
+
+  
+  @IsOptional()
+  @IsDateString()
+  inProgressDay?: string;
 }
 
 export class SearchImageIdDto {

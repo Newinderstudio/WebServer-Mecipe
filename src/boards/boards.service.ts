@@ -120,6 +120,15 @@ export class BoardsService {
       where.endDay = { lte: new Date(searchParams.endDay) };
     }
 
+    if (searchParams.notInProgressDay) {
+      where.endDay = { lt: new Date(searchParams.notInProgressDay) };
+    }
+
+    if (searchParams.inProgressDay) {
+      where.endDay = { gte: new Date(searchParams.inProgressDay) };
+      where.startDay = { lt: new Date(searchParams.inProgressDay) };
+    }
+
     // 일반 유저는 isDisable이 false인 것만 조회
     if (!isAdmin) {
       where.isDisable = false;
@@ -127,11 +136,18 @@ export class BoardsService {
 
     // CafeInfo로 검색
     if (searchParams.cafeInfoId) {
-      where.CafeBoards = {
-        some: {
-          cafeInfoId: searchParams.cafeInfoId,
-        },
-      };
+      if (searchParams.cafeInfoId > 1) {
+        where.CafeBoards = {
+          some: {
+            cafeInfoId: searchParams.cafeInfoId,
+          },
+        };
+      } else {
+        // CafeInfoId가 1 이하인 경우, 모든 CafeInfo에 연결된 Board 조회
+        where.CafeBoards = {
+          some: {}  // 빈 객체로 모든 CafeBoard 존재 여부만 확인
+        };
+      }
     }
 
     const [boards, total] = await Promise.all([
@@ -150,19 +166,20 @@ export class BoardsService {
           },
           BoardImages: {
             orderBy: { isThumb: 'desc' },
+            take: 1,
           },
-          BoardReplies: {
-            where: { isDisable: false },
-            include: {
-              User: {
-                select: {
-                  id: true,
-                  username: true,
-                  nickname: true,
-                },
-              },
-            },
-          },
+          // BoardReplies: {
+          //   where: { isDisable: false },
+          //   include: {
+          //     User: {
+          //       select: {
+          //         id: true,
+          //         username: true,
+          //         nickname: true,
+          //       },
+          //     },
+          //   },
+          // },
           CafeBoards: {
             include: {
               CafeInfo: true,

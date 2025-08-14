@@ -202,7 +202,15 @@ export class PlacesService {
       }
     }
 
-    if (searchText.trim().length > 0) where.name = { contains: searchText };
+    if (searchText.trim().length > 0) {
+      const words = searchText.trim().split(' ');
+      where.OR = [...words.map(word => ({
+        name: { contains: word.trim() },
+      })),
+      ...words.map(word => ({
+        address: { contains: word.trim() },
+      }))];
+    }
 
     console.log("findAllPlacesBySearch", where);
 
@@ -321,7 +329,7 @@ export class PlacesService {
       },
       select: {
         url: true,
-        thumbnailUrl:true
+        thumbnailUrl: true
       }
     });
     if (thumbnail.length > 0) {
@@ -380,11 +388,11 @@ export class PlacesService {
       }
     });
 
-    if(count === 0) return [];
+    if (count === 0) return [];
 
     return this.prisma.cafeInfo.findMany({
-      where:{
-        isDisable:false
+      where: {
+        isDisable: false
       },
       select: {
         id: true
