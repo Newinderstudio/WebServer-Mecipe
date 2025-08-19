@@ -63,4 +63,12 @@ export class AppController {
   getAuthToken() {
     return this.appService.getAuthToken();
   }
+
+  @Public()
+  @Get('')
+  root() {
+    return {
+      message: 'Hello World',
+    };
+  }
 }
