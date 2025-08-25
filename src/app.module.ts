@@ -22,6 +22,7 @@ import { CafevirtuallinksModule } from './cafevirtuallinks/cafevirtuallinks.modu
 import { RawimageuploadModule } from './rawimageupload/rawimageupload.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { BoardsModule } from './boards/boards.module';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { BoardsModule } from './boards/boards.module';
     RawimageuploadModule,
     CouponsModule,
     BoardsModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [

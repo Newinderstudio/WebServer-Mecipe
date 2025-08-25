@@ -271,6 +271,45 @@ exports.Prisma.NoticeScalarFieldEnum = makeEnum({
   userId: 'userId'
 });
 
+exports.Prisma.ProductCategoryScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  name: 'name',
+  description: 'description',
+  isDisable: 'isDisable',
+  code: 'code',
+  parentId: 'parentId'
+});
+
+exports.Prisma.ProductImageScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  url: 'url',
+  thumbnailUrl: 'thumbnailUrl',
+  width: 'width',
+  height: 'height',
+  size: 'size',
+  isDisable: 'isDisable',
+  productId: 'productId'
+});
+
+exports.Prisma.ProductScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  code: 'code',
+  description: 'description',
+  price: 'price',
+  originalPrice: 'originalPrice',
+  stockQuantity: 'stockQuantity',
+  minOrderQuantity: 'minOrderQuantity',
+  isDisable: 'isDisable',
+  isAvailable: 'isAvailable',
+  categoryId: 'categoryId',
+  cafeInfoId: 'cafeInfoId'
+});
+
 exports.Prisma.ProxyUserScalarFieldEnum = makeEnum({
   id: 'id',
   memberId: 'memberId',
@@ -317,6 +356,13 @@ exports.Prisma.UserScalarFieldEnum = makeEnum({
   nickname: 'nickname',
   email: 'email',
   isDisable: 'isDisable'
+});
+
+exports.Prisma.WishlistProductScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  productId: 'productId',
+  proxyUserId: 'proxyUserId'
 });
 exports.BoardType = makeEnum({
   BTALK: 'BTALK',
@@ -399,7 +445,11 @@ exports.Prisma.ModelName = makeEnum({
   ProxyUser: 'ProxyUser',
   CafeCoupon: 'CafeCoupon',
   CafeCouponHistory: 'CafeCouponHistory',
-  CafeCouponQRCode: 'CafeCouponQRCode'
+  CafeCouponQRCode: 'CafeCouponQRCode',
+  ProductCategory: 'ProductCategory',
+  Product: 'Product',
+  WishlistProduct: 'WishlistProduct',
+  ProductImage: 'ProductImage'
 });
 
 /**
