@@ -449,14 +449,26 @@ model ProductCategory {
   code      String  @unique
 
   // 계층 구조를 위한 자기참조 관계
-  parentId  Int?
-  parent    ProductCategory?  @relation("ProductCategoryHierarchy", fields: [parentId], references: [id])
-  children  ProductCategory[] @relation("ProductCategoryHierarchy")
+  AncestorCategories    ClosureProductCategory[] @relation("AncestorProductCategory")
+  DescendantCategories  ClosureProductCategory[] @relation("DescendantProductCategory")
 
   // 상품과의 관계
   Products  Product[]
 
   @@map("product_categories")
+}
+
+model ClosureProductCategory {
+  ancestor    Int
+  descendant  Int
+  depth       Int @default(0)
+
+  AncestorCategory    ProductCategory @relation("AncestorProductCategory", fields: [ancestor], references: [id])
+  DescendantCategory ProductCategory @relation("DescendantProductCategory", fields: [descendant], references: [id])
+
+  @@unique([ancestor, descendant, depth], name: "productCategoryTreeUnique")
+
+  @@map("closure_product_categories")
 }
 
 // 상품

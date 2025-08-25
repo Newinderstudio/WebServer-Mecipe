@@ -256,6 +256,12 @@ exports.Prisma.CafeVirtualLinkThumbnailImageScalarFieldEnum = makeEnum({
   cafeVirtualLinkId: 'cafeVirtualLinkId'
 });
 
+exports.Prisma.ClosureProductCategoryScalarFieldEnum = makeEnum({
+  ancestor: 'ancestor',
+  descendant: 'descendant',
+  depth: 'depth'
+});
+
 exports.Prisma.ClosureRegionCategoryScalarFieldEnum = makeEnum({
   ancestor: 'ancestor',
   descendant: 'descendant',
@@ -277,8 +283,7 @@ exports.Prisma.ProductCategoryScalarFieldEnum = makeEnum({
   name: 'name',
   description: 'description',
   isDisable: 'isDisable',
-  code: 'code',
-  parentId: 'parentId'
+  code: 'code'
 });
 
 exports.Prisma.ProductImageScalarFieldEnum = makeEnum({
@@ -447,6 +452,7 @@ exports.Prisma.ModelName = makeEnum({
   CafeCouponHistory: 'CafeCouponHistory',
   CafeCouponQRCode: 'CafeCouponQRCode',
   ProductCategory: 'ProductCategory',
+  ClosureProductCategory: 'ClosureProductCategory',
   Product: 'Product',
   WishlistProduct: 'WishlistProduct',
   ProductImage: 'ProductImage'

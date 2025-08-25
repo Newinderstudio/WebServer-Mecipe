@@ -316,7 +316,16 @@ export type ProductCategory = {
   description: string | null
   isDisable: boolean
   code: string
-  parentId: number | null
+}
+
+/**
+ * Model ClosureProductCategory
+ * 
+ */
+export type ClosureProductCategory = {
+  ancestor: number
+  descendant: number
+  depth: number
 }
 
 /**
@@ -783,6 +792,16 @@ export class PrismaClient<
     * ```
     */
   get productCategory(): Prisma.ProductCategoryDelegate<GlobalReject>;
+
+  /**
+   * `prisma.closureProductCategory`: Exposes CRUD operations for the **ClosureProductCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ClosureProductCategories
+    * const closureProductCategories = await prisma.closureProductCategory.findMany()
+    * ```
+    */
+  get closureProductCategory(): Prisma.ClosureProductCategoryDelegate<GlobalReject>;
 
   /**
    * `prisma.product`: Exposes CRUD operations for the **Product** model.
@@ -1318,6 +1337,7 @@ export namespace Prisma {
     CafeCouponHistory: 'CafeCouponHistory',
     CafeCouponQRCode: 'CafeCouponQRCode',
     ProductCategory: 'ProductCategory',
+    ClosureProductCategory: 'ClosureProductCategory',
     Product: 'Product',
     WishlistProduct: 'WishlistProduct',
     ProductImage: 'ProductImage'
@@ -1876,12 +1896,14 @@ export namespace Prisma {
 
 
   export type ProductCategoryCountOutputType = {
-    children: number
+    AncestorCategories: number
+    DescendantCategories: number
     Products: number
   }
 
   export type ProductCategoryCountOutputTypeSelect = {
-    children?: boolean
+    AncestorCategories?: boolean
+    DescendantCategories?: boolean
     Products?: boolean
   }
 
@@ -23217,12 +23239,10 @@ export namespace Prisma {
 
   export type ProductCategoryAvgAggregateOutputType = {
     id: number | null
-    parentId: number | null
   }
 
   export type ProductCategorySumAggregateOutputType = {
     id: number | null
-    parentId: number | null
   }
 
   export type ProductCategoryMinAggregateOutputType = {
@@ -23232,7 +23252,6 @@ export namespace Prisma {
     description: string | null
     isDisable: boolean | null
     code: string | null
-    parentId: number | null
   }
 
   export type ProductCategoryMaxAggregateOutputType = {
@@ -23242,7 +23261,6 @@ export namespace Prisma {
     description: string | null
     isDisable: boolean | null
     code: string | null
-    parentId: number | null
   }
 
   export type ProductCategoryCountAggregateOutputType = {
@@ -23252,19 +23270,16 @@ export namespace Prisma {
     description: number
     isDisable: number
     code: number
-    parentId: number
     _all: number
   }
 
 
   export type ProductCategoryAvgAggregateInputType = {
     id?: true
-    parentId?: true
   }
 
   export type ProductCategorySumAggregateInputType = {
     id?: true
-    parentId?: true
   }
 
   export type ProductCategoryMinAggregateInputType = {
@@ -23274,7 +23289,6 @@ export namespace Prisma {
     description?: true
     isDisable?: true
     code?: true
-    parentId?: true
   }
 
   export type ProductCategoryMaxAggregateInputType = {
@@ -23284,7 +23298,6 @@ export namespace Prisma {
     description?: true
     isDisable?: true
     code?: true
-    parentId?: true
   }
 
   export type ProductCategoryCountAggregateInputType = {
@@ -23294,7 +23307,6 @@ export namespace Prisma {
     description?: true
     isDisable?: true
     code?: true
-    parentId?: true
     _all?: true
   }
 
@@ -23397,7 +23409,6 @@ export namespace Prisma {
     description: string | null
     isDisable: boolean
     code: string
-    parentId: number | null
     _count: ProductCategoryCountAggregateOutputType | null
     _avg: ProductCategoryAvgAggregateOutputType | null
     _sum: ProductCategorySumAggregateOutputType | null
@@ -23426,17 +23437,16 @@ export namespace Prisma {
     description?: boolean
     isDisable?: boolean
     code?: boolean
-    parentId?: boolean
-    parent?: boolean | ProductCategoryArgs
-    children?: boolean | ProductCategoryFindManyArgs
+    AncestorCategories?: boolean | ClosureProductCategoryFindManyArgs
+    DescendantCategories?: boolean | ClosureProductCategoryFindManyArgs
     Products?: boolean | ProductFindManyArgs
     _count?: boolean | ProductCategoryCountOutputTypeArgs
   }
 
 
   export type ProductCategoryInclude = {
-    parent?: boolean | ProductCategoryArgs
-    children?: boolean | ProductCategoryFindManyArgs
+    AncestorCategories?: boolean | ClosureProductCategoryFindManyArgs
+    DescendantCategories?: boolean | ClosureProductCategoryFindManyArgs
     Products?: boolean | ProductFindManyArgs
     _count?: boolean | ProductCategoryCountOutputTypeArgs
   } 
@@ -23448,16 +23458,16 @@ export namespace Prisma {
     S extends { include: any } & (ProductCategoryArgs | ProductCategoryFindManyArgs)
     ? ProductCategory  & {
     [P in TruthyKeys<S['include']>]:
-        P extends 'parent' ? ProductCategoryGetPayload<S['include'][P]> | null :
-        P extends 'children' ? Array < ProductCategoryGetPayload<S['include'][P]>>  :
+        P extends 'AncestorCategories' ? Array < ClosureProductCategoryGetPayload<S['include'][P]>>  :
+        P extends 'DescendantCategories' ? Array < ClosureProductCategoryGetPayload<S['include'][P]>>  :
         P extends 'Products' ? Array < ProductGetPayload<S['include'][P]>>  :
         P extends '_count' ? ProductCategoryCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (ProductCategoryArgs | ProductCategoryFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-        P extends 'parent' ? ProductCategoryGetPayload<S['select'][P]> | null :
-        P extends 'children' ? Array < ProductCategoryGetPayload<S['select'][P]>>  :
+        P extends 'AncestorCategories' ? Array < ClosureProductCategoryGetPayload<S['select'][P]>>  :
+        P extends 'DescendantCategories' ? Array < ClosureProductCategoryGetPayload<S['select'][P]>>  :
         P extends 'Products' ? Array < ProductGetPayload<S['select'][P]>>  :
         P extends '_count' ? ProductCategoryCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof ProductCategory ? ProductCategory[P] : never
   } 
@@ -23833,9 +23843,9 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    parent<T extends ProductCategoryArgs= {}>(args?: Subset<T, ProductCategoryArgs>): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T> | Null>;
+    AncestorCategories<T extends ClosureProductCategoryFindManyArgs= {}>(args?: Subset<T, ClosureProductCategoryFindManyArgs>): PrismaPromise<Array<ClosureProductCategoryGetPayload<T>>| Null>;
 
-    children<T extends ProductCategoryFindManyArgs= {}>(args?: Subset<T, ProductCategoryFindManyArgs>): PrismaPromise<Array<ProductCategoryGetPayload<T>>| Null>;
+    DescendantCategories<T extends ClosureProductCategoryFindManyArgs= {}>(args?: Subset<T, ClosureProductCategoryFindManyArgs>): PrismaPromise<Array<ClosureProductCategoryGetPayload<T>>| Null>;
 
     Products<T extends ProductFindManyArgs= {}>(args?: Subset<T, ProductFindManyArgs>): PrismaPromise<Array<ProductGetPayload<T>>| Null>;
 
@@ -24256,6 +24266,1026 @@ export namespace Prisma {
      * 
     **/
     include?: ProductCategoryInclude | null
+  }
+
+
+
+  /**
+   * Model ClosureProductCategory
+   */
+
+
+  export type AggregateClosureProductCategory = {
+    _count: ClosureProductCategoryCountAggregateOutputType | null
+    _avg: ClosureProductCategoryAvgAggregateOutputType | null
+    _sum: ClosureProductCategorySumAggregateOutputType | null
+    _min: ClosureProductCategoryMinAggregateOutputType | null
+    _max: ClosureProductCategoryMaxAggregateOutputType | null
+  }
+
+  export type ClosureProductCategoryAvgAggregateOutputType = {
+    ancestor: number | null
+    descendant: number | null
+    depth: number | null
+  }
+
+  export type ClosureProductCategorySumAggregateOutputType = {
+    ancestor: number | null
+    descendant: number | null
+    depth: number | null
+  }
+
+  export type ClosureProductCategoryMinAggregateOutputType = {
+    ancestor: number | null
+    descendant: number | null
+    depth: number | null
+  }
+
+  export type ClosureProductCategoryMaxAggregateOutputType = {
+    ancestor: number | null
+    descendant: number | null
+    depth: number | null
+  }
+
+  export type ClosureProductCategoryCountAggregateOutputType = {
+    ancestor: number
+    descendant: number
+    depth: number
+    _all: number
+  }
+
+
+  export type ClosureProductCategoryAvgAggregateInputType = {
+    ancestor?: true
+    descendant?: true
+    depth?: true
+  }
+
+  export type ClosureProductCategorySumAggregateInputType = {
+    ancestor?: true
+    descendant?: true
+    depth?: true
+  }
+
+  export type ClosureProductCategoryMinAggregateInputType = {
+    ancestor?: true
+    descendant?: true
+    depth?: true
+  }
+
+  export type ClosureProductCategoryMaxAggregateInputType = {
+    ancestor?: true
+    descendant?: true
+    depth?: true
+  }
+
+  export type ClosureProductCategoryCountAggregateInputType = {
+    ancestor?: true
+    descendant?: true
+    depth?: true
+    _all?: true
+  }
+
+  export type ClosureProductCategoryAggregateArgs = {
+    /**
+     * Filter which ClosureProductCategory to aggregate.
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClosureProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ClosureProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: ClosureProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClosureProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClosureProductCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ClosureProductCategories
+    **/
+    _count?: true | ClosureProductCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ClosureProductCategoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ClosureProductCategorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ClosureProductCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ClosureProductCategoryMaxAggregateInputType
+  }
+
+  export type GetClosureProductCategoryAggregateType<T extends ClosureProductCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateClosureProductCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateClosureProductCategory[P]>
+      : GetScalarType<T[P], AggregateClosureProductCategory[P]>
+  }
+
+
+
+
+  export type ClosureProductCategoryGroupByArgs = {
+    where?: ClosureProductCategoryWhereInput
+    orderBy?: Enumerable<ClosureProductCategoryOrderByWithAggregationInput>
+    by: Array<ClosureProductCategoryScalarFieldEnum>
+    having?: ClosureProductCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ClosureProductCategoryCountAggregateInputType | true
+    _avg?: ClosureProductCategoryAvgAggregateInputType
+    _sum?: ClosureProductCategorySumAggregateInputType
+    _min?: ClosureProductCategoryMinAggregateInputType
+    _max?: ClosureProductCategoryMaxAggregateInputType
+  }
+
+
+  export type ClosureProductCategoryGroupByOutputType = {
+    ancestor: number
+    descendant: number
+    depth: number
+    _count: ClosureProductCategoryCountAggregateOutputType | null
+    _avg: ClosureProductCategoryAvgAggregateOutputType | null
+    _sum: ClosureProductCategorySumAggregateOutputType | null
+    _min: ClosureProductCategoryMinAggregateOutputType | null
+    _max: ClosureProductCategoryMaxAggregateOutputType | null
+  }
+
+  type GetClosureProductCategoryGroupByPayload<T extends ClosureProductCategoryGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<ClosureProductCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ClosureProductCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ClosureProductCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], ClosureProductCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ClosureProductCategorySelect = {
+    ancestor?: boolean
+    descendant?: boolean
+    depth?: boolean
+    AncestorCategory?: boolean | ProductCategoryArgs
+    DescendantCategory?: boolean | ProductCategoryArgs
+  }
+
+
+  export type ClosureProductCategoryInclude = {
+    AncestorCategory?: boolean | ProductCategoryArgs
+    DescendantCategory?: boolean | ProductCategoryArgs
+  } 
+
+  export type ClosureProductCategoryGetPayload<S extends boolean | null | undefined | ClosureProductCategoryArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ClosureProductCategory :
+    S extends undefined ? never :
+    S extends { include: any } & (ClosureProductCategoryArgs | ClosureProductCategoryFindManyArgs)
+    ? ClosureProductCategory  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'AncestorCategory' ? ProductCategoryGetPayload<S['include'][P]> :
+        P extends 'DescendantCategory' ? ProductCategoryGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (ClosureProductCategoryArgs | ClosureProductCategoryFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'AncestorCategory' ? ProductCategoryGetPayload<S['select'][P]> :
+        P extends 'DescendantCategory' ? ProductCategoryGetPayload<S['select'][P]> :  P extends keyof ClosureProductCategory ? ClosureProductCategory[P] : never
+  } 
+      : ClosureProductCategory
+
+
+  type ClosureProductCategoryCountArgs = Merge<
+    Omit<ClosureProductCategoryFindManyArgs, 'select' | 'include'> & {
+      select?: ClosureProductCategoryCountAggregateInputType | true
+    }
+  >
+
+  export interface ClosureProductCategoryDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one ClosureProductCategory that matches the filter.
+     * @param {ClosureProductCategoryFindUniqueArgs} args - Arguments to find a ClosureProductCategory
+     * @example
+     * // Get one ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ClosureProductCategoryFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ClosureProductCategoryFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'ClosureProductCategory'> extends True ? Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>> : Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T> | null, null>
+
+    /**
+     * Find one ClosureProductCategory that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ClosureProductCategoryFindUniqueOrThrowArgs} args - Arguments to find a ClosureProductCategory
+     * @example
+     * // Get one ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ClosureProductCategoryFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ClosureProductCategoryFindUniqueOrThrowArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Find the first ClosureProductCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryFindFirstArgs} args - Arguments to find a ClosureProductCategory
+     * @example
+     * // Get one ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ClosureProductCategoryFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ClosureProductCategoryFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'ClosureProductCategory'> extends True ? Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>> : Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T> | null, null>
+
+    /**
+     * Find the first ClosureProductCategory that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryFindFirstOrThrowArgs} args - Arguments to find a ClosureProductCategory
+     * @example
+     * // Get one ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ClosureProductCategoryFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ClosureProductCategoryFindFirstOrThrowArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Find zero or more ClosureProductCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ClosureProductCategories
+     * const closureProductCategories = await prisma.closureProductCategory.findMany()
+     * 
+     * // Get first 10 ClosureProductCategories
+     * const closureProductCategories = await prisma.closureProductCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `ancestor`
+     * const closureProductCategoryWithAncestorOnly = await prisma.closureProductCategory.findMany({ select: { ancestor: true } })
+     * 
+    **/
+    findMany<T extends ClosureProductCategoryFindManyArgs>(
+      args?: SelectSubset<T, ClosureProductCategoryFindManyArgs>
+    ): PrismaPromise<Array<ClosureProductCategoryGetPayload<T>>>
+
+    /**
+     * Create a ClosureProductCategory.
+     * @param {ClosureProductCategoryCreateArgs} args - Arguments to create a ClosureProductCategory.
+     * @example
+     * // Create one ClosureProductCategory
+     * const ClosureProductCategory = await prisma.closureProductCategory.create({
+     *   data: {
+     *     // ... data to create a ClosureProductCategory
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ClosureProductCategoryCreateArgs>(
+      args: SelectSubset<T, ClosureProductCategoryCreateArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Create many ClosureProductCategories.
+     *     @param {ClosureProductCategoryCreateManyArgs} args - Arguments to create many ClosureProductCategories.
+     *     @example
+     *     // Create many ClosureProductCategories
+     *     const closureProductCategory = await prisma.closureProductCategory.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ClosureProductCategoryCreateManyArgs>(
+      args?: SelectSubset<T, ClosureProductCategoryCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ClosureProductCategory.
+     * @param {ClosureProductCategoryDeleteArgs} args - Arguments to delete one ClosureProductCategory.
+     * @example
+     * // Delete one ClosureProductCategory
+     * const ClosureProductCategory = await prisma.closureProductCategory.delete({
+     *   where: {
+     *     // ... filter to delete one ClosureProductCategory
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ClosureProductCategoryDeleteArgs>(
+      args: SelectSubset<T, ClosureProductCategoryDeleteArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Update one ClosureProductCategory.
+     * @param {ClosureProductCategoryUpdateArgs} args - Arguments to update one ClosureProductCategory.
+     * @example
+     * // Update one ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ClosureProductCategoryUpdateArgs>(
+      args: SelectSubset<T, ClosureProductCategoryUpdateArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Delete zero or more ClosureProductCategories.
+     * @param {ClosureProductCategoryDeleteManyArgs} args - Arguments to filter ClosureProductCategories to delete.
+     * @example
+     * // Delete a few ClosureProductCategories
+     * const { count } = await prisma.closureProductCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ClosureProductCategoryDeleteManyArgs>(
+      args?: SelectSubset<T, ClosureProductCategoryDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ClosureProductCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ClosureProductCategories
+     * const closureProductCategory = await prisma.closureProductCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ClosureProductCategoryUpdateManyArgs>(
+      args: SelectSubset<T, ClosureProductCategoryUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ClosureProductCategory.
+     * @param {ClosureProductCategoryUpsertArgs} args - Arguments to update or create a ClosureProductCategory.
+     * @example
+     * // Update or create a ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.upsert({
+     *   create: {
+     *     // ... data to create a ClosureProductCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ClosureProductCategory we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ClosureProductCategoryUpsertArgs>(
+      args: SelectSubset<T, ClosureProductCategoryUpsertArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Count the number of ClosureProductCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryCountArgs} args - Arguments to filter ClosureProductCategories to count.
+     * @example
+     * // Count the number of ClosureProductCategories
+     * const count = await prisma.closureProductCategory.count({
+     *   where: {
+     *     // ... the filter for the ClosureProductCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends ClosureProductCategoryCountArgs>(
+      args?: Subset<T, ClosureProductCategoryCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ClosureProductCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ClosureProductCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ClosureProductCategoryAggregateArgs>(args: Subset<T, ClosureProductCategoryAggregateArgs>): PrismaPromise<GetClosureProductCategoryAggregateType<T>>
+
+    /**
+     * Group by ClosureProductCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ClosureProductCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ClosureProductCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: ClosureProductCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ClosureProductCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClosureProductCategoryGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ClosureProductCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ClosureProductCategoryClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    AncestorCategory<T extends ProductCategoryArgs= {}>(args?: Subset<T, ProductCategoryArgs>): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T> | Null>;
+
+    DescendantCategory<T extends ProductCategoryArgs= {}>(args?: Subset<T, ProductCategoryArgs>): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ClosureProductCategory base type for findUnique actions
+   */
+  export type ClosureProductCategoryFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter, which ClosureProductCategory to fetch.
+     * 
+    **/
+    where: ClosureProductCategoryWhereUniqueInput
+  }
+
+  /**
+   * ClosureProductCategory: findUnique
+   */
+  export interface ClosureProductCategoryFindUniqueArgs extends ClosureProductCategoryFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ClosureProductCategory findUniqueOrThrow
+   */
+  export type ClosureProductCategoryFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter, which ClosureProductCategory to fetch.
+     * 
+    **/
+    where: ClosureProductCategoryWhereUniqueInput
+  }
+
+
+  /**
+   * ClosureProductCategory base type for findFirst actions
+   */
+  export type ClosureProductCategoryFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter, which ClosureProductCategory to fetch.
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClosureProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ClosureProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ClosureProductCategories.
+     * 
+    **/
+    cursor?: ClosureProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClosureProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClosureProductCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ClosureProductCategories.
+     * 
+    **/
+    distinct?: Enumerable<ClosureProductCategoryScalarFieldEnum>
+  }
+
+  /**
+   * ClosureProductCategory: findFirst
+   */
+  export interface ClosureProductCategoryFindFirstArgs extends ClosureProductCategoryFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ClosureProductCategory findFirstOrThrow
+   */
+  export type ClosureProductCategoryFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter, which ClosureProductCategory to fetch.
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClosureProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ClosureProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ClosureProductCategories.
+     * 
+    **/
+    cursor?: ClosureProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClosureProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClosureProductCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ClosureProductCategories.
+     * 
+    **/
+    distinct?: Enumerable<ClosureProductCategoryScalarFieldEnum>
+  }
+
+
+  /**
+   * ClosureProductCategory findMany
+   */
+  export type ClosureProductCategoryFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter, which ClosureProductCategories to fetch.
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClosureProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ClosureProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ClosureProductCategories.
+     * 
+    **/
+    cursor?: ClosureProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClosureProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClosureProductCategories.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<ClosureProductCategoryScalarFieldEnum>
+  }
+
+
+  /**
+   * ClosureProductCategory create
+   */
+  export type ClosureProductCategoryCreateArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * The data needed to create a ClosureProductCategory.
+     * 
+    **/
+    data: XOR<ClosureProductCategoryCreateInput, ClosureProductCategoryUncheckedCreateInput>
+  }
+
+
+  /**
+   * ClosureProductCategory createMany
+   */
+  export type ClosureProductCategoryCreateManyArgs = {
+    /**
+     * The data used to create many ClosureProductCategories.
+     * 
+    **/
+    data: Enumerable<ClosureProductCategoryCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * ClosureProductCategory update
+   */
+  export type ClosureProductCategoryUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * The data needed to update a ClosureProductCategory.
+     * 
+    **/
+    data: XOR<ClosureProductCategoryUpdateInput, ClosureProductCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which ClosureProductCategory to update.
+     * 
+    **/
+    where: ClosureProductCategoryWhereUniqueInput
+  }
+
+
+  /**
+   * ClosureProductCategory updateMany
+   */
+  export type ClosureProductCategoryUpdateManyArgs = {
+    /**
+     * The data used to update ClosureProductCategories.
+     * 
+    **/
+    data: XOR<ClosureProductCategoryUpdateManyMutationInput, ClosureProductCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which ClosureProductCategories to update
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+  }
+
+
+  /**
+   * ClosureProductCategory upsert
+   */
+  export type ClosureProductCategoryUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * The filter to search for the ClosureProductCategory to update in case it exists.
+     * 
+    **/
+    where: ClosureProductCategoryWhereUniqueInput
+    /**
+     * In case the ClosureProductCategory found by the `where` argument doesn't exist, create a new ClosureProductCategory with this data.
+     * 
+    **/
+    create: XOR<ClosureProductCategoryCreateInput, ClosureProductCategoryUncheckedCreateInput>
+    /**
+     * In case the ClosureProductCategory was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<ClosureProductCategoryUpdateInput, ClosureProductCategoryUncheckedUpdateInput>
+  }
+
+
+  /**
+   * ClosureProductCategory delete
+   */
+  export type ClosureProductCategoryDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter which ClosureProductCategory to delete.
+     * 
+    **/
+    where: ClosureProductCategoryWhereUniqueInput
+  }
+
+
+  /**
+   * ClosureProductCategory deleteMany
+   */
+  export type ClosureProductCategoryDeleteManyArgs = {
+    /**
+     * Filter which ClosureProductCategories to delete
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+  }
+
+
+  /**
+   * ClosureProductCategory without action
+   */
+  export type ClosureProductCategoryArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
   }
 
 
@@ -27717,6 +28747,15 @@ export namespace Prisma {
   export type CafeVirtualLinkThumbnailImageScalarFieldEnum = (typeof CafeVirtualLinkThumbnailImageScalarFieldEnum)[keyof typeof CafeVirtualLinkThumbnailImageScalarFieldEnum]
 
 
+  export const ClosureProductCategoryScalarFieldEnum: {
+    ancestor: 'ancestor',
+    descendant: 'descendant',
+    depth: 'depth'
+  };
+
+  export type ClosureProductCategoryScalarFieldEnum = (typeof ClosureProductCategoryScalarFieldEnum)[keyof typeof ClosureProductCategoryScalarFieldEnum]
+
+
   export const ClosureRegionCategoryScalarFieldEnum: {
     ancestor: 'ancestor',
     descendant: 'descendant',
@@ -27744,8 +28783,7 @@ export namespace Prisma {
     name: 'name',
     description: 'description',
     isDisable: 'isDisable',
-    code: 'code',
-    parentId: 'parentId'
+    code: 'code'
   };
 
   export type ProductCategoryScalarFieldEnum = (typeof ProductCategoryScalarFieldEnum)[keyof typeof ProductCategoryScalarFieldEnum]
@@ -29135,9 +30173,8 @@ export namespace Prisma {
     description?: StringNullableFilter | string | null
     isDisable?: BoolFilter | boolean
     code?: StringFilter | string
-    parentId?: IntNullableFilter | number | null
-    parent?: XOR<ProductCategoryRelationFilter, ProductCategoryWhereInput> | null
-    children?: ProductCategoryListRelationFilter
+    AncestorCategories?: ClosureProductCategoryListRelationFilter
+    DescendantCategories?: ClosureProductCategoryListRelationFilter
     Products?: ProductListRelationFilter
   }
 
@@ -29148,9 +30185,8 @@ export namespace Prisma {
     description?: SortOrder
     isDisable?: SortOrder
     code?: SortOrder
-    parentId?: SortOrder
-    parent?: ProductCategoryOrderByWithRelationInput
-    children?: ProductCategoryOrderByRelationAggregateInput
+    AncestorCategories?: ClosureProductCategoryOrderByRelationAggregateInput
+    DescendantCategories?: ClosureProductCategoryOrderByRelationAggregateInput
     Products?: ProductOrderByRelationAggregateInput
   }
 
@@ -29166,7 +30202,6 @@ export namespace Prisma {
     description?: SortOrder
     isDisable?: SortOrder
     code?: SortOrder
-    parentId?: SortOrder
     _count?: ProductCategoryCountOrderByAggregateInput
     _avg?: ProductCategoryAvgOrderByAggregateInput
     _max?: ProductCategoryMaxOrderByAggregateInput
@@ -29184,7 +30219,49 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter | string | null
     isDisable?: BoolWithAggregatesFilter | boolean
     code?: StringWithAggregatesFilter | string
-    parentId?: IntNullableWithAggregatesFilter | number | null
+  }
+
+  export type ClosureProductCategoryWhereInput = {
+    AND?: Enumerable<ClosureProductCategoryWhereInput>
+    OR?: Enumerable<ClosureProductCategoryWhereInput>
+    NOT?: Enumerable<ClosureProductCategoryWhereInput>
+    ancestor?: IntFilter | number
+    descendant?: IntFilter | number
+    depth?: IntFilter | number
+    AncestorCategory?: XOR<ProductCategoryRelationFilter, ProductCategoryWhereInput>
+    DescendantCategory?: XOR<ProductCategoryRelationFilter, ProductCategoryWhereInput>
+  }
+
+  export type ClosureProductCategoryOrderByWithRelationInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+    AncestorCategory?: ProductCategoryOrderByWithRelationInput
+    DescendantCategory?: ProductCategoryOrderByWithRelationInput
+  }
+
+  export type ClosureProductCategoryWhereUniqueInput = {
+    productCategoryTreeUnique?: ClosureProductCategoryProductCategoryTreeUniqueCompoundUniqueInput
+  }
+
+  export type ClosureProductCategoryOrderByWithAggregationInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+    _count?: ClosureProductCategoryCountOrderByAggregateInput
+    _avg?: ClosureProductCategoryAvgOrderByAggregateInput
+    _max?: ClosureProductCategoryMaxOrderByAggregateInput
+    _min?: ClosureProductCategoryMinOrderByAggregateInput
+    _sum?: ClosureProductCategorySumOrderByAggregateInput
+  }
+
+  export type ClosureProductCategoryScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ClosureProductCategoryScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ClosureProductCategoryScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ClosureProductCategoryScalarWhereWithAggregatesInput>
+    ancestor?: IntWithAggregatesFilter | number
+    descendant?: IntWithAggregatesFilter | number
+    depth?: IntWithAggregatesFilter | number
   }
 
   export type ProductWhereInput = {
@@ -30922,8 +31999,8 @@ export namespace Prisma {
     description?: string | null
     isDisable?: boolean
     code: string
-    parent?: ProductCategoryCreateNestedOneWithoutChildrenInput
-    children?: ProductCategoryCreateNestedManyWithoutParentInput
+    AncestorCategories?: ClosureProductCategoryCreateNestedManyWithoutAncestorCategoryInput
+    DescendantCategories?: ClosureProductCategoryCreateNestedManyWithoutDescendantCategoryInput
     Products?: ProductCreateNestedManyWithoutCategoryInput
   }
 
@@ -30934,8 +32011,8 @@ export namespace Prisma {
     description?: string | null
     isDisable?: boolean
     code: string
-    parentId?: number | null
-    children?: ProductCategoryUncheckedCreateNestedManyWithoutParentInput
+    AncestorCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
+    DescendantCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
     Products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
   }
 
@@ -30945,8 +32022,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     code?: StringFieldUpdateOperationsInput | string
-    parent?: ProductCategoryUpdateOneWithoutChildrenNestedInput
-    children?: ProductCategoryUpdateManyWithoutParentNestedInput
+    AncestorCategories?: ClosureProductCategoryUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureProductCategoryUpdateManyWithoutDescendantCategoryNestedInput
     Products?: ProductUpdateManyWithoutCategoryNestedInput
   }
 
@@ -30957,8 +32034,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     code?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableIntFieldUpdateOperationsInput | number | null
-    children?: ProductCategoryUncheckedUpdateManyWithoutParentNestedInput
+    AncestorCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
     Products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
   }
 
@@ -30969,7 +32046,6 @@ export namespace Prisma {
     description?: string | null
     isDisable?: boolean
     code: string
-    parentId?: number | null
   }
 
   export type ProductCategoryUpdateManyMutationInput = {
@@ -30987,7 +32063,46 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     code?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableIntFieldUpdateOperationsInput | number | null
+  }
+
+  export type ClosureProductCategoryCreateInput = {
+    depth?: number
+    AncestorCategory: ProductCategoryCreateNestedOneWithoutAncestorCategoriesInput
+    DescendantCategory: ProductCategoryCreateNestedOneWithoutDescendantCategoriesInput
+  }
+
+  export type ClosureProductCategoryUncheckedCreateInput = {
+    ancestor: number
+    descendant: number
+    depth?: number
+  }
+
+  export type ClosureProductCategoryUpdateInput = {
+    depth?: IntFieldUpdateOperationsInput | number
+    AncestorCategory?: ProductCategoryUpdateOneRequiredWithoutAncestorCategoriesNestedInput
+    DescendantCategory?: ProductCategoryUpdateOneRequiredWithoutDescendantCategoriesNestedInput
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateInput = {
+    ancestor?: IntFieldUpdateOperationsInput | number
+    descendant?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ClosureProductCategoryCreateManyInput = {
+    ancestor: number
+    descendant: number
+    depth?: number
+  }
+
+  export type ClosureProductCategoryUpdateManyMutationInput = {
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateManyInput = {
+    ancestor?: IntFieldUpdateOperationsInput | number
+    descendant?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
   }
 
   export type ProductCreateInput = {
@@ -32673,18 +33788,13 @@ export namespace Prisma {
     size?: SortOrder
   }
 
-  export type ProductCategoryRelationFilter = {
-    is?: ProductCategoryWhereInput | null
-    isNot?: ProductCategoryWhereInput | null
+  export type ClosureProductCategoryListRelationFilter = {
+    every?: ClosureProductCategoryWhereInput
+    some?: ClosureProductCategoryWhereInput
+    none?: ClosureProductCategoryWhereInput
   }
 
-  export type ProductCategoryListRelationFilter = {
-    every?: ProductCategoryWhereInput
-    some?: ProductCategoryWhereInput
-    none?: ProductCategoryWhereInput
-  }
-
-  export type ProductCategoryOrderByRelationAggregateInput = {
+  export type ClosureProductCategoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -32695,12 +33805,10 @@ export namespace Prisma {
     description?: SortOrder
     isDisable?: SortOrder
     code?: SortOrder
-    parentId?: SortOrder
   }
 
   export type ProductCategoryAvgOrderByAggregateInput = {
     id?: SortOrder
-    parentId?: SortOrder
   }
 
   export type ProductCategoryMaxOrderByAggregateInput = {
@@ -32710,7 +33818,6 @@ export namespace Prisma {
     description?: SortOrder
     isDisable?: SortOrder
     code?: SortOrder
-    parentId?: SortOrder
   }
 
   export type ProductCategoryMinOrderByAggregateInput = {
@@ -32720,12 +33827,51 @@ export namespace Prisma {
     description?: SortOrder
     isDisable?: SortOrder
     code?: SortOrder
-    parentId?: SortOrder
   }
 
   export type ProductCategorySumOrderByAggregateInput = {
     id?: SortOrder
-    parentId?: SortOrder
+  }
+
+  export type ProductCategoryRelationFilter = {
+    is?: ProductCategoryWhereInput
+    isNot?: ProductCategoryWhereInput
+  }
+
+  export type ClosureProductCategoryProductCategoryTreeUniqueCompoundUniqueInput = {
+    ancestor: number
+    descendant: number
+    depth: number
+  }
+
+  export type ClosureProductCategoryCountOrderByAggregateInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+  }
+
+  export type ClosureProductCategoryAvgOrderByAggregateInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+  }
+
+  export type ClosureProductCategoryMaxOrderByAggregateInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+  }
+
+  export type ClosureProductCategoryMinOrderByAggregateInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+  }
+
+  export type ClosureProductCategorySumOrderByAggregateInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
   }
 
   export type ProductImageListRelationFilter = {
@@ -34392,17 +35538,18 @@ export namespace Prisma {
     update?: XOR<CafeCouponUpdateWithoutCafeCouponQRCodesInput, CafeCouponUncheckedUpdateWithoutCafeCouponQRCodesInput>
   }
 
-  export type ProductCategoryCreateNestedOneWithoutChildrenInput = {
-    create?: XOR<ProductCategoryCreateWithoutChildrenInput, ProductCategoryUncheckedCreateWithoutChildrenInput>
-    connectOrCreate?: ProductCategoryCreateOrConnectWithoutChildrenInput
-    connect?: ProductCategoryWhereUniqueInput
+  export type ClosureProductCategoryCreateNestedManyWithoutAncestorCategoryInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutAncestorCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutAncestorCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyAncestorCategoryInputEnvelope
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
   }
 
-  export type ProductCategoryCreateNestedManyWithoutParentInput = {
-    create?: XOR<Enumerable<ProductCategoryCreateWithoutParentInput>, Enumerable<ProductCategoryUncheckedCreateWithoutParentInput>>
-    connectOrCreate?: Enumerable<ProductCategoryCreateOrConnectWithoutParentInput>
-    createMany?: ProductCategoryCreateManyParentInputEnvelope
-    connect?: Enumerable<ProductCategoryWhereUniqueInput>
+  export type ClosureProductCategoryCreateNestedManyWithoutDescendantCategoryInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutDescendantCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutDescendantCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyDescendantCategoryInputEnvelope
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
   }
 
   export type ProductCreateNestedManyWithoutCategoryInput = {
@@ -34412,11 +35559,18 @@ export namespace Prisma {
     connect?: Enumerable<ProductWhereUniqueInput>
   }
 
-  export type ProductCategoryUncheckedCreateNestedManyWithoutParentInput = {
-    create?: XOR<Enumerable<ProductCategoryCreateWithoutParentInput>, Enumerable<ProductCategoryUncheckedCreateWithoutParentInput>>
-    connectOrCreate?: Enumerable<ProductCategoryCreateOrConnectWithoutParentInput>
-    createMany?: ProductCategoryCreateManyParentInputEnvelope
-    connect?: Enumerable<ProductCategoryWhereUniqueInput>
+  export type ClosureProductCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutAncestorCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutAncestorCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyAncestorCategoryInputEnvelope
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+  }
+
+  export type ClosureProductCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutDescendantCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutDescendantCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyDescendantCategoryInputEnvelope
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
   }
 
   export type ProductUncheckedCreateNestedManyWithoutCategoryInput = {
@@ -34426,28 +35580,32 @@ export namespace Prisma {
     connect?: Enumerable<ProductWhereUniqueInput>
   }
 
-  export type ProductCategoryUpdateOneWithoutChildrenNestedInput = {
-    create?: XOR<ProductCategoryCreateWithoutChildrenInput, ProductCategoryUncheckedCreateWithoutChildrenInput>
-    connectOrCreate?: ProductCategoryCreateOrConnectWithoutChildrenInput
-    upsert?: ProductCategoryUpsertWithoutChildrenInput
-    disconnect?: boolean
-    delete?: boolean
-    connect?: ProductCategoryWhereUniqueInput
-    update?: XOR<ProductCategoryUpdateWithoutChildrenInput, ProductCategoryUncheckedUpdateWithoutChildrenInput>
+  export type ClosureProductCategoryUpdateManyWithoutAncestorCategoryNestedInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutAncestorCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutAncestorCategoryInput>
+    upsert?: Enumerable<ClosureProductCategoryUpsertWithWhereUniqueWithoutAncestorCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyAncestorCategoryInputEnvelope
+    set?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    disconnect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    delete?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    update?: Enumerable<ClosureProductCategoryUpdateWithWhereUniqueWithoutAncestorCategoryInput>
+    updateMany?: Enumerable<ClosureProductCategoryUpdateManyWithWhereWithoutAncestorCategoryInput>
+    deleteMany?: Enumerable<ClosureProductCategoryScalarWhereInput>
   }
 
-  export type ProductCategoryUpdateManyWithoutParentNestedInput = {
-    create?: XOR<Enumerable<ProductCategoryCreateWithoutParentInput>, Enumerable<ProductCategoryUncheckedCreateWithoutParentInput>>
-    connectOrCreate?: Enumerable<ProductCategoryCreateOrConnectWithoutParentInput>
-    upsert?: Enumerable<ProductCategoryUpsertWithWhereUniqueWithoutParentInput>
-    createMany?: ProductCategoryCreateManyParentInputEnvelope
-    set?: Enumerable<ProductCategoryWhereUniqueInput>
-    disconnect?: Enumerable<ProductCategoryWhereUniqueInput>
-    delete?: Enumerable<ProductCategoryWhereUniqueInput>
-    connect?: Enumerable<ProductCategoryWhereUniqueInput>
-    update?: Enumerable<ProductCategoryUpdateWithWhereUniqueWithoutParentInput>
-    updateMany?: Enumerable<ProductCategoryUpdateManyWithWhereWithoutParentInput>
-    deleteMany?: Enumerable<ProductCategoryScalarWhereInput>
+  export type ClosureProductCategoryUpdateManyWithoutDescendantCategoryNestedInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutDescendantCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutDescendantCategoryInput>
+    upsert?: Enumerable<ClosureProductCategoryUpsertWithWhereUniqueWithoutDescendantCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyDescendantCategoryInputEnvelope
+    set?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    disconnect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    delete?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    update?: Enumerable<ClosureProductCategoryUpdateWithWhereUniqueWithoutDescendantCategoryInput>
+    updateMany?: Enumerable<ClosureProductCategoryUpdateManyWithWhereWithoutDescendantCategoryInput>
+    deleteMany?: Enumerable<ClosureProductCategoryScalarWhereInput>
   }
 
   export type ProductUpdateManyWithoutCategoryNestedInput = {
@@ -34464,18 +35622,32 @@ export namespace Prisma {
     deleteMany?: Enumerable<ProductScalarWhereInput>
   }
 
-  export type ProductCategoryUncheckedUpdateManyWithoutParentNestedInput = {
-    create?: XOR<Enumerable<ProductCategoryCreateWithoutParentInput>, Enumerable<ProductCategoryUncheckedCreateWithoutParentInput>>
-    connectOrCreate?: Enumerable<ProductCategoryCreateOrConnectWithoutParentInput>
-    upsert?: Enumerable<ProductCategoryUpsertWithWhereUniqueWithoutParentInput>
-    createMany?: ProductCategoryCreateManyParentInputEnvelope
-    set?: Enumerable<ProductCategoryWhereUniqueInput>
-    disconnect?: Enumerable<ProductCategoryWhereUniqueInput>
-    delete?: Enumerable<ProductCategoryWhereUniqueInput>
-    connect?: Enumerable<ProductCategoryWhereUniqueInput>
-    update?: Enumerable<ProductCategoryUpdateWithWhereUniqueWithoutParentInput>
-    updateMany?: Enumerable<ProductCategoryUpdateManyWithWhereWithoutParentInput>
-    deleteMany?: Enumerable<ProductCategoryScalarWhereInput>
+  export type ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutAncestorCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutAncestorCategoryInput>
+    upsert?: Enumerable<ClosureProductCategoryUpsertWithWhereUniqueWithoutAncestorCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyAncestorCategoryInputEnvelope
+    set?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    disconnect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    delete?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    update?: Enumerable<ClosureProductCategoryUpdateWithWhereUniqueWithoutAncestorCategoryInput>
+    updateMany?: Enumerable<ClosureProductCategoryUpdateManyWithWhereWithoutAncestorCategoryInput>
+    deleteMany?: Enumerable<ClosureProductCategoryScalarWhereInput>
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutDescendantCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutDescendantCategoryInput>
+    upsert?: Enumerable<ClosureProductCategoryUpsertWithWhereUniqueWithoutDescendantCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyDescendantCategoryInputEnvelope
+    set?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    disconnect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    delete?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    update?: Enumerable<ClosureProductCategoryUpdateWithWhereUniqueWithoutDescendantCategoryInput>
+    updateMany?: Enumerable<ClosureProductCategoryUpdateManyWithWhereWithoutDescendantCategoryInput>
+    deleteMany?: Enumerable<ClosureProductCategoryScalarWhereInput>
   }
 
   export type ProductUncheckedUpdateManyWithoutCategoryNestedInput = {
@@ -34490,6 +35662,34 @@ export namespace Prisma {
     update?: Enumerable<ProductUpdateWithWhereUniqueWithoutCategoryInput>
     updateMany?: Enumerable<ProductUpdateManyWithWhereWithoutCategoryInput>
     deleteMany?: Enumerable<ProductScalarWhereInput>
+  }
+
+  export type ProductCategoryCreateNestedOneWithoutAncestorCategoriesInput = {
+    create?: XOR<ProductCategoryCreateWithoutAncestorCategoriesInput, ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput>
+    connectOrCreate?: ProductCategoryCreateOrConnectWithoutAncestorCategoriesInput
+    connect?: ProductCategoryWhereUniqueInput
+  }
+
+  export type ProductCategoryCreateNestedOneWithoutDescendantCategoriesInput = {
+    create?: XOR<ProductCategoryCreateWithoutDescendantCategoriesInput, ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput>
+    connectOrCreate?: ProductCategoryCreateOrConnectWithoutDescendantCategoriesInput
+    connect?: ProductCategoryWhereUniqueInput
+  }
+
+  export type ProductCategoryUpdateOneRequiredWithoutAncestorCategoriesNestedInput = {
+    create?: XOR<ProductCategoryCreateWithoutAncestorCategoriesInput, ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput>
+    connectOrCreate?: ProductCategoryCreateOrConnectWithoutAncestorCategoriesInput
+    upsert?: ProductCategoryUpsertWithoutAncestorCategoriesInput
+    connect?: ProductCategoryWhereUniqueInput
+    update?: XOR<ProductCategoryUpdateWithoutAncestorCategoriesInput, ProductCategoryUncheckedUpdateWithoutAncestorCategoriesInput>
+  }
+
+  export type ProductCategoryUpdateOneRequiredWithoutDescendantCategoriesNestedInput = {
+    create?: XOR<ProductCategoryCreateWithoutDescendantCategoriesInput, ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput>
+    connectOrCreate?: ProductCategoryCreateOrConnectWithoutDescendantCategoriesInput
+    upsert?: ProductCategoryUpsertWithoutDescendantCategoriesInput
+    connect?: ProductCategoryWhereUniqueInput
+    update?: XOR<ProductCategoryUpdateWithoutDescendantCategoriesInput, ProductCategoryUncheckedUpdateWithoutDescendantCategoriesInput>
   }
 
   export type ProductCategoryCreateNestedOneWithoutProductsInput = {
@@ -38058,60 +39258,43 @@ export namespace Prisma {
     CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput
   }
 
-  export type ProductCategoryCreateWithoutChildrenInput = {
-    createdAt?: Date | string
-    name: string
-    description?: string | null
-    isDisable?: boolean
-    code: string
-    parent?: ProductCategoryCreateNestedOneWithoutChildrenInput
-    Products?: ProductCreateNestedManyWithoutCategoryInput
+  export type ClosureProductCategoryCreateWithoutAncestorCategoryInput = {
+    depth?: number
+    DescendantCategory: ProductCategoryCreateNestedOneWithoutDescendantCategoriesInput
   }
 
-  export type ProductCategoryUncheckedCreateWithoutChildrenInput = {
-    id?: number
-    createdAt?: Date | string
-    name: string
-    description?: string | null
-    isDisable?: boolean
-    code: string
-    parentId?: number | null
-    Products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+  export type ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput = {
+    descendant: number
+    depth?: number
   }
 
-  export type ProductCategoryCreateOrConnectWithoutChildrenInput = {
-    where: ProductCategoryWhereUniqueInput
-    create: XOR<ProductCategoryCreateWithoutChildrenInput, ProductCategoryUncheckedCreateWithoutChildrenInput>
+  export type ClosureProductCategoryCreateOrConnectWithoutAncestorCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    create: XOR<ClosureProductCategoryCreateWithoutAncestorCategoryInput, ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>
   }
 
-  export type ProductCategoryCreateWithoutParentInput = {
-    createdAt?: Date | string
-    name: string
-    description?: string | null
-    isDisable?: boolean
-    code: string
-    children?: ProductCategoryCreateNestedManyWithoutParentInput
-    Products?: ProductCreateNestedManyWithoutCategoryInput
+  export type ClosureProductCategoryCreateManyAncestorCategoryInputEnvelope = {
+    data: Enumerable<ClosureProductCategoryCreateManyAncestorCategoryInput>
+    skipDuplicates?: boolean
   }
 
-  export type ProductCategoryUncheckedCreateWithoutParentInput = {
-    id?: number
-    createdAt?: Date | string
-    name: string
-    description?: string | null
-    isDisable?: boolean
-    code: string
-    children?: ProductCategoryUncheckedCreateNestedManyWithoutParentInput
-    Products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+  export type ClosureProductCategoryCreateWithoutDescendantCategoryInput = {
+    depth?: number
+    AncestorCategory: ProductCategoryCreateNestedOneWithoutAncestorCategoriesInput
   }
 
-  export type ProductCategoryCreateOrConnectWithoutParentInput = {
-    where: ProductCategoryWhereUniqueInput
-    create: XOR<ProductCategoryCreateWithoutParentInput, ProductCategoryUncheckedCreateWithoutParentInput>
+  export type ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput = {
+    ancestor: number
+    depth?: number
   }
 
-  export type ProductCategoryCreateManyParentInputEnvelope = {
-    data: Enumerable<ProductCategoryCreateManyParentInput>
+  export type ClosureProductCategoryCreateOrConnectWithoutDescendantCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    create: XOR<ClosureProductCategoryCreateWithoutDescendantCategoryInput, ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>
+  }
+
+  export type ClosureProductCategoryCreateManyDescendantCategoryInputEnvelope = {
+    data: Enumerable<ClosureProductCategoryCreateManyDescendantCategoryInput>
     skipDuplicates?: boolean
   }
 
@@ -38160,59 +39343,45 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ProductCategoryUpsertWithoutChildrenInput = {
-    update: XOR<ProductCategoryUpdateWithoutChildrenInput, ProductCategoryUncheckedUpdateWithoutChildrenInput>
-    create: XOR<ProductCategoryCreateWithoutChildrenInput, ProductCategoryUncheckedCreateWithoutChildrenInput>
+  export type ClosureProductCategoryUpsertWithWhereUniqueWithoutAncestorCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    update: XOR<ClosureProductCategoryUpdateWithoutAncestorCategoryInput, ClosureProductCategoryUncheckedUpdateWithoutAncestorCategoryInput>
+    create: XOR<ClosureProductCategoryCreateWithoutAncestorCategoryInput, ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>
   }
 
-  export type ProductCategoryUpdateWithoutChildrenInput = {
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isDisable?: BoolFieldUpdateOperationsInput | boolean
-    code?: StringFieldUpdateOperationsInput | string
-    parent?: ProductCategoryUpdateOneWithoutChildrenNestedInput
-    Products?: ProductUpdateManyWithoutCategoryNestedInput
+  export type ClosureProductCategoryUpdateWithWhereUniqueWithoutAncestorCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    data: XOR<ClosureProductCategoryUpdateWithoutAncestorCategoryInput, ClosureProductCategoryUncheckedUpdateWithoutAncestorCategoryInput>
   }
 
-  export type ProductCategoryUncheckedUpdateWithoutChildrenInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isDisable?: BoolFieldUpdateOperationsInput | boolean
-    code?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableIntFieldUpdateOperationsInput | number | null
-    Products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+  export type ClosureProductCategoryUpdateManyWithWhereWithoutAncestorCategoryInput = {
+    where: ClosureProductCategoryScalarWhereInput
+    data: XOR<ClosureProductCategoryUpdateManyMutationInput, ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoriesInput>
   }
 
-  export type ProductCategoryUpsertWithWhereUniqueWithoutParentInput = {
-    where: ProductCategoryWhereUniqueInput
-    update: XOR<ProductCategoryUpdateWithoutParentInput, ProductCategoryUncheckedUpdateWithoutParentInput>
-    create: XOR<ProductCategoryCreateWithoutParentInput, ProductCategoryUncheckedCreateWithoutParentInput>
+  export type ClosureProductCategoryScalarWhereInput = {
+    AND?: Enumerable<ClosureProductCategoryScalarWhereInput>
+    OR?: Enumerable<ClosureProductCategoryScalarWhereInput>
+    NOT?: Enumerable<ClosureProductCategoryScalarWhereInput>
+    ancestor?: IntFilter | number
+    descendant?: IntFilter | number
+    depth?: IntFilter | number
   }
 
-  export type ProductCategoryUpdateWithWhereUniqueWithoutParentInput = {
-    where: ProductCategoryWhereUniqueInput
-    data: XOR<ProductCategoryUpdateWithoutParentInput, ProductCategoryUncheckedUpdateWithoutParentInput>
+  export type ClosureProductCategoryUpsertWithWhereUniqueWithoutDescendantCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    update: XOR<ClosureProductCategoryUpdateWithoutDescendantCategoryInput, ClosureProductCategoryUncheckedUpdateWithoutDescendantCategoryInput>
+    create: XOR<ClosureProductCategoryCreateWithoutDescendantCategoryInput, ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>
   }
 
-  export type ProductCategoryUpdateManyWithWhereWithoutParentInput = {
-    where: ProductCategoryScalarWhereInput
-    data: XOR<ProductCategoryUpdateManyMutationInput, ProductCategoryUncheckedUpdateManyWithoutChildrenInput>
+  export type ClosureProductCategoryUpdateWithWhereUniqueWithoutDescendantCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    data: XOR<ClosureProductCategoryUpdateWithoutDescendantCategoryInput, ClosureProductCategoryUncheckedUpdateWithoutDescendantCategoryInput>
   }
 
-  export type ProductCategoryScalarWhereInput = {
-    AND?: Enumerable<ProductCategoryScalarWhereInput>
-    OR?: Enumerable<ProductCategoryScalarWhereInput>
-    NOT?: Enumerable<ProductCategoryScalarWhereInput>
-    id?: IntFilter | number
-    createdAt?: DateTimeFilter | Date | string
-    name?: StringFilter | string
-    description?: StringNullableFilter | string | null
-    isDisable?: BoolFilter | boolean
-    code?: StringFilter | string
-    parentId?: IntNullableFilter | number | null
+  export type ClosureProductCategoryUpdateManyWithWhereWithoutDescendantCategoryInput = {
+    where: ClosureProductCategoryScalarWhereInput
+    data: XOR<ClosureProductCategoryUpdateManyMutationInput, ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoriesInput>
   }
 
   export type ProductUpsertWithWhereUniqueWithoutCategoryInput = {
@@ -38231,14 +39400,118 @@ export namespace Prisma {
     data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutProductsInput>
   }
 
+  export type ProductCategoryCreateWithoutAncestorCategoriesInput = {
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    DescendantCategories?: ClosureProductCategoryCreateNestedManyWithoutDescendantCategoryInput
+    Products?: ProductCreateNestedManyWithoutCategoryInput
+  }
+
+  export type ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    DescendantCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type ProductCategoryCreateOrConnectWithoutAncestorCategoriesInput = {
+    where: ProductCategoryWhereUniqueInput
+    create: XOR<ProductCategoryCreateWithoutAncestorCategoriesInput, ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput>
+  }
+
+  export type ProductCategoryCreateWithoutDescendantCategoriesInput = {
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    AncestorCategories?: ClosureProductCategoryCreateNestedManyWithoutAncestorCategoryInput
+    Products?: ProductCreateNestedManyWithoutCategoryInput
+  }
+
+  export type ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    AncestorCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type ProductCategoryCreateOrConnectWithoutDescendantCategoriesInput = {
+    where: ProductCategoryWhereUniqueInput
+    create: XOR<ProductCategoryCreateWithoutDescendantCategoriesInput, ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput>
+  }
+
+  export type ProductCategoryUpsertWithoutAncestorCategoriesInput = {
+    update: XOR<ProductCategoryUpdateWithoutAncestorCategoriesInput, ProductCategoryUncheckedUpdateWithoutAncestorCategoriesInput>
+    create: XOR<ProductCategoryCreateWithoutAncestorCategoriesInput, ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput>
+  }
+
+  export type ProductCategoryUpdateWithoutAncestorCategoriesInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    DescendantCategories?: ClosureProductCategoryUpdateManyWithoutDescendantCategoryNestedInput
+    Products?: ProductUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type ProductCategoryUncheckedUpdateWithoutAncestorCategoriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    DescendantCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type ProductCategoryUpsertWithoutDescendantCategoriesInput = {
+    update: XOR<ProductCategoryUpdateWithoutDescendantCategoriesInput, ProductCategoryUncheckedUpdateWithoutDescendantCategoriesInput>
+    create: XOR<ProductCategoryCreateWithoutDescendantCategoriesInput, ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput>
+  }
+
+  export type ProductCategoryUpdateWithoutDescendantCategoriesInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    AncestorCategories?: ClosureProductCategoryUpdateManyWithoutAncestorCategoryNestedInput
+    Products?: ProductUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type ProductCategoryUncheckedUpdateWithoutDescendantCategoriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    AncestorCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
   export type ProductCategoryCreateWithoutProductsInput = {
     createdAt?: Date | string
     name: string
     description?: string | null
     isDisable?: boolean
     code: string
-    parent?: ProductCategoryCreateNestedOneWithoutChildrenInput
-    children?: ProductCategoryCreateNestedManyWithoutParentInput
+    AncestorCategories?: ClosureProductCategoryCreateNestedManyWithoutAncestorCategoryInput
+    DescendantCategories?: ClosureProductCategoryCreateNestedManyWithoutDescendantCategoryInput
   }
 
   export type ProductCategoryUncheckedCreateWithoutProductsInput = {
@@ -38248,8 +39521,8 @@ export namespace Prisma {
     description?: string | null
     isDisable?: boolean
     code: string
-    parentId?: number | null
-    children?: ProductCategoryUncheckedCreateNestedManyWithoutParentInput
+    AncestorCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
+    DescendantCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
   }
 
   export type ProductCategoryCreateOrConnectWithoutProductsInput = {
@@ -38362,8 +39635,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     code?: StringFieldUpdateOperationsInput | string
-    parent?: ProductCategoryUpdateOneWithoutChildrenNestedInput
-    children?: ProductCategoryUpdateManyWithoutParentNestedInput
+    AncestorCategories?: ClosureProductCategoryUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureProductCategoryUpdateManyWithoutDescendantCategoryNestedInput
   }
 
   export type ProductCategoryUncheckedUpdateWithoutProductsInput = {
@@ -38373,8 +39646,8 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     code?: StringFieldUpdateOperationsInput | string
-    parentId?: NullableIntFieldUpdateOperationsInput | number | null
-    children?: ProductCategoryUncheckedUpdateManyWithoutParentNestedInput
+    AncestorCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
   }
 
   export type CafeInfoUpsertWithoutProductsInput = {
@@ -39587,13 +40860,14 @@ export namespace Prisma {
     statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
   }
 
-  export type ProductCategoryCreateManyParentInput = {
-    id?: number
-    createdAt?: Date | string
-    name: string
-    description?: string | null
-    isDisable?: boolean
-    code: string
+  export type ClosureProductCategoryCreateManyAncestorCategoryInput = {
+    descendant: number
+    depth?: number
+  }
+
+  export type ClosureProductCategoryCreateManyDescendantCategoryInput = {
+    ancestor: number
+    depth?: number
   }
 
   export type ProductCreateManyCategoryInput = {
@@ -39612,34 +40886,34 @@ export namespace Prisma {
     cafeInfoId?: number | null
   }
 
-  export type ProductCategoryUpdateWithoutParentInput = {
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isDisable?: BoolFieldUpdateOperationsInput | boolean
-    code?: StringFieldUpdateOperationsInput | string
-    children?: ProductCategoryUpdateManyWithoutParentNestedInput
-    Products?: ProductUpdateManyWithoutCategoryNestedInput
+  export type ClosureProductCategoryUpdateWithoutAncestorCategoryInput = {
+    depth?: IntFieldUpdateOperationsInput | number
+    DescendantCategory?: ProductCategoryUpdateOneRequiredWithoutDescendantCategoriesNestedInput
   }
 
-  export type ProductCategoryUncheckedUpdateWithoutParentInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isDisable?: BoolFieldUpdateOperationsInput | boolean
-    code?: StringFieldUpdateOperationsInput | string
-    children?: ProductCategoryUncheckedUpdateManyWithoutParentNestedInput
-    Products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+  export type ClosureProductCategoryUncheckedUpdateWithoutAncestorCategoryInput = {
+    descendant?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ProductCategoryUncheckedUpdateManyWithoutChildrenInput = {
-    id?: IntFieldUpdateOperationsInput | number
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    isDisable?: BoolFieldUpdateOperationsInput | boolean
-    code?: StringFieldUpdateOperationsInput | string
+  export type ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoriesInput = {
+    descendant?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ClosureProductCategoryUpdateWithoutDescendantCategoryInput = {
+    depth?: IntFieldUpdateOperationsInput | number
+    AncestorCategory?: ProductCategoryUpdateOneRequiredWithoutAncestorCategoriesNestedInput
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateWithoutDescendantCategoryInput = {
+    ancestor?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoriesInput = {
+    ancestor?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
   }
 
   export type ProductUpdateWithoutCategoryInput = {

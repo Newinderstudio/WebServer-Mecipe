@@ -23,6 +23,7 @@ import { RawimageuploadModule } from './rawimageupload/rawimageupload.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { BoardsModule } from './boards/boards.module';
 import { ProductsModule } from './products/products.module';
+import { ProductcategoriesModule } from './productcategories/productcategories.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { ProductsModule } from './products/products.module';
     CouponsModule,
     BoardsModule,
     ProductsModule,
+    ProductcategoriesModule,
   ],
   controllers: [AppController],
   providers: [
