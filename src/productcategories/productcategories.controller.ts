@@ -44,6 +44,12 @@ export class ProductcategoriesController {
     );
   }
 
+  @Get('admin/duplicate-code')
+  @UseGuards(AdminAuthGuard)
+  findDuplicateProductCategoryCode(@Query('code') code: string) {
+    return this.productcategoriesService.findDuplicateProductCategoryCode(code);
+  }
+
   @Get('admin/child')
   @UseGuards(AdminAuthGuard)
   findChildProductCategoriesByAdmin(@Query('parentId') parentId: string) {

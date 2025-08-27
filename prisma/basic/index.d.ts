@@ -373,6 +373,7 @@ export type ProductImage = {
   height: number
   size: number
   isDisable: boolean
+  isThumb: boolean
   productId: number
 }
 
@@ -25590,9 +25591,9 @@ export namespace Prisma {
     isDisable?: boolean
     isAvailable?: boolean
     categoryId?: boolean
-    category?: boolean | ProductCategoryArgs
+    ProductCategory?: boolean | ProductCategoryArgs
     cafeInfoId?: boolean
-    cafeInfo?: boolean | CafeInfoArgs
+    CafeInfo?: boolean | CafeInfoArgs
     WishlistProducts?: boolean | WishlistProductFindManyArgs
     ProductImages?: boolean | ProductImageFindManyArgs
     _count?: boolean | ProductCountOutputTypeArgs
@@ -25600,8 +25601,8 @@ export namespace Prisma {
 
 
   export type ProductInclude = {
-    category?: boolean | ProductCategoryArgs
-    cafeInfo?: boolean | CafeInfoArgs
+    ProductCategory?: boolean | ProductCategoryArgs
+    CafeInfo?: boolean | CafeInfoArgs
     WishlistProducts?: boolean | WishlistProductFindManyArgs
     ProductImages?: boolean | ProductImageFindManyArgs
     _count?: boolean | ProductCountOutputTypeArgs
@@ -25614,8 +25615,8 @@ export namespace Prisma {
     S extends { include: any } & (ProductArgs | ProductFindManyArgs)
     ? Product  & {
     [P in TruthyKeys<S['include']>]:
-        P extends 'category' ? ProductCategoryGetPayload<S['include'][P]> :
-        P extends 'cafeInfo' ? CafeInfoGetPayload<S['include'][P]> | null :
+        P extends 'ProductCategory' ? ProductCategoryGetPayload<S['include'][P]> :
+        P extends 'CafeInfo' ? CafeInfoGetPayload<S['include'][P]> | null :
         P extends 'WishlistProducts' ? Array < WishlistProductGetPayload<S['include'][P]>>  :
         P extends 'ProductImages' ? Array < ProductImageGetPayload<S['include'][P]>>  :
         P extends '_count' ? ProductCountOutputTypeGetPayload<S['include'][P]> :  never
@@ -25623,8 +25624,8 @@ export namespace Prisma {
     : S extends { select: any } & (ProductArgs | ProductFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-        P extends 'category' ? ProductCategoryGetPayload<S['select'][P]> :
-        P extends 'cafeInfo' ? CafeInfoGetPayload<S['select'][P]> | null :
+        P extends 'ProductCategory' ? ProductCategoryGetPayload<S['select'][P]> :
+        P extends 'CafeInfo' ? CafeInfoGetPayload<S['select'][P]> | null :
         P extends 'WishlistProducts' ? Array < WishlistProductGetPayload<S['select'][P]>>  :
         P extends 'ProductImages' ? Array < ProductImageGetPayload<S['select'][P]>>  :
         P extends '_count' ? ProductCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Product ? Product[P] : never
@@ -26001,9 +26002,9 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    category<T extends ProductCategoryArgs= {}>(args?: Subset<T, ProductCategoryArgs>): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T> | Null>;
+    ProductCategory<T extends ProductCategoryArgs= {}>(args?: Subset<T, ProductCategoryArgs>): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T> | Null>;
 
-    cafeInfo<T extends CafeInfoArgs= {}>(args?: Subset<T, CafeInfoArgs>): Prisma__CafeInfoClient<CafeInfoGetPayload<T> | Null>;
+    CafeInfo<T extends CafeInfoArgs= {}>(args?: Subset<T, CafeInfoArgs>): Prisma__CafeInfoClient<CafeInfoGetPayload<T> | Null>;
 
     WishlistProducts<T extends WishlistProductFindManyArgs= {}>(args?: Subset<T, WishlistProductFindManyArgs>): PrismaPromise<Array<WishlistProductGetPayload<T>>| Null>;
 
@@ -26634,15 +26635,15 @@ export namespace Prisma {
     id?: boolean
     createdAt?: boolean
     productId?: boolean
-    product?: boolean | ProductArgs
+    Product?: boolean | ProductArgs
     proxyUserId?: boolean
-    proxyUser?: boolean | ProxyUserArgs
+    ProxyUser?: boolean | ProxyUserArgs
   }
 
 
   export type WishlistProductInclude = {
-    product?: boolean | ProductArgs
-    proxyUser?: boolean | ProxyUserArgs
+    Product?: boolean | ProductArgs
+    ProxyUser?: boolean | ProxyUserArgs
   } 
 
   export type WishlistProductGetPayload<S extends boolean | null | undefined | WishlistProductArgs> =
@@ -26652,14 +26653,14 @@ export namespace Prisma {
     S extends { include: any } & (WishlistProductArgs | WishlistProductFindManyArgs)
     ? WishlistProduct  & {
     [P in TruthyKeys<S['include']>]:
-        P extends 'product' ? ProductGetPayload<S['include'][P]> :
-        P extends 'proxyUser' ? ProxyUserGetPayload<S['include'][P]> :  never
+        P extends 'Product' ? ProductGetPayload<S['include'][P]> :
+        P extends 'ProxyUser' ? ProxyUserGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (WishlistProductArgs | WishlistProductFindManyArgs)
       ? {
     [P in TruthyKeys<S['select']>]:
-        P extends 'product' ? ProductGetPayload<S['select'][P]> :
-        P extends 'proxyUser' ? ProxyUserGetPayload<S['select'][P]> :  P extends keyof WishlistProduct ? WishlistProduct[P] : never
+        P extends 'Product' ? ProductGetPayload<S['select'][P]> :
+        P extends 'ProxyUser' ? ProxyUserGetPayload<S['select'][P]> :  P extends keyof WishlistProduct ? WishlistProduct[P] : never
   } 
       : WishlistProduct
 
@@ -27033,9 +27034,9 @@ export namespace Prisma {
     constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
     readonly [Symbol.toStringTag]: 'PrismaClientPromise';
 
-    product<T extends ProductArgs= {}>(args?: Subset<T, ProductArgs>): Prisma__ProductClient<ProductGetPayload<T> | Null>;
+    Product<T extends ProductArgs= {}>(args?: Subset<T, ProductArgs>): Prisma__ProductClient<ProductGetPayload<T> | Null>;
 
-    proxyUser<T extends ProxyUserArgs= {}>(args?: Subset<T, ProxyUserArgs>): Prisma__ProxyUserClient<ProxyUserGetPayload<T> | Null>;
+    ProxyUser<T extends ProxyUserArgs= {}>(args?: Subset<T, ProxyUserArgs>): Prisma__ProxyUserClient<ProxyUserGetPayload<T> | Null>;
 
     private get _document();
     /**
@@ -27496,6 +27497,7 @@ export namespace Prisma {
     height: number | null
     size: number | null
     isDisable: boolean | null
+    isThumb: boolean | null
     productId: number | null
   }
 
@@ -27508,6 +27510,7 @@ export namespace Prisma {
     height: number | null
     size: number | null
     isDisable: boolean | null
+    isThumb: boolean | null
     productId: number | null
   }
 
@@ -27520,6 +27523,7 @@ export namespace Prisma {
     height: number
     size: number
     isDisable: number
+    isThumb: number
     productId: number
     _all: number
   }
@@ -27550,6 +27554,7 @@ export namespace Prisma {
     height?: true
     size?: true
     isDisable?: true
+    isThumb?: true
     productId?: true
   }
 
@@ -27562,6 +27567,7 @@ export namespace Prisma {
     height?: true
     size?: true
     isDisable?: true
+    isThumb?: true
     productId?: true
   }
 
@@ -27574,6 +27580,7 @@ export namespace Prisma {
     height?: true
     size?: true
     isDisable?: true
+    isThumb?: true
     productId?: true
     _all?: true
   }
@@ -27679,6 +27686,7 @@ export namespace Prisma {
     height: number
     size: number
     isDisable: boolean
+    isThumb: boolean
     productId: number
     _count: ProductImageCountAggregateOutputType | null
     _avg: ProductImageAvgAggregateOutputType | null
@@ -27710,6 +27718,7 @@ export namespace Prisma {
     height?: boolean
     size?: boolean
     isDisable?: boolean
+    isThumb?: boolean
     productId?: boolean
     Product?: boolean | ProductArgs
   }
@@ -28798,6 +28807,7 @@ export namespace Prisma {
     height: 'height',
     size: 'size',
     isDisable: 'isDisable',
+    isThumb: 'isThumb',
     productId: 'productId'
   };
 
@@ -30281,9 +30291,9 @@ export namespace Prisma {
     isDisable?: BoolFilter | boolean
     isAvailable?: BoolFilter | boolean
     categoryId?: IntFilter | number
-    category?: XOR<ProductCategoryRelationFilter, ProductCategoryWhereInput>
+    ProductCategory?: XOR<ProductCategoryRelationFilter, ProductCategoryWhereInput>
     cafeInfoId?: IntNullableFilter | number | null
-    cafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput> | null
+    CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput> | null
     WishlistProducts?: WishlistProductListRelationFilter
     ProductImages?: ProductImageListRelationFilter
   }
@@ -30302,9 +30312,9 @@ export namespace Prisma {
     isDisable?: SortOrder
     isAvailable?: SortOrder
     categoryId?: SortOrder
-    category?: ProductCategoryOrderByWithRelationInput
+    ProductCategory?: ProductCategoryOrderByWithRelationInput
     cafeInfoId?: SortOrder
-    cafeInfo?: CafeInfoOrderByWithRelationInput
+    CafeInfo?: CafeInfoOrderByWithRelationInput
     WishlistProducts?: WishlistProductOrderByRelationAggregateInput
     ProductImages?: ProductImageOrderByRelationAggregateInput
   }
@@ -30363,18 +30373,18 @@ export namespace Prisma {
     id?: IntFilter | number
     createdAt?: DateTimeFilter | Date | string
     productId?: IntFilter | number
-    product?: XOR<ProductRelationFilter, ProductWhereInput>
+    Product?: XOR<ProductRelationFilter, ProductWhereInput>
     proxyUserId?: IntFilter | number
-    proxyUser?: XOR<ProxyUserRelationFilter, ProxyUserWhereInput>
+    ProxyUser?: XOR<ProxyUserRelationFilter, ProxyUserWhereInput>
   }
 
   export type WishlistProductOrderByWithRelationInput = {
     id?: SortOrder
     createdAt?: SortOrder
     productId?: SortOrder
-    product?: ProductOrderByWithRelationInput
+    Product?: ProductOrderByWithRelationInput
     proxyUserId?: SortOrder
-    proxyUser?: ProxyUserOrderByWithRelationInput
+    ProxyUser?: ProxyUserOrderByWithRelationInput
   }
 
   export type WishlistProductWhereUniqueInput = {
@@ -30416,6 +30426,7 @@ export namespace Prisma {
     height?: IntFilter | number
     size?: IntFilter | number
     isDisable?: BoolFilter | boolean
+    isThumb?: BoolFilter | boolean
     productId?: IntFilter | number
     Product?: XOR<ProductRelationFilter, ProductWhereInput>
   }
@@ -30429,6 +30440,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     isDisable?: SortOrder
+    isThumb?: SortOrder
     productId?: SortOrder
     Product?: ProductOrderByWithRelationInput
   }
@@ -30446,6 +30458,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     isDisable?: SortOrder
+    isThumb?: SortOrder
     productId?: SortOrder
     _count?: ProductImageCountOrderByAggregateInput
     _avg?: ProductImageAvgOrderByAggregateInput
@@ -30466,6 +30479,7 @@ export namespace Prisma {
     height?: IntWithAggregatesFilter | number
     size?: IntWithAggregatesFilter | number
     isDisable?: BoolWithAggregatesFilter | boolean
+    isThumb?: BoolWithAggregatesFilter | boolean
     productId?: IntWithAggregatesFilter | number
   }
 
@@ -32001,7 +32015,7 @@ export namespace Prisma {
     code: string
     AncestorCategories?: ClosureProductCategoryCreateNestedManyWithoutAncestorCategoryInput
     DescendantCategories?: ClosureProductCategoryCreateNestedManyWithoutDescendantCategoryInput
-    Products?: ProductCreateNestedManyWithoutCategoryInput
+    Products?: ProductCreateNestedManyWithoutProductCategoryInput
   }
 
   export type ProductCategoryUncheckedCreateInput = {
@@ -32013,7 +32027,7 @@ export namespace Prisma {
     code: string
     AncestorCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
     DescendantCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
-    Products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+    Products?: ProductUncheckedCreateNestedManyWithoutProductCategoryInput
   }
 
   export type ProductCategoryUpdateInput = {
@@ -32024,7 +32038,7 @@ export namespace Prisma {
     code?: StringFieldUpdateOperationsInput | string
     AncestorCategories?: ClosureProductCategoryUpdateManyWithoutAncestorCategoryNestedInput
     DescendantCategories?: ClosureProductCategoryUpdateManyWithoutDescendantCategoryNestedInput
-    Products?: ProductUpdateManyWithoutCategoryNestedInput
+    Products?: ProductUpdateManyWithoutProductCategoryNestedInput
   }
 
   export type ProductCategoryUncheckedUpdateInput = {
@@ -32036,7 +32050,7 @@ export namespace Prisma {
     code?: StringFieldUpdateOperationsInput | string
     AncestorCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
     DescendantCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
-    Products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutProductCategoryNestedInput
   }
 
   export type ProductCategoryCreateManyInput = {
@@ -32117,8 +32131,8 @@ export namespace Prisma {
     minOrderQuantity?: number
     isDisable?: boolean
     isAvailable?: boolean
-    category: ProductCategoryCreateNestedOneWithoutProductsInput
-    cafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
+    ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
+    CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
     WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
     ProductImages?: ProductImageCreateNestedManyWithoutProductInput
   }
@@ -32154,8 +32168,8 @@ export namespace Prisma {
     minOrderQuantity?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    category?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
-    cafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
+    ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
+    CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
     WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
     ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
   }
@@ -32229,8 +32243,8 @@ export namespace Prisma {
 
   export type WishlistProductCreateInput = {
     createdAt?: Date | string
-    product: ProductCreateNestedOneWithoutWishlistProductsInput
-    proxyUser: ProxyUserCreateNestedOneWithoutWishlistProductsInput
+    Product: ProductCreateNestedOneWithoutWishlistProductsInput
+    ProxyUser: ProxyUserCreateNestedOneWithoutWishlistProductsInput
   }
 
   export type WishlistProductUncheckedCreateInput = {
@@ -32242,8 +32256,8 @@ export namespace Prisma {
 
   export type WishlistProductUpdateInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    product?: ProductUpdateOneRequiredWithoutWishlistProductsNestedInput
-    proxyUser?: ProxyUserUpdateOneRequiredWithoutWishlistProductsNestedInput
+    Product?: ProductUpdateOneRequiredWithoutWishlistProductsNestedInput
+    ProxyUser?: ProxyUserUpdateOneRequiredWithoutWishlistProductsNestedInput
   }
 
   export type WishlistProductUncheckedUpdateInput = {
@@ -32279,6 +32293,7 @@ export namespace Prisma {
     height: number
     size: number
     isDisable?: boolean
+    isThumb?: boolean
     Product: ProductCreateNestedOneWithoutProductImagesInput
   }
 
@@ -32291,6 +32306,7 @@ export namespace Prisma {
     height: number
     size: number
     isDisable?: boolean
+    isThumb?: boolean
     productId: number
   }
 
@@ -32302,6 +32318,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
     Product?: ProductUpdateOneRequiredWithoutProductImagesNestedInput
   }
 
@@ -32314,6 +32331,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
     productId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -32326,6 +32344,7 @@ export namespace Prisma {
     height: number
     size: number
     isDisable?: boolean
+    isThumb?: boolean
     productId: number
   }
 
@@ -32337,6 +32356,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductImageUncheckedUpdateManyInput = {
@@ -32348,6 +32368,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
     productId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -34007,6 +34028,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     isDisable?: SortOrder
+    isThumb?: SortOrder
     productId?: SortOrder
   }
 
@@ -34027,6 +34049,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     isDisable?: SortOrder
+    isThumb?: SortOrder
     productId?: SortOrder
   }
 
@@ -34039,6 +34062,7 @@ export namespace Prisma {
     height?: SortOrder
     size?: SortOrder
     isDisable?: SortOrder
+    isThumb?: SortOrder
     productId?: SortOrder
   }
 
@@ -35552,10 +35576,10 @@ export namespace Prisma {
     connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
   }
 
-  export type ProductCreateNestedManyWithoutCategoryInput = {
-    create?: XOR<Enumerable<ProductCreateWithoutCategoryInput>, Enumerable<ProductUncheckedCreateWithoutCategoryInput>>
-    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutCategoryInput>
-    createMany?: ProductCreateManyCategoryInputEnvelope
+  export type ProductCreateNestedManyWithoutProductCategoryInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutProductCategoryInput>, Enumerable<ProductUncheckedCreateWithoutProductCategoryInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutProductCategoryInput>
+    createMany?: ProductCreateManyProductCategoryInputEnvelope
     connect?: Enumerable<ProductWhereUniqueInput>
   }
 
@@ -35573,10 +35597,10 @@ export namespace Prisma {
     connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
   }
 
-  export type ProductUncheckedCreateNestedManyWithoutCategoryInput = {
-    create?: XOR<Enumerable<ProductCreateWithoutCategoryInput>, Enumerable<ProductUncheckedCreateWithoutCategoryInput>>
-    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutCategoryInput>
-    createMany?: ProductCreateManyCategoryInputEnvelope
+  export type ProductUncheckedCreateNestedManyWithoutProductCategoryInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutProductCategoryInput>, Enumerable<ProductUncheckedCreateWithoutProductCategoryInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutProductCategoryInput>
+    createMany?: ProductCreateManyProductCategoryInputEnvelope
     connect?: Enumerable<ProductWhereUniqueInput>
   }
 
@@ -35608,17 +35632,17 @@ export namespace Prisma {
     deleteMany?: Enumerable<ClosureProductCategoryScalarWhereInput>
   }
 
-  export type ProductUpdateManyWithoutCategoryNestedInput = {
-    create?: XOR<Enumerable<ProductCreateWithoutCategoryInput>, Enumerable<ProductUncheckedCreateWithoutCategoryInput>>
-    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutCategoryInput>
-    upsert?: Enumerable<ProductUpsertWithWhereUniqueWithoutCategoryInput>
-    createMany?: ProductCreateManyCategoryInputEnvelope
+  export type ProductUpdateManyWithoutProductCategoryNestedInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutProductCategoryInput>, Enumerable<ProductUncheckedCreateWithoutProductCategoryInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutProductCategoryInput>
+    upsert?: Enumerable<ProductUpsertWithWhereUniqueWithoutProductCategoryInput>
+    createMany?: ProductCreateManyProductCategoryInputEnvelope
     set?: Enumerable<ProductWhereUniqueInput>
     disconnect?: Enumerable<ProductWhereUniqueInput>
     delete?: Enumerable<ProductWhereUniqueInput>
     connect?: Enumerable<ProductWhereUniqueInput>
-    update?: Enumerable<ProductUpdateWithWhereUniqueWithoutCategoryInput>
-    updateMany?: Enumerable<ProductUpdateManyWithWhereWithoutCategoryInput>
+    update?: Enumerable<ProductUpdateWithWhereUniqueWithoutProductCategoryInput>
+    updateMany?: Enumerable<ProductUpdateManyWithWhereWithoutProductCategoryInput>
     deleteMany?: Enumerable<ProductScalarWhereInput>
   }
 
@@ -35650,17 +35674,17 @@ export namespace Prisma {
     deleteMany?: Enumerable<ClosureProductCategoryScalarWhereInput>
   }
 
-  export type ProductUncheckedUpdateManyWithoutCategoryNestedInput = {
-    create?: XOR<Enumerable<ProductCreateWithoutCategoryInput>, Enumerable<ProductUncheckedCreateWithoutCategoryInput>>
-    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutCategoryInput>
-    upsert?: Enumerable<ProductUpsertWithWhereUniqueWithoutCategoryInput>
-    createMany?: ProductCreateManyCategoryInputEnvelope
+  export type ProductUncheckedUpdateManyWithoutProductCategoryNestedInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutProductCategoryInput>, Enumerable<ProductUncheckedCreateWithoutProductCategoryInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutProductCategoryInput>
+    upsert?: Enumerable<ProductUpsertWithWhereUniqueWithoutProductCategoryInput>
+    createMany?: ProductCreateManyProductCategoryInputEnvelope
     set?: Enumerable<ProductWhereUniqueInput>
     disconnect?: Enumerable<ProductWhereUniqueInput>
     delete?: Enumerable<ProductWhereUniqueInput>
     connect?: Enumerable<ProductWhereUniqueInput>
-    update?: Enumerable<ProductUpdateWithWhereUniqueWithoutCategoryInput>
-    updateMany?: Enumerable<ProductUpdateManyWithWhereWithoutCategoryInput>
+    update?: Enumerable<ProductUpdateWithWhereUniqueWithoutProductCategoryInput>
+    updateMany?: Enumerable<ProductUpdateManyWithWhereWithoutProductCategoryInput>
     deleteMany?: Enumerable<ProductScalarWhereInput>
   }
 
@@ -37715,7 +37739,7 @@ export namespace Prisma {
     minOrderQuantity?: number
     isDisable?: boolean
     isAvailable?: boolean
-    category: ProductCategoryCreateNestedOneWithoutProductsInput
+    ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
     WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
     ProductImages?: ProductImageCreateNestedManyWithoutProductInput
   }
@@ -38736,7 +38760,7 @@ export namespace Prisma {
 
   export type WishlistProductCreateWithoutProxyUserInput = {
     createdAt?: Date | string
-    product: ProductCreateNestedOneWithoutWishlistProductsInput
+    Product: ProductCreateNestedOneWithoutWishlistProductsInput
   }
 
   export type WishlistProductUncheckedCreateWithoutProxyUserInput = {
@@ -39298,7 +39322,7 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
-  export type ProductCreateWithoutCategoryInput = {
+  export type ProductCreateWithoutProductCategoryInput = {
     createdAt?: Date | string
     updatedAt?: Date | string
     name: string
@@ -39310,12 +39334,12 @@ export namespace Prisma {
     minOrderQuantity?: number
     isDisable?: boolean
     isAvailable?: boolean
-    cafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
+    CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
     WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
     ProductImages?: ProductImageCreateNestedManyWithoutProductInput
   }
 
-  export type ProductUncheckedCreateWithoutCategoryInput = {
+  export type ProductUncheckedCreateWithoutProductCategoryInput = {
     id?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -39333,13 +39357,13 @@ export namespace Prisma {
     ProductImages?: ProductImageUncheckedCreateNestedManyWithoutProductInput
   }
 
-  export type ProductCreateOrConnectWithoutCategoryInput = {
+  export type ProductCreateOrConnectWithoutProductCategoryInput = {
     where: ProductWhereUniqueInput
-    create: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput>
+    create: XOR<ProductCreateWithoutProductCategoryInput, ProductUncheckedCreateWithoutProductCategoryInput>
   }
 
-  export type ProductCreateManyCategoryInputEnvelope = {
-    data: Enumerable<ProductCreateManyCategoryInput>
+  export type ProductCreateManyProductCategoryInputEnvelope = {
+    data: Enumerable<ProductCreateManyProductCategoryInput>
     skipDuplicates?: boolean
   }
 
@@ -39384,18 +39408,18 @@ export namespace Prisma {
     data: XOR<ClosureProductCategoryUpdateManyMutationInput, ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoriesInput>
   }
 
-  export type ProductUpsertWithWhereUniqueWithoutCategoryInput = {
+  export type ProductUpsertWithWhereUniqueWithoutProductCategoryInput = {
     where: ProductWhereUniqueInput
-    update: XOR<ProductUpdateWithoutCategoryInput, ProductUncheckedUpdateWithoutCategoryInput>
-    create: XOR<ProductCreateWithoutCategoryInput, ProductUncheckedCreateWithoutCategoryInput>
+    update: XOR<ProductUpdateWithoutProductCategoryInput, ProductUncheckedUpdateWithoutProductCategoryInput>
+    create: XOR<ProductCreateWithoutProductCategoryInput, ProductUncheckedCreateWithoutProductCategoryInput>
   }
 
-  export type ProductUpdateWithWhereUniqueWithoutCategoryInput = {
+  export type ProductUpdateWithWhereUniqueWithoutProductCategoryInput = {
     where: ProductWhereUniqueInput
-    data: XOR<ProductUpdateWithoutCategoryInput, ProductUncheckedUpdateWithoutCategoryInput>
+    data: XOR<ProductUpdateWithoutProductCategoryInput, ProductUncheckedUpdateWithoutProductCategoryInput>
   }
 
-  export type ProductUpdateManyWithWhereWithoutCategoryInput = {
+  export type ProductUpdateManyWithWhereWithoutProductCategoryInput = {
     where: ProductScalarWhereInput
     data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutProductsInput>
   }
@@ -39407,7 +39431,7 @@ export namespace Prisma {
     isDisable?: boolean
     code: string
     DescendantCategories?: ClosureProductCategoryCreateNestedManyWithoutDescendantCategoryInput
-    Products?: ProductCreateNestedManyWithoutCategoryInput
+    Products?: ProductCreateNestedManyWithoutProductCategoryInput
   }
 
   export type ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput = {
@@ -39418,7 +39442,7 @@ export namespace Prisma {
     isDisable?: boolean
     code: string
     DescendantCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
-    Products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+    Products?: ProductUncheckedCreateNestedManyWithoutProductCategoryInput
   }
 
   export type ProductCategoryCreateOrConnectWithoutAncestorCategoriesInput = {
@@ -39433,7 +39457,7 @@ export namespace Prisma {
     isDisable?: boolean
     code: string
     AncestorCategories?: ClosureProductCategoryCreateNestedManyWithoutAncestorCategoryInput
-    Products?: ProductCreateNestedManyWithoutCategoryInput
+    Products?: ProductCreateNestedManyWithoutProductCategoryInput
   }
 
   export type ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput = {
@@ -39444,7 +39468,7 @@ export namespace Prisma {
     isDisable?: boolean
     code: string
     AncestorCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
-    Products?: ProductUncheckedCreateNestedManyWithoutCategoryInput
+    Products?: ProductUncheckedCreateNestedManyWithoutProductCategoryInput
   }
 
   export type ProductCategoryCreateOrConnectWithoutDescendantCategoriesInput = {
@@ -39464,7 +39488,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     code?: StringFieldUpdateOperationsInput | string
     DescendantCategories?: ClosureProductCategoryUpdateManyWithoutDescendantCategoryNestedInput
-    Products?: ProductUpdateManyWithoutCategoryNestedInput
+    Products?: ProductUpdateManyWithoutProductCategoryNestedInput
   }
 
   export type ProductCategoryUncheckedUpdateWithoutAncestorCategoriesInput = {
@@ -39475,7 +39499,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     code?: StringFieldUpdateOperationsInput | string
     DescendantCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
-    Products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutProductCategoryNestedInput
   }
 
   export type ProductCategoryUpsertWithoutDescendantCategoriesInput = {
@@ -39490,7 +39514,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     code?: StringFieldUpdateOperationsInput | string
     AncestorCategories?: ClosureProductCategoryUpdateManyWithoutAncestorCategoryNestedInput
-    Products?: ProductUpdateManyWithoutCategoryNestedInput
+    Products?: ProductUpdateManyWithoutProductCategoryNestedInput
   }
 
   export type ProductCategoryUncheckedUpdateWithoutDescendantCategoriesInput = {
@@ -39501,7 +39525,7 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     code?: StringFieldUpdateOperationsInput | string
     AncestorCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
-    Products?: ProductUncheckedUpdateManyWithoutCategoryNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutProductCategoryNestedInput
   }
 
   export type ProductCategoryCreateWithoutProductsInput = {
@@ -39574,7 +39598,7 @@ export namespace Prisma {
 
   export type WishlistProductCreateWithoutProductInput = {
     createdAt?: Date | string
-    proxyUser: ProxyUserCreateNestedOneWithoutWishlistProductsInput
+    ProxyUser: ProxyUserCreateNestedOneWithoutWishlistProductsInput
   }
 
   export type WishlistProductUncheckedCreateWithoutProductInput = {
@@ -39601,6 +39625,7 @@ export namespace Prisma {
     height: number
     size: number
     isDisable?: boolean
+    isThumb?: boolean
   }
 
   export type ProductImageUncheckedCreateWithoutProductInput = {
@@ -39612,6 +39637,7 @@ export namespace Prisma {
     height: number
     size: number
     isDisable?: boolean
+    isThumb?: boolean
   }
 
   export type ProductImageCreateOrConnectWithoutProductInput = {
@@ -39736,6 +39762,7 @@ export namespace Prisma {
     height?: IntFilter | number
     size?: IntFilter | number
     isDisable?: BoolFilter | boolean
+    isThumb?: BoolFilter | boolean
     productId?: IntFilter | number
   }
 
@@ -39751,8 +39778,8 @@ export namespace Prisma {
     minOrderQuantity?: number
     isDisable?: boolean
     isAvailable?: boolean
-    category: ProductCategoryCreateNestedOneWithoutProductsInput
-    cafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
+    ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
+    CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
     ProductImages?: ProductImageCreateNestedManyWithoutProductInput
   }
 
@@ -39822,8 +39849,8 @@ export namespace Prisma {
     minOrderQuantity?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    category?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
-    cafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
+    ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
+    CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
     ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
   }
 
@@ -39883,8 +39910,8 @@ export namespace Prisma {
     minOrderQuantity?: number
     isDisable?: boolean
     isAvailable?: boolean
-    category: ProductCategoryCreateNestedOneWithoutProductsInput
-    cafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
+    ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
+    CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
     WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
   }
 
@@ -39928,8 +39955,8 @@ export namespace Prisma {
     minOrderQuantity?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    category?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
-    cafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
+    ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
+    CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
     WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
   }
 
@@ -40631,7 +40658,7 @@ export namespace Prisma {
     minOrderQuantity?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    category?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
+    ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
     WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
     ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
   }
@@ -40784,7 +40811,7 @@ export namespace Prisma {
 
   export type WishlistProductUpdateWithoutProxyUserInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    product?: ProductUpdateOneRequiredWithoutWishlistProductsNestedInput
+    Product?: ProductUpdateOneRequiredWithoutWishlistProductsNestedInput
   }
 
   export type WishlistProductUncheckedUpdateWithoutProxyUserInput = {
@@ -40870,7 +40897,7 @@ export namespace Prisma {
     depth?: number
   }
 
-  export type ProductCreateManyCategoryInput = {
+  export type ProductCreateManyProductCategoryInput = {
     id?: number
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -40916,7 +40943,7 @@ export namespace Prisma {
     depth?: IntFieldUpdateOperationsInput | number
   }
 
-  export type ProductUpdateWithoutCategoryInput = {
+  export type ProductUpdateWithoutProductCategoryInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
@@ -40928,12 +40955,12 @@ export namespace Prisma {
     minOrderQuantity?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    cafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
+    CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
     WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
     ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
   }
 
-  export type ProductUncheckedUpdateWithoutCategoryInput = {
+  export type ProductUncheckedUpdateWithoutProductCategoryInput = {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -40966,11 +40993,12 @@ export namespace Prisma {
     height: number
     size: number
     isDisable?: boolean
+    isThumb?: boolean
   }
 
   export type WishlistProductUpdateWithoutProductInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    proxyUser?: ProxyUserUpdateOneRequiredWithoutWishlistProductsNestedInput
+    ProxyUser?: ProxyUserUpdateOneRequiredWithoutWishlistProductsNestedInput
   }
 
   export type WishlistProductUncheckedUpdateWithoutProductInput = {
@@ -40987,6 +41015,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductImageUncheckedUpdateWithoutProductInput = {
@@ -40998,6 +41027,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductImageUncheckedUpdateManyWithoutProductImagesInput = {
@@ -41009,6 +41039,7 @@ export namespace Prisma {
     height?: IntFieldUpdateOperationsInput | number
     size?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
   }
 
 

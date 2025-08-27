@@ -490,11 +490,11 @@ model Product {
   
   // 카테고리 관계
   categoryId        Int
-  category          ProductCategory @relation(fields: [categoryId], references: [id])
+  ProductCategory          ProductCategory @relation(fields: [categoryId], references: [id])
   
   // 카페 정보 관계 (상품을 판매하는 카페)
   cafeInfoId        Int?
-  cafeInfo          CafeInfo? @relation(fields: [cafeInfoId], references: [id])
+  CafeInfo          CafeInfo? @relation(fields: [cafeInfoId], references: [id])
 
   // 찜한 상품과의 관계
   WishlistProducts  WishlistProduct[]
@@ -512,11 +512,11 @@ model WishlistProduct {
 
   // 상품과의 관계
   productId Int
-  product   Product @relation(fields: [productId], references: [id])
+  Product   Product @relation(fields: [productId], references: [id])
 
   // ProxyUser와의 관계 (찜한 사용자)
   proxyUserId Int
-  proxyUser   ProxyUser @relation(fields: [proxyUserId], references: [id])
+  ProxyUser   ProxyUser @relation(fields: [proxyUserId], references: [id])
 
   // 중복 찜 방지를 위한 유니크 제약
   @@unique([productId, proxyUserId], name: "wishlistProductUnique")
@@ -535,6 +535,8 @@ model ProductImage {
   size   Int
 
   isDisable Boolean   @default(false)
+
+  isThumb   Boolean   @default(false) // 썸네일이미지 여부 true 썸네일 false 상세
 
   productId Int        
   Product   Product       @relation(fields: [productId], references: [id])

@@ -295,6 +295,7 @@ exports.Prisma.ProductImageScalarFieldEnum = makeEnum({
   height: 'height',
   size: 'size',
   isDisable: 'isDisable',
+  isThumb: 'isThumb',
   productId: 'productId'
 });
 

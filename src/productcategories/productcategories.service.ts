@@ -305,4 +305,14 @@ export class ProductcategoriesService {
       }
     });
   }
+
+  async findDuplicateProductCategoryCode(code: string) {
+    const count = await this.prisma.productCategory.count({
+      where: {
+        code: code
+      }
+    });
+
+    return count > 0;
+  }
 }

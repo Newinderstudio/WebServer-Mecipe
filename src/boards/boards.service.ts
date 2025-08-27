@@ -267,7 +267,7 @@ export class BoardsService {
       throw new BadRequestException('Only the author or admin can update this board');
     }
 
-    const { cafeInfoIds, boardImages, disalbedImageIds, ...boardData } = updateBoardDto;
+    const { cafeInfoIds, boardImages, disabledImageIds, ...boardData } = updateBoardDto;
 
 
     return this.prisma.$transaction(async (tx) => {
@@ -290,9 +290,9 @@ export class BoardsService {
         },
       });
 
-      if (disalbedImageIds !== undefined) {
+      if (disabledImageIds !== undefined) {
         await tx.boardImage.updateMany({
-          where: { id: { in: disalbedImageIds } },
+          where: { id: { in: disabledImageIds } },
           data: { isDisable: true },
         });
       }
