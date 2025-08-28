@@ -1,9 +1,20 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/global/prisma.service';
 import { SearchProductDto } from './dto/search-product.dto';
 import { Prisma } from 'prisma/basic';
+import { verifySignedMessage } from 'src/util/sha256';
+import { CategoryTree } from './dto/public-product.dto';
+
+type ProductCategoryInfo = Prisma.ProductCategoryGetPayload<{
+  select: {
+    id: true;
+    name: true;
+    code: true;
+    description: true;
+  };
+}>;
 
 @Injectable()
 export class ProductsService {
@@ -64,8 +75,12 @@ export class ProductsService {
   }
 
   async findAllProductsBySearch(searchDto: SearchProductDto, isAdmin: boolean = false) {
-    const { page = 1, limit = 10, ...searchParams } = searchDto;
+    const { page: pageParam, limit: limitParam, ...searchParams } = searchDto;
+    const page = pageParam ?? 1;
+    const limit = limitParam ?? 10;
     const skip = (page - 1) * limit;
+
+    console.log("searchDto", searchDto);
 
     const where: Prisma.ProductWhereInput = {};
 
@@ -267,5 +282,105 @@ export class ProductsService {
     });
 
     return count > 0;
+  }
+
+  async findProductDatabaseByCafeInfoCode(cafeInfoCode: string, limit: number = 50) {
+
+    if (!cafeInfoCode) {
+      throw new BadRequestException('Invalid payload');
+    }
+
+    const cafeInfo = await this.prisma.cafeInfo.findUnique({
+      where: { code: cafeInfoCode }
+    });
+
+    if (!cafeInfo) {
+      throw new NotFoundException('CafeInfo not found');
+    }
+
+    const products = await this.findAllProductsBySearch({
+      cafeInfoId: cafeInfo.id,
+      limit: limit,
+    });
+
+    const categories = new Set(products.products.map(product => product.ProductCategory.id));
+
+    // 카테고리 계층 구조 트리 구성
+    const closure = await this.prisma.closureProductCategory.findMany({
+      where: {
+        descendant: { in: Array.from(categories) }
+      },
+      orderBy: {
+        depth: 'asc'
+      }
+    });
+
+    closure.forEach(rel => {
+      categories.add(rel.ancestor);
+    });
+
+    // 카테고리 정보 조회
+    const categoryInfos = await this.prisma.productCategory.findMany({
+      where: {
+        id: { in: Array.from(categories) }
+      },
+      select: {
+        id: true,
+        name: true,
+        code: true,
+        description: true
+      }
+    });
+
+    // 트리 구조 구성
+    const categoryTree = this.buildCategoryTree(Array.from(categories), closure, categoryInfos);
+
+    return { ...products, categoryTree };
+  }
+
+  private buildCategoryTree(
+    categoryIds: number[], 
+    closure: Prisma.ClosureProductCategoryGetPayload<{}>[], 
+    categoryInfos: ProductCategoryInfo[]
+  ): CategoryTree[] {
+
+    console.log("categoryIds", categoryIds);
+    console.log("closure", closure);
+    console.log("categoryInfos", categoryInfos);
+
+    const categoryMap = new Map<number, CategoryTree>();
+    const rootCategories: CategoryTree[] = [];
+
+    // 카테고리 정보를 Map으로 구성
+    categoryInfos.forEach(category => {
+      categoryMap.set(category.id, {
+        ...category,
+        children: []
+      });
+    });
+
+    // Closure 테이블을 기반으로 트리 구조 구성
+    closure.forEach(relation => {
+      if (relation.depth === 1) { // 직계 부모-자식 관계
+        const parent = categoryMap.get(relation.ancestor);
+        const child = categoryMap.get(relation.descendant);
+        
+        if (parent && child && parent.id !== child.id) {
+          parent.children.push(child);
+        }
+      }
+    });
+
+    // 루트 카테고리들 찾기 (다른 카테고리의 자식이 아닌 것들)
+    categoryIds.forEach(id => {
+      const category = categoryMap.get(id);
+      if (category && !closure.some(rel => 
+        rel.descendant === id && rel.depth > 0
+      )) {
+        rootCategories.push(category);
+      }
+    });
+
+    return rootCategories;
   }
 }

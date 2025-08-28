@@ -35,6 +35,12 @@ export class ProductsController {
     return this.productsService.findAllProductsBySearch(searchDto);
   }
 
+  @Public()
+  @Get('cafe-info-code/:cafeInfoCode')
+  findProductDatabaseByCafeInfoCode(@Param('cafeInfoCode') cafeInfoCode: string, @Query('limit') limit?: string) {
+    return this.productsService.findProductDatabaseByCafeInfoCode(cafeInfoCode, limit ? +limit : undefined);
+  }
+
   @Get('admin')
   findAdminAllProducts(@Query() searchDto: SearchProductDto, @Request() req: RequestWithUser) {
     const isAdmin = req.user?.userType === 'ADMIN' || req.user?.userType === 'MANAGER';

@@ -1,4 +1,3 @@
-import { Optional } from "@nestjs/common";
 import { Transform } from "class-transformer";
 import { IsArray, IsBoolean, IsNumber, IsOptional, IsString } from "class-validator";
 import { Prisma } from "prisma/basic";
@@ -10,14 +9,14 @@ export class CreateProductDto implements Partial<Prisma.ProductCreateInput> {
   @IsString()
   code: string;
 
-  @Optional()
+  @IsOptional()
   @IsString()
   description?: string;
 
   @IsNumber()
   price: number;
 
-  @Optional()
+  @IsOptional()
   @IsNumber()
   originalPrice?: number;
 
