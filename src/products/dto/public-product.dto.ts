@@ -7,6 +7,7 @@ export type CategoryTree = {
     code: string;
     description: string | null;
     children: CategoryTree[];
+    descendantIds: number[];
 };
 
 export type PublicProduct = {

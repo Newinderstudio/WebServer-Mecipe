@@ -347,6 +347,8 @@ export type Product = {
   isAvailable: boolean
   categoryId: number
   cafeInfoId: number | null
+  productRedirectUrl: string | null
+  isSignature: boolean
 }
 
 /**
@@ -25339,6 +25341,8 @@ export namespace Prisma {
     isAvailable: boolean | null
     categoryId: number | null
     cafeInfoId: number | null
+    productRedirectUrl: string | null
+    isSignature: boolean | null
   }
 
   export type ProductMaxAggregateOutputType = {
@@ -25356,6 +25360,8 @@ export namespace Prisma {
     isAvailable: boolean | null
     categoryId: number | null
     cafeInfoId: number | null
+    productRedirectUrl: string | null
+    isSignature: boolean | null
   }
 
   export type ProductCountAggregateOutputType = {
@@ -25373,6 +25379,8 @@ export namespace Prisma {
     isAvailable: number
     categoryId: number
     cafeInfoId: number
+    productRedirectUrl: number
+    isSignature: number
     _all: number
   }
 
@@ -25412,6 +25420,8 @@ export namespace Prisma {
     isAvailable?: true
     categoryId?: true
     cafeInfoId?: true
+    productRedirectUrl?: true
+    isSignature?: true
   }
 
   export type ProductMaxAggregateInputType = {
@@ -25429,6 +25439,8 @@ export namespace Prisma {
     isAvailable?: true
     categoryId?: true
     cafeInfoId?: true
+    productRedirectUrl?: true
+    isSignature?: true
   }
 
   export type ProductCountAggregateInputType = {
@@ -25446,6 +25458,8 @@ export namespace Prisma {
     isAvailable?: true
     categoryId?: true
     cafeInfoId?: true
+    productRedirectUrl?: true
+    isSignature?: true
     _all?: true
   }
 
@@ -25556,6 +25570,8 @@ export namespace Prisma {
     isAvailable: boolean
     categoryId: number
     cafeInfoId: number | null
+    productRedirectUrl: string | null
+    isSignature: boolean
     _count: ProductCountAggregateOutputType | null
     _avg: ProductAvgAggregateOutputType | null
     _sum: ProductSumAggregateOutputType | null
@@ -25596,6 +25612,8 @@ export namespace Prisma {
     CafeInfo?: boolean | CafeInfoArgs
     WishlistProducts?: boolean | WishlistProductFindManyArgs
     ProductImages?: boolean | ProductImageFindManyArgs
+    productRedirectUrl?: boolean
+    isSignature?: boolean
     _count?: boolean | ProductCountOutputTypeArgs
   }
 
@@ -28828,7 +28846,9 @@ export namespace Prisma {
     isDisable: 'isDisable',
     isAvailable: 'isAvailable',
     categoryId: 'categoryId',
-    cafeInfoId: 'cafeInfoId'
+    cafeInfoId: 'cafeInfoId',
+    productRedirectUrl: 'productRedirectUrl',
+    isSignature: 'isSignature'
   };
 
   export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
@@ -30296,6 +30316,8 @@ export namespace Prisma {
     CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput> | null
     WishlistProducts?: WishlistProductListRelationFilter
     ProductImages?: ProductImageListRelationFilter
+    productRedirectUrl?: StringNullableFilter | string | null
+    isSignature?: BoolFilter | boolean
   }
 
   export type ProductOrderByWithRelationInput = {
@@ -30317,6 +30339,8 @@ export namespace Prisma {
     CafeInfo?: CafeInfoOrderByWithRelationInput
     WishlistProducts?: WishlistProductOrderByRelationAggregateInput
     ProductImages?: ProductImageOrderByRelationAggregateInput
+    productRedirectUrl?: SortOrder
+    isSignature?: SortOrder
   }
 
   export type ProductWhereUniqueInput = {
@@ -30339,6 +30363,8 @@ export namespace Prisma {
     isAvailable?: SortOrder
     categoryId?: SortOrder
     cafeInfoId?: SortOrder
+    productRedirectUrl?: SortOrder
+    isSignature?: SortOrder
     _count?: ProductCountOrderByAggregateInput
     _avg?: ProductAvgOrderByAggregateInput
     _max?: ProductMaxOrderByAggregateInput
@@ -30364,6 +30390,8 @@ export namespace Prisma {
     isAvailable?: BoolWithAggregatesFilter | boolean
     categoryId?: IntWithAggregatesFilter | number
     cafeInfoId?: IntNullableWithAggregatesFilter | number | null
+    productRedirectUrl?: StringNullableWithAggregatesFilter | string | null
+    isSignature?: BoolWithAggregatesFilter | boolean
   }
 
   export type WishlistProductWhereInput = {
@@ -32135,6 +32163,8 @@ export namespace Prisma {
     CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
     WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
     ProductImages?: ProductImageCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductUncheckedCreateInput = {
@@ -32154,6 +32184,8 @@ export namespace Prisma {
     cafeInfoId?: number | null
     WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProductInput
     ProductImages?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductUpdateInput = {
@@ -32172,6 +32204,8 @@ export namespace Prisma {
     CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
     WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
     ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductUncheckedUpdateInput = {
@@ -32191,6 +32225,8 @@ export namespace Prisma {
     cafeInfoId?: NullableIntFieldUpdateOperationsInput | number | null
     WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProductNestedInput
     ProductImages?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductCreateManyInput = {
@@ -32208,6 +32244,8 @@ export namespace Prisma {
     isAvailable?: boolean
     categoryId: number
     cafeInfoId?: number | null
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductUpdateManyMutationInput = {
@@ -32222,6 +32260,8 @@ export namespace Prisma {
     minOrderQuantity?: IntFieldUpdateOperationsInput | number
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductUncheckedUpdateManyInput = {
@@ -32239,6 +32279,8 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     categoryId?: IntFieldUpdateOperationsInput | number
     cafeInfoId?: NullableIntFieldUpdateOperationsInput | number | null
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type WishlistProductCreateInput = {
@@ -33920,6 +33962,8 @@ export namespace Prisma {
     isAvailable?: SortOrder
     categoryId?: SortOrder
     cafeInfoId?: SortOrder
+    productRedirectUrl?: SortOrder
+    isSignature?: SortOrder
   }
 
   export type ProductAvgOrderByAggregateInput = {
@@ -33947,6 +33991,8 @@ export namespace Prisma {
     isAvailable?: SortOrder
     categoryId?: SortOrder
     cafeInfoId?: SortOrder
+    productRedirectUrl?: SortOrder
+    isSignature?: SortOrder
   }
 
   export type ProductMinOrderByAggregateInput = {
@@ -33964,6 +34010,8 @@ export namespace Prisma {
     isAvailable?: SortOrder
     categoryId?: SortOrder
     cafeInfoId?: SortOrder
+    productRedirectUrl?: SortOrder
+    isSignature?: SortOrder
   }
 
   export type ProductSumOrderByAggregateInput = {
@@ -37742,6 +37790,8 @@ export namespace Prisma {
     ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
     WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
     ProductImages?: ProductImageCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductUncheckedCreateWithoutCafeInfoInput = {
@@ -37760,6 +37810,8 @@ export namespace Prisma {
     categoryId: number
     WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProductInput
     ProductImages?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductCreateOrConnectWithoutCafeInfoInput = {
@@ -37994,6 +38046,8 @@ export namespace Prisma {
     isAvailable?: BoolFilter | boolean
     categoryId?: IntFilter | number
     cafeInfoId?: IntNullableFilter | number | null
+    productRedirectUrl?: StringNullableFilter | string | null
+    isSignature?: BoolFilter | boolean
   }
 
   export type CafeInfoCreateWithoutCafeThumbnailImagesInput = {
@@ -39337,6 +39391,8 @@ export namespace Prisma {
     CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
     WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
     ProductImages?: ProductImageCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductUncheckedCreateWithoutProductCategoryInput = {
@@ -39355,6 +39411,8 @@ export namespace Prisma {
     cafeInfoId?: number | null
     WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProductInput
     ProductImages?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductCreateOrConnectWithoutProductCategoryInput = {
@@ -39781,6 +39839,8 @@ export namespace Prisma {
     ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
     CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
     ProductImages?: ProductImageCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductUncheckedCreateWithoutWishlistProductsInput = {
@@ -39799,6 +39859,8 @@ export namespace Prisma {
     categoryId: number
     cafeInfoId?: number | null
     ProductImages?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductCreateOrConnectWithoutWishlistProductsInput = {
@@ -39852,6 +39914,8 @@ export namespace Prisma {
     ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
     CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
     ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductUncheckedUpdateWithoutWishlistProductsInput = {
@@ -39870,6 +39934,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     cafeInfoId?: NullableIntFieldUpdateOperationsInput | number | null
     ProductImages?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProxyUserUpsertWithoutWishlistProductsInput = {
@@ -39913,6 +39979,8 @@ export namespace Prisma {
     ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
     CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
     WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductUncheckedCreateWithoutProductImagesInput = {
@@ -39931,6 +39999,8 @@ export namespace Prisma {
     categoryId: number
     cafeInfoId?: number | null
     WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ProductCreateOrConnectWithoutProductImagesInput = {
@@ -39958,6 +40028,8 @@ export namespace Prisma {
     ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
     CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
     WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductUncheckedUpdateWithoutProductImagesInput = {
@@ -39976,6 +40048,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     cafeInfoId?: NullableIntFieldUpdateOperationsInput | number | null
     WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type BoardCreateManyUserInput = {
@@ -40492,6 +40566,8 @@ export namespace Prisma {
     isDisable?: boolean
     isAvailable?: boolean
     categoryId: number
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type CafeVirtualLinkUpdateWithoutCafeInfoInput = {
@@ -40661,6 +40737,8 @@ export namespace Prisma {
     ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
     WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
     ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductUncheckedUpdateWithoutCafeInfoInput = {
@@ -40679,6 +40757,8 @@ export namespace Prisma {
     categoryId?: IntFieldUpdateOperationsInput | number
     WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProductNestedInput
     ProductImages?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductUncheckedUpdateManyWithoutProductsInput = {
@@ -40695,6 +40775,8 @@ export namespace Prisma {
     isDisable?: BoolFieldUpdateOperationsInput | boolean
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     categoryId?: IntFieldUpdateOperationsInput | number
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type CafeCouponCreateManyCafeCouponGroupInput = {
@@ -40911,6 +40993,8 @@ export namespace Prisma {
     isDisable?: boolean
     isAvailable?: boolean
     cafeInfoId?: number | null
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type ClosureProductCategoryUpdateWithoutAncestorCategoryInput = {
@@ -40958,6 +41042,8 @@ export namespace Prisma {
     CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
     WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
     ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type ProductUncheckedUpdateWithoutProductCategoryInput = {
@@ -40976,6 +41062,8 @@ export namespace Prisma {
     cafeInfoId?: NullableIntFieldUpdateOperationsInput | number | null
     WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProductNestedInput
     ProductImages?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type WishlistProductCreateManyProductInput = {

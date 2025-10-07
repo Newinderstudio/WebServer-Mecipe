@@ -4,7 +4,6 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { PrismaService } from 'src/global/prisma.service';
 import { SearchProductDto } from './dto/search-product.dto';
 import { Prisma } from 'prisma/basic';
-import { verifySignedMessage } from 'src/util/sha256';
 import { CategoryTree } from './dto/public-product.dto';
 
 type ProductCategoryInfo = Prisma.ProductCategoryGetPayload<{
@@ -23,7 +22,7 @@ export class ProductsService {
 
   async createProduct(createProductDto: CreateProductDto) {
 
-    const { productImages, cafeInfoId, categoryId, ...productData } = createProductDto;
+    const { productImages, cafeInfoId, productRedirectUrlArray, categoryId, ...productData } = createProductDto;
 
     const cafeInfo = await this.prisma.cafeInfo.findUnique({
       where: { id: cafeInfoId }
@@ -45,6 +44,7 @@ export class ProductsService {
       const product = await tx.product.create({
         data: {
           ...productData,
+          productRedirectUrl: productRedirectUrlArray ? JSON.stringify(productRedirectUrlArray) : null,
           ProductCategory: {
             connect: { id: categoryId }
           },
@@ -67,7 +67,7 @@ export class ProductsService {
       const createdProduct = await tx.product.findUnique({
         where: { id: product.id },
         include: {
-          ProductImages: true
+          ProductImages: true,
         }
       })
       return createdProduct;
@@ -121,7 +121,11 @@ export class ProductsService {
       take: limit,
       orderBy: { createdAt: 'desc' },
       include: {
-        ProductImages: true,
+        ProductImages: {
+          where: {
+            isThumb: true
+          }
+        },
         ProductCategory: true,
       }
     }) : [];
@@ -178,15 +182,19 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
 
-    const { productImages, disabledImageIds, isThumbImageId, ...productData } = updateProductDto;
+    const { productImages, disabledImageIds, productRedirectUrlArray, isThumbImageId, ...productData } = updateProductDto;
 
     return this.prisma.$transaction(async (tx) => {
+
+      let updateData: Prisma.ProductUpdateInput = {...productData};
+      if (productRedirectUrlArray) {
+        updateData.productRedirectUrl = productRedirectUrlArray.length > 0 ? JSON.stringify(productRedirectUrlArray) : null;
+      }
+
       // Board 수정
       await tx.product.update({
         where: { id },
-        data: {
-          ...productData,
-        }
+        data: updateData,
       });
 
       if (disabledImageIds !== undefined) {
@@ -355,19 +363,23 @@ export class ProductsService {
     categoryInfos.forEach(category => {
       categoryMap.set(category.id, {
         ...category,
-        children: []
+        children: [],
+        descendantIds: []
       });
     });
 
     // Closure 테이블을 기반으로 트리 구조 구성
     closure.forEach(relation => {
+      const parent = categoryMap.get(relation.ancestor);
+      const child = categoryMap.get(relation.descendant);
       if (relation.depth === 1) { // 직계 부모-자식 관계
-        const parent = categoryMap.get(relation.ancestor);
-        const child = categoryMap.get(relation.descendant);
-        
         if (parent && child && parent.id !== child.id) {
           parent.children.push(child);
         }
+      }
+
+      if(parent && child && !parent.descendantIds.includes(child.id)) {
+        parent.descendantIds.push(child.id);
       }
     });
 
@@ -379,6 +391,10 @@ export class ProductsService {
       )) {
         rootCategories.push(category);
       }
+    });
+
+    rootCategories.forEach(category => {
+      category.descendantIds.push(category.id);
     });
 
     return rootCategories;

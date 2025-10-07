@@ -313,7 +313,9 @@ exports.Prisma.ProductScalarFieldEnum = makeEnum({
   isDisable: 'isDisable',
   isAvailable: 'isAvailable',
   categoryId: 'categoryId',
-  cafeInfoId: 'cafeInfoId'
+  cafeInfoId: 'cafeInfoId',
+  productRedirectUrl: 'productRedirectUrl',
+  isSignature: 'isSignature'
 });
 
 exports.Prisma.ProxyUserScalarFieldEnum = makeEnum({

@@ -1,9 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Logger, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Logger, Request, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Public } from 'src/util/decorators';
 import { LoginType, UserType } from 'prisma/basic';
+import { AdminAuthGuard } from 'src/auth/jwt.guard.admin';
 
 @Controller('users')
 export class UsersController {
@@ -43,6 +44,7 @@ export class UsersController {
 
   //유저 페이징
   @Get('admin')
+  @UseGuards(AdminAuthGuard)
   findAdminAllUsesrs(
     @Query('page') page: string,
     @Query('take') take: string,
@@ -66,11 +68,13 @@ export class UsersController {
   }
 
   @Get('admin/general/list')
+  @UseGuards(AdminAuthGuard)
   findAllUsersByGeneralInAdmin() {
     return this.usersService.findAllUsersByGeneralInAdmin();
   }
 
   @Patch('admin/user/:userId')
+  @UseGuards(AdminAuthGuard)
   updateUserByAdmin(
     @Param('userId') userId: string,
     @Query('userType') userType?: UserType,
@@ -125,6 +129,7 @@ export class UsersController {
   // }
 
   @Post('admin')
+  @UseGuards(AdminAuthGuard)
   createUserByAdmin(@Body() body: { adminId: number; body: CreateUserDto }) {
     return this.usersService.createUserByAdmin(body.adminId, body.body);
   }
@@ -158,6 +163,7 @@ export class UsersController {
   }
 
   @Delete('admin')
+  @UseGuards(AdminAuthGuard)
   removeUserByAdmin(
     @Query('adminId') adminId: string,
     @Query('id') id: string,

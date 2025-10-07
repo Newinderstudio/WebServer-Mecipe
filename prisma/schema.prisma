@@ -502,6 +502,11 @@ model Product {
   // 상품 이미지
   ProductImages     ProductImage[]
 
+  // 상품 URL
+  productRedirectUrl  String? @db.Text
+
+  isSignature       Boolean   @default(false)
+
   @@map("products")
 }
 

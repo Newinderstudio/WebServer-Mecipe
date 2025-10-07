@@ -46,6 +46,13 @@ export class CreateProductDto implements Partial<Prisma.ProductCreateInput> {
   @IsArray()
   productImages?: CreateProductImageDto[];
 
+  @IsOptional()
+  @IsArray()
+  productRedirectUrlArray?: string[];
+
+  @IsOptional()
+  @IsBoolean()
+  isSignature?: boolean;
 }
 
 export class CreateProductImageDto implements Partial<Prisma.ProductImageCreateInput> {

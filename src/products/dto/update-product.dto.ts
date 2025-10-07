@@ -57,4 +57,12 @@ export class UpdateProductDto implements Partial<Prisma.ProductUpdateInput> {
   @IsOptional()
   @IsNumber()
   isThumbImageId?: number;
+
+  @IsOptional()
+  @IsArray()
+  productRedirectUrlArray?: string[];
+
+  @IsOptional()
+  @IsBoolean()
+  isSignature?: boolean;
 }
