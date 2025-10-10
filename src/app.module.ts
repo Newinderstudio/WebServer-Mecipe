@@ -23,6 +23,7 @@ import { RawimageuploadModule } from './rawimageupload/rawimageupload.module';
 import { CouponsModule } from './coupons/coupons.module';
 import { BoardsModule } from './boards/boards.module';
 import { MetaVeiwersModule } from './meta-veiwers/meta-veiwers.module';
+import { MetaViewerInfosModule } from './meta-viewer-infos/meta-viewer-infos.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { MetaVeiwersModule } from './meta-veiwers/meta-veiwers.module';
     CouponsModule,
     BoardsModule,
     MetaVeiwersModule,
+    MetaViewerInfosModule,
   ],
   controllers: [AppController],
   providers: [
