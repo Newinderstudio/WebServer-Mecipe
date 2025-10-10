@@ -24,6 +24,8 @@ import { CouponsModule } from './coupons/coupons.module';
 import { BoardsModule } from './boards/boards.module';
 import { MetaVeiwersModule } from './meta-veiwers/meta-veiwers.module';
 import { MetaViewerInfosModule } from './meta-viewer-infos/meta-viewer-infos.module';
+import { ProductsModule } from './products/products.module';
+import { ProductcategoriesModule } from './productcategories/productcategories.module';
 
 @Module({
   imports: [
@@ -51,6 +53,8 @@ import { MetaViewerInfosModule } from './meta-viewer-infos/meta-viewer-infos.mod
     BoardsModule,
     MetaVeiwersModule,
     MetaViewerInfosModule,
+    ProductsModule,
+    ProductcategoriesModule,
   ],
   controllers: [AppController],
   providers: [

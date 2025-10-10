@@ -256,10 +256,42 @@ exports.Prisma.CafeVirtualLinkThumbnailImageScalarFieldEnum = makeEnum({
   cafeVirtualLinkId: 'cafeVirtualLinkId'
 });
 
+exports.Prisma.ClosureProductCategoryScalarFieldEnum = makeEnum({
+  ancestor: 'ancestor',
+  descendant: 'descendant',
+  depth: 'depth'
+});
+
 exports.Prisma.ClosureRegionCategoryScalarFieldEnum = makeEnum({
   ancestor: 'ancestor',
   descendant: 'descendant',
   depth: 'depth'
+});
+
+exports.Prisma.MetaViewerActiveMapScalarFieldEnum = makeEnum({
+  id: 'id',
+  updatedAt: 'updatedAt',
+  metaViewerInfoId: 'metaViewerInfoId',
+  activeRenderMapId: 'activeRenderMapId',
+  activeColliderMapId: 'activeColliderMapId'
+});
+
+exports.Prisma.MetaViewerInfoScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  code: 'code',
+  cafeInfoId: 'cafeInfoId'
+});
+
+exports.Prisma.MetaViewerMapScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  type: 'type',
+  version: 'version',
+  url: 'url',
+  size: 'size',
+  isDisable: 'isDisable',
+  metaViewerInfoId: 'metaViewerInfoId'
 });
 
 exports.Prisma.NoticeScalarFieldEnum = makeEnum({
@@ -269,6 +301,47 @@ exports.Prisma.NoticeScalarFieldEnum = makeEnum({
   content: 'content',
   link: 'link',
   userId: 'userId'
+});
+
+exports.Prisma.ProductCategoryScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  name: 'name',
+  description: 'description',
+  isDisable: 'isDisable',
+  code: 'code'
+});
+
+exports.Prisma.ProductImageScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  url: 'url',
+  thumbnailUrl: 'thumbnailUrl',
+  width: 'width',
+  height: 'height',
+  size: 'size',
+  isDisable: 'isDisable',
+  isThumb: 'isThumb',
+  productId: 'productId'
+});
+
+exports.Prisma.ProductScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  name: 'name',
+  code: 'code',
+  description: 'description',
+  price: 'price',
+  originalPrice: 'originalPrice',
+  stockQuantity: 'stockQuantity',
+  minOrderQuantity: 'minOrderQuantity',
+  isDisable: 'isDisable',
+  isAvailable: 'isAvailable',
+  categoryId: 'categoryId',
+  cafeInfoId: 'cafeInfoId',
+  productRedirectUrl: 'productRedirectUrl',
+  isSignature: 'isSignature'
 });
 
 exports.Prisma.ProxyUserScalarFieldEnum = makeEnum({
@@ -318,6 +391,13 @@ exports.Prisma.UserScalarFieldEnum = makeEnum({
   email: 'email',
   isDisable: 'isDisable'
 });
+
+exports.Prisma.WishlistProductScalarFieldEnum = makeEnum({
+  id: 'id',
+  createdAt: 'createdAt',
+  productId: 'productId',
+  proxyUserId: 'proxyUserId'
+});
 exports.BoardType = makeEnum({
   BTALK: 'BTALK',
   BINFORM: 'BINFORM',
@@ -365,6 +445,11 @@ exports.LoginType = makeEnum({
   ZEPETO: 'ZEPETO'
 });
 
+exports.MetaMapType = makeEnum({
+  RENDER: 'RENDER',
+  COLLIDER: 'COLLIDER'
+});
+
 exports.ProxyUserType = makeEnum({
   ETC: 'ETC',
   WEB: 'WEB',
@@ -399,7 +484,15 @@ exports.Prisma.ModelName = makeEnum({
   ProxyUser: 'ProxyUser',
   CafeCoupon: 'CafeCoupon',
   CafeCouponHistory: 'CafeCouponHistory',
-  CafeCouponQRCode: 'CafeCouponQRCode'
+  CafeCouponQRCode: 'CafeCouponQRCode',
+  MetaViewerInfo: 'MetaViewerInfo',
+  MetaViewerMap: 'MetaViewerMap',
+  MetaViewerActiveMap: 'MetaViewerActiveMap',
+  ProductCategory: 'ProductCategory',
+  ClosureProductCategory: 'ClosureProductCategory',
+  Product: 'Product',
+  WishlistProduct: 'WishlistProduct',
+  ProductImage: 'ProductImage'
 });
 
 /**

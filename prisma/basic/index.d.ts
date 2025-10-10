@@ -305,6 +305,118 @@ export type CafeCouponQRCode = {
   base64Data: string
 }
 
+/**
+ * Model MetaViewerInfo
+ * 
+ */
+export type MetaViewerInfo = {
+  id: number
+  createdAt: Date
+  code: string
+  cafeInfoId: number
+}
+
+/**
+ * Model MetaViewerMap
+ * 
+ */
+export type MetaViewerMap = {
+  id: number
+  createdAt: Date
+  type: MetaMapType
+  version: number
+  url: string
+  size: number
+  isDisable: boolean
+  metaViewerInfoId: number
+}
+
+/**
+ * Model MetaViewerActiveMap
+ * 
+ */
+export type MetaViewerActiveMap = {
+  id: number
+  updatedAt: Date
+  metaViewerInfoId: number
+  activeRenderMapId: number
+  activeColliderMapId: number
+}
+
+/**
+ * Model ProductCategory
+ * 
+ */
+export type ProductCategory = {
+  id: number
+  createdAt: Date
+  name: string
+  description: string | null
+  isDisable: boolean
+  code: string
+}
+
+/**
+ * Model ClosureProductCategory
+ * 
+ */
+export type ClosureProductCategory = {
+  ancestor: number
+  descendant: number
+  depth: number
+}
+
+/**
+ * Model Product
+ * 
+ */
+export type Product = {
+  id: number
+  createdAt: Date
+  updatedAt: Date
+  name: string
+  code: string
+  description: string | null
+  price: number
+  originalPrice: number | null
+  stockQuantity: number
+  minOrderQuantity: number
+  isDisable: boolean
+  isAvailable: boolean
+  categoryId: number
+  cafeInfoId: number | null
+  productRedirectUrl: string | null
+  isSignature: boolean
+}
+
+/**
+ * Model WishlistProduct
+ * 
+ */
+export type WishlistProduct = {
+  id: number
+  createdAt: Date
+  productId: number
+  proxyUserId: number
+}
+
+/**
+ * Model ProductImage
+ * 
+ */
+export type ProductImage = {
+  id: number
+  createdAt: Date
+  url: string
+  thumbnailUrl: string
+  width: number
+  height: number
+  size: number
+  isDisable: boolean
+  isThumb: boolean
+  productId: number
+}
+
 
 /**
  * Enums
@@ -373,6 +485,14 @@ export const LoginType: {
 };
 
 export type LoginType = (typeof LoginType)[keyof typeof LoginType]
+
+
+export const MetaMapType: {
+  RENDER: 'RENDER',
+  COLLIDER: 'COLLIDER'
+};
+
+export type MetaMapType = (typeof MetaMapType)[keyof typeof MetaMapType]
 
 
 export const ProxyUserType: {
@@ -711,6 +831,86 @@ export class PrismaClient<
     * ```
     */
   get cafeCouponQRCode(): Prisma.CafeCouponQRCodeDelegate<GlobalReject>;
+
+  /**
+   * `prisma.metaViewerInfo`: Exposes CRUD operations for the **MetaViewerInfo** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MetaViewerInfos
+    * const metaViewerInfos = await prisma.metaViewerInfo.findMany()
+    * ```
+    */
+  get metaViewerInfo(): Prisma.MetaViewerInfoDelegate<GlobalReject>;
+
+  /**
+   * `prisma.metaViewerMap`: Exposes CRUD operations for the **MetaViewerMap** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MetaViewerMaps
+    * const metaViewerMaps = await prisma.metaViewerMap.findMany()
+    * ```
+    */
+  get metaViewerMap(): Prisma.MetaViewerMapDelegate<GlobalReject>;
+
+  /**
+   * `prisma.metaViewerActiveMap`: Exposes CRUD operations for the **MetaViewerActiveMap** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more MetaViewerActiveMaps
+    * const metaViewerActiveMaps = await prisma.metaViewerActiveMap.findMany()
+    * ```
+    */
+  get metaViewerActiveMap(): Prisma.MetaViewerActiveMapDelegate<GlobalReject>;
+
+  /**
+   * `prisma.productCategory`: Exposes CRUD operations for the **ProductCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProductCategories
+    * const productCategories = await prisma.productCategory.findMany()
+    * ```
+    */
+  get productCategory(): Prisma.ProductCategoryDelegate<GlobalReject>;
+
+  /**
+   * `prisma.closureProductCategory`: Exposes CRUD operations for the **ClosureProductCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ClosureProductCategories
+    * const closureProductCategories = await prisma.closureProductCategory.findMany()
+    * ```
+    */
+  get closureProductCategory(): Prisma.ClosureProductCategoryDelegate<GlobalReject>;
+
+  /**
+   * `prisma.product`: Exposes CRUD operations for the **Product** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Products
+    * const products = await prisma.product.findMany()
+    * ```
+    */
+  get product(): Prisma.ProductDelegate<GlobalReject>;
+
+  /**
+   * `prisma.wishlistProduct`: Exposes CRUD operations for the **WishlistProduct** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more WishlistProducts
+    * const wishlistProducts = await prisma.wishlistProduct.findMany()
+    * ```
+    */
+  get wishlistProduct(): Prisma.WishlistProductDelegate<GlobalReject>;
+
+  /**
+   * `prisma.productImage`: Exposes CRUD operations for the **ProductImage** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ProductImages
+    * const productImages = await prisma.productImage.findMany()
+    * ```
+    */
+  get productImage(): Prisma.ProductImageDelegate<GlobalReject>;
 }
 
 export namespace Prisma {
@@ -1214,7 +1414,15 @@ export namespace Prisma {
     ProxyUser: 'ProxyUser',
     CafeCoupon: 'CafeCoupon',
     CafeCouponHistory: 'CafeCouponHistory',
-    CafeCouponQRCode: 'CafeCouponQRCode'
+    CafeCouponQRCode: 'CafeCouponQRCode',
+    MetaViewerInfo: 'MetaViewerInfo',
+    MetaViewerMap: 'MetaViewerMap',
+    MetaViewerActiveMap: 'MetaViewerActiveMap',
+    ProductCategory: 'ProductCategory',
+    ClosureProductCategory: 'ClosureProductCategory',
+    Product: 'Product',
+    WishlistProduct: 'WishlistProduct',
+    ProductImage: 'ProductImage'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1582,6 +1790,8 @@ export namespace Prisma {
     CafeRealImages: number
     CafeCouponGroupPartners: number
     CafeBoards: number
+    MetaViewerInfos: number
+    Products: number
   }
 
   export type CafeInfoCountOutputTypeSelect = {
@@ -1591,6 +1801,8 @@ export namespace Prisma {
     CafeRealImages?: boolean
     CafeCouponGroupPartners?: boolean
     CafeBoards?: boolean
+    MetaViewerInfos?: boolean
+    Products?: boolean
   }
 
   export type CafeInfoCountOutputTypeGetPayload<S extends boolean | null | undefined | CafeInfoCountOutputTypeArgs> =
@@ -1677,10 +1889,12 @@ export namespace Prisma {
 
   export type ProxyUserCountOutputType = {
     CafeCoupons: number
+    WishlistProducts: number
   }
 
   export type ProxyUserCountOutputTypeSelect = {
     CafeCoupons?: boolean
+    WishlistProducts?: boolean
   }
 
   export type ProxyUserCountOutputTypeGetPayload<S extends boolean | null | undefined | ProxyUserCountOutputTypeArgs> =
@@ -1756,6 +1970,190 @@ export namespace Prisma {
      * 
     **/
     select?: CafeCouponCountOutputTypeSelect | null
+  }
+
+
+
+  /**
+   * Count Type MetaViewerInfoCountOutputType
+   */
+
+
+  export type MetaViewerInfoCountOutputType = {
+    MetaViewerMaps: number
+  }
+
+  export type MetaViewerInfoCountOutputTypeSelect = {
+    MetaViewerMaps?: boolean
+  }
+
+  export type MetaViewerInfoCountOutputTypeGetPayload<S extends boolean | null | undefined | MetaViewerInfoCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? MetaViewerInfoCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (MetaViewerInfoCountOutputTypeArgs)
+    ? MetaViewerInfoCountOutputType 
+    : S extends { select: any } & (MetaViewerInfoCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof MetaViewerInfoCountOutputType ? MetaViewerInfoCountOutputType[P] : never
+  } 
+      : MetaViewerInfoCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * MetaViewerInfoCountOutputType without action
+   */
+  export type MetaViewerInfoCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfoCountOutputType
+     * 
+    **/
+    select?: MetaViewerInfoCountOutputTypeSelect | null
+  }
+
+
+
+  /**
+   * Count Type MetaViewerMapCountOutputType
+   */
+
+
+  export type MetaViewerMapCountOutputType = {
+    ActiveRenderFor: number
+    ActiveColliderFor: number
+  }
+
+  export type MetaViewerMapCountOutputTypeSelect = {
+    ActiveRenderFor?: boolean
+    ActiveColliderFor?: boolean
+  }
+
+  export type MetaViewerMapCountOutputTypeGetPayload<S extends boolean | null | undefined | MetaViewerMapCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? MetaViewerMapCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (MetaViewerMapCountOutputTypeArgs)
+    ? MetaViewerMapCountOutputType 
+    : S extends { select: any } & (MetaViewerMapCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof MetaViewerMapCountOutputType ? MetaViewerMapCountOutputType[P] : never
+  } 
+      : MetaViewerMapCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * MetaViewerMapCountOutputType without action
+   */
+  export type MetaViewerMapCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMapCountOutputType
+     * 
+    **/
+    select?: MetaViewerMapCountOutputTypeSelect | null
+  }
+
+
+
+  /**
+   * Count Type ProductCategoryCountOutputType
+   */
+
+
+  export type ProductCategoryCountOutputType = {
+    AncestorCategories: number
+    DescendantCategories: number
+    Products: number
+  }
+
+  export type ProductCategoryCountOutputTypeSelect = {
+    AncestorCategories?: boolean
+    DescendantCategories?: boolean
+    Products?: boolean
+  }
+
+  export type ProductCategoryCountOutputTypeGetPayload<S extends boolean | null | undefined | ProductCategoryCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ProductCategoryCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (ProductCategoryCountOutputTypeArgs)
+    ? ProductCategoryCountOutputType 
+    : S extends { select: any } & (ProductCategoryCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof ProductCategoryCountOutputType ? ProductCategoryCountOutputType[P] : never
+  } 
+      : ProductCategoryCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ProductCategoryCountOutputType without action
+   */
+  export type ProductCategoryCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the ProductCategoryCountOutputType
+     * 
+    **/
+    select?: ProductCategoryCountOutputTypeSelect | null
+  }
+
+
+
+  /**
+   * Count Type ProductCountOutputType
+   */
+
+
+  export type ProductCountOutputType = {
+    WishlistProducts: number
+    ProductImages: number
+  }
+
+  export type ProductCountOutputTypeSelect = {
+    WishlistProducts?: boolean
+    ProductImages?: boolean
+  }
+
+  export type ProductCountOutputTypeGetPayload<S extends boolean | null | undefined | ProductCountOutputTypeArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ProductCountOutputType :
+    S extends undefined ? never :
+    S extends { include: any } & (ProductCountOutputTypeArgs)
+    ? ProductCountOutputType 
+    : S extends { select: any } & (ProductCountOutputTypeArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+    P extends keyof ProductCountOutputType ? ProductCountOutputType[P] : never
+  } 
+      : ProductCountOutputType
+
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ProductCountOutputType without action
+   */
+  export type ProductCountOutputTypeArgs = {
+    /**
+     * Select specific fields to fetch from the ProductCountOutputType
+     * 
+    **/
+    select?: ProductCountOutputTypeSelect | null
   }
 
 
@@ -10472,6 +10870,8 @@ export namespace Prisma {
     CafeRealImages?: boolean | CafeRealImageFindManyArgs
     CafeCouponGroupPartners?: boolean | CafeCouponGoupPartnerFindManyArgs
     CafeBoards?: boolean | CafeBoardFindManyArgs
+    MetaViewerInfos?: boolean | MetaViewerInfoFindManyArgs
+    Products?: boolean | ProductFindManyArgs
     _count?: boolean | CafeInfoCountOutputTypeArgs
   }
 
@@ -10484,6 +10884,8 @@ export namespace Prisma {
     CafeRealImages?: boolean | CafeRealImageFindManyArgs
     CafeCouponGroupPartners?: boolean | CafeCouponGoupPartnerFindManyArgs
     CafeBoards?: boolean | CafeBoardFindManyArgs
+    MetaViewerInfos?: boolean | MetaViewerInfoFindManyArgs
+    Products?: boolean | ProductFindManyArgs
     _count?: boolean | CafeInfoCountOutputTypeArgs
   } 
 
@@ -10501,6 +10903,8 @@ export namespace Prisma {
         P extends 'CafeRealImages' ? Array < CafeRealImageGetPayload<S['include'][P]>>  :
         P extends 'CafeCouponGroupPartners' ? Array < CafeCouponGoupPartnerGetPayload<S['include'][P]>>  :
         P extends 'CafeBoards' ? Array < CafeBoardGetPayload<S['include'][P]>>  :
+        P extends 'MetaViewerInfos' ? Array < MetaViewerInfoGetPayload<S['include'][P]>>  :
+        P extends 'Products' ? Array < ProductGetPayload<S['include'][P]>>  :
         P extends '_count' ? CafeInfoCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (CafeInfoArgs | CafeInfoFindManyArgs)
@@ -10513,6 +10917,8 @@ export namespace Prisma {
         P extends 'CafeRealImages' ? Array < CafeRealImageGetPayload<S['select'][P]>>  :
         P extends 'CafeCouponGroupPartners' ? Array < CafeCouponGoupPartnerGetPayload<S['select'][P]>>  :
         P extends 'CafeBoards' ? Array < CafeBoardGetPayload<S['select'][P]>>  :
+        P extends 'MetaViewerInfos' ? Array < MetaViewerInfoGetPayload<S['select'][P]>>  :
+        P extends 'Products' ? Array < ProductGetPayload<S['select'][P]>>  :
         P extends '_count' ? CafeInfoCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof CafeInfo ? CafeInfo[P] : never
   } 
       : CafeInfo
@@ -10900,6 +11306,10 @@ export namespace Prisma {
     CafeCouponGroupPartners<T extends CafeCouponGoupPartnerFindManyArgs= {}>(args?: Subset<T, CafeCouponGoupPartnerFindManyArgs>): PrismaPromise<Array<CafeCouponGoupPartnerGetPayload<T>>| Null>;
 
     CafeBoards<T extends CafeBoardFindManyArgs= {}>(args?: Subset<T, CafeBoardFindManyArgs>): PrismaPromise<Array<CafeBoardGetPayload<T>>| Null>;
+
+    MetaViewerInfos<T extends MetaViewerInfoFindManyArgs= {}>(args?: Subset<T, MetaViewerInfoFindManyArgs>): PrismaPromise<Array<MetaViewerInfoGetPayload<T>>| Null>;
+
+    Products<T extends ProductFindManyArgs= {}>(args?: Subset<T, ProductFindManyArgs>): PrismaPromise<Array<ProductGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -18977,6 +19387,7 @@ export namespace Prisma {
     userId?: boolean
     User?: boolean | UserArgs
     CafeCoupons?: boolean | CafeCouponFindManyArgs
+    WishlistProducts?: boolean | WishlistProductFindManyArgs
     _count?: boolean | ProxyUserCountOutputTypeArgs
   }
 
@@ -18984,6 +19395,7 @@ export namespace Prisma {
   export type ProxyUserInclude = {
     User?: boolean | UserArgs
     CafeCoupons?: boolean | CafeCouponFindManyArgs
+    WishlistProducts?: boolean | WishlistProductFindManyArgs
     _count?: boolean | ProxyUserCountOutputTypeArgs
   } 
 
@@ -18996,6 +19408,7 @@ export namespace Prisma {
     [P in TruthyKeys<S['include']>]:
         P extends 'User' ? UserGetPayload<S['include'][P]> | null :
         P extends 'CafeCoupons' ? Array < CafeCouponGetPayload<S['include'][P]>>  :
+        P extends 'WishlistProducts' ? Array < WishlistProductGetPayload<S['include'][P]>>  :
         P extends '_count' ? ProxyUserCountOutputTypeGetPayload<S['include'][P]> :  never
   } 
     : S extends { select: any } & (ProxyUserArgs | ProxyUserFindManyArgs)
@@ -19003,6 +19416,7 @@ export namespace Prisma {
     [P in TruthyKeys<S['select']>]:
         P extends 'User' ? UserGetPayload<S['select'][P]> | null :
         P extends 'CafeCoupons' ? Array < CafeCouponGetPayload<S['select'][P]>>  :
+        P extends 'WishlistProducts' ? Array < WishlistProductGetPayload<S['select'][P]>>  :
         P extends '_count' ? ProxyUserCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof ProxyUser ? ProxyUser[P] : never
   } 
       : ProxyUser
@@ -19380,6 +19794,8 @@ export namespace Prisma {
     User<T extends UserArgs= {}>(args?: Subset<T, UserArgs>): Prisma__UserClient<UserGetPayload<T> | Null>;
 
     CafeCoupons<T extends CafeCouponFindManyArgs= {}>(args?: Subset<T, CafeCouponFindManyArgs>): PrismaPromise<Array<CafeCouponGetPayload<T>>| Null>;
+
+    WishlistProducts<T extends WishlistProductFindManyArgs= {}>(args?: Subset<T, WishlistProductFindManyArgs>): PrismaPromise<Array<WishlistProductGetPayload<T>>| Null>;
 
     private get _document();
     /**
@@ -22989,6 +23405,8488 @@ export namespace Prisma {
 
 
   /**
+   * Model MetaViewerInfo
+   */
+
+
+  export type AggregateMetaViewerInfo = {
+    _count: MetaViewerInfoCountAggregateOutputType | null
+    _avg: MetaViewerInfoAvgAggregateOutputType | null
+    _sum: MetaViewerInfoSumAggregateOutputType | null
+    _min: MetaViewerInfoMinAggregateOutputType | null
+    _max: MetaViewerInfoMaxAggregateOutputType | null
+  }
+
+  export type MetaViewerInfoAvgAggregateOutputType = {
+    id: number | null
+    cafeInfoId: number | null
+  }
+
+  export type MetaViewerInfoSumAggregateOutputType = {
+    id: number | null
+    cafeInfoId: number | null
+  }
+
+  export type MetaViewerInfoMinAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    code: string | null
+    cafeInfoId: number | null
+  }
+
+  export type MetaViewerInfoMaxAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    code: string | null
+    cafeInfoId: number | null
+  }
+
+  export type MetaViewerInfoCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    code: number
+    cafeInfoId: number
+    _all: number
+  }
+
+
+  export type MetaViewerInfoAvgAggregateInputType = {
+    id?: true
+    cafeInfoId?: true
+  }
+
+  export type MetaViewerInfoSumAggregateInputType = {
+    id?: true
+    cafeInfoId?: true
+  }
+
+  export type MetaViewerInfoMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    code?: true
+    cafeInfoId?: true
+  }
+
+  export type MetaViewerInfoMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    code?: true
+    cafeInfoId?: true
+  }
+
+  export type MetaViewerInfoCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    code?: true
+    cafeInfoId?: true
+    _all?: true
+  }
+
+  export type MetaViewerInfoAggregateArgs = {
+    /**
+     * Filter which MetaViewerInfo to aggregate.
+     * 
+    **/
+    where?: MetaViewerInfoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerInfos to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerInfoOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: MetaViewerInfoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerInfos from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerInfos.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MetaViewerInfos
+    **/
+    _count?: true | MetaViewerInfoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MetaViewerInfoAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MetaViewerInfoSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MetaViewerInfoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MetaViewerInfoMaxAggregateInputType
+  }
+
+  export type GetMetaViewerInfoAggregateType<T extends MetaViewerInfoAggregateArgs> = {
+        [P in keyof T & keyof AggregateMetaViewerInfo]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMetaViewerInfo[P]>
+      : GetScalarType<T[P], AggregateMetaViewerInfo[P]>
+  }
+
+
+
+
+  export type MetaViewerInfoGroupByArgs = {
+    where?: MetaViewerInfoWhereInput
+    orderBy?: Enumerable<MetaViewerInfoOrderByWithAggregationInput>
+    by: Array<MetaViewerInfoScalarFieldEnum>
+    having?: MetaViewerInfoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MetaViewerInfoCountAggregateInputType | true
+    _avg?: MetaViewerInfoAvgAggregateInputType
+    _sum?: MetaViewerInfoSumAggregateInputType
+    _min?: MetaViewerInfoMinAggregateInputType
+    _max?: MetaViewerInfoMaxAggregateInputType
+  }
+
+
+  export type MetaViewerInfoGroupByOutputType = {
+    id: number
+    createdAt: Date
+    code: string
+    cafeInfoId: number
+    _count: MetaViewerInfoCountAggregateOutputType | null
+    _avg: MetaViewerInfoAvgAggregateOutputType | null
+    _sum: MetaViewerInfoSumAggregateOutputType | null
+    _min: MetaViewerInfoMinAggregateOutputType | null
+    _max: MetaViewerInfoMaxAggregateOutputType | null
+  }
+
+  type GetMetaViewerInfoGroupByPayload<T extends MetaViewerInfoGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<MetaViewerInfoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MetaViewerInfoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MetaViewerInfoGroupByOutputType[P]>
+            : GetScalarType<T[P], MetaViewerInfoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MetaViewerInfoSelect = {
+    id?: boolean
+    createdAt?: boolean
+    code?: boolean
+    cafeInfoId?: boolean
+    CafeInfo?: boolean | CafeInfoArgs
+    MetaViewerMaps?: boolean | MetaViewerMapFindManyArgs
+    ActiveMaps?: boolean | MetaViewerActiveMapArgs
+    _count?: boolean | MetaViewerInfoCountOutputTypeArgs
+  }
+
+
+  export type MetaViewerInfoInclude = {
+    CafeInfo?: boolean | CafeInfoArgs
+    MetaViewerMaps?: boolean | MetaViewerMapFindManyArgs
+    ActiveMaps?: boolean | MetaViewerActiveMapArgs
+    _count?: boolean | MetaViewerInfoCountOutputTypeArgs
+  } 
+
+  export type MetaViewerInfoGetPayload<S extends boolean | null | undefined | MetaViewerInfoArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? MetaViewerInfo :
+    S extends undefined ? never :
+    S extends { include: any } & (MetaViewerInfoArgs | MetaViewerInfoFindManyArgs)
+    ? MetaViewerInfo  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'CafeInfo' ? CafeInfoGetPayload<S['include'][P]> :
+        P extends 'MetaViewerMaps' ? Array < MetaViewerMapGetPayload<S['include'][P]>>  :
+        P extends 'ActiveMaps' ? MetaViewerActiveMapGetPayload<S['include'][P]> | null :
+        P extends '_count' ? MetaViewerInfoCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (MetaViewerInfoArgs | MetaViewerInfoFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'CafeInfo' ? CafeInfoGetPayload<S['select'][P]> :
+        P extends 'MetaViewerMaps' ? Array < MetaViewerMapGetPayload<S['select'][P]>>  :
+        P extends 'ActiveMaps' ? MetaViewerActiveMapGetPayload<S['select'][P]> | null :
+        P extends '_count' ? MetaViewerInfoCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof MetaViewerInfo ? MetaViewerInfo[P] : never
+  } 
+      : MetaViewerInfo
+
+
+  type MetaViewerInfoCountArgs = Merge<
+    Omit<MetaViewerInfoFindManyArgs, 'select' | 'include'> & {
+      select?: MetaViewerInfoCountAggregateInputType | true
+    }
+  >
+
+  export interface MetaViewerInfoDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one MetaViewerInfo that matches the filter.
+     * @param {MetaViewerInfoFindUniqueArgs} args - Arguments to find a MetaViewerInfo
+     * @example
+     * // Get one MetaViewerInfo
+     * const metaViewerInfo = await prisma.metaViewerInfo.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends MetaViewerInfoFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, MetaViewerInfoFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'MetaViewerInfo'> extends True ? Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T>> : Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T> | null, null>
+
+    /**
+     * Find one MetaViewerInfo that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {MetaViewerInfoFindUniqueOrThrowArgs} args - Arguments to find a MetaViewerInfo
+     * @example
+     * // Get one MetaViewerInfo
+     * const metaViewerInfo = await prisma.metaViewerInfo.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends MetaViewerInfoFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, MetaViewerInfoFindUniqueOrThrowArgs>
+    ): Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T>>
+
+    /**
+     * Find the first MetaViewerInfo that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerInfoFindFirstArgs} args - Arguments to find a MetaViewerInfo
+     * @example
+     * // Get one MetaViewerInfo
+     * const metaViewerInfo = await prisma.metaViewerInfo.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends MetaViewerInfoFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, MetaViewerInfoFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'MetaViewerInfo'> extends True ? Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T>> : Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T> | null, null>
+
+    /**
+     * Find the first MetaViewerInfo that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerInfoFindFirstOrThrowArgs} args - Arguments to find a MetaViewerInfo
+     * @example
+     * // Get one MetaViewerInfo
+     * const metaViewerInfo = await prisma.metaViewerInfo.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends MetaViewerInfoFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, MetaViewerInfoFindFirstOrThrowArgs>
+    ): Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T>>
+
+    /**
+     * Find zero or more MetaViewerInfos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerInfoFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MetaViewerInfos
+     * const metaViewerInfos = await prisma.metaViewerInfo.findMany()
+     * 
+     * // Get first 10 MetaViewerInfos
+     * const metaViewerInfos = await prisma.metaViewerInfo.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const metaViewerInfoWithIdOnly = await prisma.metaViewerInfo.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends MetaViewerInfoFindManyArgs>(
+      args?: SelectSubset<T, MetaViewerInfoFindManyArgs>
+    ): PrismaPromise<Array<MetaViewerInfoGetPayload<T>>>
+
+    /**
+     * Create a MetaViewerInfo.
+     * @param {MetaViewerInfoCreateArgs} args - Arguments to create a MetaViewerInfo.
+     * @example
+     * // Create one MetaViewerInfo
+     * const MetaViewerInfo = await prisma.metaViewerInfo.create({
+     *   data: {
+     *     // ... data to create a MetaViewerInfo
+     *   }
+     * })
+     * 
+    **/
+    create<T extends MetaViewerInfoCreateArgs>(
+      args: SelectSubset<T, MetaViewerInfoCreateArgs>
+    ): Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T>>
+
+    /**
+     * Create many MetaViewerInfos.
+     *     @param {MetaViewerInfoCreateManyArgs} args - Arguments to create many MetaViewerInfos.
+     *     @example
+     *     // Create many MetaViewerInfos
+     *     const metaViewerInfo = await prisma.metaViewerInfo.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends MetaViewerInfoCreateManyArgs>(
+      args?: SelectSubset<T, MetaViewerInfoCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a MetaViewerInfo.
+     * @param {MetaViewerInfoDeleteArgs} args - Arguments to delete one MetaViewerInfo.
+     * @example
+     * // Delete one MetaViewerInfo
+     * const MetaViewerInfo = await prisma.metaViewerInfo.delete({
+     *   where: {
+     *     // ... filter to delete one MetaViewerInfo
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends MetaViewerInfoDeleteArgs>(
+      args: SelectSubset<T, MetaViewerInfoDeleteArgs>
+    ): Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T>>
+
+    /**
+     * Update one MetaViewerInfo.
+     * @param {MetaViewerInfoUpdateArgs} args - Arguments to update one MetaViewerInfo.
+     * @example
+     * // Update one MetaViewerInfo
+     * const metaViewerInfo = await prisma.metaViewerInfo.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends MetaViewerInfoUpdateArgs>(
+      args: SelectSubset<T, MetaViewerInfoUpdateArgs>
+    ): Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T>>
+
+    /**
+     * Delete zero or more MetaViewerInfos.
+     * @param {MetaViewerInfoDeleteManyArgs} args - Arguments to filter MetaViewerInfos to delete.
+     * @example
+     * // Delete a few MetaViewerInfos
+     * const { count } = await prisma.metaViewerInfo.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends MetaViewerInfoDeleteManyArgs>(
+      args?: SelectSubset<T, MetaViewerInfoDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MetaViewerInfos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerInfoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MetaViewerInfos
+     * const metaViewerInfo = await prisma.metaViewerInfo.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends MetaViewerInfoUpdateManyArgs>(
+      args: SelectSubset<T, MetaViewerInfoUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one MetaViewerInfo.
+     * @param {MetaViewerInfoUpsertArgs} args - Arguments to update or create a MetaViewerInfo.
+     * @example
+     * // Update or create a MetaViewerInfo
+     * const metaViewerInfo = await prisma.metaViewerInfo.upsert({
+     *   create: {
+     *     // ... data to create a MetaViewerInfo
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MetaViewerInfo we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends MetaViewerInfoUpsertArgs>(
+      args: SelectSubset<T, MetaViewerInfoUpsertArgs>
+    ): Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T>>
+
+    /**
+     * Count the number of MetaViewerInfos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerInfoCountArgs} args - Arguments to filter MetaViewerInfos to count.
+     * @example
+     * // Count the number of MetaViewerInfos
+     * const count = await prisma.metaViewerInfo.count({
+     *   where: {
+     *     // ... the filter for the MetaViewerInfos we want to count
+     *   }
+     * })
+    **/
+    count<T extends MetaViewerInfoCountArgs>(
+      args?: Subset<T, MetaViewerInfoCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MetaViewerInfoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MetaViewerInfo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerInfoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MetaViewerInfoAggregateArgs>(args: Subset<T, MetaViewerInfoAggregateArgs>): PrismaPromise<GetMetaViewerInfoAggregateType<T>>
+
+    /**
+     * Group by MetaViewerInfo.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerInfoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MetaViewerInfoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MetaViewerInfoGroupByArgs['orderBy'] }
+        : { orderBy?: MetaViewerInfoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MetaViewerInfoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMetaViewerInfoGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MetaViewerInfo.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__MetaViewerInfoClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    CafeInfo<T extends CafeInfoArgs= {}>(args?: Subset<T, CafeInfoArgs>): Prisma__CafeInfoClient<CafeInfoGetPayload<T> | Null>;
+
+    MetaViewerMaps<T extends MetaViewerMapFindManyArgs= {}>(args?: Subset<T, MetaViewerMapFindManyArgs>): PrismaPromise<Array<MetaViewerMapGetPayload<T>>| Null>;
+
+    ActiveMaps<T extends MetaViewerActiveMapArgs= {}>(args?: Subset<T, MetaViewerActiveMapArgs>): Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * MetaViewerInfo base type for findUnique actions
+   */
+  export type MetaViewerInfoFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfo
+     * 
+    **/
+    select?: MetaViewerInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerInfoInclude | null
+    /**
+     * Filter, which MetaViewerInfo to fetch.
+     * 
+    **/
+    where: MetaViewerInfoWhereUniqueInput
+  }
+
+  /**
+   * MetaViewerInfo: findUnique
+   */
+  export interface MetaViewerInfoFindUniqueArgs extends MetaViewerInfoFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * MetaViewerInfo findUniqueOrThrow
+   */
+  export type MetaViewerInfoFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfo
+     * 
+    **/
+    select?: MetaViewerInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerInfoInclude | null
+    /**
+     * Filter, which MetaViewerInfo to fetch.
+     * 
+    **/
+    where: MetaViewerInfoWhereUniqueInput
+  }
+
+
+  /**
+   * MetaViewerInfo base type for findFirst actions
+   */
+  export type MetaViewerInfoFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfo
+     * 
+    **/
+    select?: MetaViewerInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerInfoInclude | null
+    /**
+     * Filter, which MetaViewerInfo to fetch.
+     * 
+    **/
+    where?: MetaViewerInfoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerInfos to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerInfoOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MetaViewerInfos.
+     * 
+    **/
+    cursor?: MetaViewerInfoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerInfos from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerInfos.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MetaViewerInfos.
+     * 
+    **/
+    distinct?: Enumerable<MetaViewerInfoScalarFieldEnum>
+  }
+
+  /**
+   * MetaViewerInfo: findFirst
+   */
+  export interface MetaViewerInfoFindFirstArgs extends MetaViewerInfoFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * MetaViewerInfo findFirstOrThrow
+   */
+  export type MetaViewerInfoFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfo
+     * 
+    **/
+    select?: MetaViewerInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerInfoInclude | null
+    /**
+     * Filter, which MetaViewerInfo to fetch.
+     * 
+    **/
+    where?: MetaViewerInfoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerInfos to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerInfoOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MetaViewerInfos.
+     * 
+    **/
+    cursor?: MetaViewerInfoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerInfos from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerInfos.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MetaViewerInfos.
+     * 
+    **/
+    distinct?: Enumerable<MetaViewerInfoScalarFieldEnum>
+  }
+
+
+  /**
+   * MetaViewerInfo findMany
+   */
+  export type MetaViewerInfoFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfo
+     * 
+    **/
+    select?: MetaViewerInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerInfoInclude | null
+    /**
+     * Filter, which MetaViewerInfos to fetch.
+     * 
+    **/
+    where?: MetaViewerInfoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerInfos to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerInfoOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MetaViewerInfos.
+     * 
+    **/
+    cursor?: MetaViewerInfoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerInfos from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerInfos.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<MetaViewerInfoScalarFieldEnum>
+  }
+
+
+  /**
+   * MetaViewerInfo create
+   */
+  export type MetaViewerInfoCreateArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfo
+     * 
+    **/
+    select?: MetaViewerInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerInfoInclude | null
+    /**
+     * The data needed to create a MetaViewerInfo.
+     * 
+    **/
+    data: XOR<MetaViewerInfoCreateInput, MetaViewerInfoUncheckedCreateInput>
+  }
+
+
+  /**
+   * MetaViewerInfo createMany
+   */
+  export type MetaViewerInfoCreateManyArgs = {
+    /**
+     * The data used to create many MetaViewerInfos.
+     * 
+    **/
+    data: Enumerable<MetaViewerInfoCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * MetaViewerInfo update
+   */
+  export type MetaViewerInfoUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfo
+     * 
+    **/
+    select?: MetaViewerInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerInfoInclude | null
+    /**
+     * The data needed to update a MetaViewerInfo.
+     * 
+    **/
+    data: XOR<MetaViewerInfoUpdateInput, MetaViewerInfoUncheckedUpdateInput>
+    /**
+     * Choose, which MetaViewerInfo to update.
+     * 
+    **/
+    where: MetaViewerInfoWhereUniqueInput
+  }
+
+
+  /**
+   * MetaViewerInfo updateMany
+   */
+  export type MetaViewerInfoUpdateManyArgs = {
+    /**
+     * The data used to update MetaViewerInfos.
+     * 
+    **/
+    data: XOR<MetaViewerInfoUpdateManyMutationInput, MetaViewerInfoUncheckedUpdateManyInput>
+    /**
+     * Filter which MetaViewerInfos to update
+     * 
+    **/
+    where?: MetaViewerInfoWhereInput
+  }
+
+
+  /**
+   * MetaViewerInfo upsert
+   */
+  export type MetaViewerInfoUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfo
+     * 
+    **/
+    select?: MetaViewerInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerInfoInclude | null
+    /**
+     * The filter to search for the MetaViewerInfo to update in case it exists.
+     * 
+    **/
+    where: MetaViewerInfoWhereUniqueInput
+    /**
+     * In case the MetaViewerInfo found by the `where` argument doesn't exist, create a new MetaViewerInfo with this data.
+     * 
+    **/
+    create: XOR<MetaViewerInfoCreateInput, MetaViewerInfoUncheckedCreateInput>
+    /**
+     * In case the MetaViewerInfo was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<MetaViewerInfoUpdateInput, MetaViewerInfoUncheckedUpdateInput>
+  }
+
+
+  /**
+   * MetaViewerInfo delete
+   */
+  export type MetaViewerInfoDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfo
+     * 
+    **/
+    select?: MetaViewerInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerInfoInclude | null
+    /**
+     * Filter which MetaViewerInfo to delete.
+     * 
+    **/
+    where: MetaViewerInfoWhereUniqueInput
+  }
+
+
+  /**
+   * MetaViewerInfo deleteMany
+   */
+  export type MetaViewerInfoDeleteManyArgs = {
+    /**
+     * Filter which MetaViewerInfos to delete
+     * 
+    **/
+    where?: MetaViewerInfoWhereInput
+  }
+
+
+  /**
+   * MetaViewerInfo without action
+   */
+  export type MetaViewerInfoArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerInfo
+     * 
+    **/
+    select?: MetaViewerInfoSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerInfoInclude | null
+  }
+
+
+
+  /**
+   * Model MetaViewerMap
+   */
+
+
+  export type AggregateMetaViewerMap = {
+    _count: MetaViewerMapCountAggregateOutputType | null
+    _avg: MetaViewerMapAvgAggregateOutputType | null
+    _sum: MetaViewerMapSumAggregateOutputType | null
+    _min: MetaViewerMapMinAggregateOutputType | null
+    _max: MetaViewerMapMaxAggregateOutputType | null
+  }
+
+  export type MetaViewerMapAvgAggregateOutputType = {
+    id: number | null
+    version: number | null
+    size: number | null
+    metaViewerInfoId: number | null
+  }
+
+  export type MetaViewerMapSumAggregateOutputType = {
+    id: number | null
+    version: number | null
+    size: number | null
+    metaViewerInfoId: number | null
+  }
+
+  export type MetaViewerMapMinAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    type: MetaMapType | null
+    version: number | null
+    url: string | null
+    size: number | null
+    isDisable: boolean | null
+    metaViewerInfoId: number | null
+  }
+
+  export type MetaViewerMapMaxAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    type: MetaMapType | null
+    version: number | null
+    url: string | null
+    size: number | null
+    isDisable: boolean | null
+    metaViewerInfoId: number | null
+  }
+
+  export type MetaViewerMapCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    type: number
+    version: number
+    url: number
+    size: number
+    isDisable: number
+    metaViewerInfoId: number
+    _all: number
+  }
+
+
+  export type MetaViewerMapAvgAggregateInputType = {
+    id?: true
+    version?: true
+    size?: true
+    metaViewerInfoId?: true
+  }
+
+  export type MetaViewerMapSumAggregateInputType = {
+    id?: true
+    version?: true
+    size?: true
+    metaViewerInfoId?: true
+  }
+
+  export type MetaViewerMapMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    type?: true
+    version?: true
+    url?: true
+    size?: true
+    isDisable?: true
+    metaViewerInfoId?: true
+  }
+
+  export type MetaViewerMapMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    type?: true
+    version?: true
+    url?: true
+    size?: true
+    isDisable?: true
+    metaViewerInfoId?: true
+  }
+
+  export type MetaViewerMapCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    type?: true
+    version?: true
+    url?: true
+    size?: true
+    isDisable?: true
+    metaViewerInfoId?: true
+    _all?: true
+  }
+
+  export type MetaViewerMapAggregateArgs = {
+    /**
+     * Filter which MetaViewerMap to aggregate.
+     * 
+    **/
+    where?: MetaViewerMapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerMaps to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerMapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: MetaViewerMapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerMaps from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerMaps.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MetaViewerMaps
+    **/
+    _count?: true | MetaViewerMapCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MetaViewerMapAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MetaViewerMapSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MetaViewerMapMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MetaViewerMapMaxAggregateInputType
+  }
+
+  export type GetMetaViewerMapAggregateType<T extends MetaViewerMapAggregateArgs> = {
+        [P in keyof T & keyof AggregateMetaViewerMap]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMetaViewerMap[P]>
+      : GetScalarType<T[P], AggregateMetaViewerMap[P]>
+  }
+
+
+
+
+  export type MetaViewerMapGroupByArgs = {
+    where?: MetaViewerMapWhereInput
+    orderBy?: Enumerable<MetaViewerMapOrderByWithAggregationInput>
+    by: Array<MetaViewerMapScalarFieldEnum>
+    having?: MetaViewerMapScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MetaViewerMapCountAggregateInputType | true
+    _avg?: MetaViewerMapAvgAggregateInputType
+    _sum?: MetaViewerMapSumAggregateInputType
+    _min?: MetaViewerMapMinAggregateInputType
+    _max?: MetaViewerMapMaxAggregateInputType
+  }
+
+
+  export type MetaViewerMapGroupByOutputType = {
+    id: number
+    createdAt: Date
+    type: MetaMapType
+    version: number
+    url: string
+    size: number
+    isDisable: boolean
+    metaViewerInfoId: number
+    _count: MetaViewerMapCountAggregateOutputType | null
+    _avg: MetaViewerMapAvgAggregateOutputType | null
+    _sum: MetaViewerMapSumAggregateOutputType | null
+    _min: MetaViewerMapMinAggregateOutputType | null
+    _max: MetaViewerMapMaxAggregateOutputType | null
+  }
+
+  type GetMetaViewerMapGroupByPayload<T extends MetaViewerMapGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<MetaViewerMapGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MetaViewerMapGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MetaViewerMapGroupByOutputType[P]>
+            : GetScalarType<T[P], MetaViewerMapGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MetaViewerMapSelect = {
+    id?: boolean
+    createdAt?: boolean
+    type?: boolean
+    version?: boolean
+    url?: boolean
+    size?: boolean
+    isDisable?: boolean
+    metaViewerInfoId?: boolean
+    MetaViewerInfo?: boolean | MetaViewerInfoArgs
+    ActiveRenderFor?: boolean | MetaViewerActiveMapFindManyArgs
+    ActiveColliderFor?: boolean | MetaViewerActiveMapFindManyArgs
+    _count?: boolean | MetaViewerMapCountOutputTypeArgs
+  }
+
+
+  export type MetaViewerMapInclude = {
+    MetaViewerInfo?: boolean | MetaViewerInfoArgs
+    ActiveRenderFor?: boolean | MetaViewerActiveMapFindManyArgs
+    ActiveColliderFor?: boolean | MetaViewerActiveMapFindManyArgs
+    _count?: boolean | MetaViewerMapCountOutputTypeArgs
+  } 
+
+  export type MetaViewerMapGetPayload<S extends boolean | null | undefined | MetaViewerMapArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? MetaViewerMap :
+    S extends undefined ? never :
+    S extends { include: any } & (MetaViewerMapArgs | MetaViewerMapFindManyArgs)
+    ? MetaViewerMap  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'MetaViewerInfo' ? MetaViewerInfoGetPayload<S['include'][P]> :
+        P extends 'ActiveRenderFor' ? Array < MetaViewerActiveMapGetPayload<S['include'][P]>>  :
+        P extends 'ActiveColliderFor' ? Array < MetaViewerActiveMapGetPayload<S['include'][P]>>  :
+        P extends '_count' ? MetaViewerMapCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (MetaViewerMapArgs | MetaViewerMapFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'MetaViewerInfo' ? MetaViewerInfoGetPayload<S['select'][P]> :
+        P extends 'ActiveRenderFor' ? Array < MetaViewerActiveMapGetPayload<S['select'][P]>>  :
+        P extends 'ActiveColliderFor' ? Array < MetaViewerActiveMapGetPayload<S['select'][P]>>  :
+        P extends '_count' ? MetaViewerMapCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof MetaViewerMap ? MetaViewerMap[P] : never
+  } 
+      : MetaViewerMap
+
+
+  type MetaViewerMapCountArgs = Merge<
+    Omit<MetaViewerMapFindManyArgs, 'select' | 'include'> & {
+      select?: MetaViewerMapCountAggregateInputType | true
+    }
+  >
+
+  export interface MetaViewerMapDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one MetaViewerMap that matches the filter.
+     * @param {MetaViewerMapFindUniqueArgs} args - Arguments to find a MetaViewerMap
+     * @example
+     * // Get one MetaViewerMap
+     * const metaViewerMap = await prisma.metaViewerMap.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends MetaViewerMapFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, MetaViewerMapFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'MetaViewerMap'> extends True ? Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T>> : Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T> | null, null>
+
+    /**
+     * Find one MetaViewerMap that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {MetaViewerMapFindUniqueOrThrowArgs} args - Arguments to find a MetaViewerMap
+     * @example
+     * // Get one MetaViewerMap
+     * const metaViewerMap = await prisma.metaViewerMap.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends MetaViewerMapFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, MetaViewerMapFindUniqueOrThrowArgs>
+    ): Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T>>
+
+    /**
+     * Find the first MetaViewerMap that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerMapFindFirstArgs} args - Arguments to find a MetaViewerMap
+     * @example
+     * // Get one MetaViewerMap
+     * const metaViewerMap = await prisma.metaViewerMap.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends MetaViewerMapFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, MetaViewerMapFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'MetaViewerMap'> extends True ? Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T>> : Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T> | null, null>
+
+    /**
+     * Find the first MetaViewerMap that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerMapFindFirstOrThrowArgs} args - Arguments to find a MetaViewerMap
+     * @example
+     * // Get one MetaViewerMap
+     * const metaViewerMap = await prisma.metaViewerMap.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends MetaViewerMapFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, MetaViewerMapFindFirstOrThrowArgs>
+    ): Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T>>
+
+    /**
+     * Find zero or more MetaViewerMaps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerMapFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MetaViewerMaps
+     * const metaViewerMaps = await prisma.metaViewerMap.findMany()
+     * 
+     * // Get first 10 MetaViewerMaps
+     * const metaViewerMaps = await prisma.metaViewerMap.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const metaViewerMapWithIdOnly = await prisma.metaViewerMap.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends MetaViewerMapFindManyArgs>(
+      args?: SelectSubset<T, MetaViewerMapFindManyArgs>
+    ): PrismaPromise<Array<MetaViewerMapGetPayload<T>>>
+
+    /**
+     * Create a MetaViewerMap.
+     * @param {MetaViewerMapCreateArgs} args - Arguments to create a MetaViewerMap.
+     * @example
+     * // Create one MetaViewerMap
+     * const MetaViewerMap = await prisma.metaViewerMap.create({
+     *   data: {
+     *     // ... data to create a MetaViewerMap
+     *   }
+     * })
+     * 
+    **/
+    create<T extends MetaViewerMapCreateArgs>(
+      args: SelectSubset<T, MetaViewerMapCreateArgs>
+    ): Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T>>
+
+    /**
+     * Create many MetaViewerMaps.
+     *     @param {MetaViewerMapCreateManyArgs} args - Arguments to create many MetaViewerMaps.
+     *     @example
+     *     // Create many MetaViewerMaps
+     *     const metaViewerMap = await prisma.metaViewerMap.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends MetaViewerMapCreateManyArgs>(
+      args?: SelectSubset<T, MetaViewerMapCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a MetaViewerMap.
+     * @param {MetaViewerMapDeleteArgs} args - Arguments to delete one MetaViewerMap.
+     * @example
+     * // Delete one MetaViewerMap
+     * const MetaViewerMap = await prisma.metaViewerMap.delete({
+     *   where: {
+     *     // ... filter to delete one MetaViewerMap
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends MetaViewerMapDeleteArgs>(
+      args: SelectSubset<T, MetaViewerMapDeleteArgs>
+    ): Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T>>
+
+    /**
+     * Update one MetaViewerMap.
+     * @param {MetaViewerMapUpdateArgs} args - Arguments to update one MetaViewerMap.
+     * @example
+     * // Update one MetaViewerMap
+     * const metaViewerMap = await prisma.metaViewerMap.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends MetaViewerMapUpdateArgs>(
+      args: SelectSubset<T, MetaViewerMapUpdateArgs>
+    ): Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T>>
+
+    /**
+     * Delete zero or more MetaViewerMaps.
+     * @param {MetaViewerMapDeleteManyArgs} args - Arguments to filter MetaViewerMaps to delete.
+     * @example
+     * // Delete a few MetaViewerMaps
+     * const { count } = await prisma.metaViewerMap.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends MetaViewerMapDeleteManyArgs>(
+      args?: SelectSubset<T, MetaViewerMapDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MetaViewerMaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerMapUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MetaViewerMaps
+     * const metaViewerMap = await prisma.metaViewerMap.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends MetaViewerMapUpdateManyArgs>(
+      args: SelectSubset<T, MetaViewerMapUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one MetaViewerMap.
+     * @param {MetaViewerMapUpsertArgs} args - Arguments to update or create a MetaViewerMap.
+     * @example
+     * // Update or create a MetaViewerMap
+     * const metaViewerMap = await prisma.metaViewerMap.upsert({
+     *   create: {
+     *     // ... data to create a MetaViewerMap
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MetaViewerMap we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends MetaViewerMapUpsertArgs>(
+      args: SelectSubset<T, MetaViewerMapUpsertArgs>
+    ): Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T>>
+
+    /**
+     * Count the number of MetaViewerMaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerMapCountArgs} args - Arguments to filter MetaViewerMaps to count.
+     * @example
+     * // Count the number of MetaViewerMaps
+     * const count = await prisma.metaViewerMap.count({
+     *   where: {
+     *     // ... the filter for the MetaViewerMaps we want to count
+     *   }
+     * })
+    **/
+    count<T extends MetaViewerMapCountArgs>(
+      args?: Subset<T, MetaViewerMapCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MetaViewerMapCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MetaViewerMap.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerMapAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MetaViewerMapAggregateArgs>(args: Subset<T, MetaViewerMapAggregateArgs>): PrismaPromise<GetMetaViewerMapAggregateType<T>>
+
+    /**
+     * Group by MetaViewerMap.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerMapGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MetaViewerMapGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MetaViewerMapGroupByArgs['orderBy'] }
+        : { orderBy?: MetaViewerMapGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MetaViewerMapGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMetaViewerMapGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MetaViewerMap.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__MetaViewerMapClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    MetaViewerInfo<T extends MetaViewerInfoArgs= {}>(args?: Subset<T, MetaViewerInfoArgs>): Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T> | Null>;
+
+    ActiveRenderFor<T extends MetaViewerActiveMapFindManyArgs= {}>(args?: Subset<T, MetaViewerActiveMapFindManyArgs>): PrismaPromise<Array<MetaViewerActiveMapGetPayload<T>>| Null>;
+
+    ActiveColliderFor<T extends MetaViewerActiveMapFindManyArgs= {}>(args?: Subset<T, MetaViewerActiveMapFindManyArgs>): PrismaPromise<Array<MetaViewerActiveMapGetPayload<T>>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * MetaViewerMap base type for findUnique actions
+   */
+  export type MetaViewerMapFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMap
+     * 
+    **/
+    select?: MetaViewerMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerMapInclude | null
+    /**
+     * Filter, which MetaViewerMap to fetch.
+     * 
+    **/
+    where: MetaViewerMapWhereUniqueInput
+  }
+
+  /**
+   * MetaViewerMap: findUnique
+   */
+  export interface MetaViewerMapFindUniqueArgs extends MetaViewerMapFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * MetaViewerMap findUniqueOrThrow
+   */
+  export type MetaViewerMapFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMap
+     * 
+    **/
+    select?: MetaViewerMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerMapInclude | null
+    /**
+     * Filter, which MetaViewerMap to fetch.
+     * 
+    **/
+    where: MetaViewerMapWhereUniqueInput
+  }
+
+
+  /**
+   * MetaViewerMap base type for findFirst actions
+   */
+  export type MetaViewerMapFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMap
+     * 
+    **/
+    select?: MetaViewerMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerMapInclude | null
+    /**
+     * Filter, which MetaViewerMap to fetch.
+     * 
+    **/
+    where?: MetaViewerMapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerMaps to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerMapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MetaViewerMaps.
+     * 
+    **/
+    cursor?: MetaViewerMapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerMaps from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerMaps.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MetaViewerMaps.
+     * 
+    **/
+    distinct?: Enumerable<MetaViewerMapScalarFieldEnum>
+  }
+
+  /**
+   * MetaViewerMap: findFirst
+   */
+  export interface MetaViewerMapFindFirstArgs extends MetaViewerMapFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * MetaViewerMap findFirstOrThrow
+   */
+  export type MetaViewerMapFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMap
+     * 
+    **/
+    select?: MetaViewerMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerMapInclude | null
+    /**
+     * Filter, which MetaViewerMap to fetch.
+     * 
+    **/
+    where?: MetaViewerMapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerMaps to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerMapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MetaViewerMaps.
+     * 
+    **/
+    cursor?: MetaViewerMapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerMaps from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerMaps.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MetaViewerMaps.
+     * 
+    **/
+    distinct?: Enumerable<MetaViewerMapScalarFieldEnum>
+  }
+
+
+  /**
+   * MetaViewerMap findMany
+   */
+  export type MetaViewerMapFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMap
+     * 
+    **/
+    select?: MetaViewerMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerMapInclude | null
+    /**
+     * Filter, which MetaViewerMaps to fetch.
+     * 
+    **/
+    where?: MetaViewerMapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerMaps to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerMapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MetaViewerMaps.
+     * 
+    **/
+    cursor?: MetaViewerMapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerMaps from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerMaps.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<MetaViewerMapScalarFieldEnum>
+  }
+
+
+  /**
+   * MetaViewerMap create
+   */
+  export type MetaViewerMapCreateArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMap
+     * 
+    **/
+    select?: MetaViewerMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerMapInclude | null
+    /**
+     * The data needed to create a MetaViewerMap.
+     * 
+    **/
+    data: XOR<MetaViewerMapCreateInput, MetaViewerMapUncheckedCreateInput>
+  }
+
+
+  /**
+   * MetaViewerMap createMany
+   */
+  export type MetaViewerMapCreateManyArgs = {
+    /**
+     * The data used to create many MetaViewerMaps.
+     * 
+    **/
+    data: Enumerable<MetaViewerMapCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * MetaViewerMap update
+   */
+  export type MetaViewerMapUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMap
+     * 
+    **/
+    select?: MetaViewerMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerMapInclude | null
+    /**
+     * The data needed to update a MetaViewerMap.
+     * 
+    **/
+    data: XOR<MetaViewerMapUpdateInput, MetaViewerMapUncheckedUpdateInput>
+    /**
+     * Choose, which MetaViewerMap to update.
+     * 
+    **/
+    where: MetaViewerMapWhereUniqueInput
+  }
+
+
+  /**
+   * MetaViewerMap updateMany
+   */
+  export type MetaViewerMapUpdateManyArgs = {
+    /**
+     * The data used to update MetaViewerMaps.
+     * 
+    **/
+    data: XOR<MetaViewerMapUpdateManyMutationInput, MetaViewerMapUncheckedUpdateManyInput>
+    /**
+     * Filter which MetaViewerMaps to update
+     * 
+    **/
+    where?: MetaViewerMapWhereInput
+  }
+
+
+  /**
+   * MetaViewerMap upsert
+   */
+  export type MetaViewerMapUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMap
+     * 
+    **/
+    select?: MetaViewerMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerMapInclude | null
+    /**
+     * The filter to search for the MetaViewerMap to update in case it exists.
+     * 
+    **/
+    where: MetaViewerMapWhereUniqueInput
+    /**
+     * In case the MetaViewerMap found by the `where` argument doesn't exist, create a new MetaViewerMap with this data.
+     * 
+    **/
+    create: XOR<MetaViewerMapCreateInput, MetaViewerMapUncheckedCreateInput>
+    /**
+     * In case the MetaViewerMap was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<MetaViewerMapUpdateInput, MetaViewerMapUncheckedUpdateInput>
+  }
+
+
+  /**
+   * MetaViewerMap delete
+   */
+  export type MetaViewerMapDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMap
+     * 
+    **/
+    select?: MetaViewerMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerMapInclude | null
+    /**
+     * Filter which MetaViewerMap to delete.
+     * 
+    **/
+    where: MetaViewerMapWhereUniqueInput
+  }
+
+
+  /**
+   * MetaViewerMap deleteMany
+   */
+  export type MetaViewerMapDeleteManyArgs = {
+    /**
+     * Filter which MetaViewerMaps to delete
+     * 
+    **/
+    where?: MetaViewerMapWhereInput
+  }
+
+
+  /**
+   * MetaViewerMap without action
+   */
+  export type MetaViewerMapArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerMap
+     * 
+    **/
+    select?: MetaViewerMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerMapInclude | null
+  }
+
+
+
+  /**
+   * Model MetaViewerActiveMap
+   */
+
+
+  export type AggregateMetaViewerActiveMap = {
+    _count: MetaViewerActiveMapCountAggregateOutputType | null
+    _avg: MetaViewerActiveMapAvgAggregateOutputType | null
+    _sum: MetaViewerActiveMapSumAggregateOutputType | null
+    _min: MetaViewerActiveMapMinAggregateOutputType | null
+    _max: MetaViewerActiveMapMaxAggregateOutputType | null
+  }
+
+  export type MetaViewerActiveMapAvgAggregateOutputType = {
+    id: number | null
+    metaViewerInfoId: number | null
+    activeRenderMapId: number | null
+    activeColliderMapId: number | null
+  }
+
+  export type MetaViewerActiveMapSumAggregateOutputType = {
+    id: number | null
+    metaViewerInfoId: number | null
+    activeRenderMapId: number | null
+    activeColliderMapId: number | null
+  }
+
+  export type MetaViewerActiveMapMinAggregateOutputType = {
+    id: number | null
+    updatedAt: Date | null
+    metaViewerInfoId: number | null
+    activeRenderMapId: number | null
+    activeColliderMapId: number | null
+  }
+
+  export type MetaViewerActiveMapMaxAggregateOutputType = {
+    id: number | null
+    updatedAt: Date | null
+    metaViewerInfoId: number | null
+    activeRenderMapId: number | null
+    activeColliderMapId: number | null
+  }
+
+  export type MetaViewerActiveMapCountAggregateOutputType = {
+    id: number
+    updatedAt: number
+    metaViewerInfoId: number
+    activeRenderMapId: number
+    activeColliderMapId: number
+    _all: number
+  }
+
+
+  export type MetaViewerActiveMapAvgAggregateInputType = {
+    id?: true
+    metaViewerInfoId?: true
+    activeRenderMapId?: true
+    activeColliderMapId?: true
+  }
+
+  export type MetaViewerActiveMapSumAggregateInputType = {
+    id?: true
+    metaViewerInfoId?: true
+    activeRenderMapId?: true
+    activeColliderMapId?: true
+  }
+
+  export type MetaViewerActiveMapMinAggregateInputType = {
+    id?: true
+    updatedAt?: true
+    metaViewerInfoId?: true
+    activeRenderMapId?: true
+    activeColliderMapId?: true
+  }
+
+  export type MetaViewerActiveMapMaxAggregateInputType = {
+    id?: true
+    updatedAt?: true
+    metaViewerInfoId?: true
+    activeRenderMapId?: true
+    activeColliderMapId?: true
+  }
+
+  export type MetaViewerActiveMapCountAggregateInputType = {
+    id?: true
+    updatedAt?: true
+    metaViewerInfoId?: true
+    activeRenderMapId?: true
+    activeColliderMapId?: true
+    _all?: true
+  }
+
+  export type MetaViewerActiveMapAggregateArgs = {
+    /**
+     * Filter which MetaViewerActiveMap to aggregate.
+     * 
+    **/
+    where?: MetaViewerActiveMapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerActiveMaps to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerActiveMapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: MetaViewerActiveMapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerActiveMaps from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerActiveMaps.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned MetaViewerActiveMaps
+    **/
+    _count?: true | MetaViewerActiveMapCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: MetaViewerActiveMapAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: MetaViewerActiveMapSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: MetaViewerActiveMapMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: MetaViewerActiveMapMaxAggregateInputType
+  }
+
+  export type GetMetaViewerActiveMapAggregateType<T extends MetaViewerActiveMapAggregateArgs> = {
+        [P in keyof T & keyof AggregateMetaViewerActiveMap]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateMetaViewerActiveMap[P]>
+      : GetScalarType<T[P], AggregateMetaViewerActiveMap[P]>
+  }
+
+
+
+
+  export type MetaViewerActiveMapGroupByArgs = {
+    where?: MetaViewerActiveMapWhereInput
+    orderBy?: Enumerable<MetaViewerActiveMapOrderByWithAggregationInput>
+    by: Array<MetaViewerActiveMapScalarFieldEnum>
+    having?: MetaViewerActiveMapScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: MetaViewerActiveMapCountAggregateInputType | true
+    _avg?: MetaViewerActiveMapAvgAggregateInputType
+    _sum?: MetaViewerActiveMapSumAggregateInputType
+    _min?: MetaViewerActiveMapMinAggregateInputType
+    _max?: MetaViewerActiveMapMaxAggregateInputType
+  }
+
+
+  export type MetaViewerActiveMapGroupByOutputType = {
+    id: number
+    updatedAt: Date
+    metaViewerInfoId: number
+    activeRenderMapId: number
+    activeColliderMapId: number
+    _count: MetaViewerActiveMapCountAggregateOutputType | null
+    _avg: MetaViewerActiveMapAvgAggregateOutputType | null
+    _sum: MetaViewerActiveMapSumAggregateOutputType | null
+    _min: MetaViewerActiveMapMinAggregateOutputType | null
+    _max: MetaViewerActiveMapMaxAggregateOutputType | null
+  }
+
+  type GetMetaViewerActiveMapGroupByPayload<T extends MetaViewerActiveMapGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<MetaViewerActiveMapGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof MetaViewerActiveMapGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], MetaViewerActiveMapGroupByOutputType[P]>
+            : GetScalarType<T[P], MetaViewerActiveMapGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type MetaViewerActiveMapSelect = {
+    id?: boolean
+    updatedAt?: boolean
+    metaViewerInfoId?: boolean
+    MetaViewerInfo?: boolean | MetaViewerInfoArgs
+    activeRenderMapId?: boolean
+    ActiveRenderMap?: boolean | MetaViewerMapArgs
+    activeColliderMapId?: boolean
+    ActiveColliderMap?: boolean | MetaViewerMapArgs
+  }
+
+
+  export type MetaViewerActiveMapInclude = {
+    MetaViewerInfo?: boolean | MetaViewerInfoArgs
+    ActiveRenderMap?: boolean | MetaViewerMapArgs
+    ActiveColliderMap?: boolean | MetaViewerMapArgs
+  } 
+
+  export type MetaViewerActiveMapGetPayload<S extends boolean | null | undefined | MetaViewerActiveMapArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? MetaViewerActiveMap :
+    S extends undefined ? never :
+    S extends { include: any } & (MetaViewerActiveMapArgs | MetaViewerActiveMapFindManyArgs)
+    ? MetaViewerActiveMap  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'MetaViewerInfo' ? MetaViewerInfoGetPayload<S['include'][P]> :
+        P extends 'ActiveRenderMap' ? MetaViewerMapGetPayload<S['include'][P]> :
+        P extends 'ActiveColliderMap' ? MetaViewerMapGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (MetaViewerActiveMapArgs | MetaViewerActiveMapFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'MetaViewerInfo' ? MetaViewerInfoGetPayload<S['select'][P]> :
+        P extends 'ActiveRenderMap' ? MetaViewerMapGetPayload<S['select'][P]> :
+        P extends 'ActiveColliderMap' ? MetaViewerMapGetPayload<S['select'][P]> :  P extends keyof MetaViewerActiveMap ? MetaViewerActiveMap[P] : never
+  } 
+      : MetaViewerActiveMap
+
+
+  type MetaViewerActiveMapCountArgs = Merge<
+    Omit<MetaViewerActiveMapFindManyArgs, 'select' | 'include'> & {
+      select?: MetaViewerActiveMapCountAggregateInputType | true
+    }
+  >
+
+  export interface MetaViewerActiveMapDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one MetaViewerActiveMap that matches the filter.
+     * @param {MetaViewerActiveMapFindUniqueArgs} args - Arguments to find a MetaViewerActiveMap
+     * @example
+     * // Get one MetaViewerActiveMap
+     * const metaViewerActiveMap = await prisma.metaViewerActiveMap.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends MetaViewerActiveMapFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, MetaViewerActiveMapFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'MetaViewerActiveMap'> extends True ? Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T>> : Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T> | null, null>
+
+    /**
+     * Find one MetaViewerActiveMap that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {MetaViewerActiveMapFindUniqueOrThrowArgs} args - Arguments to find a MetaViewerActiveMap
+     * @example
+     * // Get one MetaViewerActiveMap
+     * const metaViewerActiveMap = await prisma.metaViewerActiveMap.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends MetaViewerActiveMapFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, MetaViewerActiveMapFindUniqueOrThrowArgs>
+    ): Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T>>
+
+    /**
+     * Find the first MetaViewerActiveMap that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerActiveMapFindFirstArgs} args - Arguments to find a MetaViewerActiveMap
+     * @example
+     * // Get one MetaViewerActiveMap
+     * const metaViewerActiveMap = await prisma.metaViewerActiveMap.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends MetaViewerActiveMapFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, MetaViewerActiveMapFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'MetaViewerActiveMap'> extends True ? Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T>> : Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T> | null, null>
+
+    /**
+     * Find the first MetaViewerActiveMap that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerActiveMapFindFirstOrThrowArgs} args - Arguments to find a MetaViewerActiveMap
+     * @example
+     * // Get one MetaViewerActiveMap
+     * const metaViewerActiveMap = await prisma.metaViewerActiveMap.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends MetaViewerActiveMapFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, MetaViewerActiveMapFindFirstOrThrowArgs>
+    ): Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T>>
+
+    /**
+     * Find zero or more MetaViewerActiveMaps that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerActiveMapFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all MetaViewerActiveMaps
+     * const metaViewerActiveMaps = await prisma.metaViewerActiveMap.findMany()
+     * 
+     * // Get first 10 MetaViewerActiveMaps
+     * const metaViewerActiveMaps = await prisma.metaViewerActiveMap.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const metaViewerActiveMapWithIdOnly = await prisma.metaViewerActiveMap.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends MetaViewerActiveMapFindManyArgs>(
+      args?: SelectSubset<T, MetaViewerActiveMapFindManyArgs>
+    ): PrismaPromise<Array<MetaViewerActiveMapGetPayload<T>>>
+
+    /**
+     * Create a MetaViewerActiveMap.
+     * @param {MetaViewerActiveMapCreateArgs} args - Arguments to create a MetaViewerActiveMap.
+     * @example
+     * // Create one MetaViewerActiveMap
+     * const MetaViewerActiveMap = await prisma.metaViewerActiveMap.create({
+     *   data: {
+     *     // ... data to create a MetaViewerActiveMap
+     *   }
+     * })
+     * 
+    **/
+    create<T extends MetaViewerActiveMapCreateArgs>(
+      args: SelectSubset<T, MetaViewerActiveMapCreateArgs>
+    ): Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T>>
+
+    /**
+     * Create many MetaViewerActiveMaps.
+     *     @param {MetaViewerActiveMapCreateManyArgs} args - Arguments to create many MetaViewerActiveMaps.
+     *     @example
+     *     // Create many MetaViewerActiveMaps
+     *     const metaViewerActiveMap = await prisma.metaViewerActiveMap.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends MetaViewerActiveMapCreateManyArgs>(
+      args?: SelectSubset<T, MetaViewerActiveMapCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a MetaViewerActiveMap.
+     * @param {MetaViewerActiveMapDeleteArgs} args - Arguments to delete one MetaViewerActiveMap.
+     * @example
+     * // Delete one MetaViewerActiveMap
+     * const MetaViewerActiveMap = await prisma.metaViewerActiveMap.delete({
+     *   where: {
+     *     // ... filter to delete one MetaViewerActiveMap
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends MetaViewerActiveMapDeleteArgs>(
+      args: SelectSubset<T, MetaViewerActiveMapDeleteArgs>
+    ): Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T>>
+
+    /**
+     * Update one MetaViewerActiveMap.
+     * @param {MetaViewerActiveMapUpdateArgs} args - Arguments to update one MetaViewerActiveMap.
+     * @example
+     * // Update one MetaViewerActiveMap
+     * const metaViewerActiveMap = await prisma.metaViewerActiveMap.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends MetaViewerActiveMapUpdateArgs>(
+      args: SelectSubset<T, MetaViewerActiveMapUpdateArgs>
+    ): Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T>>
+
+    /**
+     * Delete zero or more MetaViewerActiveMaps.
+     * @param {MetaViewerActiveMapDeleteManyArgs} args - Arguments to filter MetaViewerActiveMaps to delete.
+     * @example
+     * // Delete a few MetaViewerActiveMaps
+     * const { count } = await prisma.metaViewerActiveMap.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends MetaViewerActiveMapDeleteManyArgs>(
+      args?: SelectSubset<T, MetaViewerActiveMapDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more MetaViewerActiveMaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerActiveMapUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many MetaViewerActiveMaps
+     * const metaViewerActiveMap = await prisma.metaViewerActiveMap.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends MetaViewerActiveMapUpdateManyArgs>(
+      args: SelectSubset<T, MetaViewerActiveMapUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one MetaViewerActiveMap.
+     * @param {MetaViewerActiveMapUpsertArgs} args - Arguments to update or create a MetaViewerActiveMap.
+     * @example
+     * // Update or create a MetaViewerActiveMap
+     * const metaViewerActiveMap = await prisma.metaViewerActiveMap.upsert({
+     *   create: {
+     *     // ... data to create a MetaViewerActiveMap
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the MetaViewerActiveMap we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends MetaViewerActiveMapUpsertArgs>(
+      args: SelectSubset<T, MetaViewerActiveMapUpsertArgs>
+    ): Prisma__MetaViewerActiveMapClient<MetaViewerActiveMapGetPayload<T>>
+
+    /**
+     * Count the number of MetaViewerActiveMaps.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerActiveMapCountArgs} args - Arguments to filter MetaViewerActiveMaps to count.
+     * @example
+     * // Count the number of MetaViewerActiveMaps
+     * const count = await prisma.metaViewerActiveMap.count({
+     *   where: {
+     *     // ... the filter for the MetaViewerActiveMaps we want to count
+     *   }
+     * })
+    **/
+    count<T extends MetaViewerActiveMapCountArgs>(
+      args?: Subset<T, MetaViewerActiveMapCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], MetaViewerActiveMapCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a MetaViewerActiveMap.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerActiveMapAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends MetaViewerActiveMapAggregateArgs>(args: Subset<T, MetaViewerActiveMapAggregateArgs>): PrismaPromise<GetMetaViewerActiveMapAggregateType<T>>
+
+    /**
+     * Group by MetaViewerActiveMap.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {MetaViewerActiveMapGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends MetaViewerActiveMapGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: MetaViewerActiveMapGroupByArgs['orderBy'] }
+        : { orderBy?: MetaViewerActiveMapGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, MetaViewerActiveMapGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetMetaViewerActiveMapGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for MetaViewerActiveMap.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__MetaViewerActiveMapClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    MetaViewerInfo<T extends MetaViewerInfoArgs= {}>(args?: Subset<T, MetaViewerInfoArgs>): Prisma__MetaViewerInfoClient<MetaViewerInfoGetPayload<T> | Null>;
+
+    ActiveRenderMap<T extends MetaViewerMapArgs= {}>(args?: Subset<T, MetaViewerMapArgs>): Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T> | Null>;
+
+    ActiveColliderMap<T extends MetaViewerMapArgs= {}>(args?: Subset<T, MetaViewerMapArgs>): Prisma__MetaViewerMapClient<MetaViewerMapGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * MetaViewerActiveMap base type for findUnique actions
+   */
+  export type MetaViewerActiveMapFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the MetaViewerActiveMap
+     * 
+    **/
+    select?: MetaViewerActiveMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerActiveMapInclude | null
+    /**
+     * Filter, which MetaViewerActiveMap to fetch.
+     * 
+    **/
+    where: MetaViewerActiveMapWhereUniqueInput
+  }
+
+  /**
+   * MetaViewerActiveMap: findUnique
+   */
+  export interface MetaViewerActiveMapFindUniqueArgs extends MetaViewerActiveMapFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * MetaViewerActiveMap findUniqueOrThrow
+   */
+  export type MetaViewerActiveMapFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerActiveMap
+     * 
+    **/
+    select?: MetaViewerActiveMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerActiveMapInclude | null
+    /**
+     * Filter, which MetaViewerActiveMap to fetch.
+     * 
+    **/
+    where: MetaViewerActiveMapWhereUniqueInput
+  }
+
+
+  /**
+   * MetaViewerActiveMap base type for findFirst actions
+   */
+  export type MetaViewerActiveMapFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the MetaViewerActiveMap
+     * 
+    **/
+    select?: MetaViewerActiveMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerActiveMapInclude | null
+    /**
+     * Filter, which MetaViewerActiveMap to fetch.
+     * 
+    **/
+    where?: MetaViewerActiveMapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerActiveMaps to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerActiveMapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MetaViewerActiveMaps.
+     * 
+    **/
+    cursor?: MetaViewerActiveMapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerActiveMaps from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerActiveMaps.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MetaViewerActiveMaps.
+     * 
+    **/
+    distinct?: Enumerable<MetaViewerActiveMapScalarFieldEnum>
+  }
+
+  /**
+   * MetaViewerActiveMap: findFirst
+   */
+  export interface MetaViewerActiveMapFindFirstArgs extends MetaViewerActiveMapFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * MetaViewerActiveMap findFirstOrThrow
+   */
+  export type MetaViewerActiveMapFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerActiveMap
+     * 
+    **/
+    select?: MetaViewerActiveMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerActiveMapInclude | null
+    /**
+     * Filter, which MetaViewerActiveMap to fetch.
+     * 
+    **/
+    where?: MetaViewerActiveMapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerActiveMaps to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerActiveMapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for MetaViewerActiveMaps.
+     * 
+    **/
+    cursor?: MetaViewerActiveMapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerActiveMaps from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerActiveMaps.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of MetaViewerActiveMaps.
+     * 
+    **/
+    distinct?: Enumerable<MetaViewerActiveMapScalarFieldEnum>
+  }
+
+
+  /**
+   * MetaViewerActiveMap findMany
+   */
+  export type MetaViewerActiveMapFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerActiveMap
+     * 
+    **/
+    select?: MetaViewerActiveMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerActiveMapInclude | null
+    /**
+     * Filter, which MetaViewerActiveMaps to fetch.
+     * 
+    **/
+    where?: MetaViewerActiveMapWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of MetaViewerActiveMaps to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<MetaViewerActiveMapOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing MetaViewerActiveMaps.
+     * 
+    **/
+    cursor?: MetaViewerActiveMapWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` MetaViewerActiveMaps from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` MetaViewerActiveMaps.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<MetaViewerActiveMapScalarFieldEnum>
+  }
+
+
+  /**
+   * MetaViewerActiveMap create
+   */
+  export type MetaViewerActiveMapCreateArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerActiveMap
+     * 
+    **/
+    select?: MetaViewerActiveMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerActiveMapInclude | null
+    /**
+     * The data needed to create a MetaViewerActiveMap.
+     * 
+    **/
+    data: XOR<MetaViewerActiveMapCreateInput, MetaViewerActiveMapUncheckedCreateInput>
+  }
+
+
+  /**
+   * MetaViewerActiveMap createMany
+   */
+  export type MetaViewerActiveMapCreateManyArgs = {
+    /**
+     * The data used to create many MetaViewerActiveMaps.
+     * 
+    **/
+    data: Enumerable<MetaViewerActiveMapCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * MetaViewerActiveMap update
+   */
+  export type MetaViewerActiveMapUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerActiveMap
+     * 
+    **/
+    select?: MetaViewerActiveMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerActiveMapInclude | null
+    /**
+     * The data needed to update a MetaViewerActiveMap.
+     * 
+    **/
+    data: XOR<MetaViewerActiveMapUpdateInput, MetaViewerActiveMapUncheckedUpdateInput>
+    /**
+     * Choose, which MetaViewerActiveMap to update.
+     * 
+    **/
+    where: MetaViewerActiveMapWhereUniqueInput
+  }
+
+
+  /**
+   * MetaViewerActiveMap updateMany
+   */
+  export type MetaViewerActiveMapUpdateManyArgs = {
+    /**
+     * The data used to update MetaViewerActiveMaps.
+     * 
+    **/
+    data: XOR<MetaViewerActiveMapUpdateManyMutationInput, MetaViewerActiveMapUncheckedUpdateManyInput>
+    /**
+     * Filter which MetaViewerActiveMaps to update
+     * 
+    **/
+    where?: MetaViewerActiveMapWhereInput
+  }
+
+
+  /**
+   * MetaViewerActiveMap upsert
+   */
+  export type MetaViewerActiveMapUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerActiveMap
+     * 
+    **/
+    select?: MetaViewerActiveMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerActiveMapInclude | null
+    /**
+     * The filter to search for the MetaViewerActiveMap to update in case it exists.
+     * 
+    **/
+    where: MetaViewerActiveMapWhereUniqueInput
+    /**
+     * In case the MetaViewerActiveMap found by the `where` argument doesn't exist, create a new MetaViewerActiveMap with this data.
+     * 
+    **/
+    create: XOR<MetaViewerActiveMapCreateInput, MetaViewerActiveMapUncheckedCreateInput>
+    /**
+     * In case the MetaViewerActiveMap was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<MetaViewerActiveMapUpdateInput, MetaViewerActiveMapUncheckedUpdateInput>
+  }
+
+
+  /**
+   * MetaViewerActiveMap delete
+   */
+  export type MetaViewerActiveMapDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerActiveMap
+     * 
+    **/
+    select?: MetaViewerActiveMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerActiveMapInclude | null
+    /**
+     * Filter which MetaViewerActiveMap to delete.
+     * 
+    **/
+    where: MetaViewerActiveMapWhereUniqueInput
+  }
+
+
+  /**
+   * MetaViewerActiveMap deleteMany
+   */
+  export type MetaViewerActiveMapDeleteManyArgs = {
+    /**
+     * Filter which MetaViewerActiveMaps to delete
+     * 
+    **/
+    where?: MetaViewerActiveMapWhereInput
+  }
+
+
+  /**
+   * MetaViewerActiveMap without action
+   */
+  export type MetaViewerActiveMapArgs = {
+    /**
+     * Select specific fields to fetch from the MetaViewerActiveMap
+     * 
+    **/
+    select?: MetaViewerActiveMapSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: MetaViewerActiveMapInclude | null
+  }
+
+
+
+  /**
+   * Model ProductCategory
+   */
+
+
+  export type AggregateProductCategory = {
+    _count: ProductCategoryCountAggregateOutputType | null
+    _avg: ProductCategoryAvgAggregateOutputType | null
+    _sum: ProductCategorySumAggregateOutputType | null
+    _min: ProductCategoryMinAggregateOutputType | null
+    _max: ProductCategoryMaxAggregateOutputType | null
+  }
+
+  export type ProductCategoryAvgAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ProductCategorySumAggregateOutputType = {
+    id: number | null
+  }
+
+  export type ProductCategoryMinAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    name: string | null
+    description: string | null
+    isDisable: boolean | null
+    code: string | null
+  }
+
+  export type ProductCategoryMaxAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    name: string | null
+    description: string | null
+    isDisable: boolean | null
+    code: string | null
+  }
+
+  export type ProductCategoryCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    name: number
+    description: number
+    isDisable: number
+    code: number
+    _all: number
+  }
+
+
+  export type ProductCategoryAvgAggregateInputType = {
+    id?: true
+  }
+
+  export type ProductCategorySumAggregateInputType = {
+    id?: true
+  }
+
+  export type ProductCategoryMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    description?: true
+    isDisable?: true
+    code?: true
+  }
+
+  export type ProductCategoryMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    description?: true
+    isDisable?: true
+    code?: true
+  }
+
+  export type ProductCategoryCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    name?: true
+    description?: true
+    isDisable?: true
+    code?: true
+    _all?: true
+  }
+
+  export type ProductCategoryAggregateArgs = {
+    /**
+     * Filter which ProductCategory to aggregate.
+     * 
+    **/
+    where?: ProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: ProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProductCategories
+    **/
+    _count?: true | ProductCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProductCategoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductCategorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProductCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProductCategoryMaxAggregateInputType
+  }
+
+  export type GetProductCategoryAggregateType<T extends ProductCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateProductCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProductCategory[P]>
+      : GetScalarType<T[P], AggregateProductCategory[P]>
+  }
+
+
+
+
+  export type ProductCategoryGroupByArgs = {
+    where?: ProductCategoryWhereInput
+    orderBy?: Enumerable<ProductCategoryOrderByWithAggregationInput>
+    by: Array<ProductCategoryScalarFieldEnum>
+    having?: ProductCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProductCategoryCountAggregateInputType | true
+    _avg?: ProductCategoryAvgAggregateInputType
+    _sum?: ProductCategorySumAggregateInputType
+    _min?: ProductCategoryMinAggregateInputType
+    _max?: ProductCategoryMaxAggregateInputType
+  }
+
+
+  export type ProductCategoryGroupByOutputType = {
+    id: number
+    createdAt: Date
+    name: string
+    description: string | null
+    isDisable: boolean
+    code: string
+    _count: ProductCategoryCountAggregateOutputType | null
+    _avg: ProductCategoryAvgAggregateOutputType | null
+    _sum: ProductCategorySumAggregateOutputType | null
+    _min: ProductCategoryMinAggregateOutputType | null
+    _max: ProductCategoryMaxAggregateOutputType | null
+  }
+
+  type GetProductCategoryGroupByPayload<T extends ProductCategoryGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<ProductCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProductCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProductCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProductCategorySelect = {
+    id?: boolean
+    createdAt?: boolean
+    name?: boolean
+    description?: boolean
+    isDisable?: boolean
+    code?: boolean
+    AncestorCategories?: boolean | ClosureProductCategoryFindManyArgs
+    DescendantCategories?: boolean | ClosureProductCategoryFindManyArgs
+    Products?: boolean | ProductFindManyArgs
+    _count?: boolean | ProductCategoryCountOutputTypeArgs
+  }
+
+
+  export type ProductCategoryInclude = {
+    AncestorCategories?: boolean | ClosureProductCategoryFindManyArgs
+    DescendantCategories?: boolean | ClosureProductCategoryFindManyArgs
+    Products?: boolean | ProductFindManyArgs
+    _count?: boolean | ProductCategoryCountOutputTypeArgs
+  } 
+
+  export type ProductCategoryGetPayload<S extends boolean | null | undefined | ProductCategoryArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ProductCategory :
+    S extends undefined ? never :
+    S extends { include: any } & (ProductCategoryArgs | ProductCategoryFindManyArgs)
+    ? ProductCategory  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'AncestorCategories' ? Array < ClosureProductCategoryGetPayload<S['include'][P]>>  :
+        P extends 'DescendantCategories' ? Array < ClosureProductCategoryGetPayload<S['include'][P]>>  :
+        P extends 'Products' ? Array < ProductGetPayload<S['include'][P]>>  :
+        P extends '_count' ? ProductCategoryCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (ProductCategoryArgs | ProductCategoryFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'AncestorCategories' ? Array < ClosureProductCategoryGetPayload<S['select'][P]>>  :
+        P extends 'DescendantCategories' ? Array < ClosureProductCategoryGetPayload<S['select'][P]>>  :
+        P extends 'Products' ? Array < ProductGetPayload<S['select'][P]>>  :
+        P extends '_count' ? ProductCategoryCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof ProductCategory ? ProductCategory[P] : never
+  } 
+      : ProductCategory
+
+
+  type ProductCategoryCountArgs = Merge<
+    Omit<ProductCategoryFindManyArgs, 'select' | 'include'> & {
+      select?: ProductCategoryCountAggregateInputType | true
+    }
+  >
+
+  export interface ProductCategoryDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one ProductCategory that matches the filter.
+     * @param {ProductCategoryFindUniqueArgs} args - Arguments to find a ProductCategory
+     * @example
+     * // Get one ProductCategory
+     * const productCategory = await prisma.productCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ProductCategoryFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ProductCategoryFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'ProductCategory'> extends True ? Prisma__ProductCategoryClient<ProductCategoryGetPayload<T>> : Prisma__ProductCategoryClient<ProductCategoryGetPayload<T> | null, null>
+
+    /**
+     * Find one ProductCategory that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ProductCategoryFindUniqueOrThrowArgs} args - Arguments to find a ProductCategory
+     * @example
+     * // Get one ProductCategory
+     * const productCategory = await prisma.productCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ProductCategoryFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ProductCategoryFindUniqueOrThrowArgs>
+    ): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T>>
+
+    /**
+     * Find the first ProductCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductCategoryFindFirstArgs} args - Arguments to find a ProductCategory
+     * @example
+     * // Get one ProductCategory
+     * const productCategory = await prisma.productCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ProductCategoryFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ProductCategoryFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'ProductCategory'> extends True ? Prisma__ProductCategoryClient<ProductCategoryGetPayload<T>> : Prisma__ProductCategoryClient<ProductCategoryGetPayload<T> | null, null>
+
+    /**
+     * Find the first ProductCategory that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductCategoryFindFirstOrThrowArgs} args - Arguments to find a ProductCategory
+     * @example
+     * // Get one ProductCategory
+     * const productCategory = await prisma.productCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ProductCategoryFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ProductCategoryFindFirstOrThrowArgs>
+    ): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T>>
+
+    /**
+     * Find zero or more ProductCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductCategoryFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProductCategories
+     * const productCategories = await prisma.productCategory.findMany()
+     * 
+     * // Get first 10 ProductCategories
+     * const productCategories = await prisma.productCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const productCategoryWithIdOnly = await prisma.productCategory.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends ProductCategoryFindManyArgs>(
+      args?: SelectSubset<T, ProductCategoryFindManyArgs>
+    ): PrismaPromise<Array<ProductCategoryGetPayload<T>>>
+
+    /**
+     * Create a ProductCategory.
+     * @param {ProductCategoryCreateArgs} args - Arguments to create a ProductCategory.
+     * @example
+     * // Create one ProductCategory
+     * const ProductCategory = await prisma.productCategory.create({
+     *   data: {
+     *     // ... data to create a ProductCategory
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ProductCategoryCreateArgs>(
+      args: SelectSubset<T, ProductCategoryCreateArgs>
+    ): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T>>
+
+    /**
+     * Create many ProductCategories.
+     *     @param {ProductCategoryCreateManyArgs} args - Arguments to create many ProductCategories.
+     *     @example
+     *     // Create many ProductCategories
+     *     const productCategory = await prisma.productCategory.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ProductCategoryCreateManyArgs>(
+      args?: SelectSubset<T, ProductCategoryCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ProductCategory.
+     * @param {ProductCategoryDeleteArgs} args - Arguments to delete one ProductCategory.
+     * @example
+     * // Delete one ProductCategory
+     * const ProductCategory = await prisma.productCategory.delete({
+     *   where: {
+     *     // ... filter to delete one ProductCategory
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ProductCategoryDeleteArgs>(
+      args: SelectSubset<T, ProductCategoryDeleteArgs>
+    ): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T>>
+
+    /**
+     * Update one ProductCategory.
+     * @param {ProductCategoryUpdateArgs} args - Arguments to update one ProductCategory.
+     * @example
+     * // Update one ProductCategory
+     * const productCategory = await prisma.productCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ProductCategoryUpdateArgs>(
+      args: SelectSubset<T, ProductCategoryUpdateArgs>
+    ): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T>>
+
+    /**
+     * Delete zero or more ProductCategories.
+     * @param {ProductCategoryDeleteManyArgs} args - Arguments to filter ProductCategories to delete.
+     * @example
+     * // Delete a few ProductCategories
+     * const { count } = await prisma.productCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ProductCategoryDeleteManyArgs>(
+      args?: SelectSubset<T, ProductCategoryDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProductCategories
+     * const productCategory = await prisma.productCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ProductCategoryUpdateManyArgs>(
+      args: SelectSubset<T, ProductCategoryUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ProductCategory.
+     * @param {ProductCategoryUpsertArgs} args - Arguments to update or create a ProductCategory.
+     * @example
+     * // Update or create a ProductCategory
+     * const productCategory = await prisma.productCategory.upsert({
+     *   create: {
+     *     // ... data to create a ProductCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProductCategory we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ProductCategoryUpsertArgs>(
+      args: SelectSubset<T, ProductCategoryUpsertArgs>
+    ): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T>>
+
+    /**
+     * Count the number of ProductCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductCategoryCountArgs} args - Arguments to filter ProductCategories to count.
+     * @example
+     * // Count the number of ProductCategories
+     * const count = await prisma.productCategory.count({
+     *   where: {
+     *     // ... the filter for the ProductCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProductCategoryCountArgs>(
+      args?: Subset<T, ProductCategoryCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProductCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProductCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProductCategoryAggregateArgs>(args: Subset<T, ProductCategoryAggregateArgs>): PrismaPromise<GetProductCategoryAggregateType<T>>
+
+    /**
+     * Group by ProductCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProductCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProductCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: ProductCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProductCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductCategoryGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProductCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ProductCategoryClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    AncestorCategories<T extends ClosureProductCategoryFindManyArgs= {}>(args?: Subset<T, ClosureProductCategoryFindManyArgs>): PrismaPromise<Array<ClosureProductCategoryGetPayload<T>>| Null>;
+
+    DescendantCategories<T extends ClosureProductCategoryFindManyArgs= {}>(args?: Subset<T, ClosureProductCategoryFindManyArgs>): PrismaPromise<Array<ClosureProductCategoryGetPayload<T>>| Null>;
+
+    Products<T extends ProductFindManyArgs= {}>(args?: Subset<T, ProductFindManyArgs>): PrismaPromise<Array<ProductGetPayload<T>>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ProductCategory base type for findUnique actions
+   */
+  export type ProductCategoryFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the ProductCategory
+     * 
+    **/
+    select?: ProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductCategoryInclude | null
+    /**
+     * Filter, which ProductCategory to fetch.
+     * 
+    **/
+    where: ProductCategoryWhereUniqueInput
+  }
+
+  /**
+   * ProductCategory: findUnique
+   */
+  export interface ProductCategoryFindUniqueArgs extends ProductCategoryFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ProductCategory findUniqueOrThrow
+   */
+  export type ProductCategoryFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ProductCategory
+     * 
+    **/
+    select?: ProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductCategoryInclude | null
+    /**
+     * Filter, which ProductCategory to fetch.
+     * 
+    **/
+    where: ProductCategoryWhereUniqueInput
+  }
+
+
+  /**
+   * ProductCategory base type for findFirst actions
+   */
+  export type ProductCategoryFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the ProductCategory
+     * 
+    **/
+    select?: ProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductCategoryInclude | null
+    /**
+     * Filter, which ProductCategory to fetch.
+     * 
+    **/
+    where?: ProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductCategories.
+     * 
+    **/
+    cursor?: ProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductCategories.
+     * 
+    **/
+    distinct?: Enumerable<ProductCategoryScalarFieldEnum>
+  }
+
+  /**
+   * ProductCategory: findFirst
+   */
+  export interface ProductCategoryFindFirstArgs extends ProductCategoryFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ProductCategory findFirstOrThrow
+   */
+  export type ProductCategoryFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ProductCategory
+     * 
+    **/
+    select?: ProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductCategoryInclude | null
+    /**
+     * Filter, which ProductCategory to fetch.
+     * 
+    **/
+    where?: ProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductCategories.
+     * 
+    **/
+    cursor?: ProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductCategories.
+     * 
+    **/
+    distinct?: Enumerable<ProductCategoryScalarFieldEnum>
+  }
+
+
+  /**
+   * ProductCategory findMany
+   */
+  export type ProductCategoryFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the ProductCategory
+     * 
+    **/
+    select?: ProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductCategoryInclude | null
+    /**
+     * Filter, which ProductCategories to fetch.
+     * 
+    **/
+    where?: ProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProductCategories.
+     * 
+    **/
+    cursor?: ProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductCategories.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<ProductCategoryScalarFieldEnum>
+  }
+
+
+  /**
+   * ProductCategory create
+   */
+  export type ProductCategoryCreateArgs = {
+    /**
+     * Select specific fields to fetch from the ProductCategory
+     * 
+    **/
+    select?: ProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductCategoryInclude | null
+    /**
+     * The data needed to create a ProductCategory.
+     * 
+    **/
+    data: XOR<ProductCategoryCreateInput, ProductCategoryUncheckedCreateInput>
+  }
+
+
+  /**
+   * ProductCategory createMany
+   */
+  export type ProductCategoryCreateManyArgs = {
+    /**
+     * The data used to create many ProductCategories.
+     * 
+    **/
+    data: Enumerable<ProductCategoryCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * ProductCategory update
+   */
+  export type ProductCategoryUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the ProductCategory
+     * 
+    **/
+    select?: ProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductCategoryInclude | null
+    /**
+     * The data needed to update a ProductCategory.
+     * 
+    **/
+    data: XOR<ProductCategoryUpdateInput, ProductCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which ProductCategory to update.
+     * 
+    **/
+    where: ProductCategoryWhereUniqueInput
+  }
+
+
+  /**
+   * ProductCategory updateMany
+   */
+  export type ProductCategoryUpdateManyArgs = {
+    /**
+     * The data used to update ProductCategories.
+     * 
+    **/
+    data: XOR<ProductCategoryUpdateManyMutationInput, ProductCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductCategories to update
+     * 
+    **/
+    where?: ProductCategoryWhereInput
+  }
+
+
+  /**
+   * ProductCategory upsert
+   */
+  export type ProductCategoryUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the ProductCategory
+     * 
+    **/
+    select?: ProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductCategoryInclude | null
+    /**
+     * The filter to search for the ProductCategory to update in case it exists.
+     * 
+    **/
+    where: ProductCategoryWhereUniqueInput
+    /**
+     * In case the ProductCategory found by the `where` argument doesn't exist, create a new ProductCategory with this data.
+     * 
+    **/
+    create: XOR<ProductCategoryCreateInput, ProductCategoryUncheckedCreateInput>
+    /**
+     * In case the ProductCategory was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<ProductCategoryUpdateInput, ProductCategoryUncheckedUpdateInput>
+  }
+
+
+  /**
+   * ProductCategory delete
+   */
+  export type ProductCategoryDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the ProductCategory
+     * 
+    **/
+    select?: ProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductCategoryInclude | null
+    /**
+     * Filter which ProductCategory to delete.
+     * 
+    **/
+    where: ProductCategoryWhereUniqueInput
+  }
+
+
+  /**
+   * ProductCategory deleteMany
+   */
+  export type ProductCategoryDeleteManyArgs = {
+    /**
+     * Filter which ProductCategories to delete
+     * 
+    **/
+    where?: ProductCategoryWhereInput
+  }
+
+
+  /**
+   * ProductCategory without action
+   */
+  export type ProductCategoryArgs = {
+    /**
+     * Select specific fields to fetch from the ProductCategory
+     * 
+    **/
+    select?: ProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductCategoryInclude | null
+  }
+
+
+
+  /**
+   * Model ClosureProductCategory
+   */
+
+
+  export type AggregateClosureProductCategory = {
+    _count: ClosureProductCategoryCountAggregateOutputType | null
+    _avg: ClosureProductCategoryAvgAggregateOutputType | null
+    _sum: ClosureProductCategorySumAggregateOutputType | null
+    _min: ClosureProductCategoryMinAggregateOutputType | null
+    _max: ClosureProductCategoryMaxAggregateOutputType | null
+  }
+
+  export type ClosureProductCategoryAvgAggregateOutputType = {
+    ancestor: number | null
+    descendant: number | null
+    depth: number | null
+  }
+
+  export type ClosureProductCategorySumAggregateOutputType = {
+    ancestor: number | null
+    descendant: number | null
+    depth: number | null
+  }
+
+  export type ClosureProductCategoryMinAggregateOutputType = {
+    ancestor: number | null
+    descendant: number | null
+    depth: number | null
+  }
+
+  export type ClosureProductCategoryMaxAggregateOutputType = {
+    ancestor: number | null
+    descendant: number | null
+    depth: number | null
+  }
+
+  export type ClosureProductCategoryCountAggregateOutputType = {
+    ancestor: number
+    descendant: number
+    depth: number
+    _all: number
+  }
+
+
+  export type ClosureProductCategoryAvgAggregateInputType = {
+    ancestor?: true
+    descendant?: true
+    depth?: true
+  }
+
+  export type ClosureProductCategorySumAggregateInputType = {
+    ancestor?: true
+    descendant?: true
+    depth?: true
+  }
+
+  export type ClosureProductCategoryMinAggregateInputType = {
+    ancestor?: true
+    descendant?: true
+    depth?: true
+  }
+
+  export type ClosureProductCategoryMaxAggregateInputType = {
+    ancestor?: true
+    descendant?: true
+    depth?: true
+  }
+
+  export type ClosureProductCategoryCountAggregateInputType = {
+    ancestor?: true
+    descendant?: true
+    depth?: true
+    _all?: true
+  }
+
+  export type ClosureProductCategoryAggregateArgs = {
+    /**
+     * Filter which ClosureProductCategory to aggregate.
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClosureProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ClosureProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: ClosureProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClosureProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClosureProductCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ClosureProductCategories
+    **/
+    _count?: true | ClosureProductCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ClosureProductCategoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ClosureProductCategorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ClosureProductCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ClosureProductCategoryMaxAggregateInputType
+  }
+
+  export type GetClosureProductCategoryAggregateType<T extends ClosureProductCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateClosureProductCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateClosureProductCategory[P]>
+      : GetScalarType<T[P], AggregateClosureProductCategory[P]>
+  }
+
+
+
+
+  export type ClosureProductCategoryGroupByArgs = {
+    where?: ClosureProductCategoryWhereInput
+    orderBy?: Enumerable<ClosureProductCategoryOrderByWithAggregationInput>
+    by: Array<ClosureProductCategoryScalarFieldEnum>
+    having?: ClosureProductCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ClosureProductCategoryCountAggregateInputType | true
+    _avg?: ClosureProductCategoryAvgAggregateInputType
+    _sum?: ClosureProductCategorySumAggregateInputType
+    _min?: ClosureProductCategoryMinAggregateInputType
+    _max?: ClosureProductCategoryMaxAggregateInputType
+  }
+
+
+  export type ClosureProductCategoryGroupByOutputType = {
+    ancestor: number
+    descendant: number
+    depth: number
+    _count: ClosureProductCategoryCountAggregateOutputType | null
+    _avg: ClosureProductCategoryAvgAggregateOutputType | null
+    _sum: ClosureProductCategorySumAggregateOutputType | null
+    _min: ClosureProductCategoryMinAggregateOutputType | null
+    _max: ClosureProductCategoryMaxAggregateOutputType | null
+  }
+
+  type GetClosureProductCategoryGroupByPayload<T extends ClosureProductCategoryGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<ClosureProductCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ClosureProductCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ClosureProductCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], ClosureProductCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ClosureProductCategorySelect = {
+    ancestor?: boolean
+    descendant?: boolean
+    depth?: boolean
+    AncestorCategory?: boolean | ProductCategoryArgs
+    DescendantCategory?: boolean | ProductCategoryArgs
+  }
+
+
+  export type ClosureProductCategoryInclude = {
+    AncestorCategory?: boolean | ProductCategoryArgs
+    DescendantCategory?: boolean | ProductCategoryArgs
+  } 
+
+  export type ClosureProductCategoryGetPayload<S extends boolean | null | undefined | ClosureProductCategoryArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ClosureProductCategory :
+    S extends undefined ? never :
+    S extends { include: any } & (ClosureProductCategoryArgs | ClosureProductCategoryFindManyArgs)
+    ? ClosureProductCategory  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'AncestorCategory' ? ProductCategoryGetPayload<S['include'][P]> :
+        P extends 'DescendantCategory' ? ProductCategoryGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (ClosureProductCategoryArgs | ClosureProductCategoryFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'AncestorCategory' ? ProductCategoryGetPayload<S['select'][P]> :
+        P extends 'DescendantCategory' ? ProductCategoryGetPayload<S['select'][P]> :  P extends keyof ClosureProductCategory ? ClosureProductCategory[P] : never
+  } 
+      : ClosureProductCategory
+
+
+  type ClosureProductCategoryCountArgs = Merge<
+    Omit<ClosureProductCategoryFindManyArgs, 'select' | 'include'> & {
+      select?: ClosureProductCategoryCountAggregateInputType | true
+    }
+  >
+
+  export interface ClosureProductCategoryDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one ClosureProductCategory that matches the filter.
+     * @param {ClosureProductCategoryFindUniqueArgs} args - Arguments to find a ClosureProductCategory
+     * @example
+     * // Get one ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ClosureProductCategoryFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ClosureProductCategoryFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'ClosureProductCategory'> extends True ? Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>> : Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T> | null, null>
+
+    /**
+     * Find one ClosureProductCategory that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ClosureProductCategoryFindUniqueOrThrowArgs} args - Arguments to find a ClosureProductCategory
+     * @example
+     * // Get one ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ClosureProductCategoryFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ClosureProductCategoryFindUniqueOrThrowArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Find the first ClosureProductCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryFindFirstArgs} args - Arguments to find a ClosureProductCategory
+     * @example
+     * // Get one ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ClosureProductCategoryFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ClosureProductCategoryFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'ClosureProductCategory'> extends True ? Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>> : Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T> | null, null>
+
+    /**
+     * Find the first ClosureProductCategory that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryFindFirstOrThrowArgs} args - Arguments to find a ClosureProductCategory
+     * @example
+     * // Get one ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ClosureProductCategoryFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ClosureProductCategoryFindFirstOrThrowArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Find zero or more ClosureProductCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ClosureProductCategories
+     * const closureProductCategories = await prisma.closureProductCategory.findMany()
+     * 
+     * // Get first 10 ClosureProductCategories
+     * const closureProductCategories = await prisma.closureProductCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `ancestor`
+     * const closureProductCategoryWithAncestorOnly = await prisma.closureProductCategory.findMany({ select: { ancestor: true } })
+     * 
+    **/
+    findMany<T extends ClosureProductCategoryFindManyArgs>(
+      args?: SelectSubset<T, ClosureProductCategoryFindManyArgs>
+    ): PrismaPromise<Array<ClosureProductCategoryGetPayload<T>>>
+
+    /**
+     * Create a ClosureProductCategory.
+     * @param {ClosureProductCategoryCreateArgs} args - Arguments to create a ClosureProductCategory.
+     * @example
+     * // Create one ClosureProductCategory
+     * const ClosureProductCategory = await prisma.closureProductCategory.create({
+     *   data: {
+     *     // ... data to create a ClosureProductCategory
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ClosureProductCategoryCreateArgs>(
+      args: SelectSubset<T, ClosureProductCategoryCreateArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Create many ClosureProductCategories.
+     *     @param {ClosureProductCategoryCreateManyArgs} args - Arguments to create many ClosureProductCategories.
+     *     @example
+     *     // Create many ClosureProductCategories
+     *     const closureProductCategory = await prisma.closureProductCategory.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ClosureProductCategoryCreateManyArgs>(
+      args?: SelectSubset<T, ClosureProductCategoryCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ClosureProductCategory.
+     * @param {ClosureProductCategoryDeleteArgs} args - Arguments to delete one ClosureProductCategory.
+     * @example
+     * // Delete one ClosureProductCategory
+     * const ClosureProductCategory = await prisma.closureProductCategory.delete({
+     *   where: {
+     *     // ... filter to delete one ClosureProductCategory
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ClosureProductCategoryDeleteArgs>(
+      args: SelectSubset<T, ClosureProductCategoryDeleteArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Update one ClosureProductCategory.
+     * @param {ClosureProductCategoryUpdateArgs} args - Arguments to update one ClosureProductCategory.
+     * @example
+     * // Update one ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ClosureProductCategoryUpdateArgs>(
+      args: SelectSubset<T, ClosureProductCategoryUpdateArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Delete zero or more ClosureProductCategories.
+     * @param {ClosureProductCategoryDeleteManyArgs} args - Arguments to filter ClosureProductCategories to delete.
+     * @example
+     * // Delete a few ClosureProductCategories
+     * const { count } = await prisma.closureProductCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ClosureProductCategoryDeleteManyArgs>(
+      args?: SelectSubset<T, ClosureProductCategoryDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ClosureProductCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ClosureProductCategories
+     * const closureProductCategory = await prisma.closureProductCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ClosureProductCategoryUpdateManyArgs>(
+      args: SelectSubset<T, ClosureProductCategoryUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ClosureProductCategory.
+     * @param {ClosureProductCategoryUpsertArgs} args - Arguments to update or create a ClosureProductCategory.
+     * @example
+     * // Update or create a ClosureProductCategory
+     * const closureProductCategory = await prisma.closureProductCategory.upsert({
+     *   create: {
+     *     // ... data to create a ClosureProductCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ClosureProductCategory we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ClosureProductCategoryUpsertArgs>(
+      args: SelectSubset<T, ClosureProductCategoryUpsertArgs>
+    ): Prisma__ClosureProductCategoryClient<ClosureProductCategoryGetPayload<T>>
+
+    /**
+     * Count the number of ClosureProductCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryCountArgs} args - Arguments to filter ClosureProductCategories to count.
+     * @example
+     * // Count the number of ClosureProductCategories
+     * const count = await prisma.closureProductCategory.count({
+     *   where: {
+     *     // ... the filter for the ClosureProductCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends ClosureProductCategoryCountArgs>(
+      args?: Subset<T, ClosureProductCategoryCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ClosureProductCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ClosureProductCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ClosureProductCategoryAggregateArgs>(args: Subset<T, ClosureProductCategoryAggregateArgs>): PrismaPromise<GetClosureProductCategoryAggregateType<T>>
+
+    /**
+     * Group by ClosureProductCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ClosureProductCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ClosureProductCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ClosureProductCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: ClosureProductCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ClosureProductCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetClosureProductCategoryGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ClosureProductCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ClosureProductCategoryClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    AncestorCategory<T extends ProductCategoryArgs= {}>(args?: Subset<T, ProductCategoryArgs>): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T> | Null>;
+
+    DescendantCategory<T extends ProductCategoryArgs= {}>(args?: Subset<T, ProductCategoryArgs>): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ClosureProductCategory base type for findUnique actions
+   */
+  export type ClosureProductCategoryFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter, which ClosureProductCategory to fetch.
+     * 
+    **/
+    where: ClosureProductCategoryWhereUniqueInput
+  }
+
+  /**
+   * ClosureProductCategory: findUnique
+   */
+  export interface ClosureProductCategoryFindUniqueArgs extends ClosureProductCategoryFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ClosureProductCategory findUniqueOrThrow
+   */
+  export type ClosureProductCategoryFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter, which ClosureProductCategory to fetch.
+     * 
+    **/
+    where: ClosureProductCategoryWhereUniqueInput
+  }
+
+
+  /**
+   * ClosureProductCategory base type for findFirst actions
+   */
+  export type ClosureProductCategoryFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter, which ClosureProductCategory to fetch.
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClosureProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ClosureProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ClosureProductCategories.
+     * 
+    **/
+    cursor?: ClosureProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClosureProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClosureProductCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ClosureProductCategories.
+     * 
+    **/
+    distinct?: Enumerable<ClosureProductCategoryScalarFieldEnum>
+  }
+
+  /**
+   * ClosureProductCategory: findFirst
+   */
+  export interface ClosureProductCategoryFindFirstArgs extends ClosureProductCategoryFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ClosureProductCategory findFirstOrThrow
+   */
+  export type ClosureProductCategoryFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter, which ClosureProductCategory to fetch.
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClosureProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ClosureProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ClosureProductCategories.
+     * 
+    **/
+    cursor?: ClosureProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClosureProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClosureProductCategories.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ClosureProductCategories.
+     * 
+    **/
+    distinct?: Enumerable<ClosureProductCategoryScalarFieldEnum>
+  }
+
+
+  /**
+   * ClosureProductCategory findMany
+   */
+  export type ClosureProductCategoryFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter, which ClosureProductCategories to fetch.
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ClosureProductCategories to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ClosureProductCategoryOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ClosureProductCategories.
+     * 
+    **/
+    cursor?: ClosureProductCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ClosureProductCategories from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ClosureProductCategories.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<ClosureProductCategoryScalarFieldEnum>
+  }
+
+
+  /**
+   * ClosureProductCategory create
+   */
+  export type ClosureProductCategoryCreateArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * The data needed to create a ClosureProductCategory.
+     * 
+    **/
+    data: XOR<ClosureProductCategoryCreateInput, ClosureProductCategoryUncheckedCreateInput>
+  }
+
+
+  /**
+   * ClosureProductCategory createMany
+   */
+  export type ClosureProductCategoryCreateManyArgs = {
+    /**
+     * The data used to create many ClosureProductCategories.
+     * 
+    **/
+    data: Enumerable<ClosureProductCategoryCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * ClosureProductCategory update
+   */
+  export type ClosureProductCategoryUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * The data needed to update a ClosureProductCategory.
+     * 
+    **/
+    data: XOR<ClosureProductCategoryUpdateInput, ClosureProductCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which ClosureProductCategory to update.
+     * 
+    **/
+    where: ClosureProductCategoryWhereUniqueInput
+  }
+
+
+  /**
+   * ClosureProductCategory updateMany
+   */
+  export type ClosureProductCategoryUpdateManyArgs = {
+    /**
+     * The data used to update ClosureProductCategories.
+     * 
+    **/
+    data: XOR<ClosureProductCategoryUpdateManyMutationInput, ClosureProductCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which ClosureProductCategories to update
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+  }
+
+
+  /**
+   * ClosureProductCategory upsert
+   */
+  export type ClosureProductCategoryUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * The filter to search for the ClosureProductCategory to update in case it exists.
+     * 
+    **/
+    where: ClosureProductCategoryWhereUniqueInput
+    /**
+     * In case the ClosureProductCategory found by the `where` argument doesn't exist, create a new ClosureProductCategory with this data.
+     * 
+    **/
+    create: XOR<ClosureProductCategoryCreateInput, ClosureProductCategoryUncheckedCreateInput>
+    /**
+     * In case the ClosureProductCategory was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<ClosureProductCategoryUpdateInput, ClosureProductCategoryUncheckedUpdateInput>
+  }
+
+
+  /**
+   * ClosureProductCategory delete
+   */
+  export type ClosureProductCategoryDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+    /**
+     * Filter which ClosureProductCategory to delete.
+     * 
+    **/
+    where: ClosureProductCategoryWhereUniqueInput
+  }
+
+
+  /**
+   * ClosureProductCategory deleteMany
+   */
+  export type ClosureProductCategoryDeleteManyArgs = {
+    /**
+     * Filter which ClosureProductCategories to delete
+     * 
+    **/
+    where?: ClosureProductCategoryWhereInput
+  }
+
+
+  /**
+   * ClosureProductCategory without action
+   */
+  export type ClosureProductCategoryArgs = {
+    /**
+     * Select specific fields to fetch from the ClosureProductCategory
+     * 
+    **/
+    select?: ClosureProductCategorySelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ClosureProductCategoryInclude | null
+  }
+
+
+
+  /**
+   * Model Product
+   */
+
+
+  export type AggregateProduct = {
+    _count: ProductCountAggregateOutputType | null
+    _avg: ProductAvgAggregateOutputType | null
+    _sum: ProductSumAggregateOutputType | null
+    _min: ProductMinAggregateOutputType | null
+    _max: ProductMaxAggregateOutputType | null
+  }
+
+  export type ProductAvgAggregateOutputType = {
+    id: number | null
+    price: number | null
+    originalPrice: number | null
+    stockQuantity: number | null
+    minOrderQuantity: number | null
+    categoryId: number | null
+    cafeInfoId: number | null
+  }
+
+  export type ProductSumAggregateOutputType = {
+    id: number | null
+    price: number | null
+    originalPrice: number | null
+    stockQuantity: number | null
+    minOrderQuantity: number | null
+    categoryId: number | null
+    cafeInfoId: number | null
+  }
+
+  export type ProductMinAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    name: string | null
+    code: string | null
+    description: string | null
+    price: number | null
+    originalPrice: number | null
+    stockQuantity: number | null
+    minOrderQuantity: number | null
+    isDisable: boolean | null
+    isAvailable: boolean | null
+    categoryId: number | null
+    cafeInfoId: number | null
+    productRedirectUrl: string | null
+    isSignature: boolean | null
+  }
+
+  export type ProductMaxAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    name: string | null
+    code: string | null
+    description: string | null
+    price: number | null
+    originalPrice: number | null
+    stockQuantity: number | null
+    minOrderQuantity: number | null
+    isDisable: boolean | null
+    isAvailable: boolean | null
+    categoryId: number | null
+    cafeInfoId: number | null
+    productRedirectUrl: string | null
+    isSignature: boolean | null
+  }
+
+  export type ProductCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    updatedAt: number
+    name: number
+    code: number
+    description: number
+    price: number
+    originalPrice: number
+    stockQuantity: number
+    minOrderQuantity: number
+    isDisable: number
+    isAvailable: number
+    categoryId: number
+    cafeInfoId: number
+    productRedirectUrl: number
+    isSignature: number
+    _all: number
+  }
+
+
+  export type ProductAvgAggregateInputType = {
+    id?: true
+    price?: true
+    originalPrice?: true
+    stockQuantity?: true
+    minOrderQuantity?: true
+    categoryId?: true
+    cafeInfoId?: true
+  }
+
+  export type ProductSumAggregateInputType = {
+    id?: true
+    price?: true
+    originalPrice?: true
+    stockQuantity?: true
+    minOrderQuantity?: true
+    categoryId?: true
+    cafeInfoId?: true
+  }
+
+  export type ProductMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    code?: true
+    description?: true
+    price?: true
+    originalPrice?: true
+    stockQuantity?: true
+    minOrderQuantity?: true
+    isDisable?: true
+    isAvailable?: true
+    categoryId?: true
+    cafeInfoId?: true
+    productRedirectUrl?: true
+    isSignature?: true
+  }
+
+  export type ProductMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    code?: true
+    description?: true
+    price?: true
+    originalPrice?: true
+    stockQuantity?: true
+    minOrderQuantity?: true
+    isDisable?: true
+    isAvailable?: true
+    categoryId?: true
+    cafeInfoId?: true
+    productRedirectUrl?: true
+    isSignature?: true
+  }
+
+  export type ProductCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    updatedAt?: true
+    name?: true
+    code?: true
+    description?: true
+    price?: true
+    originalPrice?: true
+    stockQuantity?: true
+    minOrderQuantity?: true
+    isDisable?: true
+    isAvailable?: true
+    categoryId?: true
+    cafeInfoId?: true
+    productRedirectUrl?: true
+    isSignature?: true
+    _all?: true
+  }
+
+  export type ProductAggregateArgs = {
+    /**
+     * Filter which Product to aggregate.
+     * 
+    **/
+    where?: ProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Products to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: ProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Products from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Products.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Products
+    **/
+    _count?: true | ProductCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProductAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProductMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProductMaxAggregateInputType
+  }
+
+  export type GetProductAggregateType<T extends ProductAggregateArgs> = {
+        [P in keyof T & keyof AggregateProduct]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProduct[P]>
+      : GetScalarType<T[P], AggregateProduct[P]>
+  }
+
+
+
+
+  export type ProductGroupByArgs = {
+    where?: ProductWhereInput
+    orderBy?: Enumerable<ProductOrderByWithAggregationInput>
+    by: Array<ProductScalarFieldEnum>
+    having?: ProductScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProductCountAggregateInputType | true
+    _avg?: ProductAvgAggregateInputType
+    _sum?: ProductSumAggregateInputType
+    _min?: ProductMinAggregateInputType
+    _max?: ProductMaxAggregateInputType
+  }
+
+
+  export type ProductGroupByOutputType = {
+    id: number
+    createdAt: Date
+    updatedAt: Date
+    name: string
+    code: string
+    description: string | null
+    price: number
+    originalPrice: number | null
+    stockQuantity: number
+    minOrderQuantity: number
+    isDisable: boolean
+    isAvailable: boolean
+    categoryId: number
+    cafeInfoId: number | null
+    productRedirectUrl: string | null
+    isSignature: boolean
+    _count: ProductCountAggregateOutputType | null
+    _avg: ProductAvgAggregateOutputType | null
+    _sum: ProductSumAggregateOutputType | null
+    _min: ProductMinAggregateOutputType | null
+    _max: ProductMaxAggregateOutputType | null
+  }
+
+  type GetProductGroupByPayload<T extends ProductGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<ProductGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProductGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProductGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProductSelect = {
+    id?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    name?: boolean
+    code?: boolean
+    description?: boolean
+    price?: boolean
+    originalPrice?: boolean
+    stockQuantity?: boolean
+    minOrderQuantity?: boolean
+    isDisable?: boolean
+    isAvailable?: boolean
+    categoryId?: boolean
+    ProductCategory?: boolean | ProductCategoryArgs
+    cafeInfoId?: boolean
+    CafeInfo?: boolean | CafeInfoArgs
+    WishlistProducts?: boolean | WishlistProductFindManyArgs
+    ProductImages?: boolean | ProductImageFindManyArgs
+    productRedirectUrl?: boolean
+    isSignature?: boolean
+    _count?: boolean | ProductCountOutputTypeArgs
+  }
+
+
+  export type ProductInclude = {
+    ProductCategory?: boolean | ProductCategoryArgs
+    CafeInfo?: boolean | CafeInfoArgs
+    WishlistProducts?: boolean | WishlistProductFindManyArgs
+    ProductImages?: boolean | ProductImageFindManyArgs
+    _count?: boolean | ProductCountOutputTypeArgs
+  } 
+
+  export type ProductGetPayload<S extends boolean | null | undefined | ProductArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? Product :
+    S extends undefined ? never :
+    S extends { include: any } & (ProductArgs | ProductFindManyArgs)
+    ? Product  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'ProductCategory' ? ProductCategoryGetPayload<S['include'][P]> :
+        P extends 'CafeInfo' ? CafeInfoGetPayload<S['include'][P]> | null :
+        P extends 'WishlistProducts' ? Array < WishlistProductGetPayload<S['include'][P]>>  :
+        P extends 'ProductImages' ? Array < ProductImageGetPayload<S['include'][P]>>  :
+        P extends '_count' ? ProductCountOutputTypeGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (ProductArgs | ProductFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'ProductCategory' ? ProductCategoryGetPayload<S['select'][P]> :
+        P extends 'CafeInfo' ? CafeInfoGetPayload<S['select'][P]> | null :
+        P extends 'WishlistProducts' ? Array < WishlistProductGetPayload<S['select'][P]>>  :
+        P extends 'ProductImages' ? Array < ProductImageGetPayload<S['select'][P]>>  :
+        P extends '_count' ? ProductCountOutputTypeGetPayload<S['select'][P]> :  P extends keyof Product ? Product[P] : never
+  } 
+      : Product
+
+
+  type ProductCountArgs = Merge<
+    Omit<ProductFindManyArgs, 'select' | 'include'> & {
+      select?: ProductCountAggregateInputType | true
+    }
+  >
+
+  export interface ProductDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one Product that matches the filter.
+     * @param {ProductFindUniqueArgs} args - Arguments to find a Product
+     * @example
+     * // Get one Product
+     * const product = await prisma.product.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ProductFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ProductFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'Product'> extends True ? Prisma__ProductClient<ProductGetPayload<T>> : Prisma__ProductClient<ProductGetPayload<T> | null, null>
+
+    /**
+     * Find one Product that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ProductFindUniqueOrThrowArgs} args - Arguments to find a Product
+     * @example
+     * // Get one Product
+     * const product = await prisma.product.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ProductFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ProductFindUniqueOrThrowArgs>
+    ): Prisma__ProductClient<ProductGetPayload<T>>
+
+    /**
+     * Find the first Product that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductFindFirstArgs} args - Arguments to find a Product
+     * @example
+     * // Get one Product
+     * const product = await prisma.product.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ProductFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ProductFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'Product'> extends True ? Prisma__ProductClient<ProductGetPayload<T>> : Prisma__ProductClient<ProductGetPayload<T> | null, null>
+
+    /**
+     * Find the first Product that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductFindFirstOrThrowArgs} args - Arguments to find a Product
+     * @example
+     * // Get one Product
+     * const product = await prisma.product.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ProductFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ProductFindFirstOrThrowArgs>
+    ): Prisma__ProductClient<ProductGetPayload<T>>
+
+    /**
+     * Find zero or more Products that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Products
+     * const products = await prisma.product.findMany()
+     * 
+     * // Get first 10 Products
+     * const products = await prisma.product.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const productWithIdOnly = await prisma.product.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends ProductFindManyArgs>(
+      args?: SelectSubset<T, ProductFindManyArgs>
+    ): PrismaPromise<Array<ProductGetPayload<T>>>
+
+    /**
+     * Create a Product.
+     * @param {ProductCreateArgs} args - Arguments to create a Product.
+     * @example
+     * // Create one Product
+     * const Product = await prisma.product.create({
+     *   data: {
+     *     // ... data to create a Product
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ProductCreateArgs>(
+      args: SelectSubset<T, ProductCreateArgs>
+    ): Prisma__ProductClient<ProductGetPayload<T>>
+
+    /**
+     * Create many Products.
+     *     @param {ProductCreateManyArgs} args - Arguments to create many Products.
+     *     @example
+     *     // Create many Products
+     *     const product = await prisma.product.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ProductCreateManyArgs>(
+      args?: SelectSubset<T, ProductCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a Product.
+     * @param {ProductDeleteArgs} args - Arguments to delete one Product.
+     * @example
+     * // Delete one Product
+     * const Product = await prisma.product.delete({
+     *   where: {
+     *     // ... filter to delete one Product
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ProductDeleteArgs>(
+      args: SelectSubset<T, ProductDeleteArgs>
+    ): Prisma__ProductClient<ProductGetPayload<T>>
+
+    /**
+     * Update one Product.
+     * @param {ProductUpdateArgs} args - Arguments to update one Product.
+     * @example
+     * // Update one Product
+     * const product = await prisma.product.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ProductUpdateArgs>(
+      args: SelectSubset<T, ProductUpdateArgs>
+    ): Prisma__ProductClient<ProductGetPayload<T>>
+
+    /**
+     * Delete zero or more Products.
+     * @param {ProductDeleteManyArgs} args - Arguments to filter Products to delete.
+     * @example
+     * // Delete a few Products
+     * const { count } = await prisma.product.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ProductDeleteManyArgs>(
+      args?: SelectSubset<T, ProductDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Products.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Products
+     * const product = await prisma.product.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ProductUpdateManyArgs>(
+      args: SelectSubset<T, ProductUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one Product.
+     * @param {ProductUpsertArgs} args - Arguments to update or create a Product.
+     * @example
+     * // Update or create a Product
+     * const product = await prisma.product.upsert({
+     *   create: {
+     *     // ... data to create a Product
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Product we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ProductUpsertArgs>(
+      args: SelectSubset<T, ProductUpsertArgs>
+    ): Prisma__ProductClient<ProductGetPayload<T>>
+
+    /**
+     * Count the number of Products.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductCountArgs} args - Arguments to filter Products to count.
+     * @example
+     * // Count the number of Products
+     * const count = await prisma.product.count({
+     *   where: {
+     *     // ... the filter for the Products we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProductCountArgs>(
+      args?: Subset<T, ProductCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProductCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Product.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProductAggregateArgs>(args: Subset<T, ProductAggregateArgs>): PrismaPromise<GetProductAggregateType<T>>
+
+    /**
+     * Group by Product.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProductGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProductGroupByArgs['orderBy'] }
+        : { orderBy?: ProductGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProductGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Product.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ProductClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    ProductCategory<T extends ProductCategoryArgs= {}>(args?: Subset<T, ProductCategoryArgs>): Prisma__ProductCategoryClient<ProductCategoryGetPayload<T> | Null>;
+
+    CafeInfo<T extends CafeInfoArgs= {}>(args?: Subset<T, CafeInfoArgs>): Prisma__CafeInfoClient<CafeInfoGetPayload<T> | Null>;
+
+    WishlistProducts<T extends WishlistProductFindManyArgs= {}>(args?: Subset<T, WishlistProductFindManyArgs>): PrismaPromise<Array<WishlistProductGetPayload<T>>| Null>;
+
+    ProductImages<T extends ProductImageFindManyArgs= {}>(args?: Subset<T, ProductImageFindManyArgs>): PrismaPromise<Array<ProductImageGetPayload<T>>| Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * Product base type for findUnique actions
+   */
+  export type ProductFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the Product
+     * 
+    **/
+    select?: ProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductInclude | null
+    /**
+     * Filter, which Product to fetch.
+     * 
+    **/
+    where: ProductWhereUniqueInput
+  }
+
+  /**
+   * Product: findUnique
+   */
+  export interface ProductFindUniqueArgs extends ProductFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Product findUniqueOrThrow
+   */
+  export type ProductFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Product
+     * 
+    **/
+    select?: ProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductInclude | null
+    /**
+     * Filter, which Product to fetch.
+     * 
+    **/
+    where: ProductWhereUniqueInput
+  }
+
+
+  /**
+   * Product base type for findFirst actions
+   */
+  export type ProductFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the Product
+     * 
+    **/
+    select?: ProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductInclude | null
+    /**
+     * Filter, which Product to fetch.
+     * 
+    **/
+    where?: ProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Products to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Products.
+     * 
+    **/
+    cursor?: ProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Products from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Products.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Products.
+     * 
+    **/
+    distinct?: Enumerable<ProductScalarFieldEnum>
+  }
+
+  /**
+   * Product: findFirst
+   */
+  export interface ProductFindFirstArgs extends ProductFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * Product findFirstOrThrow
+   */
+  export type ProductFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the Product
+     * 
+    **/
+    select?: ProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductInclude | null
+    /**
+     * Filter, which Product to fetch.
+     * 
+    **/
+    where?: ProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Products to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Products.
+     * 
+    **/
+    cursor?: ProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Products from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Products.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Products.
+     * 
+    **/
+    distinct?: Enumerable<ProductScalarFieldEnum>
+  }
+
+
+  /**
+   * Product findMany
+   */
+  export type ProductFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the Product
+     * 
+    **/
+    select?: ProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductInclude | null
+    /**
+     * Filter, which Products to fetch.
+     * 
+    **/
+    where?: ProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Products to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Products.
+     * 
+    **/
+    cursor?: ProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Products from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Products.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<ProductScalarFieldEnum>
+  }
+
+
+  /**
+   * Product create
+   */
+  export type ProductCreateArgs = {
+    /**
+     * Select specific fields to fetch from the Product
+     * 
+    **/
+    select?: ProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductInclude | null
+    /**
+     * The data needed to create a Product.
+     * 
+    **/
+    data: XOR<ProductCreateInput, ProductUncheckedCreateInput>
+  }
+
+
+  /**
+   * Product createMany
+   */
+  export type ProductCreateManyArgs = {
+    /**
+     * The data used to create many Products.
+     * 
+    **/
+    data: Enumerable<ProductCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * Product update
+   */
+  export type ProductUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the Product
+     * 
+    **/
+    select?: ProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductInclude | null
+    /**
+     * The data needed to update a Product.
+     * 
+    **/
+    data: XOR<ProductUpdateInput, ProductUncheckedUpdateInput>
+    /**
+     * Choose, which Product to update.
+     * 
+    **/
+    where: ProductWhereUniqueInput
+  }
+
+
+  /**
+   * Product updateMany
+   */
+  export type ProductUpdateManyArgs = {
+    /**
+     * The data used to update Products.
+     * 
+    **/
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyInput>
+    /**
+     * Filter which Products to update
+     * 
+    **/
+    where?: ProductWhereInput
+  }
+
+
+  /**
+   * Product upsert
+   */
+  export type ProductUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the Product
+     * 
+    **/
+    select?: ProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductInclude | null
+    /**
+     * The filter to search for the Product to update in case it exists.
+     * 
+    **/
+    where: ProductWhereUniqueInput
+    /**
+     * In case the Product found by the `where` argument doesn't exist, create a new Product with this data.
+     * 
+    **/
+    create: XOR<ProductCreateInput, ProductUncheckedCreateInput>
+    /**
+     * In case the Product was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<ProductUpdateInput, ProductUncheckedUpdateInput>
+  }
+
+
+  /**
+   * Product delete
+   */
+  export type ProductDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the Product
+     * 
+    **/
+    select?: ProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductInclude | null
+    /**
+     * Filter which Product to delete.
+     * 
+    **/
+    where: ProductWhereUniqueInput
+  }
+
+
+  /**
+   * Product deleteMany
+   */
+  export type ProductDeleteManyArgs = {
+    /**
+     * Filter which Products to delete
+     * 
+    **/
+    where?: ProductWhereInput
+  }
+
+
+  /**
+   * Product without action
+   */
+  export type ProductArgs = {
+    /**
+     * Select specific fields to fetch from the Product
+     * 
+    **/
+    select?: ProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductInclude | null
+  }
+
+
+
+  /**
+   * Model WishlistProduct
+   */
+
+
+  export type AggregateWishlistProduct = {
+    _count: WishlistProductCountAggregateOutputType | null
+    _avg: WishlistProductAvgAggregateOutputType | null
+    _sum: WishlistProductSumAggregateOutputType | null
+    _min: WishlistProductMinAggregateOutputType | null
+    _max: WishlistProductMaxAggregateOutputType | null
+  }
+
+  export type WishlistProductAvgAggregateOutputType = {
+    id: number | null
+    productId: number | null
+    proxyUserId: number | null
+  }
+
+  export type WishlistProductSumAggregateOutputType = {
+    id: number | null
+    productId: number | null
+    proxyUserId: number | null
+  }
+
+  export type WishlistProductMinAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    productId: number | null
+    proxyUserId: number | null
+  }
+
+  export type WishlistProductMaxAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    productId: number | null
+    proxyUserId: number | null
+  }
+
+  export type WishlistProductCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    productId: number
+    proxyUserId: number
+    _all: number
+  }
+
+
+  export type WishlistProductAvgAggregateInputType = {
+    id?: true
+    productId?: true
+    proxyUserId?: true
+  }
+
+  export type WishlistProductSumAggregateInputType = {
+    id?: true
+    productId?: true
+    proxyUserId?: true
+  }
+
+  export type WishlistProductMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    productId?: true
+    proxyUserId?: true
+  }
+
+  export type WishlistProductMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    productId?: true
+    proxyUserId?: true
+  }
+
+  export type WishlistProductCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    productId?: true
+    proxyUserId?: true
+    _all?: true
+  }
+
+  export type WishlistProductAggregateArgs = {
+    /**
+     * Filter which WishlistProduct to aggregate.
+     * 
+    **/
+    where?: WishlistProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WishlistProducts to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<WishlistProductOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: WishlistProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WishlistProducts from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WishlistProducts.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned WishlistProducts
+    **/
+    _count?: true | WishlistProductCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: WishlistProductAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: WishlistProductSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: WishlistProductMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: WishlistProductMaxAggregateInputType
+  }
+
+  export type GetWishlistProductAggregateType<T extends WishlistProductAggregateArgs> = {
+        [P in keyof T & keyof AggregateWishlistProduct]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateWishlistProduct[P]>
+      : GetScalarType<T[P], AggregateWishlistProduct[P]>
+  }
+
+
+
+
+  export type WishlistProductGroupByArgs = {
+    where?: WishlistProductWhereInput
+    orderBy?: Enumerable<WishlistProductOrderByWithAggregationInput>
+    by: Array<WishlistProductScalarFieldEnum>
+    having?: WishlistProductScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: WishlistProductCountAggregateInputType | true
+    _avg?: WishlistProductAvgAggregateInputType
+    _sum?: WishlistProductSumAggregateInputType
+    _min?: WishlistProductMinAggregateInputType
+    _max?: WishlistProductMaxAggregateInputType
+  }
+
+
+  export type WishlistProductGroupByOutputType = {
+    id: number
+    createdAt: Date
+    productId: number
+    proxyUserId: number
+    _count: WishlistProductCountAggregateOutputType | null
+    _avg: WishlistProductAvgAggregateOutputType | null
+    _sum: WishlistProductSumAggregateOutputType | null
+    _min: WishlistProductMinAggregateOutputType | null
+    _max: WishlistProductMaxAggregateOutputType | null
+  }
+
+  type GetWishlistProductGroupByPayload<T extends WishlistProductGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<WishlistProductGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof WishlistProductGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], WishlistProductGroupByOutputType[P]>
+            : GetScalarType<T[P], WishlistProductGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type WishlistProductSelect = {
+    id?: boolean
+    createdAt?: boolean
+    productId?: boolean
+    Product?: boolean | ProductArgs
+    proxyUserId?: boolean
+    ProxyUser?: boolean | ProxyUserArgs
+  }
+
+
+  export type WishlistProductInclude = {
+    Product?: boolean | ProductArgs
+    ProxyUser?: boolean | ProxyUserArgs
+  } 
+
+  export type WishlistProductGetPayload<S extends boolean | null | undefined | WishlistProductArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? WishlistProduct :
+    S extends undefined ? never :
+    S extends { include: any } & (WishlistProductArgs | WishlistProductFindManyArgs)
+    ? WishlistProduct  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'Product' ? ProductGetPayload<S['include'][P]> :
+        P extends 'ProxyUser' ? ProxyUserGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (WishlistProductArgs | WishlistProductFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'Product' ? ProductGetPayload<S['select'][P]> :
+        P extends 'ProxyUser' ? ProxyUserGetPayload<S['select'][P]> :  P extends keyof WishlistProduct ? WishlistProduct[P] : never
+  } 
+      : WishlistProduct
+
+
+  type WishlistProductCountArgs = Merge<
+    Omit<WishlistProductFindManyArgs, 'select' | 'include'> & {
+      select?: WishlistProductCountAggregateInputType | true
+    }
+  >
+
+  export interface WishlistProductDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one WishlistProduct that matches the filter.
+     * @param {WishlistProductFindUniqueArgs} args - Arguments to find a WishlistProduct
+     * @example
+     * // Get one WishlistProduct
+     * const wishlistProduct = await prisma.wishlistProduct.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends WishlistProductFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, WishlistProductFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'WishlistProduct'> extends True ? Prisma__WishlistProductClient<WishlistProductGetPayload<T>> : Prisma__WishlistProductClient<WishlistProductGetPayload<T> | null, null>
+
+    /**
+     * Find one WishlistProduct that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {WishlistProductFindUniqueOrThrowArgs} args - Arguments to find a WishlistProduct
+     * @example
+     * // Get one WishlistProduct
+     * const wishlistProduct = await prisma.wishlistProduct.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends WishlistProductFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, WishlistProductFindUniqueOrThrowArgs>
+    ): Prisma__WishlistProductClient<WishlistProductGetPayload<T>>
+
+    /**
+     * Find the first WishlistProduct that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WishlistProductFindFirstArgs} args - Arguments to find a WishlistProduct
+     * @example
+     * // Get one WishlistProduct
+     * const wishlistProduct = await prisma.wishlistProduct.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends WishlistProductFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, WishlistProductFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'WishlistProduct'> extends True ? Prisma__WishlistProductClient<WishlistProductGetPayload<T>> : Prisma__WishlistProductClient<WishlistProductGetPayload<T> | null, null>
+
+    /**
+     * Find the first WishlistProduct that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WishlistProductFindFirstOrThrowArgs} args - Arguments to find a WishlistProduct
+     * @example
+     * // Get one WishlistProduct
+     * const wishlistProduct = await prisma.wishlistProduct.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends WishlistProductFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, WishlistProductFindFirstOrThrowArgs>
+    ): Prisma__WishlistProductClient<WishlistProductGetPayload<T>>
+
+    /**
+     * Find zero or more WishlistProducts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WishlistProductFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all WishlistProducts
+     * const wishlistProducts = await prisma.wishlistProduct.findMany()
+     * 
+     * // Get first 10 WishlistProducts
+     * const wishlistProducts = await prisma.wishlistProduct.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const wishlistProductWithIdOnly = await prisma.wishlistProduct.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends WishlistProductFindManyArgs>(
+      args?: SelectSubset<T, WishlistProductFindManyArgs>
+    ): PrismaPromise<Array<WishlistProductGetPayload<T>>>
+
+    /**
+     * Create a WishlistProduct.
+     * @param {WishlistProductCreateArgs} args - Arguments to create a WishlistProduct.
+     * @example
+     * // Create one WishlistProduct
+     * const WishlistProduct = await prisma.wishlistProduct.create({
+     *   data: {
+     *     // ... data to create a WishlistProduct
+     *   }
+     * })
+     * 
+    **/
+    create<T extends WishlistProductCreateArgs>(
+      args: SelectSubset<T, WishlistProductCreateArgs>
+    ): Prisma__WishlistProductClient<WishlistProductGetPayload<T>>
+
+    /**
+     * Create many WishlistProducts.
+     *     @param {WishlistProductCreateManyArgs} args - Arguments to create many WishlistProducts.
+     *     @example
+     *     // Create many WishlistProducts
+     *     const wishlistProduct = await prisma.wishlistProduct.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends WishlistProductCreateManyArgs>(
+      args?: SelectSubset<T, WishlistProductCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a WishlistProduct.
+     * @param {WishlistProductDeleteArgs} args - Arguments to delete one WishlistProduct.
+     * @example
+     * // Delete one WishlistProduct
+     * const WishlistProduct = await prisma.wishlistProduct.delete({
+     *   where: {
+     *     // ... filter to delete one WishlistProduct
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends WishlistProductDeleteArgs>(
+      args: SelectSubset<T, WishlistProductDeleteArgs>
+    ): Prisma__WishlistProductClient<WishlistProductGetPayload<T>>
+
+    /**
+     * Update one WishlistProduct.
+     * @param {WishlistProductUpdateArgs} args - Arguments to update one WishlistProduct.
+     * @example
+     * // Update one WishlistProduct
+     * const wishlistProduct = await prisma.wishlistProduct.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends WishlistProductUpdateArgs>(
+      args: SelectSubset<T, WishlistProductUpdateArgs>
+    ): Prisma__WishlistProductClient<WishlistProductGetPayload<T>>
+
+    /**
+     * Delete zero or more WishlistProducts.
+     * @param {WishlistProductDeleteManyArgs} args - Arguments to filter WishlistProducts to delete.
+     * @example
+     * // Delete a few WishlistProducts
+     * const { count } = await prisma.wishlistProduct.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends WishlistProductDeleteManyArgs>(
+      args?: SelectSubset<T, WishlistProductDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more WishlistProducts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WishlistProductUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many WishlistProducts
+     * const wishlistProduct = await prisma.wishlistProduct.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends WishlistProductUpdateManyArgs>(
+      args: SelectSubset<T, WishlistProductUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one WishlistProduct.
+     * @param {WishlistProductUpsertArgs} args - Arguments to update or create a WishlistProduct.
+     * @example
+     * // Update or create a WishlistProduct
+     * const wishlistProduct = await prisma.wishlistProduct.upsert({
+     *   create: {
+     *     // ... data to create a WishlistProduct
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the WishlistProduct we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends WishlistProductUpsertArgs>(
+      args: SelectSubset<T, WishlistProductUpsertArgs>
+    ): Prisma__WishlistProductClient<WishlistProductGetPayload<T>>
+
+    /**
+     * Count the number of WishlistProducts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WishlistProductCountArgs} args - Arguments to filter WishlistProducts to count.
+     * @example
+     * // Count the number of WishlistProducts
+     * const count = await prisma.wishlistProduct.count({
+     *   where: {
+     *     // ... the filter for the WishlistProducts we want to count
+     *   }
+     * })
+    **/
+    count<T extends WishlistProductCountArgs>(
+      args?: Subset<T, WishlistProductCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], WishlistProductCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a WishlistProduct.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WishlistProductAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends WishlistProductAggregateArgs>(args: Subset<T, WishlistProductAggregateArgs>): PrismaPromise<GetWishlistProductAggregateType<T>>
+
+    /**
+     * Group by WishlistProduct.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {WishlistProductGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends WishlistProductGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: WishlistProductGroupByArgs['orderBy'] }
+        : { orderBy?: WishlistProductGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, WishlistProductGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetWishlistProductGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for WishlistProduct.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__WishlistProductClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    Product<T extends ProductArgs= {}>(args?: Subset<T, ProductArgs>): Prisma__ProductClient<ProductGetPayload<T> | Null>;
+
+    ProxyUser<T extends ProxyUserArgs= {}>(args?: Subset<T, ProxyUserArgs>): Prisma__ProxyUserClient<ProxyUserGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * WishlistProduct base type for findUnique actions
+   */
+  export type WishlistProductFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the WishlistProduct
+     * 
+    **/
+    select?: WishlistProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: WishlistProductInclude | null
+    /**
+     * Filter, which WishlistProduct to fetch.
+     * 
+    **/
+    where: WishlistProductWhereUniqueInput
+  }
+
+  /**
+   * WishlistProduct: findUnique
+   */
+  export interface WishlistProductFindUniqueArgs extends WishlistProductFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * WishlistProduct findUniqueOrThrow
+   */
+  export type WishlistProductFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the WishlistProduct
+     * 
+    **/
+    select?: WishlistProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: WishlistProductInclude | null
+    /**
+     * Filter, which WishlistProduct to fetch.
+     * 
+    **/
+    where: WishlistProductWhereUniqueInput
+  }
+
+
+  /**
+   * WishlistProduct base type for findFirst actions
+   */
+  export type WishlistProductFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the WishlistProduct
+     * 
+    **/
+    select?: WishlistProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: WishlistProductInclude | null
+    /**
+     * Filter, which WishlistProduct to fetch.
+     * 
+    **/
+    where?: WishlistProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WishlistProducts to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<WishlistProductOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WishlistProducts.
+     * 
+    **/
+    cursor?: WishlistProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WishlistProducts from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WishlistProducts.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WishlistProducts.
+     * 
+    **/
+    distinct?: Enumerable<WishlistProductScalarFieldEnum>
+  }
+
+  /**
+   * WishlistProduct: findFirst
+   */
+  export interface WishlistProductFindFirstArgs extends WishlistProductFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * WishlistProduct findFirstOrThrow
+   */
+  export type WishlistProductFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the WishlistProduct
+     * 
+    **/
+    select?: WishlistProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: WishlistProductInclude | null
+    /**
+     * Filter, which WishlistProduct to fetch.
+     * 
+    **/
+    where?: WishlistProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WishlistProducts to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<WishlistProductOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for WishlistProducts.
+     * 
+    **/
+    cursor?: WishlistProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WishlistProducts from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WishlistProducts.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of WishlistProducts.
+     * 
+    **/
+    distinct?: Enumerable<WishlistProductScalarFieldEnum>
+  }
+
+
+  /**
+   * WishlistProduct findMany
+   */
+  export type WishlistProductFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the WishlistProduct
+     * 
+    **/
+    select?: WishlistProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: WishlistProductInclude | null
+    /**
+     * Filter, which WishlistProducts to fetch.
+     * 
+    **/
+    where?: WishlistProductWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of WishlistProducts to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<WishlistProductOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing WishlistProducts.
+     * 
+    **/
+    cursor?: WishlistProductWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` WishlistProducts from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` WishlistProducts.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<WishlistProductScalarFieldEnum>
+  }
+
+
+  /**
+   * WishlistProduct create
+   */
+  export type WishlistProductCreateArgs = {
+    /**
+     * Select specific fields to fetch from the WishlistProduct
+     * 
+    **/
+    select?: WishlistProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: WishlistProductInclude | null
+    /**
+     * The data needed to create a WishlistProduct.
+     * 
+    **/
+    data: XOR<WishlistProductCreateInput, WishlistProductUncheckedCreateInput>
+  }
+
+
+  /**
+   * WishlistProduct createMany
+   */
+  export type WishlistProductCreateManyArgs = {
+    /**
+     * The data used to create many WishlistProducts.
+     * 
+    **/
+    data: Enumerable<WishlistProductCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * WishlistProduct update
+   */
+  export type WishlistProductUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the WishlistProduct
+     * 
+    **/
+    select?: WishlistProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: WishlistProductInclude | null
+    /**
+     * The data needed to update a WishlistProduct.
+     * 
+    **/
+    data: XOR<WishlistProductUpdateInput, WishlistProductUncheckedUpdateInput>
+    /**
+     * Choose, which WishlistProduct to update.
+     * 
+    **/
+    where: WishlistProductWhereUniqueInput
+  }
+
+
+  /**
+   * WishlistProduct updateMany
+   */
+  export type WishlistProductUpdateManyArgs = {
+    /**
+     * The data used to update WishlistProducts.
+     * 
+    **/
+    data: XOR<WishlistProductUpdateManyMutationInput, WishlistProductUncheckedUpdateManyInput>
+    /**
+     * Filter which WishlistProducts to update
+     * 
+    **/
+    where?: WishlistProductWhereInput
+  }
+
+
+  /**
+   * WishlistProduct upsert
+   */
+  export type WishlistProductUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the WishlistProduct
+     * 
+    **/
+    select?: WishlistProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: WishlistProductInclude | null
+    /**
+     * The filter to search for the WishlistProduct to update in case it exists.
+     * 
+    **/
+    where: WishlistProductWhereUniqueInput
+    /**
+     * In case the WishlistProduct found by the `where` argument doesn't exist, create a new WishlistProduct with this data.
+     * 
+    **/
+    create: XOR<WishlistProductCreateInput, WishlistProductUncheckedCreateInput>
+    /**
+     * In case the WishlistProduct was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<WishlistProductUpdateInput, WishlistProductUncheckedUpdateInput>
+  }
+
+
+  /**
+   * WishlistProduct delete
+   */
+  export type WishlistProductDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the WishlistProduct
+     * 
+    **/
+    select?: WishlistProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: WishlistProductInclude | null
+    /**
+     * Filter which WishlistProduct to delete.
+     * 
+    **/
+    where: WishlistProductWhereUniqueInput
+  }
+
+
+  /**
+   * WishlistProduct deleteMany
+   */
+  export type WishlistProductDeleteManyArgs = {
+    /**
+     * Filter which WishlistProducts to delete
+     * 
+    **/
+    where?: WishlistProductWhereInput
+  }
+
+
+  /**
+   * WishlistProduct without action
+   */
+  export type WishlistProductArgs = {
+    /**
+     * Select specific fields to fetch from the WishlistProduct
+     * 
+    **/
+    select?: WishlistProductSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: WishlistProductInclude | null
+  }
+
+
+
+  /**
+   * Model ProductImage
+   */
+
+
+  export type AggregateProductImage = {
+    _count: ProductImageCountAggregateOutputType | null
+    _avg: ProductImageAvgAggregateOutputType | null
+    _sum: ProductImageSumAggregateOutputType | null
+    _min: ProductImageMinAggregateOutputType | null
+    _max: ProductImageMaxAggregateOutputType | null
+  }
+
+  export type ProductImageAvgAggregateOutputType = {
+    id: number | null
+    width: number | null
+    height: number | null
+    size: number | null
+    productId: number | null
+  }
+
+  export type ProductImageSumAggregateOutputType = {
+    id: number | null
+    width: number | null
+    height: number | null
+    size: number | null
+    productId: number | null
+  }
+
+  export type ProductImageMinAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    url: string | null
+    thumbnailUrl: string | null
+    width: number | null
+    height: number | null
+    size: number | null
+    isDisable: boolean | null
+    isThumb: boolean | null
+    productId: number | null
+  }
+
+  export type ProductImageMaxAggregateOutputType = {
+    id: number | null
+    createdAt: Date | null
+    url: string | null
+    thumbnailUrl: string | null
+    width: number | null
+    height: number | null
+    size: number | null
+    isDisable: boolean | null
+    isThumb: boolean | null
+    productId: number | null
+  }
+
+  export type ProductImageCountAggregateOutputType = {
+    id: number
+    createdAt: number
+    url: number
+    thumbnailUrl: number
+    width: number
+    height: number
+    size: number
+    isDisable: number
+    isThumb: number
+    productId: number
+    _all: number
+  }
+
+
+  export type ProductImageAvgAggregateInputType = {
+    id?: true
+    width?: true
+    height?: true
+    size?: true
+    productId?: true
+  }
+
+  export type ProductImageSumAggregateInputType = {
+    id?: true
+    width?: true
+    height?: true
+    size?: true
+    productId?: true
+  }
+
+  export type ProductImageMinAggregateInputType = {
+    id?: true
+    createdAt?: true
+    url?: true
+    thumbnailUrl?: true
+    width?: true
+    height?: true
+    size?: true
+    isDisable?: true
+    isThumb?: true
+    productId?: true
+  }
+
+  export type ProductImageMaxAggregateInputType = {
+    id?: true
+    createdAt?: true
+    url?: true
+    thumbnailUrl?: true
+    width?: true
+    height?: true
+    size?: true
+    isDisable?: true
+    isThumb?: true
+    productId?: true
+  }
+
+  export type ProductImageCountAggregateInputType = {
+    id?: true
+    createdAt?: true
+    url?: true
+    thumbnailUrl?: true
+    width?: true
+    height?: true
+    size?: true
+    isDisable?: true
+    isThumb?: true
+    productId?: true
+    _all?: true
+  }
+
+  export type ProductImageAggregateArgs = {
+    /**
+     * Filter which ProductImage to aggregate.
+     * 
+    **/
+    where?: ProductImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductImages to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     * 
+    **/
+    cursor?: ProductImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductImages from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductImages.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ProductImages
+    **/
+    _count?: true | ProductImageCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ProductImageAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ProductImageSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ProductImageMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ProductImageMaxAggregateInputType
+  }
+
+  export type GetProductImageAggregateType<T extends ProductImageAggregateArgs> = {
+        [P in keyof T & keyof AggregateProductImage]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateProductImage[P]>
+      : GetScalarType<T[P], AggregateProductImage[P]>
+  }
+
+
+
+
+  export type ProductImageGroupByArgs = {
+    where?: ProductImageWhereInput
+    orderBy?: Enumerable<ProductImageOrderByWithAggregationInput>
+    by: Array<ProductImageScalarFieldEnum>
+    having?: ProductImageScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ProductImageCountAggregateInputType | true
+    _avg?: ProductImageAvgAggregateInputType
+    _sum?: ProductImageSumAggregateInputType
+    _min?: ProductImageMinAggregateInputType
+    _max?: ProductImageMaxAggregateInputType
+  }
+
+
+  export type ProductImageGroupByOutputType = {
+    id: number
+    createdAt: Date
+    url: string
+    thumbnailUrl: string
+    width: number
+    height: number
+    size: number
+    isDisable: boolean
+    isThumb: boolean
+    productId: number
+    _count: ProductImageCountAggregateOutputType | null
+    _avg: ProductImageAvgAggregateOutputType | null
+    _sum: ProductImageSumAggregateOutputType | null
+    _min: ProductImageMinAggregateOutputType | null
+    _max: ProductImageMaxAggregateOutputType | null
+  }
+
+  type GetProductImageGroupByPayload<T extends ProductImageGroupByArgs> = PrismaPromise<
+    Array<
+      PickArray<ProductImageGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ProductImageGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ProductImageGroupByOutputType[P]>
+            : GetScalarType<T[P], ProductImageGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ProductImageSelect = {
+    id?: boolean
+    createdAt?: boolean
+    url?: boolean
+    thumbnailUrl?: boolean
+    width?: boolean
+    height?: boolean
+    size?: boolean
+    isDisable?: boolean
+    isThumb?: boolean
+    productId?: boolean
+    Product?: boolean | ProductArgs
+  }
+
+
+  export type ProductImageInclude = {
+    Product?: boolean | ProductArgs
+  } 
+
+  export type ProductImageGetPayload<S extends boolean | null | undefined | ProductImageArgs> =
+    S extends { select: any, include: any } ? 'Please either choose `select` or `include`' :
+    S extends true ? ProductImage :
+    S extends undefined ? never :
+    S extends { include: any } & (ProductImageArgs | ProductImageFindManyArgs)
+    ? ProductImage  & {
+    [P in TruthyKeys<S['include']>]:
+        P extends 'Product' ? ProductGetPayload<S['include'][P]> :  never
+  } 
+    : S extends { select: any } & (ProductImageArgs | ProductImageFindManyArgs)
+      ? {
+    [P in TruthyKeys<S['select']>]:
+        P extends 'Product' ? ProductGetPayload<S['select'][P]> :  P extends keyof ProductImage ? ProductImage[P] : never
+  } 
+      : ProductImage
+
+
+  type ProductImageCountArgs = Merge<
+    Omit<ProductImageFindManyArgs, 'select' | 'include'> & {
+      select?: ProductImageCountAggregateInputType | true
+    }
+  >
+
+  export interface ProductImageDelegate<GlobalRejectSettings extends Prisma.RejectOnNotFound | Prisma.RejectPerOperation | false | undefined> {
+    /**
+     * Find zero or one ProductImage that matches the filter.
+     * @param {ProductImageFindUniqueArgs} args - Arguments to find a ProductImage
+     * @example
+     * // Get one ProductImage
+     * const productImage = await prisma.productImage.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUnique<T extends ProductImageFindUniqueArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args: SelectSubset<T, ProductImageFindUniqueArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findUnique', 'ProductImage'> extends True ? Prisma__ProductImageClient<ProductImageGetPayload<T>> : Prisma__ProductImageClient<ProductImageGetPayload<T> | null, null>
+
+    /**
+     * Find one ProductImage that matches the filter or throw an error  with `error.code='P2025'` 
+     *     if no matches were found.
+     * @param {ProductImageFindUniqueOrThrowArgs} args - Arguments to find a ProductImage
+     * @example
+     * // Get one ProductImage
+     * const productImage = await prisma.productImage.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findUniqueOrThrow<T extends ProductImageFindUniqueOrThrowArgs>(
+      args?: SelectSubset<T, ProductImageFindUniqueOrThrowArgs>
+    ): Prisma__ProductImageClient<ProductImageGetPayload<T>>
+
+    /**
+     * Find the first ProductImage that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductImageFindFirstArgs} args - Arguments to find a ProductImage
+     * @example
+     * // Get one ProductImage
+     * const productImage = await prisma.productImage.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirst<T extends ProductImageFindFirstArgs,  LocalRejectSettings = T["rejectOnNotFound"] extends RejectOnNotFound ? T['rejectOnNotFound'] : undefined>(
+      args?: SelectSubset<T, ProductImageFindFirstArgs>
+    ): HasReject<GlobalRejectSettings, LocalRejectSettings, 'findFirst', 'ProductImage'> extends True ? Prisma__ProductImageClient<ProductImageGetPayload<T>> : Prisma__ProductImageClient<ProductImageGetPayload<T> | null, null>
+
+    /**
+     * Find the first ProductImage that matches the filter or
+     * throw `NotFoundError` if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductImageFindFirstOrThrowArgs} args - Arguments to find a ProductImage
+     * @example
+     * // Get one ProductImage
+     * const productImage = await prisma.productImage.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+    **/
+    findFirstOrThrow<T extends ProductImageFindFirstOrThrowArgs>(
+      args?: SelectSubset<T, ProductImageFindFirstOrThrowArgs>
+    ): Prisma__ProductImageClient<ProductImageGetPayload<T>>
+
+    /**
+     * Find zero or more ProductImages that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductImageFindManyArgs=} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ProductImages
+     * const productImages = await prisma.productImage.findMany()
+     * 
+     * // Get first 10 ProductImages
+     * const productImages = await prisma.productImage.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const productImageWithIdOnly = await prisma.productImage.findMany({ select: { id: true } })
+     * 
+    **/
+    findMany<T extends ProductImageFindManyArgs>(
+      args?: SelectSubset<T, ProductImageFindManyArgs>
+    ): PrismaPromise<Array<ProductImageGetPayload<T>>>
+
+    /**
+     * Create a ProductImage.
+     * @param {ProductImageCreateArgs} args - Arguments to create a ProductImage.
+     * @example
+     * // Create one ProductImage
+     * const ProductImage = await prisma.productImage.create({
+     *   data: {
+     *     // ... data to create a ProductImage
+     *   }
+     * })
+     * 
+    **/
+    create<T extends ProductImageCreateArgs>(
+      args: SelectSubset<T, ProductImageCreateArgs>
+    ): Prisma__ProductImageClient<ProductImageGetPayload<T>>
+
+    /**
+     * Create many ProductImages.
+     *     @param {ProductImageCreateManyArgs} args - Arguments to create many ProductImages.
+     *     @example
+     *     // Create many ProductImages
+     *     const productImage = await prisma.productImage.createMany({
+     *       data: {
+     *         // ... provide data here
+     *       }
+     *     })
+     *     
+    **/
+    createMany<T extends ProductImageCreateManyArgs>(
+      args?: SelectSubset<T, ProductImageCreateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Delete a ProductImage.
+     * @param {ProductImageDeleteArgs} args - Arguments to delete one ProductImage.
+     * @example
+     * // Delete one ProductImage
+     * const ProductImage = await prisma.productImage.delete({
+     *   where: {
+     *     // ... filter to delete one ProductImage
+     *   }
+     * })
+     * 
+    **/
+    delete<T extends ProductImageDeleteArgs>(
+      args: SelectSubset<T, ProductImageDeleteArgs>
+    ): Prisma__ProductImageClient<ProductImageGetPayload<T>>
+
+    /**
+     * Update one ProductImage.
+     * @param {ProductImageUpdateArgs} args - Arguments to update one ProductImage.
+     * @example
+     * // Update one ProductImage
+     * const productImage = await prisma.productImage.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    update<T extends ProductImageUpdateArgs>(
+      args: SelectSubset<T, ProductImageUpdateArgs>
+    ): Prisma__ProductImageClient<ProductImageGetPayload<T>>
+
+    /**
+     * Delete zero or more ProductImages.
+     * @param {ProductImageDeleteManyArgs} args - Arguments to filter ProductImages to delete.
+     * @example
+     * // Delete a few ProductImages
+     * const { count } = await prisma.productImage.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+    **/
+    deleteMany<T extends ProductImageDeleteManyArgs>(
+      args?: SelectSubset<T, ProductImageDeleteManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ProductImages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductImageUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ProductImages
+     * const productImage = await prisma.productImage.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+    **/
+    updateMany<T extends ProductImageUpdateManyArgs>(
+      args: SelectSubset<T, ProductImageUpdateManyArgs>
+    ): PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one ProductImage.
+     * @param {ProductImageUpsertArgs} args - Arguments to update or create a ProductImage.
+     * @example
+     * // Update or create a ProductImage
+     * const productImage = await prisma.productImage.upsert({
+     *   create: {
+     *     // ... data to create a ProductImage
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ProductImage we want to update
+     *   }
+     * })
+    **/
+    upsert<T extends ProductImageUpsertArgs>(
+      args: SelectSubset<T, ProductImageUpsertArgs>
+    ): Prisma__ProductImageClient<ProductImageGetPayload<T>>
+
+    /**
+     * Count the number of ProductImages.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductImageCountArgs} args - Arguments to filter ProductImages to count.
+     * @example
+     * // Count the number of ProductImages
+     * const count = await prisma.productImage.count({
+     *   where: {
+     *     // ... the filter for the ProductImages we want to count
+     *   }
+     * })
+    **/
+    count<T extends ProductImageCountArgs>(
+      args?: Subset<T, ProductImageCountArgs>,
+    ): PrismaPromise<
+      T extends _Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ProductImageCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ProductImage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductImageAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ProductImageAggregateArgs>(args: Subset<T, ProductImageAggregateArgs>): PrismaPromise<GetProductImageAggregateType<T>>
+
+    /**
+     * Group by ProductImage.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ProductImageGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ProductImageGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ProductImageGroupByArgs['orderBy'] }
+        : { orderBy?: ProductImageGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends TupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ProductImageGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetProductImageGroupByPayload<T> : PrismaPromise<InputErrors>
+
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ProductImage.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export class Prisma__ProductImageClient<T, Null = never> implements PrismaPromise<T> {
+    [prisma]: true;
+    private readonly _dmmf;
+    private readonly _fetcher;
+    private readonly _queryType;
+    private readonly _rootField;
+    private readonly _clientMethod;
+    private readonly _args;
+    private readonly _dataPath;
+    private readonly _errorFormat;
+    private readonly _measurePerformance?;
+    private _isList;
+    private _callsite;
+    private _requestPromise?;
+    constructor(_dmmf: runtime.DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
+    readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+
+    Product<T extends ProductArgs= {}>(args?: Subset<T, ProductArgs>): Prisma__ProductClient<ProductGetPayload<T> | Null>;
+
+    private get _document();
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): Promise<TResult1 | TResult2>;
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): Promise<T | TResult>;
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): Promise<T>;
+  }
+
+
+
+  // Custom InputTypes
+
+  /**
+   * ProductImage base type for findUnique actions
+   */
+  export type ProductImageFindUniqueArgsBase = {
+    /**
+     * Select specific fields to fetch from the ProductImage
+     * 
+    **/
+    select?: ProductImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductImageInclude | null
+    /**
+     * Filter, which ProductImage to fetch.
+     * 
+    **/
+    where: ProductImageWhereUniqueInput
+  }
+
+  /**
+   * ProductImage: findUnique
+   */
+  export interface ProductImageFindUniqueArgs extends ProductImageFindUniqueArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findUniqueOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ProductImage findUniqueOrThrow
+   */
+  export type ProductImageFindUniqueOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ProductImage
+     * 
+    **/
+    select?: ProductImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductImageInclude | null
+    /**
+     * Filter, which ProductImage to fetch.
+     * 
+    **/
+    where: ProductImageWhereUniqueInput
+  }
+
+
+  /**
+   * ProductImage base type for findFirst actions
+   */
+  export type ProductImageFindFirstArgsBase = {
+    /**
+     * Select specific fields to fetch from the ProductImage
+     * 
+    **/
+    select?: ProductImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductImageInclude | null
+    /**
+     * Filter, which ProductImage to fetch.
+     * 
+    **/
+    where?: ProductImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductImages to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductImages.
+     * 
+    **/
+    cursor?: ProductImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductImages from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductImages.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductImages.
+     * 
+    **/
+    distinct?: Enumerable<ProductImageScalarFieldEnum>
+  }
+
+  /**
+   * ProductImage: findFirst
+   */
+  export interface ProductImageFindFirstArgs extends ProductImageFindFirstArgsBase {
+   /**
+    * Throw an Error if query returns no results
+    * @deprecated since 4.0.0: use `findFirstOrThrow` method instead
+    */
+    rejectOnNotFound?: RejectOnNotFound
+  }
+      
+
+  /**
+   * ProductImage findFirstOrThrow
+   */
+  export type ProductImageFindFirstOrThrowArgs = {
+    /**
+     * Select specific fields to fetch from the ProductImage
+     * 
+    **/
+    select?: ProductImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductImageInclude | null
+    /**
+     * Filter, which ProductImage to fetch.
+     * 
+    **/
+    where?: ProductImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductImages to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ProductImages.
+     * 
+    **/
+    cursor?: ProductImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductImages from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductImages.
+     * 
+    **/
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ProductImages.
+     * 
+    **/
+    distinct?: Enumerable<ProductImageScalarFieldEnum>
+  }
+
+
+  /**
+   * ProductImage findMany
+   */
+  export type ProductImageFindManyArgs = {
+    /**
+     * Select specific fields to fetch from the ProductImage
+     * 
+    **/
+    select?: ProductImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductImageInclude | null
+    /**
+     * Filter, which ProductImages to fetch.
+     * 
+    **/
+    where?: ProductImageWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ProductImages to fetch.
+     * 
+    **/
+    orderBy?: Enumerable<ProductImageOrderByWithRelationInput>
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ProductImages.
+     * 
+    **/
+    cursor?: ProductImageWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ProductImages from the position of the cursor.
+     * 
+    **/
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ProductImages.
+     * 
+    **/
+    skip?: number
+    distinct?: Enumerable<ProductImageScalarFieldEnum>
+  }
+
+
+  /**
+   * ProductImage create
+   */
+  export type ProductImageCreateArgs = {
+    /**
+     * Select specific fields to fetch from the ProductImage
+     * 
+    **/
+    select?: ProductImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductImageInclude | null
+    /**
+     * The data needed to create a ProductImage.
+     * 
+    **/
+    data: XOR<ProductImageCreateInput, ProductImageUncheckedCreateInput>
+  }
+
+
+  /**
+   * ProductImage createMany
+   */
+  export type ProductImageCreateManyArgs = {
+    /**
+     * The data used to create many ProductImages.
+     * 
+    **/
+    data: Enumerable<ProductImageCreateManyInput>
+    skipDuplicates?: boolean
+  }
+
+
+  /**
+   * ProductImage update
+   */
+  export type ProductImageUpdateArgs = {
+    /**
+     * Select specific fields to fetch from the ProductImage
+     * 
+    **/
+    select?: ProductImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductImageInclude | null
+    /**
+     * The data needed to update a ProductImage.
+     * 
+    **/
+    data: XOR<ProductImageUpdateInput, ProductImageUncheckedUpdateInput>
+    /**
+     * Choose, which ProductImage to update.
+     * 
+    **/
+    where: ProductImageWhereUniqueInput
+  }
+
+
+  /**
+   * ProductImage updateMany
+   */
+  export type ProductImageUpdateManyArgs = {
+    /**
+     * The data used to update ProductImages.
+     * 
+    **/
+    data: XOR<ProductImageUpdateManyMutationInput, ProductImageUncheckedUpdateManyInput>
+    /**
+     * Filter which ProductImages to update
+     * 
+    **/
+    where?: ProductImageWhereInput
+  }
+
+
+  /**
+   * ProductImage upsert
+   */
+  export type ProductImageUpsertArgs = {
+    /**
+     * Select specific fields to fetch from the ProductImage
+     * 
+    **/
+    select?: ProductImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductImageInclude | null
+    /**
+     * The filter to search for the ProductImage to update in case it exists.
+     * 
+    **/
+    where: ProductImageWhereUniqueInput
+    /**
+     * In case the ProductImage found by the `where` argument doesn't exist, create a new ProductImage with this data.
+     * 
+    **/
+    create: XOR<ProductImageCreateInput, ProductImageUncheckedCreateInput>
+    /**
+     * In case the ProductImage was found with the provided `where` argument, update it with this data.
+     * 
+    **/
+    update: XOR<ProductImageUpdateInput, ProductImageUncheckedUpdateInput>
+  }
+
+
+  /**
+   * ProductImage delete
+   */
+  export type ProductImageDeleteArgs = {
+    /**
+     * Select specific fields to fetch from the ProductImage
+     * 
+    **/
+    select?: ProductImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductImageInclude | null
+    /**
+     * Filter which ProductImage to delete.
+     * 
+    **/
+    where: ProductImageWhereUniqueInput
+  }
+
+
+  /**
+   * ProductImage deleteMany
+   */
+  export type ProductImageDeleteManyArgs = {
+    /**
+     * Filter which ProductImages to delete
+     * 
+    **/
+    where?: ProductImageWhereInput
+  }
+
+
+  /**
+   * ProductImage without action
+   */
+  export type ProductImageArgs = {
+    /**
+     * Select specific fields to fetch from the ProductImage
+     * 
+    **/
+    select?: ProductImageSelect | null
+    /**
+     * Choose, which related nodes to fetch as well.
+     * 
+    **/
+    include?: ProductImageInclude | null
+  }
+
+
+
+  /**
    * Enums
    */
 
@@ -23207,6 +32105,15 @@ export namespace Prisma {
   export type CafeVirtualLinkThumbnailImageScalarFieldEnum = (typeof CafeVirtualLinkThumbnailImageScalarFieldEnum)[keyof typeof CafeVirtualLinkThumbnailImageScalarFieldEnum]
 
 
+  export const ClosureProductCategoryScalarFieldEnum: {
+    ancestor: 'ancestor',
+    descendant: 'descendant',
+    depth: 'depth'
+  };
+
+  export type ClosureProductCategoryScalarFieldEnum = (typeof ClosureProductCategoryScalarFieldEnum)[keyof typeof ClosureProductCategoryScalarFieldEnum]
+
+
   export const ClosureRegionCategoryScalarFieldEnum: {
     ancestor: 'ancestor',
     descendant: 'descendant',
@@ -23214,6 +32121,41 @@ export namespace Prisma {
   };
 
   export type ClosureRegionCategoryScalarFieldEnum = (typeof ClosureRegionCategoryScalarFieldEnum)[keyof typeof ClosureRegionCategoryScalarFieldEnum]
+
+
+  export const MetaViewerActiveMapScalarFieldEnum: {
+    id: 'id',
+    updatedAt: 'updatedAt',
+    metaViewerInfoId: 'metaViewerInfoId',
+    activeRenderMapId: 'activeRenderMapId',
+    activeColliderMapId: 'activeColliderMapId'
+  };
+
+  export type MetaViewerActiveMapScalarFieldEnum = (typeof MetaViewerActiveMapScalarFieldEnum)[keyof typeof MetaViewerActiveMapScalarFieldEnum]
+
+
+  export const MetaViewerInfoScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    code: 'code',
+    cafeInfoId: 'cafeInfoId'
+  };
+
+  export type MetaViewerInfoScalarFieldEnum = (typeof MetaViewerInfoScalarFieldEnum)[keyof typeof MetaViewerInfoScalarFieldEnum]
+
+
+  export const MetaViewerMapScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    type: 'type',
+    version: 'version',
+    url: 'url',
+    size: 'size',
+    isDisable: 'isDisable',
+    metaViewerInfoId: 'metaViewerInfoId'
+  };
+
+  export type MetaViewerMapScalarFieldEnum = (typeof MetaViewerMapScalarFieldEnum)[keyof typeof MetaViewerMapScalarFieldEnum]
 
 
   export const NoticeScalarFieldEnum: {
@@ -23226,6 +32168,56 @@ export namespace Prisma {
   };
 
   export type NoticeScalarFieldEnum = (typeof NoticeScalarFieldEnum)[keyof typeof NoticeScalarFieldEnum]
+
+
+  export const ProductCategoryScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    name: 'name',
+    description: 'description',
+    isDisable: 'isDisable',
+    code: 'code'
+  };
+
+  export type ProductCategoryScalarFieldEnum = (typeof ProductCategoryScalarFieldEnum)[keyof typeof ProductCategoryScalarFieldEnum]
+
+
+  export const ProductImageScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    url: 'url',
+    thumbnailUrl: 'thumbnailUrl',
+    width: 'width',
+    height: 'height',
+    size: 'size',
+    isDisable: 'isDisable',
+    isThumb: 'isThumb',
+    productId: 'productId'
+  };
+
+  export type ProductImageScalarFieldEnum = (typeof ProductImageScalarFieldEnum)[keyof typeof ProductImageScalarFieldEnum]
+
+
+  export const ProductScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    name: 'name',
+    code: 'code',
+    description: 'description',
+    price: 'price',
+    originalPrice: 'originalPrice',
+    stockQuantity: 'stockQuantity',
+    minOrderQuantity: 'minOrderQuantity',
+    isDisable: 'isDisable',
+    isAvailable: 'isAvailable',
+    categoryId: 'categoryId',
+    cafeInfoId: 'cafeInfoId',
+    productRedirectUrl: 'productRedirectUrl',
+    isSignature: 'isSignature'
+  };
+
+  export type ProductScalarFieldEnum = (typeof ProductScalarFieldEnum)[keyof typeof ProductScalarFieldEnum]
 
 
   export const ProxyUserScalarFieldEnum: {
@@ -23292,6 +32284,16 @@ export namespace Prisma {
   };
 
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+  export const WishlistProductScalarFieldEnum: {
+    id: 'id',
+    createdAt: 'createdAt',
+    productId: 'productId',
+    proxyUserId: 'proxyUserId'
+  };
+
+  export type WishlistProductScalarFieldEnum = (typeof WishlistProductScalarFieldEnum)[keyof typeof WishlistProductScalarFieldEnum]
 
 
   /**
@@ -23805,6 +32807,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageListRelationFilter
     CafeCouponGroupPartners?: CafeCouponGoupPartnerListRelationFilter
     CafeBoards?: CafeBoardListRelationFilter
+    MetaViewerInfos?: MetaViewerInfoListRelationFilter
+    Products?: ProductListRelationFilter
   }
 
   export type CafeInfoOrderByWithRelationInput = {
@@ -23825,6 +32829,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageOrderByRelationAggregateInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerOrderByRelationAggregateInput
     CafeBoards?: CafeBoardOrderByRelationAggregateInput
+    MetaViewerInfos?: MetaViewerInfoOrderByRelationAggregateInput
+    Products?: ProductOrderByRelationAggregateInput
   }
 
   export type CafeInfoWhereUniqueInput = {
@@ -24314,6 +33320,7 @@ export namespace Prisma {
     userId?: IntNullableFilter | number | null
     User?: XOR<UserRelationFilter, UserWhereInput> | null
     CafeCoupons?: CafeCouponListRelationFilter
+    WishlistProducts?: WishlistProductListRelationFilter
   }
 
   export type ProxyUserOrderByWithRelationInput = {
@@ -24326,6 +33333,7 @@ export namespace Prisma {
     userId?: SortOrder
     User?: UserOrderByWithRelationInput
     CafeCoupons?: CafeCouponOrderByRelationAggregateInput
+    WishlistProducts?: WishlistProductOrderByRelationAggregateInput
   }
 
   export type ProxyUserWhereUniqueInput = {
@@ -24551,6 +33559,493 @@ export namespace Prisma {
     cafeCouponId?: IntNullableWithAggregatesFilter | number | null
     size?: IntWithAggregatesFilter | number
     base64Data?: StringWithAggregatesFilter | string
+  }
+
+  export type MetaViewerInfoWhereInput = {
+    AND?: Enumerable<MetaViewerInfoWhereInput>
+    OR?: Enumerable<MetaViewerInfoWhereInput>
+    NOT?: Enumerable<MetaViewerInfoWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    code?: StringFilter | string
+    cafeInfoId?: IntFilter | number
+    CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput>
+    MetaViewerMaps?: MetaViewerMapListRelationFilter
+    ActiveMaps?: XOR<MetaViewerActiveMapRelationFilter, MetaViewerActiveMapWhereInput> | null
+  }
+
+  export type MetaViewerInfoOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    code?: SortOrder
+    cafeInfoId?: SortOrder
+    CafeInfo?: CafeInfoOrderByWithRelationInput
+    MetaViewerMaps?: MetaViewerMapOrderByRelationAggregateInput
+    ActiveMaps?: MetaViewerActiveMapOrderByWithRelationInput
+  }
+
+  export type MetaViewerInfoWhereUniqueInput = {
+    id?: number
+    code?: string
+  }
+
+  export type MetaViewerInfoOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    code?: SortOrder
+    cafeInfoId?: SortOrder
+    _count?: MetaViewerInfoCountOrderByAggregateInput
+    _avg?: MetaViewerInfoAvgOrderByAggregateInput
+    _max?: MetaViewerInfoMaxOrderByAggregateInput
+    _min?: MetaViewerInfoMinOrderByAggregateInput
+    _sum?: MetaViewerInfoSumOrderByAggregateInput
+  }
+
+  export type MetaViewerInfoScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<MetaViewerInfoScalarWhereWithAggregatesInput>
+    OR?: Enumerable<MetaViewerInfoScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<MetaViewerInfoScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    code?: StringWithAggregatesFilter | string
+    cafeInfoId?: IntWithAggregatesFilter | number
+  }
+
+  export type MetaViewerMapWhereInput = {
+    AND?: Enumerable<MetaViewerMapWhereInput>
+    OR?: Enumerable<MetaViewerMapWhereInput>
+    NOT?: Enumerable<MetaViewerMapWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    type?: EnumMetaMapTypeFilter | MetaMapType
+    version?: IntFilter | number
+    url?: StringFilter | string
+    size?: IntFilter | number
+    isDisable?: BoolFilter | boolean
+    metaViewerInfoId?: IntFilter | number
+    MetaViewerInfo?: XOR<MetaViewerInfoRelationFilter, MetaViewerInfoWhereInput>
+    ActiveRenderFor?: MetaViewerActiveMapListRelationFilter
+    ActiveColliderFor?: MetaViewerActiveMapListRelationFilter
+  }
+
+  export type MetaViewerMapOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    type?: SortOrder
+    version?: SortOrder
+    url?: SortOrder
+    size?: SortOrder
+    isDisable?: SortOrder
+    metaViewerInfoId?: SortOrder
+    MetaViewerInfo?: MetaViewerInfoOrderByWithRelationInput
+    ActiveRenderFor?: MetaViewerActiveMapOrderByRelationAggregateInput
+    ActiveColliderFor?: MetaViewerActiveMapOrderByRelationAggregateInput
+  }
+
+  export type MetaViewerMapWhereUniqueInput = {
+    id?: number
+  }
+
+  export type MetaViewerMapOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    type?: SortOrder
+    version?: SortOrder
+    url?: SortOrder
+    size?: SortOrder
+    isDisable?: SortOrder
+    metaViewerInfoId?: SortOrder
+    _count?: MetaViewerMapCountOrderByAggregateInput
+    _avg?: MetaViewerMapAvgOrderByAggregateInput
+    _max?: MetaViewerMapMaxOrderByAggregateInput
+    _min?: MetaViewerMapMinOrderByAggregateInput
+    _sum?: MetaViewerMapSumOrderByAggregateInput
+  }
+
+  export type MetaViewerMapScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<MetaViewerMapScalarWhereWithAggregatesInput>
+    OR?: Enumerable<MetaViewerMapScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<MetaViewerMapScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    type?: EnumMetaMapTypeWithAggregatesFilter | MetaMapType
+    version?: IntWithAggregatesFilter | number
+    url?: StringWithAggregatesFilter | string
+    size?: IntWithAggregatesFilter | number
+    isDisable?: BoolWithAggregatesFilter | boolean
+    metaViewerInfoId?: IntWithAggregatesFilter | number
+  }
+
+  export type MetaViewerActiveMapWhereInput = {
+    AND?: Enumerable<MetaViewerActiveMapWhereInput>
+    OR?: Enumerable<MetaViewerActiveMapWhereInput>
+    NOT?: Enumerable<MetaViewerActiveMapWhereInput>
+    id?: IntFilter | number
+    updatedAt?: DateTimeFilter | Date | string
+    metaViewerInfoId?: IntFilter | number
+    MetaViewerInfo?: XOR<MetaViewerInfoRelationFilter, MetaViewerInfoWhereInput>
+    activeRenderMapId?: IntFilter | number
+    ActiveRenderMap?: XOR<MetaViewerMapRelationFilter, MetaViewerMapWhereInput>
+    activeColliderMapId?: IntFilter | number
+    ActiveColliderMap?: XOR<MetaViewerMapRelationFilter, MetaViewerMapWhereInput>
+  }
+
+  export type MetaViewerActiveMapOrderByWithRelationInput = {
+    id?: SortOrder
+    updatedAt?: SortOrder
+    metaViewerInfoId?: SortOrder
+    MetaViewerInfo?: MetaViewerInfoOrderByWithRelationInput
+    activeRenderMapId?: SortOrder
+    ActiveRenderMap?: MetaViewerMapOrderByWithRelationInput
+    activeColliderMapId?: SortOrder
+    ActiveColliderMap?: MetaViewerMapOrderByWithRelationInput
+  }
+
+  export type MetaViewerActiveMapWhereUniqueInput = {
+    id?: number
+    metaViewerInfoId?: number
+  }
+
+  export type MetaViewerActiveMapOrderByWithAggregationInput = {
+    id?: SortOrder
+    updatedAt?: SortOrder
+    metaViewerInfoId?: SortOrder
+    activeRenderMapId?: SortOrder
+    activeColliderMapId?: SortOrder
+    _count?: MetaViewerActiveMapCountOrderByAggregateInput
+    _avg?: MetaViewerActiveMapAvgOrderByAggregateInput
+    _max?: MetaViewerActiveMapMaxOrderByAggregateInput
+    _min?: MetaViewerActiveMapMinOrderByAggregateInput
+    _sum?: MetaViewerActiveMapSumOrderByAggregateInput
+  }
+
+  export type MetaViewerActiveMapScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<MetaViewerActiveMapScalarWhereWithAggregatesInput>
+    OR?: Enumerable<MetaViewerActiveMapScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<MetaViewerActiveMapScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
+    metaViewerInfoId?: IntWithAggregatesFilter | number
+    activeRenderMapId?: IntWithAggregatesFilter | number
+    activeColliderMapId?: IntWithAggregatesFilter | number
+  }
+
+  export type ProductCategoryWhereInput = {
+    AND?: Enumerable<ProductCategoryWhereInput>
+    OR?: Enumerable<ProductCategoryWhereInput>
+    NOT?: Enumerable<ProductCategoryWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    name?: StringFilter | string
+    description?: StringNullableFilter | string | null
+    isDisable?: BoolFilter | boolean
+    code?: StringFilter | string
+    AncestorCategories?: ClosureProductCategoryListRelationFilter
+    DescendantCategories?: ClosureProductCategoryListRelationFilter
+    Products?: ProductListRelationFilter
+  }
+
+  export type ProductCategoryOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isDisable?: SortOrder
+    code?: SortOrder
+    AncestorCategories?: ClosureProductCategoryOrderByRelationAggregateInput
+    DescendantCategories?: ClosureProductCategoryOrderByRelationAggregateInput
+    Products?: ProductOrderByRelationAggregateInput
+  }
+
+  export type ProductCategoryWhereUniqueInput = {
+    id?: number
+    code?: string
+  }
+
+  export type ProductCategoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isDisable?: SortOrder
+    code?: SortOrder
+    _count?: ProductCategoryCountOrderByAggregateInput
+    _avg?: ProductCategoryAvgOrderByAggregateInput
+    _max?: ProductCategoryMaxOrderByAggregateInput
+    _min?: ProductCategoryMinOrderByAggregateInput
+    _sum?: ProductCategorySumOrderByAggregateInput
+  }
+
+  export type ProductCategoryScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ProductCategoryScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ProductCategoryScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ProductCategoryScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    name?: StringWithAggregatesFilter | string
+    description?: StringNullableWithAggregatesFilter | string | null
+    isDisable?: BoolWithAggregatesFilter | boolean
+    code?: StringWithAggregatesFilter | string
+  }
+
+  export type ClosureProductCategoryWhereInput = {
+    AND?: Enumerable<ClosureProductCategoryWhereInput>
+    OR?: Enumerable<ClosureProductCategoryWhereInput>
+    NOT?: Enumerable<ClosureProductCategoryWhereInput>
+    ancestor?: IntFilter | number
+    descendant?: IntFilter | number
+    depth?: IntFilter | number
+    AncestorCategory?: XOR<ProductCategoryRelationFilter, ProductCategoryWhereInput>
+    DescendantCategory?: XOR<ProductCategoryRelationFilter, ProductCategoryWhereInput>
+  }
+
+  export type ClosureProductCategoryOrderByWithRelationInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+    AncestorCategory?: ProductCategoryOrderByWithRelationInput
+    DescendantCategory?: ProductCategoryOrderByWithRelationInput
+  }
+
+  export type ClosureProductCategoryWhereUniqueInput = {
+    productCategoryTreeUnique?: ClosureProductCategoryProductCategoryTreeUniqueCompoundUniqueInput
+  }
+
+  export type ClosureProductCategoryOrderByWithAggregationInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+    _count?: ClosureProductCategoryCountOrderByAggregateInput
+    _avg?: ClosureProductCategoryAvgOrderByAggregateInput
+    _max?: ClosureProductCategoryMaxOrderByAggregateInput
+    _min?: ClosureProductCategoryMinOrderByAggregateInput
+    _sum?: ClosureProductCategorySumOrderByAggregateInput
+  }
+
+  export type ClosureProductCategoryScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ClosureProductCategoryScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ClosureProductCategoryScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ClosureProductCategoryScalarWhereWithAggregatesInput>
+    ancestor?: IntWithAggregatesFilter | number
+    descendant?: IntWithAggregatesFilter | number
+    depth?: IntWithAggregatesFilter | number
+  }
+
+  export type ProductWhereInput = {
+    AND?: Enumerable<ProductWhereInput>
+    OR?: Enumerable<ProductWhereInput>
+    NOT?: Enumerable<ProductWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    name?: StringFilter | string
+    code?: StringFilter | string
+    description?: StringNullableFilter | string | null
+    price?: IntFilter | number
+    originalPrice?: IntNullableFilter | number | null
+    stockQuantity?: IntFilter | number
+    minOrderQuantity?: IntFilter | number
+    isDisable?: BoolFilter | boolean
+    isAvailable?: BoolFilter | boolean
+    categoryId?: IntFilter | number
+    ProductCategory?: XOR<ProductCategoryRelationFilter, ProductCategoryWhereInput>
+    cafeInfoId?: IntNullableFilter | number | null
+    CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput> | null
+    WishlistProducts?: WishlistProductListRelationFilter
+    ProductImages?: ProductImageListRelationFilter
+    productRedirectUrl?: StringNullableFilter | string | null
+    isSignature?: BoolFilter | boolean
+  }
+
+  export type ProductOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrder
+    stockQuantity?: SortOrder
+    minOrderQuantity?: SortOrder
+    isDisable?: SortOrder
+    isAvailable?: SortOrder
+    categoryId?: SortOrder
+    ProductCategory?: ProductCategoryOrderByWithRelationInput
+    cafeInfoId?: SortOrder
+    CafeInfo?: CafeInfoOrderByWithRelationInput
+    WishlistProducts?: WishlistProductOrderByRelationAggregateInput
+    ProductImages?: ProductImageOrderByRelationAggregateInput
+    productRedirectUrl?: SortOrder
+    isSignature?: SortOrder
+  }
+
+  export type ProductWhereUniqueInput = {
+    id?: number
+    code?: string
+  }
+
+  export type ProductOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrder
+    stockQuantity?: SortOrder
+    minOrderQuantity?: SortOrder
+    isDisable?: SortOrder
+    isAvailable?: SortOrder
+    categoryId?: SortOrder
+    cafeInfoId?: SortOrder
+    productRedirectUrl?: SortOrder
+    isSignature?: SortOrder
+    _count?: ProductCountOrderByAggregateInput
+    _avg?: ProductAvgOrderByAggregateInput
+    _max?: ProductMaxOrderByAggregateInput
+    _min?: ProductMinOrderByAggregateInput
+    _sum?: ProductSumOrderByAggregateInput
+  }
+
+  export type ProductScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ProductScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ProductScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ProductScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter | Date | string
+    name?: StringWithAggregatesFilter | string
+    code?: StringWithAggregatesFilter | string
+    description?: StringNullableWithAggregatesFilter | string | null
+    price?: IntWithAggregatesFilter | number
+    originalPrice?: IntNullableWithAggregatesFilter | number | null
+    stockQuantity?: IntWithAggregatesFilter | number
+    minOrderQuantity?: IntWithAggregatesFilter | number
+    isDisable?: BoolWithAggregatesFilter | boolean
+    isAvailable?: BoolWithAggregatesFilter | boolean
+    categoryId?: IntWithAggregatesFilter | number
+    cafeInfoId?: IntNullableWithAggregatesFilter | number | null
+    productRedirectUrl?: StringNullableWithAggregatesFilter | string | null
+    isSignature?: BoolWithAggregatesFilter | boolean
+  }
+
+  export type WishlistProductWhereInput = {
+    AND?: Enumerable<WishlistProductWhereInput>
+    OR?: Enumerable<WishlistProductWhereInput>
+    NOT?: Enumerable<WishlistProductWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    productId?: IntFilter | number
+    Product?: XOR<ProductRelationFilter, ProductWhereInput>
+    proxyUserId?: IntFilter | number
+    ProxyUser?: XOR<ProxyUserRelationFilter, ProxyUserWhereInput>
+  }
+
+  export type WishlistProductOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    productId?: SortOrder
+    Product?: ProductOrderByWithRelationInput
+    proxyUserId?: SortOrder
+    ProxyUser?: ProxyUserOrderByWithRelationInput
+  }
+
+  export type WishlistProductWhereUniqueInput = {
+    id?: number
+    wishlistProductUnique?: WishlistProductWishlistProductUniqueCompoundUniqueInput
+  }
+
+  export type WishlistProductOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    productId?: SortOrder
+    proxyUserId?: SortOrder
+    _count?: WishlistProductCountOrderByAggregateInput
+    _avg?: WishlistProductAvgOrderByAggregateInput
+    _max?: WishlistProductMaxOrderByAggregateInput
+    _min?: WishlistProductMinOrderByAggregateInput
+    _sum?: WishlistProductSumOrderByAggregateInput
+  }
+
+  export type WishlistProductScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<WishlistProductScalarWhereWithAggregatesInput>
+    OR?: Enumerable<WishlistProductScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<WishlistProductScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    productId?: IntWithAggregatesFilter | number
+    proxyUserId?: IntWithAggregatesFilter | number
+  }
+
+  export type ProductImageWhereInput = {
+    AND?: Enumerable<ProductImageWhereInput>
+    OR?: Enumerable<ProductImageWhereInput>
+    NOT?: Enumerable<ProductImageWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    url?: StringFilter | string
+    thumbnailUrl?: StringFilter | string
+    width?: IntFilter | number
+    height?: IntFilter | number
+    size?: IntFilter | number
+    isDisable?: BoolFilter | boolean
+    isThumb?: BoolFilter | boolean
+    productId?: IntFilter | number
+    Product?: XOR<ProductRelationFilter, ProductWhereInput>
+  }
+
+  export type ProductImageOrderByWithRelationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    url?: SortOrder
+    thumbnailUrl?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    isDisable?: SortOrder
+    isThumb?: SortOrder
+    productId?: SortOrder
+    Product?: ProductOrderByWithRelationInput
+  }
+
+  export type ProductImageWhereUniqueInput = {
+    id?: number
+  }
+
+  export type ProductImageOrderByWithAggregationInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    url?: SortOrder
+    thumbnailUrl?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    isDisable?: SortOrder
+    isThumb?: SortOrder
+    productId?: SortOrder
+    _count?: ProductImageCountOrderByAggregateInput
+    _avg?: ProductImageAvgOrderByAggregateInput
+    _max?: ProductImageMaxOrderByAggregateInput
+    _min?: ProductImageMinOrderByAggregateInput
+    _sum?: ProductImageSumOrderByAggregateInput
+  }
+
+  export type ProductImageScalarWhereWithAggregatesInput = {
+    AND?: Enumerable<ProductImageScalarWhereWithAggregatesInput>
+    OR?: Enumerable<ProductImageScalarWhereWithAggregatesInput>
+    NOT?: Enumerable<ProductImageScalarWhereWithAggregatesInput>
+    id?: IntWithAggregatesFilter | number
+    createdAt?: DateTimeWithAggregatesFilter | Date | string
+    url?: StringWithAggregatesFilter | string
+    thumbnailUrl?: StringWithAggregatesFilter | string
+    width?: IntWithAggregatesFilter | number
+    height?: IntWithAggregatesFilter | number
+    size?: IntWithAggregatesFilter | number
+    isDisable?: BoolWithAggregatesFilter | boolean
+    isThumb?: BoolWithAggregatesFilter | boolean
+    productId?: IntWithAggregatesFilter | number
   }
 
   export type UserCreateInput = {
@@ -25149,6 +34644,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateInput = {
@@ -25168,6 +34665,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUpdateInput = {
@@ -25186,6 +34685,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateInput = {
@@ -25205,6 +34706,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateManyInput = {
@@ -25779,6 +35282,7 @@ export namespace Prisma {
     token: string
     User?: UserCreateNestedOneWithoutProxyUsersInput
     CafeCoupons?: CafeCouponCreateNestedManyWithoutProxyUserInput
+    WishlistProducts?: WishlistProductCreateNestedManyWithoutProxyUserInput
   }
 
   export type ProxyUserUncheckedCreateInput = {
@@ -25790,6 +35294,7 @@ export namespace Prisma {
     token: string
     userId?: number | null
     CafeCoupons?: CafeCouponUncheckedCreateNestedManyWithoutProxyUserInput
+    WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProxyUserInput
   }
 
   export type ProxyUserUpdateInput = {
@@ -25800,6 +35305,7 @@ export namespace Prisma {
     token?: StringFieldUpdateOperationsInput | string
     User?: UserUpdateOneWithoutProxyUsersNestedInput
     CafeCoupons?: CafeCouponUpdateManyWithoutProxyUserNestedInput
+    WishlistProducts?: WishlistProductUpdateManyWithoutProxyUserNestedInput
   }
 
   export type ProxyUserUncheckedUpdateInput = {
@@ -25811,6 +35317,7 @@ export namespace Prisma {
     token?: StringFieldUpdateOperationsInput | string
     userId?: NullableIntFieldUpdateOperationsInput | number | null
     CafeCoupons?: CafeCouponUncheckedUpdateManyWithoutProxyUserNestedInput
+    WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProxyUserNestedInput
   }
 
   export type ProxyUserCreateManyInput = {
@@ -26067,6 +35574,569 @@ export namespace Prisma {
     cafeCouponId?: NullableIntFieldUpdateOperationsInput | number | null
     size?: IntFieldUpdateOperationsInput | number
     base64Data?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MetaViewerInfoCreateInput = {
+    createdAt?: Date | string
+    code: string
+    CafeInfo: CafeInfoCreateNestedOneWithoutMetaViewerInfosInput
+    MetaViewerMaps?: MetaViewerMapCreateNestedManyWithoutMetaViewerInfoInput
+    ActiveMaps?: MetaViewerActiveMapCreateNestedOneWithoutMetaViewerInfoInput
+  }
+
+  export type MetaViewerInfoUncheckedCreateInput = {
+    id?: number
+    createdAt?: Date | string
+    code: string
+    cafeInfoId: number
+    MetaViewerMaps?: MetaViewerMapUncheckedCreateNestedManyWithoutMetaViewerInfoInput
+    ActiveMaps?: MetaViewerActiveMapUncheckedCreateNestedOneWithoutMetaViewerInfoInput
+  }
+
+  export type MetaViewerInfoUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutMetaViewerInfosNestedInput
+    MetaViewerMaps?: MetaViewerMapUpdateManyWithoutMetaViewerInfoNestedInput
+    ActiveMaps?: MetaViewerActiveMapUpdateOneWithoutMetaViewerInfoNestedInput
+  }
+
+  export type MetaViewerInfoUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+    MetaViewerMaps?: MetaViewerMapUncheckedUpdateManyWithoutMetaViewerInfoNestedInput
+    ActiveMaps?: MetaViewerActiveMapUncheckedUpdateOneWithoutMetaViewerInfoNestedInput
+  }
+
+  export type MetaViewerInfoCreateManyInput = {
+    id?: number
+    createdAt?: Date | string
+    code: string
+    cafeInfoId: number
+  }
+
+  export type MetaViewerInfoUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type MetaViewerInfoUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MetaViewerMapCreateInput = {
+    createdAt?: Date | string
+    type: MetaMapType
+    version?: number
+    url: string
+    size: number
+    isDisable?: boolean
+    MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutMetaViewerMapsInput
+    ActiveRenderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveRenderMapInput
+    ActiveColliderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveColliderMapInput
+  }
+
+  export type MetaViewerMapUncheckedCreateInput = {
+    id?: number
+    createdAt?: Date | string
+    type: MetaMapType
+    version?: number
+    url: string
+    size: number
+    isDisable?: boolean
+    metaViewerInfoId: number
+    ActiveRenderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveRenderMapInput
+    ActiveColliderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveColliderMapInput
+  }
+
+  export type MetaViewerMapUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput
+    ActiveRenderFor?: MetaViewerActiveMapUpdateManyWithoutActiveRenderMapNestedInput
+    ActiveColliderFor?: MetaViewerActiveMapUpdateManyWithoutActiveColliderMapNestedInput
+  }
+
+  export type MetaViewerMapUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    metaViewerInfoId?: IntFieldUpdateOperationsInput | number
+    ActiveRenderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderMapNestedInput
+    ActiveColliderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderMapNestedInput
+  }
+
+  export type MetaViewerMapCreateManyInput = {
+    id?: number
+    createdAt?: Date | string
+    type: MetaMapType
+    version?: number
+    url: string
+    size: number
+    isDisable?: boolean
+    metaViewerInfoId: number
+  }
+
+  export type MetaViewerMapUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type MetaViewerMapUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    metaViewerInfoId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MetaViewerActiveMapCreateInput = {
+    updatedAt?: Date | string
+    MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutActiveMapsInput
+    ActiveRenderMap: MetaViewerMapCreateNestedOneWithoutActiveRenderForInput
+    ActiveColliderMap: MetaViewerMapCreateNestedOneWithoutActiveColliderForInput
+  }
+
+  export type MetaViewerActiveMapUncheckedCreateInput = {
+    id?: number
+    updatedAt?: Date | string
+    metaViewerInfoId: number
+    activeRenderMapId: number
+    activeColliderMapId: number
+  }
+
+  export type MetaViewerActiveMapUpdateInput = {
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutActiveMapsNestedInput
+    ActiveRenderMap?: MetaViewerMapUpdateOneRequiredWithoutActiveRenderForNestedInput
+    ActiveColliderMap?: MetaViewerMapUpdateOneRequiredWithoutActiveColliderForNestedInput
+  }
+
+  export type MetaViewerActiveMapUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metaViewerInfoId?: IntFieldUpdateOperationsInput | number
+    activeRenderMapId?: IntFieldUpdateOperationsInput | number
+    activeColliderMapId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MetaViewerActiveMapCreateManyInput = {
+    id?: number
+    updatedAt?: Date | string
+    metaViewerInfoId: number
+    activeRenderMapId: number
+    activeColliderMapId: number
+  }
+
+  export type MetaViewerActiveMapUpdateManyMutationInput = {
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MetaViewerActiveMapUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metaViewerInfoId?: IntFieldUpdateOperationsInput | number
+    activeRenderMapId?: IntFieldUpdateOperationsInput | number
+    activeColliderMapId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProductCategoryCreateInput = {
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    AncestorCategories?: ClosureProductCategoryCreateNestedManyWithoutAncestorCategoryInput
+    DescendantCategories?: ClosureProductCategoryCreateNestedManyWithoutDescendantCategoryInput
+    Products?: ProductCreateNestedManyWithoutProductCategoryInput
+  }
+
+  export type ProductCategoryUncheckedCreateInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    AncestorCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
+    DescendantCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
+    Products?: ProductUncheckedCreateNestedManyWithoutProductCategoryInput
+  }
+
+  export type ProductCategoryUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    AncestorCategories?: ClosureProductCategoryUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureProductCategoryUpdateManyWithoutDescendantCategoryNestedInput
+    Products?: ProductUpdateManyWithoutProductCategoryNestedInput
+  }
+
+  export type ProductCategoryUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    AncestorCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutProductCategoryNestedInput
+  }
+
+  export type ProductCategoryCreateManyInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+  }
+
+  export type ProductCategoryUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProductCategoryUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ClosureProductCategoryCreateInput = {
+    depth?: number
+    AncestorCategory: ProductCategoryCreateNestedOneWithoutAncestorCategoriesInput
+    DescendantCategory: ProductCategoryCreateNestedOneWithoutDescendantCategoriesInput
+  }
+
+  export type ClosureProductCategoryUncheckedCreateInput = {
+    ancestor: number
+    descendant: number
+    depth?: number
+  }
+
+  export type ClosureProductCategoryUpdateInput = {
+    depth?: IntFieldUpdateOperationsInput | number
+    AncestorCategory?: ProductCategoryUpdateOneRequiredWithoutAncestorCategoriesNestedInput
+    DescendantCategory?: ProductCategoryUpdateOneRequiredWithoutDescendantCategoriesNestedInput
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateInput = {
+    ancestor?: IntFieldUpdateOperationsInput | number
+    descendant?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ClosureProductCategoryCreateManyInput = {
+    ancestor: number
+    descendant: number
+    depth?: number
+  }
+
+  export type ClosureProductCategoryUpdateManyMutationInput = {
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateManyInput = {
+    ancestor?: IntFieldUpdateOperationsInput | number
+    descendant?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProductCreateInput = {
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
+    CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
+    WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
+    ProductImages?: ProductImageCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductUncheckedCreateInput = {
+    id?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    categoryId: number
+    cafeInfoId?: number | null
+    WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProductInput
+    ProductImages?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
+    CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
+    WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
+    ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    categoryId?: IntFieldUpdateOperationsInput | number
+    cafeInfoId?: NullableIntFieldUpdateOperationsInput | number | null
+    WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProductNestedInput
+    ProductImages?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductCreateManyInput = {
+    id?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    categoryId: number
+    cafeInfoId?: number | null
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    categoryId?: IntFieldUpdateOperationsInput | number
+    cafeInfoId?: NullableIntFieldUpdateOperationsInput | number | null
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type WishlistProductCreateInput = {
+    createdAt?: Date | string
+    Product: ProductCreateNestedOneWithoutWishlistProductsInput
+    ProxyUser: ProxyUserCreateNestedOneWithoutWishlistProductsInput
+  }
+
+  export type WishlistProductUncheckedCreateInput = {
+    id?: number
+    createdAt?: Date | string
+    productId: number
+    proxyUserId: number
+  }
+
+  export type WishlistProductUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Product?: ProductUpdateOneRequiredWithoutWishlistProductsNestedInput
+    ProxyUser?: ProxyUserUpdateOneRequiredWithoutWishlistProductsNestedInput
+  }
+
+  export type WishlistProductUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: IntFieldUpdateOperationsInput | number
+    proxyUserId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WishlistProductCreateManyInput = {
+    id?: number
+    createdAt?: Date | string
+    productId: number
+    proxyUserId: number
+  }
+
+  export type WishlistProductUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type WishlistProductUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: IntFieldUpdateOperationsInput | number
+    proxyUserId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProductImageCreateInput = {
+    createdAt?: Date | string
+    url: string
+    thumbnailUrl: string
+    width: number
+    height: number
+    size: number
+    isDisable?: boolean
+    isThumb?: boolean
+    Product: ProductCreateNestedOneWithoutProductImagesInput
+  }
+
+  export type ProductImageUncheckedCreateInput = {
+    id?: number
+    createdAt?: Date | string
+    url: string
+    thumbnailUrl: string
+    width: number
+    height: number
+    size: number
+    isDisable?: boolean
+    isThumb?: boolean
+    productId: number
+  }
+
+  export type ProductImageUpdateInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
+    Product?: ProductUpdateOneRequiredWithoutProductImagesNestedInput
+  }
+
+  export type ProductImageUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
+    productId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProductImageCreateManyInput = {
+    id?: number
+    createdAt?: Date | string
+    url: string
+    thumbnailUrl: string
+    width: number
+    height: number
+    size: number
+    isDisable?: boolean
+    isThumb?: boolean
+    productId: number
+  }
+
+  export type ProductImageUpdateManyMutationInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductImageUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
+    productId?: IntFieldUpdateOperationsInput | number
   }
 
   export type IntFilter = {
@@ -26809,6 +36879,18 @@ export namespace Prisma {
     none?: CafeCouponGoupPartnerWhereInput
   }
 
+  export type MetaViewerInfoListRelationFilter = {
+    every?: MetaViewerInfoWhereInput
+    some?: MetaViewerInfoWhereInput
+    none?: MetaViewerInfoWhereInput
+  }
+
+  export type ProductListRelationFilter = {
+    every?: ProductWhereInput
+    some?: ProductWhereInput
+    none?: ProductWhereInput
+  }
+
   export type CafeVirtualLinkOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -26826,6 +36908,14 @@ export namespace Prisma {
   }
 
   export type CafeCouponGoupPartnerOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MetaViewerInfoOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProductOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -27244,6 +37334,16 @@ export namespace Prisma {
     not?: NestedEnumProxyUserTypeFilter | ProxyUserType
   }
 
+  export type WishlistProductListRelationFilter = {
+    every?: WishlistProductWhereInput
+    some?: WishlistProductWhereInput
+    none?: WishlistProductWhereInput
+  }
+
+  export type WishlistProductOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type ProxyUserProxyUserUniqueCompoundUniqueInput = {
     memberId: string
     proxyUserType: ProxyUserType
@@ -27484,6 +37584,445 @@ export namespace Prisma {
   export type CafeCouponQRCodeSumOrderByAggregateInput = {
     cafeCouponId?: SortOrder
     size?: SortOrder
+  }
+
+  export type MetaViewerMapListRelationFilter = {
+    every?: MetaViewerMapWhereInput
+    some?: MetaViewerMapWhereInput
+    none?: MetaViewerMapWhereInput
+  }
+
+  export type MetaViewerActiveMapRelationFilter = {
+    is?: MetaViewerActiveMapWhereInput | null
+    isNot?: MetaViewerActiveMapWhereInput | null
+  }
+
+  export type MetaViewerMapOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MetaViewerInfoCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    code?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type MetaViewerInfoAvgOrderByAggregateInput = {
+    id?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type MetaViewerInfoMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    code?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type MetaViewerInfoMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    code?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type MetaViewerInfoSumOrderByAggregateInput = {
+    id?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type EnumMetaMapTypeFilter = {
+    equals?: MetaMapType
+    in?: Enumerable<MetaMapType>
+    notIn?: Enumerable<MetaMapType>
+    not?: NestedEnumMetaMapTypeFilter | MetaMapType
+  }
+
+  export type MetaViewerInfoRelationFilter = {
+    is?: MetaViewerInfoWhereInput
+    isNot?: MetaViewerInfoWhereInput
+  }
+
+  export type MetaViewerActiveMapListRelationFilter = {
+    every?: MetaViewerActiveMapWhereInput
+    some?: MetaViewerActiveMapWhereInput
+    none?: MetaViewerActiveMapWhereInput
+  }
+
+  export type MetaViewerActiveMapOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type MetaViewerMapCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    type?: SortOrder
+    version?: SortOrder
+    url?: SortOrder
+    size?: SortOrder
+    isDisable?: SortOrder
+    metaViewerInfoId?: SortOrder
+  }
+
+  export type MetaViewerMapAvgOrderByAggregateInput = {
+    id?: SortOrder
+    version?: SortOrder
+    size?: SortOrder
+    metaViewerInfoId?: SortOrder
+  }
+
+  export type MetaViewerMapMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    type?: SortOrder
+    version?: SortOrder
+    url?: SortOrder
+    size?: SortOrder
+    isDisable?: SortOrder
+    metaViewerInfoId?: SortOrder
+  }
+
+  export type MetaViewerMapMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    type?: SortOrder
+    version?: SortOrder
+    url?: SortOrder
+    size?: SortOrder
+    isDisable?: SortOrder
+    metaViewerInfoId?: SortOrder
+  }
+
+  export type MetaViewerMapSumOrderByAggregateInput = {
+    id?: SortOrder
+    version?: SortOrder
+    size?: SortOrder
+    metaViewerInfoId?: SortOrder
+  }
+
+  export type EnumMetaMapTypeWithAggregatesFilter = {
+    equals?: MetaMapType
+    in?: Enumerable<MetaMapType>
+    notIn?: Enumerable<MetaMapType>
+    not?: NestedEnumMetaMapTypeWithAggregatesFilter | MetaMapType
+    _count?: NestedIntFilter
+    _min?: NestedEnumMetaMapTypeFilter
+    _max?: NestedEnumMetaMapTypeFilter
+  }
+
+  export type MetaViewerMapRelationFilter = {
+    is?: MetaViewerMapWhereInput
+    isNot?: MetaViewerMapWhereInput
+  }
+
+  export type MetaViewerActiveMapCountOrderByAggregateInput = {
+    id?: SortOrder
+    updatedAt?: SortOrder
+    metaViewerInfoId?: SortOrder
+    activeRenderMapId?: SortOrder
+    activeColliderMapId?: SortOrder
+  }
+
+  export type MetaViewerActiveMapAvgOrderByAggregateInput = {
+    id?: SortOrder
+    metaViewerInfoId?: SortOrder
+    activeRenderMapId?: SortOrder
+    activeColliderMapId?: SortOrder
+  }
+
+  export type MetaViewerActiveMapMaxOrderByAggregateInput = {
+    id?: SortOrder
+    updatedAt?: SortOrder
+    metaViewerInfoId?: SortOrder
+    activeRenderMapId?: SortOrder
+    activeColliderMapId?: SortOrder
+  }
+
+  export type MetaViewerActiveMapMinOrderByAggregateInput = {
+    id?: SortOrder
+    updatedAt?: SortOrder
+    metaViewerInfoId?: SortOrder
+    activeRenderMapId?: SortOrder
+    activeColliderMapId?: SortOrder
+  }
+
+  export type MetaViewerActiveMapSumOrderByAggregateInput = {
+    id?: SortOrder
+    metaViewerInfoId?: SortOrder
+    activeRenderMapId?: SortOrder
+    activeColliderMapId?: SortOrder
+  }
+
+  export type ClosureProductCategoryListRelationFilter = {
+    every?: ClosureProductCategoryWhereInput
+    some?: ClosureProductCategoryWhereInput
+    none?: ClosureProductCategoryWhereInput
+  }
+
+  export type ClosureProductCategoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProductCategoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isDisable?: SortOrder
+    code?: SortOrder
+  }
+
+  export type ProductCategoryAvgOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type ProductCategoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isDisable?: SortOrder
+    code?: SortOrder
+  }
+
+  export type ProductCategoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    isDisable?: SortOrder
+    code?: SortOrder
+  }
+
+  export type ProductCategorySumOrderByAggregateInput = {
+    id?: SortOrder
+  }
+
+  export type ProductCategoryRelationFilter = {
+    is?: ProductCategoryWhereInput
+    isNot?: ProductCategoryWhereInput
+  }
+
+  export type ClosureProductCategoryProductCategoryTreeUniqueCompoundUniqueInput = {
+    ancestor: number
+    descendant: number
+    depth: number
+  }
+
+  export type ClosureProductCategoryCountOrderByAggregateInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+  }
+
+  export type ClosureProductCategoryAvgOrderByAggregateInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+  }
+
+  export type ClosureProductCategoryMaxOrderByAggregateInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+  }
+
+  export type ClosureProductCategoryMinOrderByAggregateInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+  }
+
+  export type ClosureProductCategorySumOrderByAggregateInput = {
+    ancestor?: SortOrder
+    descendant?: SortOrder
+    depth?: SortOrder
+  }
+
+  export type ProductImageListRelationFilter = {
+    every?: ProductImageWhereInput
+    some?: ProductImageWhereInput
+    none?: ProductImageWhereInput
+  }
+
+  export type ProductImageOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ProductCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrder
+    stockQuantity?: SortOrder
+    minOrderQuantity?: SortOrder
+    isDisable?: SortOrder
+    isAvailable?: SortOrder
+    categoryId?: SortOrder
+    cafeInfoId?: SortOrder
+    productRedirectUrl?: SortOrder
+    isSignature?: SortOrder
+  }
+
+  export type ProductAvgOrderByAggregateInput = {
+    id?: SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrder
+    stockQuantity?: SortOrder
+    minOrderQuantity?: SortOrder
+    categoryId?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type ProductMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrder
+    stockQuantity?: SortOrder
+    minOrderQuantity?: SortOrder
+    isDisable?: SortOrder
+    isAvailable?: SortOrder
+    categoryId?: SortOrder
+    cafeInfoId?: SortOrder
+    productRedirectUrl?: SortOrder
+    isSignature?: SortOrder
+  }
+
+  export type ProductMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    name?: SortOrder
+    code?: SortOrder
+    description?: SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrder
+    stockQuantity?: SortOrder
+    minOrderQuantity?: SortOrder
+    isDisable?: SortOrder
+    isAvailable?: SortOrder
+    categoryId?: SortOrder
+    cafeInfoId?: SortOrder
+    productRedirectUrl?: SortOrder
+    isSignature?: SortOrder
+  }
+
+  export type ProductSumOrderByAggregateInput = {
+    id?: SortOrder
+    price?: SortOrder
+    originalPrice?: SortOrder
+    stockQuantity?: SortOrder
+    minOrderQuantity?: SortOrder
+    categoryId?: SortOrder
+    cafeInfoId?: SortOrder
+  }
+
+  export type ProductRelationFilter = {
+    is?: ProductWhereInput
+    isNot?: ProductWhereInput
+  }
+
+  export type WishlistProductWishlistProductUniqueCompoundUniqueInput = {
+    productId: number
+    proxyUserId: number
+  }
+
+  export type WishlistProductCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    productId?: SortOrder
+    proxyUserId?: SortOrder
+  }
+
+  export type WishlistProductAvgOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    proxyUserId?: SortOrder
+  }
+
+  export type WishlistProductMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    productId?: SortOrder
+    proxyUserId?: SortOrder
+  }
+
+  export type WishlistProductMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    productId?: SortOrder
+    proxyUserId?: SortOrder
+  }
+
+  export type WishlistProductSumOrderByAggregateInput = {
+    id?: SortOrder
+    productId?: SortOrder
+    proxyUserId?: SortOrder
+  }
+
+  export type ProductImageCountOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    url?: SortOrder
+    thumbnailUrl?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    isDisable?: SortOrder
+    isThumb?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type ProductImageAvgOrderByAggregateInput = {
+    id?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type ProductImageMaxOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    url?: SortOrder
+    thumbnailUrl?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    isDisable?: SortOrder
+    isThumb?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type ProductImageMinOrderByAggregateInput = {
+    id?: SortOrder
+    createdAt?: SortOrder
+    url?: SortOrder
+    thumbnailUrl?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    isDisable?: SortOrder
+    isThumb?: SortOrder
+    productId?: SortOrder
+  }
+
+  export type ProductImageSumOrderByAggregateInput = {
+    id?: SortOrder
+    width?: SortOrder
+    height?: SortOrder
+    size?: SortOrder
+    productId?: SortOrder
   }
 
   export type BoardCreateNestedManyWithoutUserInput = {
@@ -28232,6 +38771,20 @@ export namespace Prisma {
     connect?: Enumerable<CafeBoardWhereUniqueInput>
   }
 
+  export type MetaViewerInfoCreateNestedManyWithoutCafeInfoInput = {
+    create?: XOR<Enumerable<MetaViewerInfoCreateWithoutCafeInfoInput>, Enumerable<MetaViewerInfoUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<MetaViewerInfoCreateOrConnectWithoutCafeInfoInput>
+    createMany?: MetaViewerInfoCreateManyCafeInfoInputEnvelope
+    connect?: Enumerable<MetaViewerInfoWhereUniqueInput>
+  }
+
+  export type ProductCreateNestedManyWithoutCafeInfoInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutCafeInfoInput>, Enumerable<ProductUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutCafeInfoInput>
+    createMany?: ProductCreateManyCafeInfoInputEnvelope
+    connect?: Enumerable<ProductWhereUniqueInput>
+  }
+
   export type CafeVirtualLinkUncheckedCreateNestedManyWithoutCafeInfoInput = {
     create?: XOR<Enumerable<CafeVirtualLinkCreateWithoutCafeInfoInput>, Enumerable<CafeVirtualLinkUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeVirtualLinkCreateOrConnectWithoutCafeInfoInput>
@@ -28272,6 +38825,20 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<CafeBoardCreateOrConnectWithoutCafeInfoInput>
     createMany?: CafeBoardCreateManyCafeInfoInputEnvelope
     connect?: Enumerable<CafeBoardWhereUniqueInput>
+  }
+
+  export type MetaViewerInfoUncheckedCreateNestedManyWithoutCafeInfoInput = {
+    create?: XOR<Enumerable<MetaViewerInfoCreateWithoutCafeInfoInput>, Enumerable<MetaViewerInfoUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<MetaViewerInfoCreateOrConnectWithoutCafeInfoInput>
+    createMany?: MetaViewerInfoCreateManyCafeInfoInputEnvelope
+    connect?: Enumerable<MetaViewerInfoWhereUniqueInput>
+  }
+
+  export type ProductUncheckedCreateNestedManyWithoutCafeInfoInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutCafeInfoInput>, Enumerable<ProductUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutCafeInfoInput>
+    createMany?: ProductCreateManyCafeInfoInputEnvelope
+    connect?: Enumerable<ProductWhereUniqueInput>
   }
 
   export type RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput = {
@@ -28366,6 +38933,34 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeBoardScalarWhereInput>
   }
 
+  export type MetaViewerInfoUpdateManyWithoutCafeInfoNestedInput = {
+    create?: XOR<Enumerable<MetaViewerInfoCreateWithoutCafeInfoInput>, Enumerable<MetaViewerInfoUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<MetaViewerInfoCreateOrConnectWithoutCafeInfoInput>
+    upsert?: Enumerable<MetaViewerInfoUpsertWithWhereUniqueWithoutCafeInfoInput>
+    createMany?: MetaViewerInfoCreateManyCafeInfoInputEnvelope
+    set?: Enumerable<MetaViewerInfoWhereUniqueInput>
+    disconnect?: Enumerable<MetaViewerInfoWhereUniqueInput>
+    delete?: Enumerable<MetaViewerInfoWhereUniqueInput>
+    connect?: Enumerable<MetaViewerInfoWhereUniqueInput>
+    update?: Enumerable<MetaViewerInfoUpdateWithWhereUniqueWithoutCafeInfoInput>
+    updateMany?: Enumerable<MetaViewerInfoUpdateManyWithWhereWithoutCafeInfoInput>
+    deleteMany?: Enumerable<MetaViewerInfoScalarWhereInput>
+  }
+
+  export type ProductUpdateManyWithoutCafeInfoNestedInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutCafeInfoInput>, Enumerable<ProductUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutCafeInfoInput>
+    upsert?: Enumerable<ProductUpsertWithWhereUniqueWithoutCafeInfoInput>
+    createMany?: ProductCreateManyCafeInfoInputEnvelope
+    set?: Enumerable<ProductWhereUniqueInput>
+    disconnect?: Enumerable<ProductWhereUniqueInput>
+    delete?: Enumerable<ProductWhereUniqueInput>
+    connect?: Enumerable<ProductWhereUniqueInput>
+    update?: Enumerable<ProductUpdateWithWhereUniqueWithoutCafeInfoInput>
+    updateMany?: Enumerable<ProductUpdateManyWithWhereWithoutCafeInfoInput>
+    deleteMany?: Enumerable<ProductScalarWhereInput>
+  }
+
   export type CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput = {
     create?: XOR<Enumerable<CafeVirtualLinkCreateWithoutCafeInfoInput>, Enumerable<CafeVirtualLinkUncheckedCreateWithoutCafeInfoInput>>
     connectOrCreate?: Enumerable<CafeVirtualLinkCreateOrConnectWithoutCafeInfoInput>
@@ -28448,6 +39043,34 @@ export namespace Prisma {
     update?: Enumerable<CafeBoardUpdateWithWhereUniqueWithoutCafeInfoInput>
     updateMany?: Enumerable<CafeBoardUpdateManyWithWhereWithoutCafeInfoInput>
     deleteMany?: Enumerable<CafeBoardScalarWhereInput>
+  }
+
+  export type MetaViewerInfoUncheckedUpdateManyWithoutCafeInfoNestedInput = {
+    create?: XOR<Enumerable<MetaViewerInfoCreateWithoutCafeInfoInput>, Enumerable<MetaViewerInfoUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<MetaViewerInfoCreateOrConnectWithoutCafeInfoInput>
+    upsert?: Enumerable<MetaViewerInfoUpsertWithWhereUniqueWithoutCafeInfoInput>
+    createMany?: MetaViewerInfoCreateManyCafeInfoInputEnvelope
+    set?: Enumerable<MetaViewerInfoWhereUniqueInput>
+    disconnect?: Enumerable<MetaViewerInfoWhereUniqueInput>
+    delete?: Enumerable<MetaViewerInfoWhereUniqueInput>
+    connect?: Enumerable<MetaViewerInfoWhereUniqueInput>
+    update?: Enumerable<MetaViewerInfoUpdateWithWhereUniqueWithoutCafeInfoInput>
+    updateMany?: Enumerable<MetaViewerInfoUpdateManyWithWhereWithoutCafeInfoInput>
+    deleteMany?: Enumerable<MetaViewerInfoScalarWhereInput>
+  }
+
+  export type ProductUncheckedUpdateManyWithoutCafeInfoNestedInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutCafeInfoInput>, Enumerable<ProductUncheckedCreateWithoutCafeInfoInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutCafeInfoInput>
+    upsert?: Enumerable<ProductUpsertWithWhereUniqueWithoutCafeInfoInput>
+    createMany?: ProductCreateManyCafeInfoInputEnvelope
+    set?: Enumerable<ProductWhereUniqueInput>
+    disconnect?: Enumerable<ProductWhereUniqueInput>
+    delete?: Enumerable<ProductWhereUniqueInput>
+    connect?: Enumerable<ProductWhereUniqueInput>
+    update?: Enumerable<ProductUpdateWithWhereUniqueWithoutCafeInfoInput>
+    updateMany?: Enumerable<ProductUpdateManyWithWhereWithoutCafeInfoInput>
+    deleteMany?: Enumerable<ProductScalarWhereInput>
   }
 
   export type CafeInfoCreateNestedOneWithoutCafeThumbnailImagesInput = {
@@ -28677,11 +39300,25 @@ export namespace Prisma {
     connect?: Enumerable<CafeCouponWhereUniqueInput>
   }
 
+  export type WishlistProductCreateNestedManyWithoutProxyUserInput = {
+    create?: XOR<Enumerable<WishlistProductCreateWithoutProxyUserInput>, Enumerable<WishlistProductUncheckedCreateWithoutProxyUserInput>>
+    connectOrCreate?: Enumerable<WishlistProductCreateOrConnectWithoutProxyUserInput>
+    createMany?: WishlistProductCreateManyProxyUserInputEnvelope
+    connect?: Enumerable<WishlistProductWhereUniqueInput>
+  }
+
   export type CafeCouponUncheckedCreateNestedManyWithoutProxyUserInput = {
     create?: XOR<Enumerable<CafeCouponCreateWithoutProxyUserInput>, Enumerable<CafeCouponUncheckedCreateWithoutProxyUserInput>>
     connectOrCreate?: Enumerable<CafeCouponCreateOrConnectWithoutProxyUserInput>
     createMany?: CafeCouponCreateManyProxyUserInputEnvelope
     connect?: Enumerable<CafeCouponWhereUniqueInput>
+  }
+
+  export type WishlistProductUncheckedCreateNestedManyWithoutProxyUserInput = {
+    create?: XOR<Enumerable<WishlistProductCreateWithoutProxyUserInput>, Enumerable<WishlistProductUncheckedCreateWithoutProxyUserInput>>
+    connectOrCreate?: Enumerable<WishlistProductCreateOrConnectWithoutProxyUserInput>
+    createMany?: WishlistProductCreateManyProxyUserInputEnvelope
+    connect?: Enumerable<WishlistProductWhereUniqueInput>
   }
 
   export type EnumProxyUserTypeFieldUpdateOperationsInput = {
@@ -28712,6 +39349,20 @@ export namespace Prisma {
     deleteMany?: Enumerable<CafeCouponScalarWhereInput>
   }
 
+  export type WishlistProductUpdateManyWithoutProxyUserNestedInput = {
+    create?: XOR<Enumerable<WishlistProductCreateWithoutProxyUserInput>, Enumerable<WishlistProductUncheckedCreateWithoutProxyUserInput>>
+    connectOrCreate?: Enumerable<WishlistProductCreateOrConnectWithoutProxyUserInput>
+    upsert?: Enumerable<WishlistProductUpsertWithWhereUniqueWithoutProxyUserInput>
+    createMany?: WishlistProductCreateManyProxyUserInputEnvelope
+    set?: Enumerable<WishlistProductWhereUniqueInput>
+    disconnect?: Enumerable<WishlistProductWhereUniqueInput>
+    delete?: Enumerable<WishlistProductWhereUniqueInput>
+    connect?: Enumerable<WishlistProductWhereUniqueInput>
+    update?: Enumerable<WishlistProductUpdateWithWhereUniqueWithoutProxyUserInput>
+    updateMany?: Enumerable<WishlistProductUpdateManyWithWhereWithoutProxyUserInput>
+    deleteMany?: Enumerable<WishlistProductScalarWhereInput>
+  }
+
   export type CafeCouponUncheckedUpdateManyWithoutProxyUserNestedInput = {
     create?: XOR<Enumerable<CafeCouponCreateWithoutProxyUserInput>, Enumerable<CafeCouponUncheckedCreateWithoutProxyUserInput>>
     connectOrCreate?: Enumerable<CafeCouponCreateOrConnectWithoutProxyUserInput>
@@ -28724,6 +39375,20 @@ export namespace Prisma {
     update?: Enumerable<CafeCouponUpdateWithWhereUniqueWithoutProxyUserInput>
     updateMany?: Enumerable<CafeCouponUpdateManyWithWhereWithoutProxyUserInput>
     deleteMany?: Enumerable<CafeCouponScalarWhereInput>
+  }
+
+  export type WishlistProductUncheckedUpdateManyWithoutProxyUserNestedInput = {
+    create?: XOR<Enumerable<WishlistProductCreateWithoutProxyUserInput>, Enumerable<WishlistProductUncheckedCreateWithoutProxyUserInput>>
+    connectOrCreate?: Enumerable<WishlistProductCreateOrConnectWithoutProxyUserInput>
+    upsert?: Enumerable<WishlistProductUpsertWithWhereUniqueWithoutProxyUserInput>
+    createMany?: WishlistProductCreateManyProxyUserInputEnvelope
+    set?: Enumerable<WishlistProductWhereUniqueInput>
+    disconnect?: Enumerable<WishlistProductWhereUniqueInput>
+    delete?: Enumerable<WishlistProductWhereUniqueInput>
+    connect?: Enumerable<WishlistProductWhereUniqueInput>
+    update?: Enumerable<WishlistProductUpdateWithWhereUniqueWithoutProxyUserInput>
+    updateMany?: Enumerable<WishlistProductUpdateManyWithWhereWithoutProxyUserInput>
+    deleteMany?: Enumerable<WishlistProductScalarWhereInput>
   }
 
   export type ProxyUserCreateNestedOneWithoutCafeCouponsInput = {
@@ -28888,6 +39553,548 @@ export namespace Prisma {
     delete?: boolean
     connect?: CafeCouponWhereUniqueInput
     update?: XOR<CafeCouponUpdateWithoutCafeCouponQRCodesInput, CafeCouponUncheckedUpdateWithoutCafeCouponQRCodesInput>
+  }
+
+  export type CafeInfoCreateNestedOneWithoutMetaViewerInfosInput = {
+    create?: XOR<CafeInfoCreateWithoutMetaViewerInfosInput, CafeInfoUncheckedCreateWithoutMetaViewerInfosInput>
+    connectOrCreate?: CafeInfoCreateOrConnectWithoutMetaViewerInfosInput
+    connect?: CafeInfoWhereUniqueInput
+  }
+
+  export type MetaViewerMapCreateNestedManyWithoutMetaViewerInfoInput = {
+    create?: XOR<Enumerable<MetaViewerMapCreateWithoutMetaViewerInfoInput>, Enumerable<MetaViewerMapUncheckedCreateWithoutMetaViewerInfoInput>>
+    connectOrCreate?: Enumerable<MetaViewerMapCreateOrConnectWithoutMetaViewerInfoInput>
+    createMany?: MetaViewerMapCreateManyMetaViewerInfoInputEnvelope
+    connect?: Enumerable<MetaViewerMapWhereUniqueInput>
+  }
+
+  export type MetaViewerActiveMapCreateNestedOneWithoutMetaViewerInfoInput = {
+    create?: XOR<MetaViewerActiveMapCreateWithoutMetaViewerInfoInput, MetaViewerActiveMapUncheckedCreateWithoutMetaViewerInfoInput>
+    connectOrCreate?: MetaViewerActiveMapCreateOrConnectWithoutMetaViewerInfoInput
+    connect?: MetaViewerActiveMapWhereUniqueInput
+  }
+
+  export type MetaViewerMapUncheckedCreateNestedManyWithoutMetaViewerInfoInput = {
+    create?: XOR<Enumerable<MetaViewerMapCreateWithoutMetaViewerInfoInput>, Enumerable<MetaViewerMapUncheckedCreateWithoutMetaViewerInfoInput>>
+    connectOrCreate?: Enumerable<MetaViewerMapCreateOrConnectWithoutMetaViewerInfoInput>
+    createMany?: MetaViewerMapCreateManyMetaViewerInfoInputEnvelope
+    connect?: Enumerable<MetaViewerMapWhereUniqueInput>
+  }
+
+  export type MetaViewerActiveMapUncheckedCreateNestedOneWithoutMetaViewerInfoInput = {
+    create?: XOR<MetaViewerActiveMapCreateWithoutMetaViewerInfoInput, MetaViewerActiveMapUncheckedCreateWithoutMetaViewerInfoInput>
+    connectOrCreate?: MetaViewerActiveMapCreateOrConnectWithoutMetaViewerInfoInput
+    connect?: MetaViewerActiveMapWhereUniqueInput
+  }
+
+  export type CafeInfoUpdateOneRequiredWithoutMetaViewerInfosNestedInput = {
+    create?: XOR<CafeInfoCreateWithoutMetaViewerInfosInput, CafeInfoUncheckedCreateWithoutMetaViewerInfosInput>
+    connectOrCreate?: CafeInfoCreateOrConnectWithoutMetaViewerInfosInput
+    upsert?: CafeInfoUpsertWithoutMetaViewerInfosInput
+    connect?: CafeInfoWhereUniqueInput
+    update?: XOR<CafeInfoUpdateWithoutMetaViewerInfosInput, CafeInfoUncheckedUpdateWithoutMetaViewerInfosInput>
+  }
+
+  export type MetaViewerMapUpdateManyWithoutMetaViewerInfoNestedInput = {
+    create?: XOR<Enumerable<MetaViewerMapCreateWithoutMetaViewerInfoInput>, Enumerable<MetaViewerMapUncheckedCreateWithoutMetaViewerInfoInput>>
+    connectOrCreate?: Enumerable<MetaViewerMapCreateOrConnectWithoutMetaViewerInfoInput>
+    upsert?: Enumerable<MetaViewerMapUpsertWithWhereUniqueWithoutMetaViewerInfoInput>
+    createMany?: MetaViewerMapCreateManyMetaViewerInfoInputEnvelope
+    set?: Enumerable<MetaViewerMapWhereUniqueInput>
+    disconnect?: Enumerable<MetaViewerMapWhereUniqueInput>
+    delete?: Enumerable<MetaViewerMapWhereUniqueInput>
+    connect?: Enumerable<MetaViewerMapWhereUniqueInput>
+    update?: Enumerable<MetaViewerMapUpdateWithWhereUniqueWithoutMetaViewerInfoInput>
+    updateMany?: Enumerable<MetaViewerMapUpdateManyWithWhereWithoutMetaViewerInfoInput>
+    deleteMany?: Enumerable<MetaViewerMapScalarWhereInput>
+  }
+
+  export type MetaViewerActiveMapUpdateOneWithoutMetaViewerInfoNestedInput = {
+    create?: XOR<MetaViewerActiveMapCreateWithoutMetaViewerInfoInput, MetaViewerActiveMapUncheckedCreateWithoutMetaViewerInfoInput>
+    connectOrCreate?: MetaViewerActiveMapCreateOrConnectWithoutMetaViewerInfoInput
+    upsert?: MetaViewerActiveMapUpsertWithoutMetaViewerInfoInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: MetaViewerActiveMapWhereUniqueInput
+    update?: XOR<MetaViewerActiveMapUpdateWithoutMetaViewerInfoInput, MetaViewerActiveMapUncheckedUpdateWithoutMetaViewerInfoInput>
+  }
+
+  export type MetaViewerMapUncheckedUpdateManyWithoutMetaViewerInfoNestedInput = {
+    create?: XOR<Enumerable<MetaViewerMapCreateWithoutMetaViewerInfoInput>, Enumerable<MetaViewerMapUncheckedCreateWithoutMetaViewerInfoInput>>
+    connectOrCreate?: Enumerable<MetaViewerMapCreateOrConnectWithoutMetaViewerInfoInput>
+    upsert?: Enumerable<MetaViewerMapUpsertWithWhereUniqueWithoutMetaViewerInfoInput>
+    createMany?: MetaViewerMapCreateManyMetaViewerInfoInputEnvelope
+    set?: Enumerable<MetaViewerMapWhereUniqueInput>
+    disconnect?: Enumerable<MetaViewerMapWhereUniqueInput>
+    delete?: Enumerable<MetaViewerMapWhereUniqueInput>
+    connect?: Enumerable<MetaViewerMapWhereUniqueInput>
+    update?: Enumerable<MetaViewerMapUpdateWithWhereUniqueWithoutMetaViewerInfoInput>
+    updateMany?: Enumerable<MetaViewerMapUpdateManyWithWhereWithoutMetaViewerInfoInput>
+    deleteMany?: Enumerable<MetaViewerMapScalarWhereInput>
+  }
+
+  export type MetaViewerActiveMapUncheckedUpdateOneWithoutMetaViewerInfoNestedInput = {
+    create?: XOR<MetaViewerActiveMapCreateWithoutMetaViewerInfoInput, MetaViewerActiveMapUncheckedCreateWithoutMetaViewerInfoInput>
+    connectOrCreate?: MetaViewerActiveMapCreateOrConnectWithoutMetaViewerInfoInput
+    upsert?: MetaViewerActiveMapUpsertWithoutMetaViewerInfoInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: MetaViewerActiveMapWhereUniqueInput
+    update?: XOR<MetaViewerActiveMapUpdateWithoutMetaViewerInfoInput, MetaViewerActiveMapUncheckedUpdateWithoutMetaViewerInfoInput>
+  }
+
+  export type MetaViewerInfoCreateNestedOneWithoutMetaViewerMapsInput = {
+    create?: XOR<MetaViewerInfoCreateWithoutMetaViewerMapsInput, MetaViewerInfoUncheckedCreateWithoutMetaViewerMapsInput>
+    connectOrCreate?: MetaViewerInfoCreateOrConnectWithoutMetaViewerMapsInput
+    connect?: MetaViewerInfoWhereUniqueInput
+  }
+
+  export type MetaViewerActiveMapCreateNestedManyWithoutActiveRenderMapInput = {
+    create?: XOR<Enumerable<MetaViewerActiveMapCreateWithoutActiveRenderMapInput>, Enumerable<MetaViewerActiveMapUncheckedCreateWithoutActiveRenderMapInput>>
+    connectOrCreate?: Enumerable<MetaViewerActiveMapCreateOrConnectWithoutActiveRenderMapInput>
+    createMany?: MetaViewerActiveMapCreateManyActiveRenderMapInputEnvelope
+    connect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+  }
+
+  export type MetaViewerActiveMapCreateNestedManyWithoutActiveColliderMapInput = {
+    create?: XOR<Enumerable<MetaViewerActiveMapCreateWithoutActiveColliderMapInput>, Enumerable<MetaViewerActiveMapUncheckedCreateWithoutActiveColliderMapInput>>
+    connectOrCreate?: Enumerable<MetaViewerActiveMapCreateOrConnectWithoutActiveColliderMapInput>
+    createMany?: MetaViewerActiveMapCreateManyActiveColliderMapInputEnvelope
+    connect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+  }
+
+  export type MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveRenderMapInput = {
+    create?: XOR<Enumerable<MetaViewerActiveMapCreateWithoutActiveRenderMapInput>, Enumerable<MetaViewerActiveMapUncheckedCreateWithoutActiveRenderMapInput>>
+    connectOrCreate?: Enumerable<MetaViewerActiveMapCreateOrConnectWithoutActiveRenderMapInput>
+    createMany?: MetaViewerActiveMapCreateManyActiveRenderMapInputEnvelope
+    connect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+  }
+
+  export type MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveColliderMapInput = {
+    create?: XOR<Enumerable<MetaViewerActiveMapCreateWithoutActiveColliderMapInput>, Enumerable<MetaViewerActiveMapUncheckedCreateWithoutActiveColliderMapInput>>
+    connectOrCreate?: Enumerable<MetaViewerActiveMapCreateOrConnectWithoutActiveColliderMapInput>
+    createMany?: MetaViewerActiveMapCreateManyActiveColliderMapInputEnvelope
+    connect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+  }
+
+  export type EnumMetaMapTypeFieldUpdateOperationsInput = {
+    set?: MetaMapType
+  }
+
+  export type MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput = {
+    create?: XOR<MetaViewerInfoCreateWithoutMetaViewerMapsInput, MetaViewerInfoUncheckedCreateWithoutMetaViewerMapsInput>
+    connectOrCreate?: MetaViewerInfoCreateOrConnectWithoutMetaViewerMapsInput
+    upsert?: MetaViewerInfoUpsertWithoutMetaViewerMapsInput
+    connect?: MetaViewerInfoWhereUniqueInput
+    update?: XOR<MetaViewerInfoUpdateWithoutMetaViewerMapsInput, MetaViewerInfoUncheckedUpdateWithoutMetaViewerMapsInput>
+  }
+
+  export type MetaViewerActiveMapUpdateManyWithoutActiveRenderMapNestedInput = {
+    create?: XOR<Enumerable<MetaViewerActiveMapCreateWithoutActiveRenderMapInput>, Enumerable<MetaViewerActiveMapUncheckedCreateWithoutActiveRenderMapInput>>
+    connectOrCreate?: Enumerable<MetaViewerActiveMapCreateOrConnectWithoutActiveRenderMapInput>
+    upsert?: Enumerable<MetaViewerActiveMapUpsertWithWhereUniqueWithoutActiveRenderMapInput>
+    createMany?: MetaViewerActiveMapCreateManyActiveRenderMapInputEnvelope
+    set?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    disconnect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    delete?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    connect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    update?: Enumerable<MetaViewerActiveMapUpdateWithWhereUniqueWithoutActiveRenderMapInput>
+    updateMany?: Enumerable<MetaViewerActiveMapUpdateManyWithWhereWithoutActiveRenderMapInput>
+    deleteMany?: Enumerable<MetaViewerActiveMapScalarWhereInput>
+  }
+
+  export type MetaViewerActiveMapUpdateManyWithoutActiveColliderMapNestedInput = {
+    create?: XOR<Enumerable<MetaViewerActiveMapCreateWithoutActiveColliderMapInput>, Enumerable<MetaViewerActiveMapUncheckedCreateWithoutActiveColliderMapInput>>
+    connectOrCreate?: Enumerable<MetaViewerActiveMapCreateOrConnectWithoutActiveColliderMapInput>
+    upsert?: Enumerable<MetaViewerActiveMapUpsertWithWhereUniqueWithoutActiveColliderMapInput>
+    createMany?: MetaViewerActiveMapCreateManyActiveColliderMapInputEnvelope
+    set?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    disconnect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    delete?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    connect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    update?: Enumerable<MetaViewerActiveMapUpdateWithWhereUniqueWithoutActiveColliderMapInput>
+    updateMany?: Enumerable<MetaViewerActiveMapUpdateManyWithWhereWithoutActiveColliderMapInput>
+    deleteMany?: Enumerable<MetaViewerActiveMapScalarWhereInput>
+  }
+
+  export type MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderMapNestedInput = {
+    create?: XOR<Enumerable<MetaViewerActiveMapCreateWithoutActiveRenderMapInput>, Enumerable<MetaViewerActiveMapUncheckedCreateWithoutActiveRenderMapInput>>
+    connectOrCreate?: Enumerable<MetaViewerActiveMapCreateOrConnectWithoutActiveRenderMapInput>
+    upsert?: Enumerable<MetaViewerActiveMapUpsertWithWhereUniqueWithoutActiveRenderMapInput>
+    createMany?: MetaViewerActiveMapCreateManyActiveRenderMapInputEnvelope
+    set?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    disconnect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    delete?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    connect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    update?: Enumerable<MetaViewerActiveMapUpdateWithWhereUniqueWithoutActiveRenderMapInput>
+    updateMany?: Enumerable<MetaViewerActiveMapUpdateManyWithWhereWithoutActiveRenderMapInput>
+    deleteMany?: Enumerable<MetaViewerActiveMapScalarWhereInput>
+  }
+
+  export type MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderMapNestedInput = {
+    create?: XOR<Enumerable<MetaViewerActiveMapCreateWithoutActiveColliderMapInput>, Enumerable<MetaViewerActiveMapUncheckedCreateWithoutActiveColliderMapInput>>
+    connectOrCreate?: Enumerable<MetaViewerActiveMapCreateOrConnectWithoutActiveColliderMapInput>
+    upsert?: Enumerable<MetaViewerActiveMapUpsertWithWhereUniqueWithoutActiveColliderMapInput>
+    createMany?: MetaViewerActiveMapCreateManyActiveColliderMapInputEnvelope
+    set?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    disconnect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    delete?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    connect?: Enumerable<MetaViewerActiveMapWhereUniqueInput>
+    update?: Enumerable<MetaViewerActiveMapUpdateWithWhereUniqueWithoutActiveColliderMapInput>
+    updateMany?: Enumerable<MetaViewerActiveMapUpdateManyWithWhereWithoutActiveColliderMapInput>
+    deleteMany?: Enumerable<MetaViewerActiveMapScalarWhereInput>
+  }
+
+  export type MetaViewerInfoCreateNestedOneWithoutActiveMapsInput = {
+    create?: XOR<MetaViewerInfoCreateWithoutActiveMapsInput, MetaViewerInfoUncheckedCreateWithoutActiveMapsInput>
+    connectOrCreate?: MetaViewerInfoCreateOrConnectWithoutActiveMapsInput
+    connect?: MetaViewerInfoWhereUniqueInput
+  }
+
+  export type MetaViewerMapCreateNestedOneWithoutActiveRenderForInput = {
+    create?: XOR<MetaViewerMapCreateWithoutActiveRenderForInput, MetaViewerMapUncheckedCreateWithoutActiveRenderForInput>
+    connectOrCreate?: MetaViewerMapCreateOrConnectWithoutActiveRenderForInput
+    connect?: MetaViewerMapWhereUniqueInput
+  }
+
+  export type MetaViewerMapCreateNestedOneWithoutActiveColliderForInput = {
+    create?: XOR<MetaViewerMapCreateWithoutActiveColliderForInput, MetaViewerMapUncheckedCreateWithoutActiveColliderForInput>
+    connectOrCreate?: MetaViewerMapCreateOrConnectWithoutActiveColliderForInput
+    connect?: MetaViewerMapWhereUniqueInput
+  }
+
+  export type MetaViewerInfoUpdateOneRequiredWithoutActiveMapsNestedInput = {
+    create?: XOR<MetaViewerInfoCreateWithoutActiveMapsInput, MetaViewerInfoUncheckedCreateWithoutActiveMapsInput>
+    connectOrCreate?: MetaViewerInfoCreateOrConnectWithoutActiveMapsInput
+    upsert?: MetaViewerInfoUpsertWithoutActiveMapsInput
+    connect?: MetaViewerInfoWhereUniqueInput
+    update?: XOR<MetaViewerInfoUpdateWithoutActiveMapsInput, MetaViewerInfoUncheckedUpdateWithoutActiveMapsInput>
+  }
+
+  export type MetaViewerMapUpdateOneRequiredWithoutActiveRenderForNestedInput = {
+    create?: XOR<MetaViewerMapCreateWithoutActiveRenderForInput, MetaViewerMapUncheckedCreateWithoutActiveRenderForInput>
+    connectOrCreate?: MetaViewerMapCreateOrConnectWithoutActiveRenderForInput
+    upsert?: MetaViewerMapUpsertWithoutActiveRenderForInput
+    connect?: MetaViewerMapWhereUniqueInput
+    update?: XOR<MetaViewerMapUpdateWithoutActiveRenderForInput, MetaViewerMapUncheckedUpdateWithoutActiveRenderForInput>
+  }
+
+  export type MetaViewerMapUpdateOneRequiredWithoutActiveColliderForNestedInput = {
+    create?: XOR<MetaViewerMapCreateWithoutActiveColliderForInput, MetaViewerMapUncheckedCreateWithoutActiveColliderForInput>
+    connectOrCreate?: MetaViewerMapCreateOrConnectWithoutActiveColliderForInput
+    upsert?: MetaViewerMapUpsertWithoutActiveColliderForInput
+    connect?: MetaViewerMapWhereUniqueInput
+    update?: XOR<MetaViewerMapUpdateWithoutActiveColliderForInput, MetaViewerMapUncheckedUpdateWithoutActiveColliderForInput>
+  }
+
+  export type ClosureProductCategoryCreateNestedManyWithoutAncestorCategoryInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutAncestorCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutAncestorCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyAncestorCategoryInputEnvelope
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+  }
+
+  export type ClosureProductCategoryCreateNestedManyWithoutDescendantCategoryInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutDescendantCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutDescendantCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyDescendantCategoryInputEnvelope
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+  }
+
+  export type ProductCreateNestedManyWithoutProductCategoryInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutProductCategoryInput>, Enumerable<ProductUncheckedCreateWithoutProductCategoryInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutProductCategoryInput>
+    createMany?: ProductCreateManyProductCategoryInputEnvelope
+    connect?: Enumerable<ProductWhereUniqueInput>
+  }
+
+  export type ClosureProductCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutAncestorCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutAncestorCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyAncestorCategoryInputEnvelope
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+  }
+
+  export type ClosureProductCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutDescendantCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutDescendantCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyDescendantCategoryInputEnvelope
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+  }
+
+  export type ProductUncheckedCreateNestedManyWithoutProductCategoryInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutProductCategoryInput>, Enumerable<ProductUncheckedCreateWithoutProductCategoryInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutProductCategoryInput>
+    createMany?: ProductCreateManyProductCategoryInputEnvelope
+    connect?: Enumerable<ProductWhereUniqueInput>
+  }
+
+  export type ClosureProductCategoryUpdateManyWithoutAncestorCategoryNestedInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutAncestorCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutAncestorCategoryInput>
+    upsert?: Enumerable<ClosureProductCategoryUpsertWithWhereUniqueWithoutAncestorCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyAncestorCategoryInputEnvelope
+    set?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    disconnect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    delete?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    update?: Enumerable<ClosureProductCategoryUpdateWithWhereUniqueWithoutAncestorCategoryInput>
+    updateMany?: Enumerable<ClosureProductCategoryUpdateManyWithWhereWithoutAncestorCategoryInput>
+    deleteMany?: Enumerable<ClosureProductCategoryScalarWhereInput>
+  }
+
+  export type ClosureProductCategoryUpdateManyWithoutDescendantCategoryNestedInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutDescendantCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutDescendantCategoryInput>
+    upsert?: Enumerable<ClosureProductCategoryUpsertWithWhereUniqueWithoutDescendantCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyDescendantCategoryInputEnvelope
+    set?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    disconnect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    delete?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    update?: Enumerable<ClosureProductCategoryUpdateWithWhereUniqueWithoutDescendantCategoryInput>
+    updateMany?: Enumerable<ClosureProductCategoryUpdateManyWithWhereWithoutDescendantCategoryInput>
+    deleteMany?: Enumerable<ClosureProductCategoryScalarWhereInput>
+  }
+
+  export type ProductUpdateManyWithoutProductCategoryNestedInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutProductCategoryInput>, Enumerable<ProductUncheckedCreateWithoutProductCategoryInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutProductCategoryInput>
+    upsert?: Enumerable<ProductUpsertWithWhereUniqueWithoutProductCategoryInput>
+    createMany?: ProductCreateManyProductCategoryInputEnvelope
+    set?: Enumerable<ProductWhereUniqueInput>
+    disconnect?: Enumerable<ProductWhereUniqueInput>
+    delete?: Enumerable<ProductWhereUniqueInput>
+    connect?: Enumerable<ProductWhereUniqueInput>
+    update?: Enumerable<ProductUpdateWithWhereUniqueWithoutProductCategoryInput>
+    updateMany?: Enumerable<ProductUpdateManyWithWhereWithoutProductCategoryInput>
+    deleteMany?: Enumerable<ProductScalarWhereInput>
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutAncestorCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutAncestorCategoryInput>
+    upsert?: Enumerable<ClosureProductCategoryUpsertWithWhereUniqueWithoutAncestorCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyAncestorCategoryInputEnvelope
+    set?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    disconnect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    delete?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    update?: Enumerable<ClosureProductCategoryUpdateWithWhereUniqueWithoutAncestorCategoryInput>
+    updateMany?: Enumerable<ClosureProductCategoryUpdateManyWithWhereWithoutAncestorCategoryInput>
+    deleteMany?: Enumerable<ClosureProductCategoryScalarWhereInput>
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput = {
+    create?: XOR<Enumerable<ClosureProductCategoryCreateWithoutDescendantCategoryInput>, Enumerable<ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>>
+    connectOrCreate?: Enumerable<ClosureProductCategoryCreateOrConnectWithoutDescendantCategoryInput>
+    upsert?: Enumerable<ClosureProductCategoryUpsertWithWhereUniqueWithoutDescendantCategoryInput>
+    createMany?: ClosureProductCategoryCreateManyDescendantCategoryInputEnvelope
+    set?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    disconnect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    delete?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    connect?: Enumerable<ClosureProductCategoryWhereUniqueInput>
+    update?: Enumerable<ClosureProductCategoryUpdateWithWhereUniqueWithoutDescendantCategoryInput>
+    updateMany?: Enumerable<ClosureProductCategoryUpdateManyWithWhereWithoutDescendantCategoryInput>
+    deleteMany?: Enumerable<ClosureProductCategoryScalarWhereInput>
+  }
+
+  export type ProductUncheckedUpdateManyWithoutProductCategoryNestedInput = {
+    create?: XOR<Enumerable<ProductCreateWithoutProductCategoryInput>, Enumerable<ProductUncheckedCreateWithoutProductCategoryInput>>
+    connectOrCreate?: Enumerable<ProductCreateOrConnectWithoutProductCategoryInput>
+    upsert?: Enumerable<ProductUpsertWithWhereUniqueWithoutProductCategoryInput>
+    createMany?: ProductCreateManyProductCategoryInputEnvelope
+    set?: Enumerable<ProductWhereUniqueInput>
+    disconnect?: Enumerable<ProductWhereUniqueInput>
+    delete?: Enumerable<ProductWhereUniqueInput>
+    connect?: Enumerable<ProductWhereUniqueInput>
+    update?: Enumerable<ProductUpdateWithWhereUniqueWithoutProductCategoryInput>
+    updateMany?: Enumerable<ProductUpdateManyWithWhereWithoutProductCategoryInput>
+    deleteMany?: Enumerable<ProductScalarWhereInput>
+  }
+
+  export type ProductCategoryCreateNestedOneWithoutAncestorCategoriesInput = {
+    create?: XOR<ProductCategoryCreateWithoutAncestorCategoriesInput, ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput>
+    connectOrCreate?: ProductCategoryCreateOrConnectWithoutAncestorCategoriesInput
+    connect?: ProductCategoryWhereUniqueInput
+  }
+
+  export type ProductCategoryCreateNestedOneWithoutDescendantCategoriesInput = {
+    create?: XOR<ProductCategoryCreateWithoutDescendantCategoriesInput, ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput>
+    connectOrCreate?: ProductCategoryCreateOrConnectWithoutDescendantCategoriesInput
+    connect?: ProductCategoryWhereUniqueInput
+  }
+
+  export type ProductCategoryUpdateOneRequiredWithoutAncestorCategoriesNestedInput = {
+    create?: XOR<ProductCategoryCreateWithoutAncestorCategoriesInput, ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput>
+    connectOrCreate?: ProductCategoryCreateOrConnectWithoutAncestorCategoriesInput
+    upsert?: ProductCategoryUpsertWithoutAncestorCategoriesInput
+    connect?: ProductCategoryWhereUniqueInput
+    update?: XOR<ProductCategoryUpdateWithoutAncestorCategoriesInput, ProductCategoryUncheckedUpdateWithoutAncestorCategoriesInput>
+  }
+
+  export type ProductCategoryUpdateOneRequiredWithoutDescendantCategoriesNestedInput = {
+    create?: XOR<ProductCategoryCreateWithoutDescendantCategoriesInput, ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput>
+    connectOrCreate?: ProductCategoryCreateOrConnectWithoutDescendantCategoriesInput
+    upsert?: ProductCategoryUpsertWithoutDescendantCategoriesInput
+    connect?: ProductCategoryWhereUniqueInput
+    update?: XOR<ProductCategoryUpdateWithoutDescendantCategoriesInput, ProductCategoryUncheckedUpdateWithoutDescendantCategoriesInput>
+  }
+
+  export type ProductCategoryCreateNestedOneWithoutProductsInput = {
+    create?: XOR<ProductCategoryCreateWithoutProductsInput, ProductCategoryUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: ProductCategoryCreateOrConnectWithoutProductsInput
+    connect?: ProductCategoryWhereUniqueInput
+  }
+
+  export type CafeInfoCreateNestedOneWithoutProductsInput = {
+    create?: XOR<CafeInfoCreateWithoutProductsInput, CafeInfoUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: CafeInfoCreateOrConnectWithoutProductsInput
+    connect?: CafeInfoWhereUniqueInput
+  }
+
+  export type WishlistProductCreateNestedManyWithoutProductInput = {
+    create?: XOR<Enumerable<WishlistProductCreateWithoutProductInput>, Enumerable<WishlistProductUncheckedCreateWithoutProductInput>>
+    connectOrCreate?: Enumerable<WishlistProductCreateOrConnectWithoutProductInput>
+    createMany?: WishlistProductCreateManyProductInputEnvelope
+    connect?: Enumerable<WishlistProductWhereUniqueInput>
+  }
+
+  export type ProductImageCreateNestedManyWithoutProductInput = {
+    create?: XOR<Enumerable<ProductImageCreateWithoutProductInput>, Enumerable<ProductImageUncheckedCreateWithoutProductInput>>
+    connectOrCreate?: Enumerable<ProductImageCreateOrConnectWithoutProductInput>
+    createMany?: ProductImageCreateManyProductInputEnvelope
+    connect?: Enumerable<ProductImageWhereUniqueInput>
+  }
+
+  export type WishlistProductUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<Enumerable<WishlistProductCreateWithoutProductInput>, Enumerable<WishlistProductUncheckedCreateWithoutProductInput>>
+    connectOrCreate?: Enumerable<WishlistProductCreateOrConnectWithoutProductInput>
+    createMany?: WishlistProductCreateManyProductInputEnvelope
+    connect?: Enumerable<WishlistProductWhereUniqueInput>
+  }
+
+  export type ProductImageUncheckedCreateNestedManyWithoutProductInput = {
+    create?: XOR<Enumerable<ProductImageCreateWithoutProductInput>, Enumerable<ProductImageUncheckedCreateWithoutProductInput>>
+    connectOrCreate?: Enumerable<ProductImageCreateOrConnectWithoutProductInput>
+    createMany?: ProductImageCreateManyProductInputEnvelope
+    connect?: Enumerable<ProductImageWhereUniqueInput>
+  }
+
+  export type ProductCategoryUpdateOneRequiredWithoutProductsNestedInput = {
+    create?: XOR<ProductCategoryCreateWithoutProductsInput, ProductCategoryUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: ProductCategoryCreateOrConnectWithoutProductsInput
+    upsert?: ProductCategoryUpsertWithoutProductsInput
+    connect?: ProductCategoryWhereUniqueInput
+    update?: XOR<ProductCategoryUpdateWithoutProductsInput, ProductCategoryUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type CafeInfoUpdateOneWithoutProductsNestedInput = {
+    create?: XOR<CafeInfoCreateWithoutProductsInput, CafeInfoUncheckedCreateWithoutProductsInput>
+    connectOrCreate?: CafeInfoCreateOrConnectWithoutProductsInput
+    upsert?: CafeInfoUpsertWithoutProductsInput
+    disconnect?: boolean
+    delete?: boolean
+    connect?: CafeInfoWhereUniqueInput
+    update?: XOR<CafeInfoUpdateWithoutProductsInput, CafeInfoUncheckedUpdateWithoutProductsInput>
+  }
+
+  export type WishlistProductUpdateManyWithoutProductNestedInput = {
+    create?: XOR<Enumerable<WishlistProductCreateWithoutProductInput>, Enumerable<WishlistProductUncheckedCreateWithoutProductInput>>
+    connectOrCreate?: Enumerable<WishlistProductCreateOrConnectWithoutProductInput>
+    upsert?: Enumerable<WishlistProductUpsertWithWhereUniqueWithoutProductInput>
+    createMany?: WishlistProductCreateManyProductInputEnvelope
+    set?: Enumerable<WishlistProductWhereUniqueInput>
+    disconnect?: Enumerable<WishlistProductWhereUniqueInput>
+    delete?: Enumerable<WishlistProductWhereUniqueInput>
+    connect?: Enumerable<WishlistProductWhereUniqueInput>
+    update?: Enumerable<WishlistProductUpdateWithWhereUniqueWithoutProductInput>
+    updateMany?: Enumerable<WishlistProductUpdateManyWithWhereWithoutProductInput>
+    deleteMany?: Enumerable<WishlistProductScalarWhereInput>
+  }
+
+  export type ProductImageUpdateManyWithoutProductNestedInput = {
+    create?: XOR<Enumerable<ProductImageCreateWithoutProductInput>, Enumerable<ProductImageUncheckedCreateWithoutProductInput>>
+    connectOrCreate?: Enumerable<ProductImageCreateOrConnectWithoutProductInput>
+    upsert?: Enumerable<ProductImageUpsertWithWhereUniqueWithoutProductInput>
+    createMany?: ProductImageCreateManyProductInputEnvelope
+    set?: Enumerable<ProductImageWhereUniqueInput>
+    disconnect?: Enumerable<ProductImageWhereUniqueInput>
+    delete?: Enumerable<ProductImageWhereUniqueInput>
+    connect?: Enumerable<ProductImageWhereUniqueInput>
+    update?: Enumerable<ProductImageUpdateWithWhereUniqueWithoutProductInput>
+    updateMany?: Enumerable<ProductImageUpdateManyWithWhereWithoutProductInput>
+    deleteMany?: Enumerable<ProductImageScalarWhereInput>
+  }
+
+  export type WishlistProductUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<Enumerable<WishlistProductCreateWithoutProductInput>, Enumerable<WishlistProductUncheckedCreateWithoutProductInput>>
+    connectOrCreate?: Enumerable<WishlistProductCreateOrConnectWithoutProductInput>
+    upsert?: Enumerable<WishlistProductUpsertWithWhereUniqueWithoutProductInput>
+    createMany?: WishlistProductCreateManyProductInputEnvelope
+    set?: Enumerable<WishlistProductWhereUniqueInput>
+    disconnect?: Enumerable<WishlistProductWhereUniqueInput>
+    delete?: Enumerable<WishlistProductWhereUniqueInput>
+    connect?: Enumerable<WishlistProductWhereUniqueInput>
+    update?: Enumerable<WishlistProductUpdateWithWhereUniqueWithoutProductInput>
+    updateMany?: Enumerable<WishlistProductUpdateManyWithWhereWithoutProductInput>
+    deleteMany?: Enumerable<WishlistProductScalarWhereInput>
+  }
+
+  export type ProductImageUncheckedUpdateManyWithoutProductNestedInput = {
+    create?: XOR<Enumerable<ProductImageCreateWithoutProductInput>, Enumerable<ProductImageUncheckedCreateWithoutProductInput>>
+    connectOrCreate?: Enumerable<ProductImageCreateOrConnectWithoutProductInput>
+    upsert?: Enumerable<ProductImageUpsertWithWhereUniqueWithoutProductInput>
+    createMany?: ProductImageCreateManyProductInputEnvelope
+    set?: Enumerable<ProductImageWhereUniqueInput>
+    disconnect?: Enumerable<ProductImageWhereUniqueInput>
+    delete?: Enumerable<ProductImageWhereUniqueInput>
+    connect?: Enumerable<ProductImageWhereUniqueInput>
+    update?: Enumerable<ProductImageUpdateWithWhereUniqueWithoutProductInput>
+    updateMany?: Enumerable<ProductImageUpdateManyWithWhereWithoutProductInput>
+    deleteMany?: Enumerable<ProductImageScalarWhereInput>
+  }
+
+  export type ProductCreateNestedOneWithoutWishlistProductsInput = {
+    create?: XOR<ProductCreateWithoutWishlistProductsInput, ProductUncheckedCreateWithoutWishlistProductsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutWishlistProductsInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ProxyUserCreateNestedOneWithoutWishlistProductsInput = {
+    create?: XOR<ProxyUserCreateWithoutWishlistProductsInput, ProxyUserUncheckedCreateWithoutWishlistProductsInput>
+    connectOrCreate?: ProxyUserCreateOrConnectWithoutWishlistProductsInput
+    connect?: ProxyUserWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutWishlistProductsNestedInput = {
+    create?: XOR<ProductCreateWithoutWishlistProductsInput, ProductUncheckedCreateWithoutWishlistProductsInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutWishlistProductsInput
+    upsert?: ProductUpsertWithoutWishlistProductsInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<ProductUpdateWithoutWishlistProductsInput, ProductUncheckedUpdateWithoutWishlistProductsInput>
+  }
+
+  export type ProxyUserUpdateOneRequiredWithoutWishlistProductsNestedInput = {
+    create?: XOR<ProxyUserCreateWithoutWishlistProductsInput, ProxyUserUncheckedCreateWithoutWishlistProductsInput>
+    connectOrCreate?: ProxyUserCreateOrConnectWithoutWishlistProductsInput
+    upsert?: ProxyUserUpsertWithoutWishlistProductsInput
+    connect?: ProxyUserWhereUniqueInput
+    update?: XOR<ProxyUserUpdateWithoutWishlistProductsInput, ProxyUserUncheckedUpdateWithoutWishlistProductsInput>
+  }
+
+  export type ProductCreateNestedOneWithoutProductImagesInput = {
+    create?: XOR<ProductCreateWithoutProductImagesInput, ProductUncheckedCreateWithoutProductImagesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutProductImagesInput
+    connect?: ProductWhereUniqueInput
+  }
+
+  export type ProductUpdateOneRequiredWithoutProductImagesNestedInput = {
+    create?: XOR<ProductCreateWithoutProductImagesInput, ProductUncheckedCreateWithoutProductImagesInput>
+    connectOrCreate?: ProductCreateOrConnectWithoutProductImagesInput
+    upsert?: ProductUpsertWithoutProductImagesInput
+    connect?: ProductWhereUniqueInput
+    update?: XOR<ProductUpdateWithoutProductImagesInput, ProductUncheckedUpdateWithoutProductImagesInput>
   }
 
   export type NestedIntFilter = {
@@ -29210,6 +40417,23 @@ export namespace Prisma {
     _max?: NestedEnumCafeCouponStatusNullableFilter
   }
 
+  export type NestedEnumMetaMapTypeFilter = {
+    equals?: MetaMapType
+    in?: Enumerable<MetaMapType>
+    notIn?: Enumerable<MetaMapType>
+    not?: NestedEnumMetaMapTypeFilter | MetaMapType
+  }
+
+  export type NestedEnumMetaMapTypeWithAggregatesFilter = {
+    equals?: MetaMapType
+    in?: Enumerable<MetaMapType>
+    notIn?: Enumerable<MetaMapType>
+    not?: NestedEnumMetaMapTypeWithAggregatesFilter | MetaMapType
+    _count?: NestedIntFilter
+    _min?: NestedEnumMetaMapTypeFilter
+    _max?: NestedEnumMetaMapTypeFilter
+  }
+
   export type BoardCreateWithoutUserInput = {
     createdAt?: Date | string
     title: string
@@ -29314,6 +40538,7 @@ export namespace Prisma {
     name: string
     token: string
     CafeCoupons?: CafeCouponCreateNestedManyWithoutProxyUserInput
+    WishlistProducts?: WishlistProductCreateNestedManyWithoutProxyUserInput
   }
 
   export type ProxyUserUncheckedCreateWithoutUserInput = {
@@ -29324,6 +40549,7 @@ export namespace Prisma {
     name: string
     token: string
     CafeCoupons?: CafeCouponUncheckedCreateNestedManyWithoutProxyUserInput
+    WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProxyUserInput
   }
 
   export type ProxyUserCreateOrConnectWithoutUserInput = {
@@ -30194,6 +41420,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeBoardsInput = {
@@ -30212,6 +41440,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeBoardsInput = {
@@ -30275,6 +41505,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeBoardsInput = {
@@ -30293,6 +41525,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutRegionCategoryInput = {
@@ -30310,6 +41544,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutRegionCategoryInput = {
@@ -30328,6 +41564,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutRegionCategoryInput = {
@@ -30737,6 +41975,80 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type MetaViewerInfoCreateWithoutCafeInfoInput = {
+    createdAt?: Date | string
+    code: string
+    MetaViewerMaps?: MetaViewerMapCreateNestedManyWithoutMetaViewerInfoInput
+    ActiveMaps?: MetaViewerActiveMapCreateNestedOneWithoutMetaViewerInfoInput
+  }
+
+  export type MetaViewerInfoUncheckedCreateWithoutCafeInfoInput = {
+    id?: number
+    createdAt?: Date | string
+    code: string
+    MetaViewerMaps?: MetaViewerMapUncheckedCreateNestedManyWithoutMetaViewerInfoInput
+    ActiveMaps?: MetaViewerActiveMapUncheckedCreateNestedOneWithoutMetaViewerInfoInput
+  }
+
+  export type MetaViewerInfoCreateOrConnectWithoutCafeInfoInput = {
+    where: MetaViewerInfoWhereUniqueInput
+    create: XOR<MetaViewerInfoCreateWithoutCafeInfoInput, MetaViewerInfoUncheckedCreateWithoutCafeInfoInput>
+  }
+
+  export type MetaViewerInfoCreateManyCafeInfoInputEnvelope = {
+    data: Enumerable<MetaViewerInfoCreateManyCafeInfoInput>
+    skipDuplicates?: boolean
+  }
+
+  export type ProductCreateWithoutCafeInfoInput = {
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
+    WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
+    ProductImages?: ProductImageCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductUncheckedCreateWithoutCafeInfoInput = {
+    id?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    categoryId: number
+    WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProductInput
+    ProductImages?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductCreateOrConnectWithoutCafeInfoInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutCafeInfoInput, ProductUncheckedCreateWithoutCafeInfoInput>
+  }
+
+  export type ProductCreateManyCafeInfoInputEnvelope = {
+    data: Enumerable<ProductCreateManyCafeInfoInput>
+    skipDuplicates?: boolean
+  }
+
   export type RegionCategoryUpsertWithoutCafeInfosInput = {
     update: XOR<RegionCategoryUpdateWithoutCafeInfosInput, RegionCategoryUncheckedUpdateWithoutCafeInfosInput>
     create: XOR<RegionCategoryCreateWithoutCafeInfosInput, RegionCategoryUncheckedCreateWithoutCafeInfosInput>
@@ -30925,6 +42237,70 @@ export namespace Prisma {
     data: XOR<CafeBoardUpdateManyMutationInput, CafeBoardUncheckedUpdateManyWithoutCafeBoardsInput>
   }
 
+  export type MetaViewerInfoUpsertWithWhereUniqueWithoutCafeInfoInput = {
+    where: MetaViewerInfoWhereUniqueInput
+    update: XOR<MetaViewerInfoUpdateWithoutCafeInfoInput, MetaViewerInfoUncheckedUpdateWithoutCafeInfoInput>
+    create: XOR<MetaViewerInfoCreateWithoutCafeInfoInput, MetaViewerInfoUncheckedCreateWithoutCafeInfoInput>
+  }
+
+  export type MetaViewerInfoUpdateWithWhereUniqueWithoutCafeInfoInput = {
+    where: MetaViewerInfoWhereUniqueInput
+    data: XOR<MetaViewerInfoUpdateWithoutCafeInfoInput, MetaViewerInfoUncheckedUpdateWithoutCafeInfoInput>
+  }
+
+  export type MetaViewerInfoUpdateManyWithWhereWithoutCafeInfoInput = {
+    where: MetaViewerInfoScalarWhereInput
+    data: XOR<MetaViewerInfoUpdateManyMutationInput, MetaViewerInfoUncheckedUpdateManyWithoutMetaViewerInfosInput>
+  }
+
+  export type MetaViewerInfoScalarWhereInput = {
+    AND?: Enumerable<MetaViewerInfoScalarWhereInput>
+    OR?: Enumerable<MetaViewerInfoScalarWhereInput>
+    NOT?: Enumerable<MetaViewerInfoScalarWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    code?: StringFilter | string
+    cafeInfoId?: IntFilter | number
+  }
+
+  export type ProductUpsertWithWhereUniqueWithoutCafeInfoInput = {
+    where: ProductWhereUniqueInput
+    update: XOR<ProductUpdateWithoutCafeInfoInput, ProductUncheckedUpdateWithoutCafeInfoInput>
+    create: XOR<ProductCreateWithoutCafeInfoInput, ProductUncheckedCreateWithoutCafeInfoInput>
+  }
+
+  export type ProductUpdateWithWhereUniqueWithoutCafeInfoInput = {
+    where: ProductWhereUniqueInput
+    data: XOR<ProductUpdateWithoutCafeInfoInput, ProductUncheckedUpdateWithoutCafeInfoInput>
+  }
+
+  export type ProductUpdateManyWithWhereWithoutCafeInfoInput = {
+    where: ProductScalarWhereInput
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutProductsInput>
+  }
+
+  export type ProductScalarWhereInput = {
+    AND?: Enumerable<ProductScalarWhereInput>
+    OR?: Enumerable<ProductScalarWhereInput>
+    NOT?: Enumerable<ProductScalarWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    updatedAt?: DateTimeFilter | Date | string
+    name?: StringFilter | string
+    code?: StringFilter | string
+    description?: StringNullableFilter | string | null
+    price?: IntFilter | number
+    originalPrice?: IntNullableFilter | number | null
+    stockQuantity?: IntFilter | number
+    minOrderQuantity?: IntFilter | number
+    isDisable?: BoolFilter | boolean
+    isAvailable?: BoolFilter | boolean
+    categoryId?: IntFilter | number
+    cafeInfoId?: IntNullableFilter | number | null
+    productRedirectUrl?: StringNullableFilter | string | null
+    isSignature?: BoolFilter | boolean
+  }
+
   export type CafeInfoCreateWithoutCafeThumbnailImagesInput = {
     createdAt?: Date | string
     isDisable?: boolean
@@ -30940,6 +42316,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeThumbnailImagesInput = {
@@ -30958,6 +42336,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeThumbnailImagesInput = {
@@ -30985,6 +42365,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeThumbnailImagesInput = {
@@ -31003,6 +42385,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeVirtualImagesInput = {
@@ -31020,6 +42404,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeVirtualImagesInput = {
@@ -31038,6 +42424,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeVirtualImagesInput = {
@@ -31065,6 +42453,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeVirtualImagesInput = {
@@ -31083,6 +42473,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeRealImagesInput = {
@@ -31100,6 +42492,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeRealImagesInput = {
@@ -31118,6 +42512,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeRealImagesInput = {
@@ -31145,6 +42541,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeRealImagesInput = {
@@ -31163,6 +42561,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoCreateWithoutCafeVirtualLinksInput = {
@@ -31180,6 +42580,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeVirtualLinksInput = {
@@ -31198,6 +42600,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeVirtualLinksInput = {
@@ -31247,6 +42651,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeVirtualLinksInput = {
@@ -31265,6 +42671,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeVirtualLinkThumbnailImageUpsertWithoutCafeVirtualLinkInput = {
@@ -31493,6 +42901,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoUncheckedCreateWithoutCafeCouponGroupPartnersInput = {
@@ -31511,6 +42921,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
     CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCafeInfoInput
   }
 
   export type CafeInfoCreateOrConnectWithoutCafeCouponGroupPartnersInput = {
@@ -31572,6 +42984,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutCafeCouponGroupPartnersInput = {
@@ -31590,6 +43004,8 @@ export namespace Prisma {
     CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type UserCreateWithoutProxyUsersInput = {
@@ -31667,6 +43083,27 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type WishlistProductCreateWithoutProxyUserInput = {
+    createdAt?: Date | string
+    Product: ProductCreateNestedOneWithoutWishlistProductsInput
+  }
+
+  export type WishlistProductUncheckedCreateWithoutProxyUserInput = {
+    id?: number
+    createdAt?: Date | string
+    productId: number
+  }
+
+  export type WishlistProductCreateOrConnectWithoutProxyUserInput = {
+    where: WishlistProductWhereUniqueInput
+    create: XOR<WishlistProductCreateWithoutProxyUserInput, WishlistProductUncheckedCreateWithoutProxyUserInput>
+  }
+
+  export type WishlistProductCreateManyProxyUserInputEnvelope = {
+    data: Enumerable<WishlistProductCreateManyProxyUserInput>
+    skipDuplicates?: boolean
+  }
+
   export type UserUpsertWithoutProxyUsersInput = {
     update: XOR<UserUpdateWithoutProxyUsersInput, UserUncheckedUpdateWithoutProxyUsersInput>
     create: XOR<UserCreateWithoutProxyUsersInput, UserUncheckedCreateWithoutProxyUsersInput>
@@ -31721,6 +43158,32 @@ export namespace Prisma {
     data: XOR<CafeCouponUpdateManyMutationInput, CafeCouponUncheckedUpdateManyWithoutCafeCouponsInput>
   }
 
+  export type WishlistProductUpsertWithWhereUniqueWithoutProxyUserInput = {
+    where: WishlistProductWhereUniqueInput
+    update: XOR<WishlistProductUpdateWithoutProxyUserInput, WishlistProductUncheckedUpdateWithoutProxyUserInput>
+    create: XOR<WishlistProductCreateWithoutProxyUserInput, WishlistProductUncheckedCreateWithoutProxyUserInput>
+  }
+
+  export type WishlistProductUpdateWithWhereUniqueWithoutProxyUserInput = {
+    where: WishlistProductWhereUniqueInput
+    data: XOR<WishlistProductUpdateWithoutProxyUserInput, WishlistProductUncheckedUpdateWithoutProxyUserInput>
+  }
+
+  export type WishlistProductUpdateManyWithWhereWithoutProxyUserInput = {
+    where: WishlistProductScalarWhereInput
+    data: XOR<WishlistProductUpdateManyMutationInput, WishlistProductUncheckedUpdateManyWithoutWishlistProductsInput>
+  }
+
+  export type WishlistProductScalarWhereInput = {
+    AND?: Enumerable<WishlistProductScalarWhereInput>
+    OR?: Enumerable<WishlistProductScalarWhereInput>
+    NOT?: Enumerable<WishlistProductScalarWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    productId?: IntFilter | number
+    proxyUserId?: IntFilter | number
+  }
+
   export type ProxyUserCreateWithoutCafeCouponsInput = {
     memberId: string
     createdAt?: Date | string
@@ -31728,6 +43191,7 @@ export namespace Prisma {
     name: string
     token: string
     User?: UserCreateNestedOneWithoutProxyUsersInput
+    WishlistProducts?: WishlistProductCreateNestedManyWithoutProxyUserInput
   }
 
   export type ProxyUserUncheckedCreateWithoutCafeCouponsInput = {
@@ -31738,6 +43202,7 @@ export namespace Prisma {
     name: string
     token: string
     userId?: number | null
+    WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProxyUserInput
   }
 
   export type ProxyUserCreateOrConnectWithoutCafeCouponsInput = {
@@ -31846,6 +43311,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
     User?: UserUpdateOneWithoutProxyUsersNestedInput
+    WishlistProducts?: WishlistProductUpdateManyWithoutProxyUserNestedInput
   }
 
   export type ProxyUserUncheckedUpdateWithoutCafeCouponsInput = {
@@ -31856,6 +43322,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
     userId?: NullableIntFieldUpdateOperationsInput | number | null
+    WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProxyUserNestedInput
   }
 
   export type CafeCouponGroupUpsertWithoutCafeCouponsInput = {
@@ -32140,6 +43607,1194 @@ export namespace Prisma {
     CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput
   }
 
+  export type CafeInfoCreateWithoutMetaViewerInfosInput = {
+    createdAt?: Date | string
+    isDisable?: boolean
+    name: string
+    code?: string | null
+    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
+    address: string
+    directions: string
+    businessNumber: string
+    ceoName: string
+    CafeVirtualLinks?: CafeVirtualLinkCreateNestedManyWithoutCafeInfoInput
+    CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
+    CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
+    CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductCreateNestedManyWithoutCafeInfoInput
+  }
+
+  export type CafeInfoUncheckedCreateWithoutMetaViewerInfosInput = {
+    id?: number
+    createdAt?: Date | string
+    isDisable?: boolean
+    name: string
+    code?: string | null
+    regionCategoryId: number
+    address: string
+    directions: string
+    businessNumber: string
+    ceoName: string
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
+    Products?: ProductUncheckedCreateNestedManyWithoutCafeInfoInput
+  }
+
+  export type CafeInfoCreateOrConnectWithoutMetaViewerInfosInput = {
+    where: CafeInfoWhereUniqueInput
+    create: XOR<CafeInfoCreateWithoutMetaViewerInfosInput, CafeInfoUncheckedCreateWithoutMetaViewerInfosInput>
+  }
+
+  export type MetaViewerMapCreateWithoutMetaViewerInfoInput = {
+    createdAt?: Date | string
+    type: MetaMapType
+    version?: number
+    url: string
+    size: number
+    isDisable?: boolean
+    ActiveRenderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveRenderMapInput
+    ActiveColliderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveColliderMapInput
+  }
+
+  export type MetaViewerMapUncheckedCreateWithoutMetaViewerInfoInput = {
+    id?: number
+    createdAt?: Date | string
+    type: MetaMapType
+    version?: number
+    url: string
+    size: number
+    isDisable?: boolean
+    ActiveRenderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveRenderMapInput
+    ActiveColliderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveColliderMapInput
+  }
+
+  export type MetaViewerMapCreateOrConnectWithoutMetaViewerInfoInput = {
+    where: MetaViewerMapWhereUniqueInput
+    create: XOR<MetaViewerMapCreateWithoutMetaViewerInfoInput, MetaViewerMapUncheckedCreateWithoutMetaViewerInfoInput>
+  }
+
+  export type MetaViewerMapCreateManyMetaViewerInfoInputEnvelope = {
+    data: Enumerable<MetaViewerMapCreateManyMetaViewerInfoInput>
+    skipDuplicates?: boolean
+  }
+
+  export type MetaViewerActiveMapCreateWithoutMetaViewerInfoInput = {
+    updatedAt?: Date | string
+    ActiveRenderMap: MetaViewerMapCreateNestedOneWithoutActiveRenderForInput
+    ActiveColliderMap: MetaViewerMapCreateNestedOneWithoutActiveColliderForInput
+  }
+
+  export type MetaViewerActiveMapUncheckedCreateWithoutMetaViewerInfoInput = {
+    id?: number
+    updatedAt?: Date | string
+    activeRenderMapId: number
+    activeColliderMapId: number
+  }
+
+  export type MetaViewerActiveMapCreateOrConnectWithoutMetaViewerInfoInput = {
+    where: MetaViewerActiveMapWhereUniqueInput
+    create: XOR<MetaViewerActiveMapCreateWithoutMetaViewerInfoInput, MetaViewerActiveMapUncheckedCreateWithoutMetaViewerInfoInput>
+  }
+
+  export type CafeInfoUpsertWithoutMetaViewerInfosInput = {
+    update: XOR<CafeInfoUpdateWithoutMetaViewerInfosInput, CafeInfoUncheckedUpdateWithoutMetaViewerInfosInput>
+    create: XOR<CafeInfoCreateWithoutMetaViewerInfosInput, CafeInfoUncheckedCreateWithoutMetaViewerInfosInput>
+  }
+
+  export type CafeInfoUpdateWithoutMetaViewerInfosInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
+    address?: StringFieldUpdateOperationsInput | string
+    directions?: StringFieldUpdateOperationsInput | string
+    businessNumber?: StringFieldUpdateOperationsInput | string
+    ceoName?: StringFieldUpdateOperationsInput | string
+    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUpdateManyWithoutCafeInfoNestedInput
+  }
+
+  export type CafeInfoUncheckedUpdateWithoutMetaViewerInfosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    regionCategoryId?: IntFieldUpdateOperationsInput | number
+    address?: StringFieldUpdateOperationsInput | string
+    directions?: StringFieldUpdateOperationsInput | string
+    businessNumber?: StringFieldUpdateOperationsInput | string
+    ceoName?: StringFieldUpdateOperationsInput | string
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCafeInfoNestedInput
+  }
+
+  export type MetaViewerMapUpsertWithWhereUniqueWithoutMetaViewerInfoInput = {
+    where: MetaViewerMapWhereUniqueInput
+    update: XOR<MetaViewerMapUpdateWithoutMetaViewerInfoInput, MetaViewerMapUncheckedUpdateWithoutMetaViewerInfoInput>
+    create: XOR<MetaViewerMapCreateWithoutMetaViewerInfoInput, MetaViewerMapUncheckedCreateWithoutMetaViewerInfoInput>
+  }
+
+  export type MetaViewerMapUpdateWithWhereUniqueWithoutMetaViewerInfoInput = {
+    where: MetaViewerMapWhereUniqueInput
+    data: XOR<MetaViewerMapUpdateWithoutMetaViewerInfoInput, MetaViewerMapUncheckedUpdateWithoutMetaViewerInfoInput>
+  }
+
+  export type MetaViewerMapUpdateManyWithWhereWithoutMetaViewerInfoInput = {
+    where: MetaViewerMapScalarWhereInput
+    data: XOR<MetaViewerMapUpdateManyMutationInput, MetaViewerMapUncheckedUpdateManyWithoutMetaViewerMapsInput>
+  }
+
+  export type MetaViewerMapScalarWhereInput = {
+    AND?: Enumerable<MetaViewerMapScalarWhereInput>
+    OR?: Enumerable<MetaViewerMapScalarWhereInput>
+    NOT?: Enumerable<MetaViewerMapScalarWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    type?: EnumMetaMapTypeFilter | MetaMapType
+    version?: IntFilter | number
+    url?: StringFilter | string
+    size?: IntFilter | number
+    isDisable?: BoolFilter | boolean
+    metaViewerInfoId?: IntFilter | number
+  }
+
+  export type MetaViewerActiveMapUpsertWithoutMetaViewerInfoInput = {
+    update: XOR<MetaViewerActiveMapUpdateWithoutMetaViewerInfoInput, MetaViewerActiveMapUncheckedUpdateWithoutMetaViewerInfoInput>
+    create: XOR<MetaViewerActiveMapCreateWithoutMetaViewerInfoInput, MetaViewerActiveMapUncheckedCreateWithoutMetaViewerInfoInput>
+  }
+
+  export type MetaViewerActiveMapUpdateWithoutMetaViewerInfoInput = {
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ActiveRenderMap?: MetaViewerMapUpdateOneRequiredWithoutActiveRenderForNestedInput
+    ActiveColliderMap?: MetaViewerMapUpdateOneRequiredWithoutActiveColliderForNestedInput
+  }
+
+  export type MetaViewerActiveMapUncheckedUpdateWithoutMetaViewerInfoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeRenderMapId?: IntFieldUpdateOperationsInput | number
+    activeColliderMapId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MetaViewerInfoCreateWithoutMetaViewerMapsInput = {
+    createdAt?: Date | string
+    code: string
+    CafeInfo: CafeInfoCreateNestedOneWithoutMetaViewerInfosInput
+    ActiveMaps?: MetaViewerActiveMapCreateNestedOneWithoutMetaViewerInfoInput
+  }
+
+  export type MetaViewerInfoUncheckedCreateWithoutMetaViewerMapsInput = {
+    id?: number
+    createdAt?: Date | string
+    code: string
+    cafeInfoId: number
+    ActiveMaps?: MetaViewerActiveMapUncheckedCreateNestedOneWithoutMetaViewerInfoInput
+  }
+
+  export type MetaViewerInfoCreateOrConnectWithoutMetaViewerMapsInput = {
+    where: MetaViewerInfoWhereUniqueInput
+    create: XOR<MetaViewerInfoCreateWithoutMetaViewerMapsInput, MetaViewerInfoUncheckedCreateWithoutMetaViewerMapsInput>
+  }
+
+  export type MetaViewerActiveMapCreateWithoutActiveRenderMapInput = {
+    updatedAt?: Date | string
+    MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutActiveMapsInput
+    ActiveColliderMap: MetaViewerMapCreateNestedOneWithoutActiveColliderForInput
+  }
+
+  export type MetaViewerActiveMapUncheckedCreateWithoutActiveRenderMapInput = {
+    id?: number
+    updatedAt?: Date | string
+    metaViewerInfoId: number
+    activeColliderMapId: number
+  }
+
+  export type MetaViewerActiveMapCreateOrConnectWithoutActiveRenderMapInput = {
+    where: MetaViewerActiveMapWhereUniqueInput
+    create: XOR<MetaViewerActiveMapCreateWithoutActiveRenderMapInput, MetaViewerActiveMapUncheckedCreateWithoutActiveRenderMapInput>
+  }
+
+  export type MetaViewerActiveMapCreateManyActiveRenderMapInputEnvelope = {
+    data: Enumerable<MetaViewerActiveMapCreateManyActiveRenderMapInput>
+    skipDuplicates?: boolean
+  }
+
+  export type MetaViewerActiveMapCreateWithoutActiveColliderMapInput = {
+    updatedAt?: Date | string
+    MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutActiveMapsInput
+    ActiveRenderMap: MetaViewerMapCreateNestedOneWithoutActiveRenderForInput
+  }
+
+  export type MetaViewerActiveMapUncheckedCreateWithoutActiveColliderMapInput = {
+    id?: number
+    updatedAt?: Date | string
+    metaViewerInfoId: number
+    activeRenderMapId: number
+  }
+
+  export type MetaViewerActiveMapCreateOrConnectWithoutActiveColliderMapInput = {
+    where: MetaViewerActiveMapWhereUniqueInput
+    create: XOR<MetaViewerActiveMapCreateWithoutActiveColliderMapInput, MetaViewerActiveMapUncheckedCreateWithoutActiveColliderMapInput>
+  }
+
+  export type MetaViewerActiveMapCreateManyActiveColliderMapInputEnvelope = {
+    data: Enumerable<MetaViewerActiveMapCreateManyActiveColliderMapInput>
+    skipDuplicates?: boolean
+  }
+
+  export type MetaViewerInfoUpsertWithoutMetaViewerMapsInput = {
+    update: XOR<MetaViewerInfoUpdateWithoutMetaViewerMapsInput, MetaViewerInfoUncheckedUpdateWithoutMetaViewerMapsInput>
+    create: XOR<MetaViewerInfoCreateWithoutMetaViewerMapsInput, MetaViewerInfoUncheckedCreateWithoutMetaViewerMapsInput>
+  }
+
+  export type MetaViewerInfoUpdateWithoutMetaViewerMapsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutMetaViewerInfosNestedInput
+    ActiveMaps?: MetaViewerActiveMapUpdateOneWithoutMetaViewerInfoNestedInput
+  }
+
+  export type MetaViewerInfoUncheckedUpdateWithoutMetaViewerMapsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+    ActiveMaps?: MetaViewerActiveMapUncheckedUpdateOneWithoutMetaViewerInfoNestedInput
+  }
+
+  export type MetaViewerActiveMapUpsertWithWhereUniqueWithoutActiveRenderMapInput = {
+    where: MetaViewerActiveMapWhereUniqueInput
+    update: XOR<MetaViewerActiveMapUpdateWithoutActiveRenderMapInput, MetaViewerActiveMapUncheckedUpdateWithoutActiveRenderMapInput>
+    create: XOR<MetaViewerActiveMapCreateWithoutActiveRenderMapInput, MetaViewerActiveMapUncheckedCreateWithoutActiveRenderMapInput>
+  }
+
+  export type MetaViewerActiveMapUpdateWithWhereUniqueWithoutActiveRenderMapInput = {
+    where: MetaViewerActiveMapWhereUniqueInput
+    data: XOR<MetaViewerActiveMapUpdateWithoutActiveRenderMapInput, MetaViewerActiveMapUncheckedUpdateWithoutActiveRenderMapInput>
+  }
+
+  export type MetaViewerActiveMapUpdateManyWithWhereWithoutActiveRenderMapInput = {
+    where: MetaViewerActiveMapScalarWhereInput
+    data: XOR<MetaViewerActiveMapUpdateManyMutationInput, MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderForInput>
+  }
+
+  export type MetaViewerActiveMapScalarWhereInput = {
+    AND?: Enumerable<MetaViewerActiveMapScalarWhereInput>
+    OR?: Enumerable<MetaViewerActiveMapScalarWhereInput>
+    NOT?: Enumerable<MetaViewerActiveMapScalarWhereInput>
+    id?: IntFilter | number
+    updatedAt?: DateTimeFilter | Date | string
+    metaViewerInfoId?: IntFilter | number
+    activeRenderMapId?: IntFilter | number
+    activeColliderMapId?: IntFilter | number
+  }
+
+  export type MetaViewerActiveMapUpsertWithWhereUniqueWithoutActiveColliderMapInput = {
+    where: MetaViewerActiveMapWhereUniqueInput
+    update: XOR<MetaViewerActiveMapUpdateWithoutActiveColliderMapInput, MetaViewerActiveMapUncheckedUpdateWithoutActiveColliderMapInput>
+    create: XOR<MetaViewerActiveMapCreateWithoutActiveColliderMapInput, MetaViewerActiveMapUncheckedCreateWithoutActiveColliderMapInput>
+  }
+
+  export type MetaViewerActiveMapUpdateWithWhereUniqueWithoutActiveColliderMapInput = {
+    where: MetaViewerActiveMapWhereUniqueInput
+    data: XOR<MetaViewerActiveMapUpdateWithoutActiveColliderMapInput, MetaViewerActiveMapUncheckedUpdateWithoutActiveColliderMapInput>
+  }
+
+  export type MetaViewerActiveMapUpdateManyWithWhereWithoutActiveColliderMapInput = {
+    where: MetaViewerActiveMapScalarWhereInput
+    data: XOR<MetaViewerActiveMapUpdateManyMutationInput, MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderForInput>
+  }
+
+  export type MetaViewerInfoCreateWithoutActiveMapsInput = {
+    createdAt?: Date | string
+    code: string
+    CafeInfo: CafeInfoCreateNestedOneWithoutMetaViewerInfosInput
+    MetaViewerMaps?: MetaViewerMapCreateNestedManyWithoutMetaViewerInfoInput
+  }
+
+  export type MetaViewerInfoUncheckedCreateWithoutActiveMapsInput = {
+    id?: number
+    createdAt?: Date | string
+    code: string
+    cafeInfoId: number
+    MetaViewerMaps?: MetaViewerMapUncheckedCreateNestedManyWithoutMetaViewerInfoInput
+  }
+
+  export type MetaViewerInfoCreateOrConnectWithoutActiveMapsInput = {
+    where: MetaViewerInfoWhereUniqueInput
+    create: XOR<MetaViewerInfoCreateWithoutActiveMapsInput, MetaViewerInfoUncheckedCreateWithoutActiveMapsInput>
+  }
+
+  export type MetaViewerMapCreateWithoutActiveRenderForInput = {
+    createdAt?: Date | string
+    type: MetaMapType
+    version?: number
+    url: string
+    size: number
+    isDisable?: boolean
+    MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutMetaViewerMapsInput
+    ActiveColliderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveColliderMapInput
+  }
+
+  export type MetaViewerMapUncheckedCreateWithoutActiveRenderForInput = {
+    id?: number
+    createdAt?: Date | string
+    type: MetaMapType
+    version?: number
+    url: string
+    size: number
+    isDisable?: boolean
+    metaViewerInfoId: number
+    ActiveColliderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveColliderMapInput
+  }
+
+  export type MetaViewerMapCreateOrConnectWithoutActiveRenderForInput = {
+    where: MetaViewerMapWhereUniqueInput
+    create: XOR<MetaViewerMapCreateWithoutActiveRenderForInput, MetaViewerMapUncheckedCreateWithoutActiveRenderForInput>
+  }
+
+  export type MetaViewerMapCreateWithoutActiveColliderForInput = {
+    createdAt?: Date | string
+    type: MetaMapType
+    version?: number
+    url: string
+    size: number
+    isDisable?: boolean
+    MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutMetaViewerMapsInput
+    ActiveRenderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveRenderMapInput
+  }
+
+  export type MetaViewerMapUncheckedCreateWithoutActiveColliderForInput = {
+    id?: number
+    createdAt?: Date | string
+    type: MetaMapType
+    version?: number
+    url: string
+    size: number
+    isDisable?: boolean
+    metaViewerInfoId: number
+    ActiveRenderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveRenderMapInput
+  }
+
+  export type MetaViewerMapCreateOrConnectWithoutActiveColliderForInput = {
+    where: MetaViewerMapWhereUniqueInput
+    create: XOR<MetaViewerMapCreateWithoutActiveColliderForInput, MetaViewerMapUncheckedCreateWithoutActiveColliderForInput>
+  }
+
+  export type MetaViewerInfoUpsertWithoutActiveMapsInput = {
+    update: XOR<MetaViewerInfoUpdateWithoutActiveMapsInput, MetaViewerInfoUncheckedUpdateWithoutActiveMapsInput>
+    create: XOR<MetaViewerInfoCreateWithoutActiveMapsInput, MetaViewerInfoUncheckedCreateWithoutActiveMapsInput>
+  }
+
+  export type MetaViewerInfoUpdateWithoutActiveMapsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    CafeInfo?: CafeInfoUpdateOneRequiredWithoutMetaViewerInfosNestedInput
+    MetaViewerMaps?: MetaViewerMapUpdateManyWithoutMetaViewerInfoNestedInput
+  }
+
+  export type MetaViewerInfoUncheckedUpdateWithoutActiveMapsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    cafeInfoId?: IntFieldUpdateOperationsInput | number
+    MetaViewerMaps?: MetaViewerMapUncheckedUpdateManyWithoutMetaViewerInfoNestedInput
+  }
+
+  export type MetaViewerMapUpsertWithoutActiveRenderForInput = {
+    update: XOR<MetaViewerMapUpdateWithoutActiveRenderForInput, MetaViewerMapUncheckedUpdateWithoutActiveRenderForInput>
+    create: XOR<MetaViewerMapCreateWithoutActiveRenderForInput, MetaViewerMapUncheckedCreateWithoutActiveRenderForInput>
+  }
+
+  export type MetaViewerMapUpdateWithoutActiveRenderForInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput
+    ActiveColliderFor?: MetaViewerActiveMapUpdateManyWithoutActiveColliderMapNestedInput
+  }
+
+  export type MetaViewerMapUncheckedUpdateWithoutActiveRenderForInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    metaViewerInfoId?: IntFieldUpdateOperationsInput | number
+    ActiveColliderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderMapNestedInput
+  }
+
+  export type MetaViewerMapUpsertWithoutActiveColliderForInput = {
+    update: XOR<MetaViewerMapUpdateWithoutActiveColliderForInput, MetaViewerMapUncheckedUpdateWithoutActiveColliderForInput>
+    create: XOR<MetaViewerMapCreateWithoutActiveColliderForInput, MetaViewerMapUncheckedCreateWithoutActiveColliderForInput>
+  }
+
+  export type MetaViewerMapUpdateWithoutActiveColliderForInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput
+    ActiveRenderFor?: MetaViewerActiveMapUpdateManyWithoutActiveRenderMapNestedInput
+  }
+
+  export type MetaViewerMapUncheckedUpdateWithoutActiveColliderForInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    metaViewerInfoId?: IntFieldUpdateOperationsInput | number
+    ActiveRenderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderMapNestedInput
+  }
+
+  export type ClosureProductCategoryCreateWithoutAncestorCategoryInput = {
+    depth?: number
+    DescendantCategory: ProductCategoryCreateNestedOneWithoutDescendantCategoriesInput
+  }
+
+  export type ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput = {
+    descendant: number
+    depth?: number
+  }
+
+  export type ClosureProductCategoryCreateOrConnectWithoutAncestorCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    create: XOR<ClosureProductCategoryCreateWithoutAncestorCategoryInput, ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>
+  }
+
+  export type ClosureProductCategoryCreateManyAncestorCategoryInputEnvelope = {
+    data: Enumerable<ClosureProductCategoryCreateManyAncestorCategoryInput>
+    skipDuplicates?: boolean
+  }
+
+  export type ClosureProductCategoryCreateWithoutDescendantCategoryInput = {
+    depth?: number
+    AncestorCategory: ProductCategoryCreateNestedOneWithoutAncestorCategoriesInput
+  }
+
+  export type ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput = {
+    ancestor: number
+    depth?: number
+  }
+
+  export type ClosureProductCategoryCreateOrConnectWithoutDescendantCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    create: XOR<ClosureProductCategoryCreateWithoutDescendantCategoryInput, ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>
+  }
+
+  export type ClosureProductCategoryCreateManyDescendantCategoryInputEnvelope = {
+    data: Enumerable<ClosureProductCategoryCreateManyDescendantCategoryInput>
+    skipDuplicates?: boolean
+  }
+
+  export type ProductCreateWithoutProductCategoryInput = {
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
+    WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
+    ProductImages?: ProductImageCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductUncheckedCreateWithoutProductCategoryInput = {
+    id?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    cafeInfoId?: number | null
+    WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProductInput
+    ProductImages?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductCreateOrConnectWithoutProductCategoryInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutProductCategoryInput, ProductUncheckedCreateWithoutProductCategoryInput>
+  }
+
+  export type ProductCreateManyProductCategoryInputEnvelope = {
+    data: Enumerable<ProductCreateManyProductCategoryInput>
+    skipDuplicates?: boolean
+  }
+
+  export type ClosureProductCategoryUpsertWithWhereUniqueWithoutAncestorCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    update: XOR<ClosureProductCategoryUpdateWithoutAncestorCategoryInput, ClosureProductCategoryUncheckedUpdateWithoutAncestorCategoryInput>
+    create: XOR<ClosureProductCategoryCreateWithoutAncestorCategoryInput, ClosureProductCategoryUncheckedCreateWithoutAncestorCategoryInput>
+  }
+
+  export type ClosureProductCategoryUpdateWithWhereUniqueWithoutAncestorCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    data: XOR<ClosureProductCategoryUpdateWithoutAncestorCategoryInput, ClosureProductCategoryUncheckedUpdateWithoutAncestorCategoryInput>
+  }
+
+  export type ClosureProductCategoryUpdateManyWithWhereWithoutAncestorCategoryInput = {
+    where: ClosureProductCategoryScalarWhereInput
+    data: XOR<ClosureProductCategoryUpdateManyMutationInput, ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoriesInput>
+  }
+
+  export type ClosureProductCategoryScalarWhereInput = {
+    AND?: Enumerable<ClosureProductCategoryScalarWhereInput>
+    OR?: Enumerable<ClosureProductCategoryScalarWhereInput>
+    NOT?: Enumerable<ClosureProductCategoryScalarWhereInput>
+    ancestor?: IntFilter | number
+    descendant?: IntFilter | number
+    depth?: IntFilter | number
+  }
+
+  export type ClosureProductCategoryUpsertWithWhereUniqueWithoutDescendantCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    update: XOR<ClosureProductCategoryUpdateWithoutDescendantCategoryInput, ClosureProductCategoryUncheckedUpdateWithoutDescendantCategoryInput>
+    create: XOR<ClosureProductCategoryCreateWithoutDescendantCategoryInput, ClosureProductCategoryUncheckedCreateWithoutDescendantCategoryInput>
+  }
+
+  export type ClosureProductCategoryUpdateWithWhereUniqueWithoutDescendantCategoryInput = {
+    where: ClosureProductCategoryWhereUniqueInput
+    data: XOR<ClosureProductCategoryUpdateWithoutDescendantCategoryInput, ClosureProductCategoryUncheckedUpdateWithoutDescendantCategoryInput>
+  }
+
+  export type ClosureProductCategoryUpdateManyWithWhereWithoutDescendantCategoryInput = {
+    where: ClosureProductCategoryScalarWhereInput
+    data: XOR<ClosureProductCategoryUpdateManyMutationInput, ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoriesInput>
+  }
+
+  export type ProductUpsertWithWhereUniqueWithoutProductCategoryInput = {
+    where: ProductWhereUniqueInput
+    update: XOR<ProductUpdateWithoutProductCategoryInput, ProductUncheckedUpdateWithoutProductCategoryInput>
+    create: XOR<ProductCreateWithoutProductCategoryInput, ProductUncheckedCreateWithoutProductCategoryInput>
+  }
+
+  export type ProductUpdateWithWhereUniqueWithoutProductCategoryInput = {
+    where: ProductWhereUniqueInput
+    data: XOR<ProductUpdateWithoutProductCategoryInput, ProductUncheckedUpdateWithoutProductCategoryInput>
+  }
+
+  export type ProductUpdateManyWithWhereWithoutProductCategoryInput = {
+    where: ProductScalarWhereInput
+    data: XOR<ProductUpdateManyMutationInput, ProductUncheckedUpdateManyWithoutProductsInput>
+  }
+
+  export type ProductCategoryCreateWithoutAncestorCategoriesInput = {
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    DescendantCategories?: ClosureProductCategoryCreateNestedManyWithoutDescendantCategoryInput
+    Products?: ProductCreateNestedManyWithoutProductCategoryInput
+  }
+
+  export type ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    DescendantCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
+    Products?: ProductUncheckedCreateNestedManyWithoutProductCategoryInput
+  }
+
+  export type ProductCategoryCreateOrConnectWithoutAncestorCategoriesInput = {
+    where: ProductCategoryWhereUniqueInput
+    create: XOR<ProductCategoryCreateWithoutAncestorCategoriesInput, ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput>
+  }
+
+  export type ProductCategoryCreateWithoutDescendantCategoriesInput = {
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    AncestorCategories?: ClosureProductCategoryCreateNestedManyWithoutAncestorCategoryInput
+    Products?: ProductCreateNestedManyWithoutProductCategoryInput
+  }
+
+  export type ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    AncestorCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
+    Products?: ProductUncheckedCreateNestedManyWithoutProductCategoryInput
+  }
+
+  export type ProductCategoryCreateOrConnectWithoutDescendantCategoriesInput = {
+    where: ProductCategoryWhereUniqueInput
+    create: XOR<ProductCategoryCreateWithoutDescendantCategoriesInput, ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput>
+  }
+
+  export type ProductCategoryUpsertWithoutAncestorCategoriesInput = {
+    update: XOR<ProductCategoryUpdateWithoutAncestorCategoriesInput, ProductCategoryUncheckedUpdateWithoutAncestorCategoriesInput>
+    create: XOR<ProductCategoryCreateWithoutAncestorCategoriesInput, ProductCategoryUncheckedCreateWithoutAncestorCategoriesInput>
+  }
+
+  export type ProductCategoryUpdateWithoutAncestorCategoriesInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    DescendantCategories?: ClosureProductCategoryUpdateManyWithoutDescendantCategoryNestedInput
+    Products?: ProductUpdateManyWithoutProductCategoryNestedInput
+  }
+
+  export type ProductCategoryUncheckedUpdateWithoutAncestorCategoriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    DescendantCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutProductCategoryNestedInput
+  }
+
+  export type ProductCategoryUpsertWithoutDescendantCategoriesInput = {
+    update: XOR<ProductCategoryUpdateWithoutDescendantCategoriesInput, ProductCategoryUncheckedUpdateWithoutDescendantCategoriesInput>
+    create: XOR<ProductCategoryCreateWithoutDescendantCategoriesInput, ProductCategoryUncheckedCreateWithoutDescendantCategoriesInput>
+  }
+
+  export type ProductCategoryUpdateWithoutDescendantCategoriesInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    AncestorCategories?: ClosureProductCategoryUpdateManyWithoutAncestorCategoryNestedInput
+    Products?: ProductUpdateManyWithoutProductCategoryNestedInput
+  }
+
+  export type ProductCategoryUncheckedUpdateWithoutDescendantCategoriesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    AncestorCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutProductCategoryNestedInput
+  }
+
+  export type ProductCategoryCreateWithoutProductsInput = {
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    AncestorCategories?: ClosureProductCategoryCreateNestedManyWithoutAncestorCategoryInput
+    DescendantCategories?: ClosureProductCategoryCreateNestedManyWithoutDescendantCategoryInput
+  }
+
+  export type ProductCategoryUncheckedCreateWithoutProductsInput = {
+    id?: number
+    createdAt?: Date | string
+    name: string
+    description?: string | null
+    isDisable?: boolean
+    code: string
+    AncestorCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutAncestorCategoryInput
+    DescendantCategories?: ClosureProductCategoryUncheckedCreateNestedManyWithoutDescendantCategoryInput
+  }
+
+  export type ProductCategoryCreateOrConnectWithoutProductsInput = {
+    where: ProductCategoryWhereUniqueInput
+    create: XOR<ProductCategoryCreateWithoutProductsInput, ProductCategoryUncheckedCreateWithoutProductsInput>
+  }
+
+  export type CafeInfoCreateWithoutProductsInput = {
+    createdAt?: Date | string
+    isDisable?: boolean
+    name: string
+    code?: string | null
+    RegionCategory: RegionCategoryCreateNestedOneWithoutCafeInfosInput
+    address: string
+    directions: string
+    businessNumber: string
+    ceoName: string
+    CafeVirtualLinks?: CafeVirtualLinkCreateNestedManyWithoutCafeInfoInput
+    CafeThumbnailImages?: CafeThumbnailImageCreateNestedManyWithoutCafeInfoInput
+    CafeVirtualImages?: CafeVirtualImageCreateNestedManyWithoutCafeInfoInput
+    CafeRealImages?: CafeRealImageCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoCreateNestedManyWithoutCafeInfoInput
+  }
+
+  export type CafeInfoUncheckedCreateWithoutProductsInput = {
+    id?: number
+    createdAt?: Date | string
+    isDisable?: boolean
+    name: string
+    code?: string | null
+    regionCategoryId: number
+    address: string
+    directions: string
+    businessNumber: string
+    ceoName: string
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeRealImages?: CafeRealImageUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedCreateNestedManyWithoutCafeInfoInput
+    CafeBoards?: CafeBoardUncheckedCreateNestedManyWithoutCafeInfoInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedCreateNestedManyWithoutCafeInfoInput
+  }
+
+  export type CafeInfoCreateOrConnectWithoutProductsInput = {
+    where: CafeInfoWhereUniqueInput
+    create: XOR<CafeInfoCreateWithoutProductsInput, CafeInfoUncheckedCreateWithoutProductsInput>
+  }
+
+  export type WishlistProductCreateWithoutProductInput = {
+    createdAt?: Date | string
+    ProxyUser: ProxyUserCreateNestedOneWithoutWishlistProductsInput
+  }
+
+  export type WishlistProductUncheckedCreateWithoutProductInput = {
+    id?: number
+    createdAt?: Date | string
+    proxyUserId: number
+  }
+
+  export type WishlistProductCreateOrConnectWithoutProductInput = {
+    where: WishlistProductWhereUniqueInput
+    create: XOR<WishlistProductCreateWithoutProductInput, WishlistProductUncheckedCreateWithoutProductInput>
+  }
+
+  export type WishlistProductCreateManyProductInputEnvelope = {
+    data: Enumerable<WishlistProductCreateManyProductInput>
+    skipDuplicates?: boolean
+  }
+
+  export type ProductImageCreateWithoutProductInput = {
+    createdAt?: Date | string
+    url: string
+    thumbnailUrl: string
+    width: number
+    height: number
+    size: number
+    isDisable?: boolean
+    isThumb?: boolean
+  }
+
+  export type ProductImageUncheckedCreateWithoutProductInput = {
+    id?: number
+    createdAt?: Date | string
+    url: string
+    thumbnailUrl: string
+    width: number
+    height: number
+    size: number
+    isDisable?: boolean
+    isThumb?: boolean
+  }
+
+  export type ProductImageCreateOrConnectWithoutProductInput = {
+    where: ProductImageWhereUniqueInput
+    create: XOR<ProductImageCreateWithoutProductInput, ProductImageUncheckedCreateWithoutProductInput>
+  }
+
+  export type ProductImageCreateManyProductInputEnvelope = {
+    data: Enumerable<ProductImageCreateManyProductInput>
+    skipDuplicates?: boolean
+  }
+
+  export type ProductCategoryUpsertWithoutProductsInput = {
+    update: XOR<ProductCategoryUpdateWithoutProductsInput, ProductCategoryUncheckedUpdateWithoutProductsInput>
+    create: XOR<ProductCategoryCreateWithoutProductsInput, ProductCategoryUncheckedCreateWithoutProductsInput>
+  }
+
+  export type ProductCategoryUpdateWithoutProductsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    AncestorCategories?: ClosureProductCategoryUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureProductCategoryUpdateManyWithoutDescendantCategoryNestedInput
+  }
+
+  export type ProductCategoryUncheckedUpdateWithoutProductsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    code?: StringFieldUpdateOperationsInput | string
+    AncestorCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoryNestedInput
+    DescendantCategories?: ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoryNestedInput
+  }
+
+  export type CafeInfoUpsertWithoutProductsInput = {
+    update: XOR<CafeInfoUpdateWithoutProductsInput, CafeInfoUncheckedUpdateWithoutProductsInput>
+    create: XOR<CafeInfoCreateWithoutProductsInput, CafeInfoUncheckedCreateWithoutProductsInput>
+  }
+
+  export type CafeInfoUpdateWithoutProductsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    RegionCategory?: RegionCategoryUpdateOneRequiredWithoutCafeInfosNestedInput
+    address?: StringFieldUpdateOperationsInput | string
+    directions?: StringFieldUpdateOperationsInput | string
+    businessNumber?: StringFieldUpdateOperationsInput | string
+    ceoName?: StringFieldUpdateOperationsInput | string
+    CafeVirtualLinks?: CafeVirtualLinkUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUpdateManyWithoutCafeInfoNestedInput
+  }
+
+  export type CafeInfoUncheckedUpdateWithoutProductsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    name?: StringFieldUpdateOperationsInput | string
+    code?: NullableStringFieldUpdateOperationsInput | string | null
+    regionCategoryId?: IntFieldUpdateOperationsInput | number
+    address?: StringFieldUpdateOperationsInput | string
+    directions?: StringFieldUpdateOperationsInput | string
+    businessNumber?: StringFieldUpdateOperationsInput | string
+    ceoName?: StringFieldUpdateOperationsInput | string
+    CafeVirtualLinks?: CafeVirtualLinkUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeThumbnailImages?: CafeThumbnailImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeVirtualImages?: CafeVirtualImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
+    CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedUpdateManyWithoutCafeInfoNestedInput
+  }
+
+  export type WishlistProductUpsertWithWhereUniqueWithoutProductInput = {
+    where: WishlistProductWhereUniqueInput
+    update: XOR<WishlistProductUpdateWithoutProductInput, WishlistProductUncheckedUpdateWithoutProductInput>
+    create: XOR<WishlistProductCreateWithoutProductInput, WishlistProductUncheckedCreateWithoutProductInput>
+  }
+
+  export type WishlistProductUpdateWithWhereUniqueWithoutProductInput = {
+    where: WishlistProductWhereUniqueInput
+    data: XOR<WishlistProductUpdateWithoutProductInput, WishlistProductUncheckedUpdateWithoutProductInput>
+  }
+
+  export type WishlistProductUpdateManyWithWhereWithoutProductInput = {
+    where: WishlistProductScalarWhereInput
+    data: XOR<WishlistProductUpdateManyMutationInput, WishlistProductUncheckedUpdateManyWithoutWishlistProductsInput>
+  }
+
+  export type ProductImageUpsertWithWhereUniqueWithoutProductInput = {
+    where: ProductImageWhereUniqueInput
+    update: XOR<ProductImageUpdateWithoutProductInput, ProductImageUncheckedUpdateWithoutProductInput>
+    create: XOR<ProductImageCreateWithoutProductInput, ProductImageUncheckedCreateWithoutProductInput>
+  }
+
+  export type ProductImageUpdateWithWhereUniqueWithoutProductInput = {
+    where: ProductImageWhereUniqueInput
+    data: XOR<ProductImageUpdateWithoutProductInput, ProductImageUncheckedUpdateWithoutProductInput>
+  }
+
+  export type ProductImageUpdateManyWithWhereWithoutProductInput = {
+    where: ProductImageScalarWhereInput
+    data: XOR<ProductImageUpdateManyMutationInput, ProductImageUncheckedUpdateManyWithoutProductImagesInput>
+  }
+
+  export type ProductImageScalarWhereInput = {
+    AND?: Enumerable<ProductImageScalarWhereInput>
+    OR?: Enumerable<ProductImageScalarWhereInput>
+    NOT?: Enumerable<ProductImageScalarWhereInput>
+    id?: IntFilter | number
+    createdAt?: DateTimeFilter | Date | string
+    url?: StringFilter | string
+    thumbnailUrl?: StringFilter | string
+    width?: IntFilter | number
+    height?: IntFilter | number
+    size?: IntFilter | number
+    isDisable?: BoolFilter | boolean
+    isThumb?: BoolFilter | boolean
+    productId?: IntFilter | number
+  }
+
+  export type ProductCreateWithoutWishlistProductsInput = {
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
+    CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
+    ProductImages?: ProductImageCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductUncheckedCreateWithoutWishlistProductsInput = {
+    id?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    categoryId: number
+    cafeInfoId?: number | null
+    ProductImages?: ProductImageUncheckedCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductCreateOrConnectWithoutWishlistProductsInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutWishlistProductsInput, ProductUncheckedCreateWithoutWishlistProductsInput>
+  }
+
+  export type ProxyUserCreateWithoutWishlistProductsInput = {
+    memberId: string
+    createdAt?: Date | string
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+    User?: UserCreateNestedOneWithoutProxyUsersInput
+    CafeCoupons?: CafeCouponCreateNestedManyWithoutProxyUserInput
+  }
+
+  export type ProxyUserUncheckedCreateWithoutWishlistProductsInput = {
+    id?: number
+    memberId: string
+    createdAt?: Date | string
+    proxyUserType: ProxyUserType
+    name: string
+    token: string
+    userId?: number | null
+    CafeCoupons?: CafeCouponUncheckedCreateNestedManyWithoutProxyUserInput
+  }
+
+  export type ProxyUserCreateOrConnectWithoutWishlistProductsInput = {
+    where: ProxyUserWhereUniqueInput
+    create: XOR<ProxyUserCreateWithoutWishlistProductsInput, ProxyUserUncheckedCreateWithoutWishlistProductsInput>
+  }
+
+  export type ProductUpsertWithoutWishlistProductsInput = {
+    update: XOR<ProductUpdateWithoutWishlistProductsInput, ProductUncheckedUpdateWithoutWishlistProductsInput>
+    create: XOR<ProductCreateWithoutWishlistProductsInput, ProductUncheckedCreateWithoutWishlistProductsInput>
+  }
+
+  export type ProductUpdateWithoutWishlistProductsInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
+    CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
+    ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductUncheckedUpdateWithoutWishlistProductsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    categoryId?: IntFieldUpdateOperationsInput | number
+    cafeInfoId?: NullableIntFieldUpdateOperationsInput | number | null
+    ProductImages?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProxyUserUpsertWithoutWishlistProductsInput = {
+    update: XOR<ProxyUserUpdateWithoutWishlistProductsInput, ProxyUserUncheckedUpdateWithoutWishlistProductsInput>
+    create: XOR<ProxyUserCreateWithoutWishlistProductsInput, ProxyUserUncheckedCreateWithoutWishlistProductsInput>
+  }
+
+  export type ProxyUserUpdateWithoutWishlistProductsInput = {
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    User?: UserUpdateOneWithoutProxyUsersNestedInput
+    CafeCoupons?: CafeCouponUpdateManyWithoutProxyUserNestedInput
+  }
+
+  export type ProxyUserUncheckedUpdateWithoutWishlistProductsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    memberId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserType?: EnumProxyUserTypeFieldUpdateOperationsInput | ProxyUserType
+    name?: StringFieldUpdateOperationsInput | string
+    token?: StringFieldUpdateOperationsInput | string
+    userId?: NullableIntFieldUpdateOperationsInput | number | null
+    CafeCoupons?: CafeCouponUncheckedUpdateManyWithoutProxyUserNestedInput
+  }
+
+  export type ProductCreateWithoutProductImagesInput = {
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    ProductCategory: ProductCategoryCreateNestedOneWithoutProductsInput
+    CafeInfo?: CafeInfoCreateNestedOneWithoutProductsInput
+    WishlistProducts?: WishlistProductCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductUncheckedCreateWithoutProductImagesInput = {
+    id?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    categoryId: number
+    cafeInfoId?: number | null
+    WishlistProducts?: WishlistProductUncheckedCreateNestedManyWithoutProductInput
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ProductCreateOrConnectWithoutProductImagesInput = {
+    where: ProductWhereUniqueInput
+    create: XOR<ProductCreateWithoutProductImagesInput, ProductUncheckedCreateWithoutProductImagesInput>
+  }
+
+  export type ProductUpsertWithoutProductImagesInput = {
+    update: XOR<ProductUpdateWithoutProductImagesInput, ProductUncheckedUpdateWithoutProductImagesInput>
+    create: XOR<ProductCreateWithoutProductImagesInput, ProductUncheckedCreateWithoutProductImagesInput>
+  }
+
+  export type ProductUpdateWithoutProductImagesInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
+    CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
+    WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductUncheckedUpdateWithoutProductImagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    categoryId?: IntFieldUpdateOperationsInput | number
+    cafeInfoId?: NullableIntFieldUpdateOperationsInput | number | null
+    WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
   export type BoardCreateManyUserInput = {
     id?: number
     createdAt?: Date | string
@@ -32295,6 +44950,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
     CafeCoupons?: CafeCouponUpdateManyWithoutProxyUserNestedInput
+    WishlistProducts?: WishlistProductUpdateManyWithoutProxyUserNestedInput
   }
 
   export type ProxyUserUncheckedUpdateWithoutUserInput = {
@@ -32305,6 +44961,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     token?: StringFieldUpdateOperationsInput | string
     CafeCoupons?: CafeCouponUncheckedUpdateManyWithoutProxyUserNestedInput
+    WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProxyUserNestedInput
   }
 
   export type ProxyUserUncheckedUpdateManyWithoutProxyUsersInput = {
@@ -32521,6 +45178,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateWithoutRegionCategoryInput = {
@@ -32539,6 +45198,8 @@ export namespace Prisma {
     CafeRealImages?: CafeRealImageUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeCouponGroupPartners?: CafeCouponGoupPartnerUncheckedUpdateManyWithoutCafeInfoNestedInput
     CafeBoards?: CafeBoardUncheckedUpdateManyWithoutCafeInfoNestedInput
+    MetaViewerInfos?: MetaViewerInfoUncheckedUpdateManyWithoutCafeInfoNestedInput
+    Products?: ProductUncheckedUpdateManyWithoutCafeInfoNestedInput
   }
 
   export type CafeInfoUncheckedUpdateManyWithoutCafeInfosInput = {
@@ -32634,6 +45295,30 @@ export namespace Prisma {
   export type CafeBoardCreateManyCafeInfoInput = {
     boardId: number
     createdAt?: Date | string
+  }
+
+  export type MetaViewerInfoCreateManyCafeInfoInput = {
+    id?: number
+    createdAt?: Date | string
+    code: string
+  }
+
+  export type ProductCreateManyCafeInfoInput = {
+    id?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    categoryId: number
+    productRedirectUrl?: string | null
+    isSignature?: boolean
   }
 
   export type CafeVirtualLinkUpdateWithoutCafeInfoInput = {
@@ -32788,6 +45473,84 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type MetaViewerInfoUpdateWithoutCafeInfoInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    MetaViewerMaps?: MetaViewerMapUpdateManyWithoutMetaViewerInfoNestedInput
+    ActiveMaps?: MetaViewerActiveMapUpdateOneWithoutMetaViewerInfoNestedInput
+  }
+
+  export type MetaViewerInfoUncheckedUpdateWithoutCafeInfoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+    MetaViewerMaps?: MetaViewerMapUncheckedUpdateManyWithoutMetaViewerInfoNestedInput
+    ActiveMaps?: MetaViewerActiveMapUncheckedUpdateOneWithoutMetaViewerInfoNestedInput
+  }
+
+  export type MetaViewerInfoUncheckedUpdateManyWithoutMetaViewerInfosInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    code?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ProductUpdateWithoutCafeInfoInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ProductCategory?: ProductCategoryUpdateOneRequiredWithoutProductsNestedInput
+    WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
+    ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductUncheckedUpdateWithoutCafeInfoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    categoryId?: IntFieldUpdateOperationsInput | number
+    WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProductNestedInput
+    ProductImages?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductUncheckedUpdateManyWithoutProductsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    categoryId?: IntFieldUpdateOperationsInput | number
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
   export type CafeCouponCreateManyCafeCouponGroupInput = {
     id?: number
     createdAt?: Date | string
@@ -32867,6 +45630,12 @@ export namespace Prisma {
     cafeCouponGroupId: number
   }
 
+  export type WishlistProductCreateManyProxyUserInput = {
+    id?: number
+    createdAt?: Date | string
+    productId: number
+  }
+
   export type CafeCouponUpdateWithoutProxyUserInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     name?: StringFieldUpdateOperationsInput | string
@@ -32892,6 +45661,23 @@ export namespace Prisma {
     cafeCouponGroupId?: IntFieldUpdateOperationsInput | number
     CafeCouponQRCodes?: CafeCouponQRCodeUncheckedUpdateManyWithoutCafeCouponNestedInput
     CafeCouponHistories?: CafeCouponHistoryUncheckedUpdateManyWithoutCafeCouponNestedInput
+  }
+
+  export type WishlistProductUpdateWithoutProxyUserInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    Product?: ProductUpdateOneRequiredWithoutWishlistProductsNestedInput
+  }
+
+  export type WishlistProductUncheckedUpdateWithoutProxyUserInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type WishlistProductUncheckedUpdateManyWithoutWishlistProductsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    productId?: IntFieldUpdateOperationsInput | number
   }
 
   export type CafeCouponQRCodeCreateManyCafeCouponInput = {
@@ -32953,6 +45739,264 @@ export namespace Prisma {
     actorId?: IntFieldUpdateOperationsInput | number
     statusBefore?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
     statusAfter?: NullableEnumCafeCouponStatusFieldUpdateOperationsInput | CafeCouponStatus | null
+  }
+
+  export type MetaViewerMapCreateManyMetaViewerInfoInput = {
+    id?: number
+    createdAt?: Date | string
+    type: MetaMapType
+    version?: number
+    url: string
+    size: number
+    isDisable?: boolean
+  }
+
+  export type MetaViewerMapUpdateWithoutMetaViewerInfoInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    ActiveRenderFor?: MetaViewerActiveMapUpdateManyWithoutActiveRenderMapNestedInput
+    ActiveColliderFor?: MetaViewerActiveMapUpdateManyWithoutActiveColliderMapNestedInput
+  }
+
+  export type MetaViewerMapUncheckedUpdateWithoutMetaViewerInfoInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    ActiveRenderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderMapNestedInput
+    ActiveColliderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderMapNestedInput
+  }
+
+  export type MetaViewerMapUncheckedUpdateManyWithoutMetaViewerMapsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
+    version?: IntFieldUpdateOperationsInput | number
+    url?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type MetaViewerActiveMapCreateManyActiveRenderMapInput = {
+    id?: number
+    updatedAt?: Date | string
+    metaViewerInfoId: number
+    activeColliderMapId: number
+  }
+
+  export type MetaViewerActiveMapCreateManyActiveColliderMapInput = {
+    id?: number
+    updatedAt?: Date | string
+    metaViewerInfoId: number
+    activeRenderMapId: number
+  }
+
+  export type MetaViewerActiveMapUpdateWithoutActiveRenderMapInput = {
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutActiveMapsNestedInput
+    ActiveColliderMap?: MetaViewerMapUpdateOneRequiredWithoutActiveColliderForNestedInput
+  }
+
+  export type MetaViewerActiveMapUncheckedUpdateWithoutActiveRenderMapInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metaViewerInfoId?: IntFieldUpdateOperationsInput | number
+    activeColliderMapId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderForInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metaViewerInfoId?: IntFieldUpdateOperationsInput | number
+    activeColliderMapId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MetaViewerActiveMapUpdateWithoutActiveColliderMapInput = {
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutActiveMapsNestedInput
+    ActiveRenderMap?: MetaViewerMapUpdateOneRequiredWithoutActiveRenderForNestedInput
+  }
+
+  export type MetaViewerActiveMapUncheckedUpdateWithoutActiveColliderMapInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metaViewerInfoId?: IntFieldUpdateOperationsInput | number
+    activeRenderMapId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderForInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    metaViewerInfoId?: IntFieldUpdateOperationsInput | number
+    activeRenderMapId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ClosureProductCategoryCreateManyAncestorCategoryInput = {
+    descendant: number
+    depth?: number
+  }
+
+  export type ClosureProductCategoryCreateManyDescendantCategoryInput = {
+    ancestor: number
+    depth?: number
+  }
+
+  export type ProductCreateManyProductCategoryInput = {
+    id?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    name: string
+    code: string
+    description?: string | null
+    price: number
+    originalPrice?: number | null
+    stockQuantity?: number
+    minOrderQuantity?: number
+    isDisable?: boolean
+    isAvailable?: boolean
+    cafeInfoId?: number | null
+    productRedirectUrl?: string | null
+    isSignature?: boolean
+  }
+
+  export type ClosureProductCategoryUpdateWithoutAncestorCategoryInput = {
+    depth?: IntFieldUpdateOperationsInput | number
+    DescendantCategory?: ProductCategoryUpdateOneRequiredWithoutDescendantCategoriesNestedInput
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateWithoutAncestorCategoryInput = {
+    descendant?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateManyWithoutAncestorCategoriesInput = {
+    descendant?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ClosureProductCategoryUpdateWithoutDescendantCategoryInput = {
+    depth?: IntFieldUpdateOperationsInput | number
+    AncestorCategory?: ProductCategoryUpdateOneRequiredWithoutAncestorCategoriesNestedInput
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateWithoutDescendantCategoryInput = {
+    ancestor?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ClosureProductCategoryUncheckedUpdateManyWithoutDescendantCategoriesInput = {
+    ancestor?: IntFieldUpdateOperationsInput | number
+    depth?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProductUpdateWithoutProductCategoryInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    CafeInfo?: CafeInfoUpdateOneWithoutProductsNestedInput
+    WishlistProducts?: WishlistProductUpdateManyWithoutProductNestedInput
+    ProductImages?: ProductImageUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductUncheckedUpdateWithoutProductCategoryInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    name?: StringFieldUpdateOperationsInput | string
+    code?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    price?: IntFieldUpdateOperationsInput | number
+    originalPrice?: NullableIntFieldUpdateOperationsInput | number | null
+    stockQuantity?: IntFieldUpdateOperationsInput | number
+    minOrderQuantity?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    cafeInfoId?: NullableIntFieldUpdateOperationsInput | number | null
+    WishlistProducts?: WishlistProductUncheckedUpdateManyWithoutProductNestedInput
+    ProductImages?: ProductImageUncheckedUpdateManyWithoutProductNestedInput
+    productRedirectUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isSignature?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type WishlistProductCreateManyProductInput = {
+    id?: number
+    createdAt?: Date | string
+    proxyUserId: number
+  }
+
+  export type ProductImageCreateManyProductInput = {
+    id?: number
+    createdAt?: Date | string
+    url: string
+    thumbnailUrl: string
+    width: number
+    height: number
+    size: number
+    isDisable?: boolean
+    isThumb?: boolean
+  }
+
+  export type WishlistProductUpdateWithoutProductInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    ProxyUser?: ProxyUserUpdateOneRequiredWithoutWishlistProductsNestedInput
+  }
+
+  export type WishlistProductUncheckedUpdateWithoutProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    proxyUserId?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ProductImageUpdateWithoutProductInput = {
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductImageUncheckedUpdateWithoutProductInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
+  }
+
+  export type ProductImageUncheckedUpdateManyWithoutProductImagesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    url?: StringFieldUpdateOperationsInput | string
+    thumbnailUrl?: StringFieldUpdateOperationsInput | string
+    width?: IntFieldUpdateOperationsInput | number
+    height?: IntFieldUpdateOperationsInput | number
+    size?: IntFieldUpdateOperationsInput | number
+    isDisable?: BoolFieldUpdateOperationsInput | boolean
+    isThumb?: BoolFieldUpdateOperationsInput | boolean
   }
 
 

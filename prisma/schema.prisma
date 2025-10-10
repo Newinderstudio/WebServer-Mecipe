@@ -217,6 +217,7 @@ model CafeInfo {
   CafeBoards            CafeBoard[]
   
   MetaViewerInfos       MetaViewerInfo[]
+  Products                Product[]
 }
 
 // 카페 썸네일 이미지
@@ -353,6 +354,7 @@ model ProxyUser {
   User            User?    @relation(fields: [userId], references: [id])
 
   CafeCoupons     CafeCoupon[]
+  WishlistProducts WishlistProduct[]
 
   @@unique([memberId, proxyUserType], name: "proxyUserUnique")
 
@@ -434,6 +436,8 @@ model CafeCouponQRCode{
   base64Data      String
 }
 
+// ************** 메타 뷰어어 *************
+
 // 메타 뷰어 정보
 model MetaViewerInfo {
   id              Int       @id @default(autoincrement())
@@ -488,3 +492,122 @@ model MetaViewerActiveMap {
   activeColliderMapId Int
   ActiveColliderMap   MetaViewerMap @relation("ActiveCollider", fields: [activeColliderMapId], references: [id])
 }
+
+// ************** 메타 뷰어 *************
+
+// ******* 상품 쇼케이스 *******
+
+
+// 상품 카테고리
+model ProductCategory {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  name      String
+  description String?
+  isDisable Boolean @default(false)
+
+  code      String  @unique
+
+  // 계층 구조를 위한 자기참조 관계
+  AncestorCategories    ClosureProductCategory[] @relation("AncestorProductCategory")
+  DescendantCategories  ClosureProductCategory[] @relation("DescendantProductCategory")
+
+  // 상품과의 관계
+  Products  Product[]
+
+  @@map("product_categories")
+}
+
+model ClosureProductCategory {
+  ancestor    Int
+  descendant  Int
+  depth       Int @default(0)
+
+  AncestorCategory    ProductCategory @relation("AncestorProductCategory", fields: [ancestor], references: [id])
+  DescendantCategory ProductCategory @relation("DescendantProductCategory", fields: [descendant], references: [id])
+
+  @@unique([ancestor, descendant, depth], name: "productCategoryTreeUnique")
+
+  @@map("closure_product_categories")
+}
+
+// 상품
+model Product {
+  id                Int       @id @default(autoincrement())
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  name              String
+  code              String    @unique
+  description       String?   @db.Text
+  price             Int       // 가격 (원 단위)
+  originalPrice     Int?      // 원가 (할인 전 가격)
+  stockQuantity     Int       @default(0) // 재고 수량
+  minOrderQuantity  Int       @default(1) // 최소 주문 수량
+  
+  isDisable         Boolean   @default(false)
+  isAvailable       Boolean   @default(true) // 판매 가능 여부
+  
+  // 카테고리 관계
+  categoryId        Int
+  ProductCategory          ProductCategory @relation(fields: [categoryId], references: [id])
+  
+  // 카페 정보 관계 (상품을 판매하는 카페)
+  cafeInfoId        Int?
+  CafeInfo          CafeInfo? @relation(fields: [cafeInfoId], references: [id])
+
+  // 찜한 상품과의 관계
+  WishlistProducts  WishlistProduct[]
+
+  // 상품 이미지
+  ProductImages     ProductImage[]
+
+  // 상품 URL
+  productRedirectUrl  String? @db.Text
+
+  isSignature       Boolean   @default(false)
+
+  @@map("products")
+}
+
+// 찜한 상품
+model WishlistProduct {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  // 상품과의 관계
+  productId Int
+  Product   Product @relation(fields: [productId], references: [id])
+
+  // ProxyUser와의 관계 (찜한 사용자)
+  proxyUserId Int
+  ProxyUser   ProxyUser @relation(fields: [proxyUserId], references: [id])
+
+  // 중복 찜 방지를 위한 유니크 제약
+  @@unique([productId, proxyUserId], name: "wishlistProductUnique")
+  @@map("wishlist_products")
+}
+
+// 게시물 이미지
+model ProductImage {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+
+  url    String       @db.Text
+  thumbnailUrl        String       @db.Text
+  width  Int
+  height Int
+  size   Int
+
+  isDisable Boolean   @default(false)
+
+  isThumb   Boolean   @default(false) // 썸네일이미지 여부 true 썸네일 false 상세
+
+  productId Int        
+  Product   Product       @relation(fields: [productId], references: [id])
+
+  @@map("product_images")
+}
+
+// ************** 상품 쇼케이스 *************

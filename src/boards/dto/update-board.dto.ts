@@ -47,5 +47,5 @@ export class UpdateBoardDto implements Partial<Prisma.BoardUpdateInput> {
   @IsArray()
   @Transform(({ value }) => Array.isArray(value) ? value.map(v => parseInt(v)) : value)
   @IsNumber({}, { each: true })
-  disalbedImageIds?: number[];
+  disabledImageIds?: number[];
 }
