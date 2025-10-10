@@ -445,6 +445,8 @@ model MetaViewerInfo {
 
   code                String   @unique
 
+  isDisable           Boolean   @default(false)
+
   cafeInfoId          Int
   CafeInfo            CafeInfo @relation(fields: [cafeInfoId], references: [id])  
 
@@ -462,7 +464,6 @@ model MetaViewerMap {
 
   url       String    @db.Text
   size      Int
-  isDisable Boolean   @default(false)
 
   metaViewerInfoId    Int
   MetaViewerInfo      MetaViewerInfo @relation(fields: [metaViewerInfoId], references: [id])

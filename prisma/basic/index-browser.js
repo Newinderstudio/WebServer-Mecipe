@@ -280,6 +280,7 @@ exports.Prisma.MetaViewerInfoScalarFieldEnum = makeEnum({
   id: 'id',
   createdAt: 'createdAt',
   code: 'code',
+  isDisable: 'isDisable',
   cafeInfoId: 'cafeInfoId'
 });
 
@@ -290,7 +291,6 @@ exports.Prisma.MetaViewerMapScalarFieldEnum = makeEnum({
   version: 'version',
   url: 'url',
   size: 'size',
-  isDisable: 'isDisable',
   metaViewerInfoId: 'metaViewerInfoId'
 });
 
