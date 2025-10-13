@@ -268,6 +268,16 @@ exports.Prisma.ClosureRegionCategoryScalarFieldEnum = makeEnum({
   depth: 'depth'
 });
 
+exports.Prisma.JsonNullValueFilter = makeEnum({
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
+});
+
+exports.Prisma.JsonNullValueInput = makeEnum({
+  JsonNull: Prisma.JsonNull
+});
+
 exports.Prisma.MetaViewerActiveMapScalarFieldEnum = makeEnum({
   id: 'id',
   updatedAt: 'updatedAt',
@@ -281,6 +291,7 @@ exports.Prisma.MetaViewerInfoScalarFieldEnum = makeEnum({
   createdAt: 'createdAt',
   code: 'code',
   isDisable: 'isDisable',
+  worldData: 'worldData',
   cafeInfoId: 'cafeInfoId'
 });
 
@@ -291,6 +302,7 @@ exports.Prisma.MetaViewerMapScalarFieldEnum = makeEnum({
   version: 'version',
   url: 'url',
   size: 'size',
+  isDraco: 'isDraco',
   metaViewerInfoId: 'metaViewerInfoId'
 });
 

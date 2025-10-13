@@ -314,6 +314,7 @@ export type MetaViewerInfo = {
   createdAt: Date
   code: string
   isDisable: boolean
+  worldData: Prisma.JsonValue
   cafeInfoId: number
 }
 
@@ -328,6 +329,7 @@ export type MetaViewerMap = {
   version: number
   url: string
   size: number
+  isDraco: boolean
   metaViewerInfoId: number
 }
 
@@ -23448,6 +23450,7 @@ export namespace Prisma {
     createdAt: number
     code: number
     isDisable: number
+    worldData: number
     cafeInfoId: number
     _all: number
   }
@@ -23484,6 +23487,7 @@ export namespace Prisma {
     createdAt?: true
     code?: true
     isDisable?: true
+    worldData?: true
     cafeInfoId?: true
     _all?: true
   }
@@ -23585,6 +23589,7 @@ export namespace Prisma {
     createdAt: Date
     code: string
     isDisable: boolean
+    worldData: JsonValue
     cafeInfoId: number
     _count: MetaViewerInfoCountAggregateOutputType | null
     _avg: MetaViewerInfoAvgAggregateOutputType | null
@@ -23612,6 +23617,7 @@ export namespace Prisma {
     createdAt?: boolean
     code?: boolean
     isDisable?: boolean
+    worldData?: boolean
     cafeInfoId?: boolean
     CafeInfo?: boolean | CafeInfoArgs
     MetaViewerMaps?: boolean | MetaViewerMapFindManyArgs
@@ -24480,6 +24486,7 @@ export namespace Prisma {
     version: number | null
     url: string | null
     size: number | null
+    isDraco: boolean | null
     metaViewerInfoId: number | null
   }
 
@@ -24490,6 +24497,7 @@ export namespace Prisma {
     version: number | null
     url: string | null
     size: number | null
+    isDraco: boolean | null
     metaViewerInfoId: number | null
   }
 
@@ -24500,6 +24508,7 @@ export namespace Prisma {
     version: number
     url: number
     size: number
+    isDraco: number
     metaViewerInfoId: number
     _all: number
   }
@@ -24526,6 +24535,7 @@ export namespace Prisma {
     version?: true
     url?: true
     size?: true
+    isDraco?: true
     metaViewerInfoId?: true
   }
 
@@ -24536,6 +24546,7 @@ export namespace Prisma {
     version?: true
     url?: true
     size?: true
+    isDraco?: true
     metaViewerInfoId?: true
   }
 
@@ -24546,6 +24557,7 @@ export namespace Prisma {
     version?: true
     url?: true
     size?: true
+    isDraco?: true
     metaViewerInfoId?: true
     _all?: true
   }
@@ -24649,6 +24661,7 @@ export namespace Prisma {
     version: number
     url: string
     size: number
+    isDraco: boolean
     metaViewerInfoId: number
     _count: MetaViewerMapCountAggregateOutputType | null
     _avg: MetaViewerMapAvgAggregateOutputType | null
@@ -24678,6 +24691,7 @@ export namespace Prisma {
     version?: boolean
     url?: boolean
     size?: boolean
+    isDraco?: boolean
     metaViewerInfoId?: boolean
     MetaViewerInfo?: boolean | MetaViewerInfoArgs
     ActiveRenderFor?: boolean | MetaViewerActiveMapFindManyArgs
@@ -32123,6 +32137,22 @@ export namespace Prisma {
   export type ClosureRegionCategoryScalarFieldEnum = (typeof ClosureRegionCategoryScalarFieldEnum)[keyof typeof ClosureRegionCategoryScalarFieldEnum]
 
 
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
   export const MetaViewerActiveMapScalarFieldEnum: {
     id: 'id',
     updatedAt: 'updatedAt',
@@ -32139,6 +32169,7 @@ export namespace Prisma {
     createdAt: 'createdAt',
     code: 'code',
     isDisable: 'isDisable',
+    worldData: 'worldData',
     cafeInfoId: 'cafeInfoId'
   };
 
@@ -32152,6 +32183,7 @@ export namespace Prisma {
     version: 'version',
     url: 'url',
     size: 'size',
+    isDraco: 'isDraco',
     metaViewerInfoId: 'metaViewerInfoId'
   };
 
@@ -33569,6 +33601,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter | Date | string
     code?: StringFilter | string
     isDisable?: BoolFilter | boolean
+    worldData?: JsonFilter
     cafeInfoId?: IntFilter | number
     CafeInfo?: XOR<CafeInfoRelationFilter, CafeInfoWhereInput>
     MetaViewerMaps?: MetaViewerMapListRelationFilter
@@ -33580,6 +33613,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     code?: SortOrder
     isDisable?: SortOrder
+    worldData?: SortOrder
     cafeInfoId?: SortOrder
     CafeInfo?: CafeInfoOrderByWithRelationInput
     MetaViewerMaps?: MetaViewerMapOrderByRelationAggregateInput
@@ -33596,6 +33630,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     code?: SortOrder
     isDisable?: SortOrder
+    worldData?: SortOrder
     cafeInfoId?: SortOrder
     _count?: MetaViewerInfoCountOrderByAggregateInput
     _avg?: MetaViewerInfoAvgOrderByAggregateInput
@@ -33612,6 +33647,7 @@ export namespace Prisma {
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     code?: StringWithAggregatesFilter | string
     isDisable?: BoolWithAggregatesFilter | boolean
+    worldData?: JsonWithAggregatesFilter
     cafeInfoId?: IntWithAggregatesFilter | number
   }
 
@@ -33622,9 +33658,10 @@ export namespace Prisma {
     id?: IntFilter | number
     createdAt?: DateTimeFilter | Date | string
     type?: EnumMetaMapTypeFilter | MetaMapType
-    version?: IntFilter | number
+    version?: FloatFilter | number
     url?: StringFilter | string
     size?: IntFilter | number
+    isDraco?: BoolFilter | boolean
     metaViewerInfoId?: IntFilter | number
     MetaViewerInfo?: XOR<MetaViewerInfoRelationFilter, MetaViewerInfoWhereInput>
     ActiveRenderFor?: MetaViewerActiveMapListRelationFilter
@@ -33638,6 +33675,7 @@ export namespace Prisma {
     version?: SortOrder
     url?: SortOrder
     size?: SortOrder
+    isDraco?: SortOrder
     metaViewerInfoId?: SortOrder
     MetaViewerInfo?: MetaViewerInfoOrderByWithRelationInput
     ActiveRenderFor?: MetaViewerActiveMapOrderByRelationAggregateInput
@@ -33655,6 +33693,7 @@ export namespace Prisma {
     version?: SortOrder
     url?: SortOrder
     size?: SortOrder
+    isDraco?: SortOrder
     metaViewerInfoId?: SortOrder
     _count?: MetaViewerMapCountOrderByAggregateInput
     _avg?: MetaViewerMapAvgOrderByAggregateInput
@@ -33670,9 +33709,10 @@ export namespace Prisma {
     id?: IntWithAggregatesFilter | number
     createdAt?: DateTimeWithAggregatesFilter | Date | string
     type?: EnumMetaMapTypeWithAggregatesFilter | MetaMapType
-    version?: IntWithAggregatesFilter | number
+    version?: FloatWithAggregatesFilter | number
     url?: StringWithAggregatesFilter | string
     size?: IntWithAggregatesFilter | number
+    isDraco?: BoolWithAggregatesFilter | boolean
     metaViewerInfoId?: IntWithAggregatesFilter | number
   }
 
@@ -35580,6 +35620,7 @@ export namespace Prisma {
     createdAt?: Date | string
     code: string
     isDisable?: boolean
+    worldData: JsonNullValueInput | InputJsonValue
     CafeInfo: CafeInfoCreateNestedOneWithoutMetaViewerInfosInput
     MetaViewerMaps?: MetaViewerMapCreateNestedManyWithoutMetaViewerInfoInput
     ActiveMaps?: MetaViewerActiveMapCreateNestedOneWithoutMetaViewerInfoInput
@@ -35590,6 +35631,7 @@ export namespace Prisma {
     createdAt?: Date | string
     code: string
     isDisable?: boolean
+    worldData: JsonNullValueInput | InputJsonValue
     cafeInfoId: number
     MetaViewerMaps?: MetaViewerMapUncheckedCreateNestedManyWithoutMetaViewerInfoInput
     ActiveMaps?: MetaViewerActiveMapUncheckedCreateNestedOneWithoutMetaViewerInfoInput
@@ -35599,6 +35641,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
     CafeInfo?: CafeInfoUpdateOneRequiredWithoutMetaViewerInfosNestedInput
     MetaViewerMaps?: MetaViewerMapUpdateManyWithoutMetaViewerInfoNestedInput
     ActiveMaps?: MetaViewerActiveMapUpdateOneWithoutMetaViewerInfoNestedInput
@@ -35609,6 +35652,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
     cafeInfoId?: IntFieldUpdateOperationsInput | number
     MetaViewerMaps?: MetaViewerMapUncheckedUpdateManyWithoutMetaViewerInfoNestedInput
     ActiveMaps?: MetaViewerActiveMapUncheckedUpdateOneWithoutMetaViewerInfoNestedInput
@@ -35619,6 +35663,7 @@ export namespace Prisma {
     createdAt?: Date | string
     code: string
     isDisable?: boolean
+    worldData: JsonNullValueInput | InputJsonValue
     cafeInfoId: number
   }
 
@@ -35626,6 +35671,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
   }
 
   export type MetaViewerInfoUncheckedUpdateManyInput = {
@@ -35633,6 +35679,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
     cafeInfoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -35642,6 +35689,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    isDraco: boolean
     MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutMetaViewerMapsInput
     ActiveRenderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveRenderMapInput
     ActiveColliderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveColliderMapInput
@@ -35654,6 +35702,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    isDraco: boolean
     metaViewerInfoId: number
     ActiveRenderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveRenderMapInput
     ActiveColliderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveColliderMapInput
@@ -35662,9 +35711,10 @@ export namespace Prisma {
   export type MetaViewerMapUpdateInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
     MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput
     ActiveRenderFor?: MetaViewerActiveMapUpdateManyWithoutActiveRenderMapNestedInput
     ActiveColliderFor?: MetaViewerActiveMapUpdateManyWithoutActiveColliderMapNestedInput
@@ -35674,9 +35724,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
     metaViewerInfoId?: IntFieldUpdateOperationsInput | number
     ActiveRenderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderMapNestedInput
     ActiveColliderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderMapNestedInput
@@ -35689,24 +35740,27 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    isDraco: boolean
     metaViewerInfoId: number
   }
 
   export type MetaViewerMapUpdateManyMutationInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MetaViewerMapUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
     metaViewerInfoId?: IntFieldUpdateOperationsInput | number
   }
 
@@ -37585,6 +37639,28 @@ export namespace Prisma {
     cafeCouponId?: SortOrder
     size?: SortOrder
   }
+  export type JsonFilter = 
+    | PatchUndefined<
+        Either<Required<JsonFilterBase>, Exclude<keyof Required<JsonFilterBase>, 'path'>>,
+        Required<JsonFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase>, 'path'>>
+
+  export type JsonFilterBase = {
+    equals?: InputJsonValue | JsonNullValueFilter
+    path?: Array<string>
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
+  }
 
   export type MetaViewerMapListRelationFilter = {
     every?: MetaViewerMapWhereInput
@@ -37606,6 +37682,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     code?: SortOrder
     isDisable?: SortOrder
+    worldData?: SortOrder
     cafeInfoId?: SortOrder
   }
 
@@ -37634,12 +37711,48 @@ export namespace Prisma {
     id?: SortOrder
     cafeInfoId?: SortOrder
   }
+  export type JsonWithAggregatesFilter = 
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase>, Exclude<keyof Required<JsonWithAggregatesFilterBase>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase = {
+    equals?: InputJsonValue | JsonNullValueFilter
+    path?: Array<string>
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
+    _count?: NestedIntFilter
+    _min?: NestedJsonFilter
+    _max?: NestedJsonFilter
+  }
 
   export type EnumMetaMapTypeFilter = {
     equals?: MetaMapType
     in?: Enumerable<MetaMapType>
     notIn?: Enumerable<MetaMapType>
     not?: NestedEnumMetaMapTypeFilter | MetaMapType
+  }
+
+  export type FloatFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatFilter | number
   }
 
   export type MetaViewerInfoRelationFilter = {
@@ -37664,6 +37777,7 @@ export namespace Prisma {
     version?: SortOrder
     url?: SortOrder
     size?: SortOrder
+    isDraco?: SortOrder
     metaViewerInfoId?: SortOrder
   }
 
@@ -37681,6 +37795,7 @@ export namespace Prisma {
     version?: SortOrder
     url?: SortOrder
     size?: SortOrder
+    isDraco?: SortOrder
     metaViewerInfoId?: SortOrder
   }
 
@@ -37691,6 +37806,7 @@ export namespace Prisma {
     version?: SortOrder
     url?: SortOrder
     size?: SortOrder
+    isDraco?: SortOrder
     metaViewerInfoId?: SortOrder
   }
 
@@ -37709,6 +37825,22 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedEnumMetaMapTypeFilter
     _max?: NestedEnumMetaMapTypeFilter
+  }
+
+  export type FloatWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedFloatFilter
+    _min?: NestedFloatFilter
+    _max?: NestedFloatFilter
   }
 
   export type MetaViewerMapRelationFilter = {
@@ -39681,6 +39813,14 @@ export namespace Prisma {
     set?: MetaMapType
   }
 
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput = {
     create?: XOR<MetaViewerInfoCreateWithoutMetaViewerMapsInput, MetaViewerInfoUncheckedCreateWithoutMetaViewerMapsInput>
     connectOrCreate?: MetaViewerInfoCreateOrConnectWithoutMetaViewerMapsInput
@@ -40416,6 +40556,28 @@ export namespace Prisma {
     _min?: NestedEnumCafeCouponStatusNullableFilter
     _max?: NestedEnumCafeCouponStatusNullableFilter
   }
+  export type NestedJsonFilter = 
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase>, Exclude<keyof Required<NestedJsonFilterBase>, 'path'>>,
+        Required<NestedJsonFilterBase>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase>, 'path'>>
+
+  export type NestedJsonFilterBase = {
+    equals?: InputJsonValue | JsonNullValueFilter
+    path?: Array<string>
+    string_contains?: string
+    string_starts_with?: string
+    string_ends_with?: string
+    array_contains?: InputJsonValue | null
+    array_starts_with?: InputJsonValue | null
+    array_ends_with?: InputJsonValue | null
+    lt?: InputJsonValue
+    lte?: InputJsonValue
+    gt?: InputJsonValue
+    gte?: InputJsonValue
+    not?: InputJsonValue | JsonNullValueFilter
+  }
 
   export type NestedEnumMetaMapTypeFilter = {
     equals?: MetaMapType
@@ -40432,6 +40594,22 @@ export namespace Prisma {
     _count?: NestedIntFilter
     _min?: NestedEnumMetaMapTypeFilter
     _max?: NestedEnumMetaMapTypeFilter
+  }
+
+  export type NestedFloatWithAggregatesFilter = {
+    equals?: number
+    in?: Enumerable<number>
+    notIn?: Enumerable<number>
+    lt?: number
+    lte?: number
+    gt?: number
+    gte?: number
+    not?: NestedFloatWithAggregatesFilter | number
+    _count?: NestedIntFilter
+    _avg?: NestedFloatFilter
+    _sum?: NestedFloatFilter
+    _min?: NestedFloatFilter
+    _max?: NestedFloatFilter
   }
 
   export type BoardCreateWithoutUserInput = {
@@ -41979,6 +42157,7 @@ export namespace Prisma {
     createdAt?: Date | string
     code: string
     isDisable?: boolean
+    worldData: JsonNullValueInput | InputJsonValue
     MetaViewerMaps?: MetaViewerMapCreateNestedManyWithoutMetaViewerInfoInput
     ActiveMaps?: MetaViewerActiveMapCreateNestedOneWithoutMetaViewerInfoInput
   }
@@ -41988,6 +42167,7 @@ export namespace Prisma {
     createdAt?: Date | string
     code: string
     isDisable?: boolean
+    worldData: JsonNullValueInput | InputJsonValue
     MetaViewerMaps?: MetaViewerMapUncheckedCreateNestedManyWithoutMetaViewerInfoInput
     ActiveMaps?: MetaViewerActiveMapUncheckedCreateNestedOneWithoutMetaViewerInfoInput
   }
@@ -42263,6 +42443,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter | Date | string
     code?: StringFilter | string
     isDisable?: BoolFilter | boolean
+    worldData?: JsonFilter
     cafeInfoId?: IntFilter | number
   }
 
@@ -43660,6 +43841,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    isDraco: boolean
     ActiveRenderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveRenderMapInput
     ActiveColliderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveColliderMapInput
   }
@@ -43671,6 +43853,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    isDraco: boolean
     ActiveRenderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveRenderMapInput
     ActiveColliderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveColliderMapInput
   }
@@ -43770,9 +43953,10 @@ export namespace Prisma {
     id?: IntFilter | number
     createdAt?: DateTimeFilter | Date | string
     type?: EnumMetaMapTypeFilter | MetaMapType
-    version?: IntFilter | number
+    version?: FloatFilter | number
     url?: StringFilter | string
     size?: IntFilter | number
+    isDraco?: BoolFilter | boolean
     metaViewerInfoId?: IntFilter | number
   }
 
@@ -43798,6 +43982,7 @@ export namespace Prisma {
     createdAt?: Date | string
     code: string
     isDisable?: boolean
+    worldData: JsonNullValueInput | InputJsonValue
     CafeInfo: CafeInfoCreateNestedOneWithoutMetaViewerInfosInput
     ActiveMaps?: MetaViewerActiveMapCreateNestedOneWithoutMetaViewerInfoInput
   }
@@ -43807,6 +43992,7 @@ export namespace Prisma {
     createdAt?: Date | string
     code: string
     isDisable?: boolean
+    worldData: JsonNullValueInput | InputJsonValue
     cafeInfoId: number
     ActiveMaps?: MetaViewerActiveMapUncheckedCreateNestedOneWithoutMetaViewerInfoInput
   }
@@ -43871,6 +44057,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
     CafeInfo?: CafeInfoUpdateOneRequiredWithoutMetaViewerInfosNestedInput
     ActiveMaps?: MetaViewerActiveMapUpdateOneWithoutMetaViewerInfoNestedInput
   }
@@ -43880,6 +44067,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
     cafeInfoId?: IntFieldUpdateOperationsInput | number
     ActiveMaps?: MetaViewerActiveMapUncheckedUpdateOneWithoutMetaViewerInfoNestedInput
   }
@@ -43931,6 +44119,7 @@ export namespace Prisma {
     createdAt?: Date | string
     code: string
     isDisable?: boolean
+    worldData: JsonNullValueInput | InputJsonValue
     CafeInfo: CafeInfoCreateNestedOneWithoutMetaViewerInfosInput
     MetaViewerMaps?: MetaViewerMapCreateNestedManyWithoutMetaViewerInfoInput
   }
@@ -43940,6 +44129,7 @@ export namespace Prisma {
     createdAt?: Date | string
     code: string
     isDisable?: boolean
+    worldData: JsonNullValueInput | InputJsonValue
     cafeInfoId: number
     MetaViewerMaps?: MetaViewerMapUncheckedCreateNestedManyWithoutMetaViewerInfoInput
   }
@@ -43955,6 +44145,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    isDraco: boolean
     MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutMetaViewerMapsInput
     ActiveColliderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveColliderMapInput
   }
@@ -43966,6 +44157,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    isDraco: boolean
     metaViewerInfoId: number
     ActiveColliderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveColliderMapInput
   }
@@ -43981,6 +44173,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    isDraco: boolean
     MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutMetaViewerMapsInput
     ActiveRenderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveRenderMapInput
   }
@@ -43992,6 +44185,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    isDraco: boolean
     metaViewerInfoId: number
     ActiveRenderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveRenderMapInput
   }
@@ -44010,6 +44204,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
     CafeInfo?: CafeInfoUpdateOneRequiredWithoutMetaViewerInfosNestedInput
     MetaViewerMaps?: MetaViewerMapUpdateManyWithoutMetaViewerInfoNestedInput
   }
@@ -44019,6 +44214,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
     cafeInfoId?: IntFieldUpdateOperationsInput | number
     MetaViewerMaps?: MetaViewerMapUncheckedUpdateManyWithoutMetaViewerInfoNestedInput
   }
@@ -44031,9 +44227,10 @@ export namespace Prisma {
   export type MetaViewerMapUpdateWithoutActiveRenderForInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
     MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput
     ActiveColliderFor?: MetaViewerActiveMapUpdateManyWithoutActiveColliderMapNestedInput
   }
@@ -44042,9 +44239,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
     metaViewerInfoId?: IntFieldUpdateOperationsInput | number
     ActiveColliderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderMapNestedInput
   }
@@ -44057,9 +44255,10 @@ export namespace Prisma {
   export type MetaViewerMapUpdateWithoutActiveColliderForInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
     MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput
     ActiveRenderFor?: MetaViewerActiveMapUpdateManyWithoutActiveRenderMapNestedInput
   }
@@ -44068,9 +44267,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
     metaViewerInfoId?: IntFieldUpdateOperationsInput | number
     ActiveRenderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderMapNestedInput
   }
@@ -45302,6 +45502,7 @@ export namespace Prisma {
     createdAt?: Date | string
     code: string
     isDisable?: boolean
+    worldData: JsonNullValueInput | InputJsonValue
   }
 
   export type ProductCreateManyCafeInfoInput = {
@@ -45478,6 +45679,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
     MetaViewerMaps?: MetaViewerMapUpdateManyWithoutMetaViewerInfoNestedInput
     ActiveMaps?: MetaViewerActiveMapUpdateOneWithoutMetaViewerInfoNestedInput
   }
@@ -45487,6 +45689,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
     MetaViewerMaps?: MetaViewerMapUncheckedUpdateManyWithoutMetaViewerInfoNestedInput
     ActiveMaps?: MetaViewerActiveMapUncheckedUpdateOneWithoutMetaViewerInfoNestedInput
   }
@@ -45496,6 +45699,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     code?: StringFieldUpdateOperationsInput | string
     isDisable?: BoolFieldUpdateOperationsInput | boolean
+    worldData?: JsonNullValueInput | InputJsonValue
   }
 
   export type ProductUpdateWithoutCafeInfoInput = {
@@ -45752,14 +45956,16 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    isDraco: boolean
   }
 
   export type MetaViewerMapUpdateWithoutMetaViewerInfoInput = {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
     ActiveRenderFor?: MetaViewerActiveMapUpdateManyWithoutActiveRenderMapNestedInput
     ActiveColliderFor?: MetaViewerActiveMapUpdateManyWithoutActiveColliderMapNestedInput
   }
@@ -45768,9 +45974,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
     ActiveRenderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderMapNestedInput
     ActiveColliderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderMapNestedInput
   }
@@ -45779,9 +45986,10 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     type?: EnumMetaMapTypeFieldUpdateOperationsInput | MetaMapType
-    version?: IntFieldUpdateOperationsInput | number
+    version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    isDraco?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type MetaViewerActiveMapCreateManyActiveRenderMapInput = {

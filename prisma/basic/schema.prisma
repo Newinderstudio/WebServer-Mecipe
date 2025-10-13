@@ -447,6 +447,8 @@ model MetaViewerInfo {
 
   isDisable           Boolean   @default(false)
 
+  worldData           Json
+
   cafeInfoId          Int
   CafeInfo            CafeInfo @relation(fields: [cafeInfoId], references: [id])  
 
@@ -460,10 +462,12 @@ model MetaViewerMap {
   createdAt DateTime  @default(now())
 
   type      MetaMapType   // RENDER 또는 COLLIDER
-  version   Int       @default(0)
+  version   Float     @default(0)
 
   url       String    @db.Text
   size      Int
+
+  isDraco   Boolean
 
   metaViewerInfoId    Int
   MetaViewerInfo      MetaViewerInfo @relation(fields: [metaViewerInfoId], references: [id])

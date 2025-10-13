@@ -9,6 +9,7 @@ import { join } from 'path';
 import { HttpLoggerMiddleware } from './util/middleware/http-logger.middleware';
 import { HttpBodyLoggerInterceptor } from './util/interceptor/http-body-logger.interceptor';
 import { JwtAuthGuard } from './auth/jwt.guard';
+import { ApiKeyGuard } from './auth/api-key.guard';
 import { UsersModule } from './users/users.module';
 import { GlobalModule } from './global/global.module';
 import { AuthModule } from './auth/auth.module';
@@ -61,6 +62,10 @@ import { ProductcategoriesModule } from './productcategories/productcategories.m
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ApiKeyGuard,
     },
     {
       provide: APP_INTERCEPTOR,
