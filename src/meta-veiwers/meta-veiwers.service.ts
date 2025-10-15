@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { BroadcastSchedulerService } from './services/broadcast-scheduler.service';
-import { ClientMessage } from './interface/socket-data';
+import { BroadcastData, ClientMessage, RoomDataMessageType } from './interface/broadcast-data-type';
 import { RoomManagerService } from './services/room-manager.service';
 import { RoomDataQueueService } from './services/room-data-queue.service';
 import SocketLogger from './utils/socket-logger';
+import { ServerToClientListenerType } from './interface/socket-event-type';
+import { CacheTypeFlag, MessageCacheService } from './services/message-cache.service';
 
 @Injectable()
 export class MetaVeiwersService {
@@ -14,6 +16,7 @@ export class MetaVeiwersService {
         private readonly schedulerService: BroadcastSchedulerService,
         private readonly roomManagerService: RoomManagerService,
         private readonly queueService: RoomDataQueueService,
+        private readonly messageCacheService: MessageCacheService,
     ) { }
 
     // 연결된 소켓들을 저장할 Map
@@ -28,14 +31,19 @@ export class MetaVeiwersService {
         // 브로드캐스트 스케줄러 설정 및 시작
         this.schedulerService.setServer(server);
         this.schedulerService.start();
+
+        // Stateful 소켓 통신 메시지 캐시 타입 선언
+        this.messageCacheService.declareCacheType(RoomDataMessageType.PLAYER_TRANSFORM, CacheTypeFlag.JOIN_EVENT); // 플레이어 입장 시, 룸에 있는 모든 플레이어의 가장 마지막 정보를 해당 플레이어에게 전송
     }
 
     handleDisconnect(client: Socket) {
         // 방에서 클라이언트 제거
-        this.roomManagerService.handleClientDisconnect(client);
+        const currentRoom = this.roomManagerService.handleClientDisconnect(client);
 
         // 연결 해제된 클라이언트 제거
         this.connectedClients.delete(client.id);
+
+        this.messageCacheService.clearMessageCache(client.id, currentRoom);
 
         this.logger.log(`Client Disconnected: ${client.id}`);
         this.logger.log(`현재 연결된 클라이언트 수: ${this.connectedClients.size}`);
@@ -78,6 +86,9 @@ export class MetaVeiwersService {
 
         // 방별 큐에 데이터 추가 (같은 타입이면 덮어씀)
         this.queueService.enqueueData(currentRoom, clientLetter);
+
+        // 메시지 캐시 저장
+        this.messageCacheService.setMessageCache(client.id, currentRoom, data.type, clientLetter);
 
         return {
             success: true,
@@ -128,6 +139,9 @@ export class MetaVeiwersService {
         // 활성 방 목록 업데이트
         this.updateActiveRooms();
 
+        // 조인 이벤트 캐시 메시지 풀 전송
+        this.messageCacheService.executeJoinClientEvent(client, data.roomId);
+
         console.log('joinRoom', result);
 
         return result;
@@ -138,6 +152,9 @@ export class MetaVeiwersService {
 
         // 활성 방 목록 업데이트
         this.updateActiveRooms();
+
+        // 리빌 이벤트 캐시 메시지 풀 전송
+        this.messageCacheService.executeLeaveClientEvent(client, data.roomId);
 
         console.log('leaveRoom', result);
 
@@ -163,7 +180,7 @@ export class MetaVeiwersService {
         }
 
         // 같은 방의 다른 클라이언트들에게만 전송
-        client.to(currentRoom).emit('roomMessage', {
+        client.to(currentRoom).emit(ServerToClientListenerType.ROOM_MESSAGE, {
             from: client.id,
             message: data.message,
             roomId: currentRoom,

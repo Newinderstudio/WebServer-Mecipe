@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import {
   RoomDataQueue,
 } from '../interface/socket-data-queue';
-import { ClientMessage } from '../interface/socket-data';
+import { ClientMessage } from '../interface/broadcast-data-type';
 
 @Injectable()
 export class RoomDataQueueService {

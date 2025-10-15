@@ -8,5 +8,11 @@ export interface ClientMessage {
 export interface BroadcastData {
     roomId: string;
     timestamp: number;
-    data: ClientMessage[];
+    messages: ClientMessage[];
+}
+
+export enum RoomDataMessageType {
+    PLAYER_TRANSFORM = 'playerTransform',
+    PLAYER_ANIMATION = 'playerAnimation',
+    CUSTOM_EVENT = 'customEvent',
 }

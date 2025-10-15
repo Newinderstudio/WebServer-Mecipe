@@ -1,5 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Socket } from 'socket.io';
+import { ServerToClientListenerType } from '../interface/socket-event-type';
 
 export interface RoomInfo {
   roomId: string;
@@ -63,7 +64,7 @@ export class RoomManagerService {
     this.printRoomStatus();
 
     // 방에 있는 다른 클라이언트들에게 알림
-    client.to(roomId).emit('userJoined', {
+    client.to(roomId).emit(ServerToClientListenerType.USER_JOINED, {
       socketId: client.id,
       roomId: roomId,
       timestamp: joinAt,
@@ -94,7 +95,7 @@ export class RoomManagerService {
 
     if (currentRoom) {
       // 방에 있는 다른 클라이언트들에게 알림
-      client.to(currentRoom).emit('userLeft', {
+      client.to(currentRoom).emit(ServerToClientListenerType.USER_LEFT, {
         socketId: client.id,
         roomId: currentRoom,
         timestamp: new Date().toISOString(),
@@ -203,21 +204,23 @@ export class RoomManagerService {
   /**
    * 클라이언트 연결 해제 처리
    */
-  handleClientDisconnect(client: Socket): void {
-    this.removeClientFromRoom(client);
-    this.logger.log(`Client ${client.id} disconnected and removed from rooms`);
+  handleClientDisconnect(client: Socket): string {
+    const currentRoom = this.removeClientFromRoom(client);
+    this.logger.log(`Client ${client.id} disconnected and removed from rooms: ${currentRoom}`);
+
+    return currentRoom;
   }
 
   /**
    * 방에서 클라이언트 제거 (내부 메소드)
    */
-  private removeClientFromRoom(socket: Socket): void {
+  private removeClientFromRoom(socket: Socket): string {
     const currentRoom = this.clientRooms.get(socket.id);
 
     if (currentRoom) {
 
       // 방에 있는 다른 클라이언트들에게 알림
-      socket.to(currentRoom).emit('userDisconnected', {
+      socket.to(currentRoom).emit(ServerToClientListenerType.USER_DISCONNECTED, {
         socketId: socket.id,
         roomId: currentRoom,
         timestamp: new Date().toISOString(),
@@ -244,6 +247,8 @@ export class RoomManagerService {
 
       this.clientRooms.delete(socket.id);
       this.clientInfo.delete(socket.id);
+
+      return currentRoom;
     }
   }
 

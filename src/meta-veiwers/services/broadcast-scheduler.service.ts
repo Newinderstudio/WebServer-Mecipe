@@ -1,11 +1,12 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { Server } from 'socket.io';
 import { RoomDataQueueService } from './room-data-queue.service';
-import { BroadcastData } from '../interface/socket-data';
-import SocketLogger from '../utils/socket-logger';
+import { BroadcastData } from '../interface/broadcast-data-type';
+import { ServerToClientListenerType } from '../interface/socket-event-type';
 
 @Injectable()
 export class BroadcastSchedulerService implements OnModuleDestroy {
+  private readonly logger: Logger = new Logger(BroadcastSchedulerService.name);
   private broadcastInterval: NodeJS.Timeout | null = null;
   private server: Server | null = null;
   private activeRooms: Set<string> = new Set();
@@ -20,7 +21,6 @@ export class BroadcastSchedulerService implements OnModuleDestroy {
 
   constructor(
     private readonly queueService: RoomDataQueueService,
-    private readonly logger: SocketLogger
   ) {}
 
   /**
@@ -130,11 +130,11 @@ export class BroadcastSchedulerService implements OnModuleDestroy {
         const broadcastData: BroadcastData = {
           roomId,
           timestamp: Date.now(),
-          data: queuedData,
+          messages: queuedData,
         };
 
         // 특정 방에만 브로드캐스트
-        this.server!.to(roomId).emit('roomBroadcast', broadcastData);
+        this.server!.to(roomId).emit(ServerToClientListenerType.ROOM_BROADCAST, broadcastData);
 
         totalDataSent += queuedData.length;
 

@@ -1,6 +1,7 @@
 import { ConnectedSocket, MessageBody, SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { MetaVeiwersService } from './meta-veiwers.service';
 import { Server, Socket } from 'socket.io';
+import { ClientToServerListenerType } from './interface/socket-event-type';
 
 @WebSocketGateway(Number(process.env.SOCKET_PORT) || 4100, {
   cors: {
@@ -35,7 +36,7 @@ export class MetaVeiwersGateway {
    * 방별 큐에 저장하여 12ms마다 브로드캐스트
    * @emit 'roomBroadcast'
    */
-  @SubscribeMessage('boradcastRoomData')
+  @SubscribeMessage(ClientToServerListenerType.ROOM_BROADCAST)
   handleRoomData(
     @MessageBody() data: { type: string; data: any },
     @ConnectedSocket() client: Socket,
@@ -44,13 +45,13 @@ export class MetaVeiwersGateway {
   }
 
   // 특정 소켓 정보 조회 메시지 핸들러
-  @SubscribeMessage('getSocketInfo')
+  @SubscribeMessage(ClientToServerListenerType.GET_SOCKET_INFO)
   getSocketInfo(@MessageBody() socketId: string) {
     return this.metaVeiwersService.getSocketInfo(socketId);
   }
 
   // 모든 연결된 클라이언트 목록 반환 메시지 핸들러
-  @SubscribeMessage('getConnectedClients')
+  @SubscribeMessage(ClientToServerListenerType.GET_CONNECTED_CLIENTS)
   getConnectedClients() {
     return this.metaVeiwersService.getConnectedClients();
   }
@@ -61,7 +62,7 @@ export class MetaVeiwersGateway {
    * 방입장
    * @emit 'userJoined'
    */
-  @SubscribeMessage('joinRoom')
+  @SubscribeMessage(ClientToServerListenerType.USER_JOINED)
   joinRoom(
     @MessageBody() data: { roomId: string },
     @ConnectedSocket() client: Socket,
@@ -73,25 +74,25 @@ export class MetaVeiwersGateway {
    * 방나가기
    * @emit 'userLeft'
    */
-  @SubscribeMessage('leaveRoom')
+  @SubscribeMessage(ClientToServerListenerType.USER_LEFT)
   leaveRoom(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
     return this.metaVeiwersService.leaveRoom(data, client);
   }
 
   // 현재 방 정보 조회
-  @SubscribeMessage('getRoomInfo')
+  @SubscribeMessage(ClientToServerListenerType.GET_ROOM_INFO)
   getRoomInfo(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
     return this.metaVeiwersService.getRoomInfo(client);
   }
 
   // 방 목록 조회
-  @SubscribeMessage('getRoomList')
+  @SubscribeMessage(ClientToServerListenerType.GET_ROOM_LIST)
   getRoomList() {
     return this.metaVeiwersService.getRoomList();
   }
 
   // 같은 방 클라이언트들에게만 메시지 전송
-  @SubscribeMessage('sendToRoom')
+  @SubscribeMessage(ClientToServerListenerType.SEND_TO_ROOM)
   sendToRoom(
     @MessageBody() data: { message: string },
     @ConnectedSocket() client: Socket,
