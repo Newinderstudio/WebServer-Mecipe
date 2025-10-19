@@ -458,16 +458,17 @@ model MetaViewerInfo {
 
 // 메타 뷰어 월드 파일
 model MetaViewerMap {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
+  id                  Int       @id @default(autoincrement())
+  createdAt           DateTime  @default(now())
 
-  type      MetaMapType   // RENDER 또는 COLLIDER
-  version   Float     @default(0)
+  type                MetaMapType   // RENDER 또는 COLLIDER
+  version             Float     @default(0)
 
-  url       String    @db.Text
-  size      Int
+  url                 String    @db.Text
+  size                Int
+  contentKey          String?
 
-  isDraco   Boolean
+  isDraco             Boolean
 
   metaViewerInfoId    Int
   MetaViewerInfo      MetaViewerInfo @relation(fields: [metaViewerInfoId], references: [id])

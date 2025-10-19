@@ -17,6 +17,10 @@ export class CreateMetaViewerMapDto {
   @Type(() => Boolean)
   isDraco: boolean;
 
+  @IsString()
+  @IsOptional()
+  contentKey?: string;
+
   @IsNumber()
   @Type(() => Number)
   @IsOptional()

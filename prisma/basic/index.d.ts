@@ -329,6 +329,7 @@ export type MetaViewerMap = {
   version: number
   url: string
   size: number
+  contentKey: string | null
   isDraco: boolean
   metaViewerInfoId: number
 }
@@ -24486,6 +24487,7 @@ export namespace Prisma {
     version: number | null
     url: string | null
     size: number | null
+    contentKey: string | null
     isDraco: boolean | null
     metaViewerInfoId: number | null
   }
@@ -24497,6 +24499,7 @@ export namespace Prisma {
     version: number | null
     url: string | null
     size: number | null
+    contentKey: string | null
     isDraco: boolean | null
     metaViewerInfoId: number | null
   }
@@ -24508,6 +24511,7 @@ export namespace Prisma {
     version: number
     url: number
     size: number
+    contentKey: number
     isDraco: number
     metaViewerInfoId: number
     _all: number
@@ -24535,6 +24539,7 @@ export namespace Prisma {
     version?: true
     url?: true
     size?: true
+    contentKey?: true
     isDraco?: true
     metaViewerInfoId?: true
   }
@@ -24546,6 +24551,7 @@ export namespace Prisma {
     version?: true
     url?: true
     size?: true
+    contentKey?: true
     isDraco?: true
     metaViewerInfoId?: true
   }
@@ -24557,6 +24563,7 @@ export namespace Prisma {
     version?: true
     url?: true
     size?: true
+    contentKey?: true
     isDraco?: true
     metaViewerInfoId?: true
     _all?: true
@@ -24661,6 +24668,7 @@ export namespace Prisma {
     version: number
     url: string
     size: number
+    contentKey: string | null
     isDraco: boolean
     metaViewerInfoId: number
     _count: MetaViewerMapCountAggregateOutputType | null
@@ -24691,6 +24699,7 @@ export namespace Prisma {
     version?: boolean
     url?: boolean
     size?: boolean
+    contentKey?: boolean
     isDraco?: boolean
     metaViewerInfoId?: boolean
     MetaViewerInfo?: boolean | MetaViewerInfoArgs
@@ -32183,6 +32192,7 @@ export namespace Prisma {
     version: 'version',
     url: 'url',
     size: 'size',
+    contentKey: 'contentKey',
     isDraco: 'isDraco',
     metaViewerInfoId: 'metaViewerInfoId'
   };
@@ -33661,6 +33671,7 @@ export namespace Prisma {
     version?: FloatFilter | number
     url?: StringFilter | string
     size?: IntFilter | number
+    contentKey?: StringNullableFilter | string | null
     isDraco?: BoolFilter | boolean
     metaViewerInfoId?: IntFilter | number
     MetaViewerInfo?: XOR<MetaViewerInfoRelationFilter, MetaViewerInfoWhereInput>
@@ -33675,6 +33686,7 @@ export namespace Prisma {
     version?: SortOrder
     url?: SortOrder
     size?: SortOrder
+    contentKey?: SortOrder
     isDraco?: SortOrder
     metaViewerInfoId?: SortOrder
     MetaViewerInfo?: MetaViewerInfoOrderByWithRelationInput
@@ -33693,6 +33705,7 @@ export namespace Prisma {
     version?: SortOrder
     url?: SortOrder
     size?: SortOrder
+    contentKey?: SortOrder
     isDraco?: SortOrder
     metaViewerInfoId?: SortOrder
     _count?: MetaViewerMapCountOrderByAggregateInput
@@ -33712,6 +33725,7 @@ export namespace Prisma {
     version?: FloatWithAggregatesFilter | number
     url?: StringWithAggregatesFilter | string
     size?: IntWithAggregatesFilter | number
+    contentKey?: StringNullableWithAggregatesFilter | string | null
     isDraco?: BoolWithAggregatesFilter | boolean
     metaViewerInfoId?: IntWithAggregatesFilter | number
   }
@@ -35689,6 +35703,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    contentKey?: string | null
     isDraco: boolean
     MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutMetaViewerMapsInput
     ActiveRenderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveRenderMapInput
@@ -35702,6 +35717,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    contentKey?: string | null
     isDraco: boolean
     metaViewerInfoId: number
     ActiveRenderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveRenderMapInput
@@ -35714,6 +35730,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
     MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput
     ActiveRenderFor?: MetaViewerActiveMapUpdateManyWithoutActiveRenderMapNestedInput
@@ -35727,6 +35744,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
     metaViewerInfoId?: IntFieldUpdateOperationsInput | number
     ActiveRenderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderMapNestedInput
@@ -35740,6 +35758,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    contentKey?: string | null
     isDraco: boolean
     metaViewerInfoId: number
   }
@@ -35750,6 +35769,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
   }
 
@@ -35760,6 +35780,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
     metaViewerInfoId?: IntFieldUpdateOperationsInput | number
   }
@@ -37777,6 +37798,7 @@ export namespace Prisma {
     version?: SortOrder
     url?: SortOrder
     size?: SortOrder
+    contentKey?: SortOrder
     isDraco?: SortOrder
     metaViewerInfoId?: SortOrder
   }
@@ -37795,6 +37817,7 @@ export namespace Prisma {
     version?: SortOrder
     url?: SortOrder
     size?: SortOrder
+    contentKey?: SortOrder
     isDraco?: SortOrder
     metaViewerInfoId?: SortOrder
   }
@@ -37806,6 +37829,7 @@ export namespace Prisma {
     version?: SortOrder
     url?: SortOrder
     size?: SortOrder
+    contentKey?: SortOrder
     isDraco?: SortOrder
     metaViewerInfoId?: SortOrder
   }
@@ -43841,6 +43865,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    contentKey?: string | null
     isDraco: boolean
     ActiveRenderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveRenderMapInput
     ActiveColliderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveColliderMapInput
@@ -43853,6 +43878,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    contentKey?: string | null
     isDraco: boolean
     ActiveRenderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveRenderMapInput
     ActiveColliderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveColliderMapInput
@@ -43956,6 +43982,7 @@ export namespace Prisma {
     version?: FloatFilter | number
     url?: StringFilter | string
     size?: IntFilter | number
+    contentKey?: StringNullableFilter | string | null
     isDraco?: BoolFilter | boolean
     metaViewerInfoId?: IntFilter | number
   }
@@ -44145,6 +44172,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    contentKey?: string | null
     isDraco: boolean
     MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutMetaViewerMapsInput
     ActiveColliderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveColliderMapInput
@@ -44157,6 +44185,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    contentKey?: string | null
     isDraco: boolean
     metaViewerInfoId: number
     ActiveColliderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveColliderMapInput
@@ -44173,6 +44202,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    contentKey?: string | null
     isDraco: boolean
     MetaViewerInfo: MetaViewerInfoCreateNestedOneWithoutMetaViewerMapsInput
     ActiveRenderFor?: MetaViewerActiveMapCreateNestedManyWithoutActiveRenderMapInput
@@ -44185,6 +44215,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    contentKey?: string | null
     isDraco: boolean
     metaViewerInfoId: number
     ActiveRenderFor?: MetaViewerActiveMapUncheckedCreateNestedManyWithoutActiveRenderMapInput
@@ -44230,6 +44261,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
     MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput
     ActiveColliderFor?: MetaViewerActiveMapUpdateManyWithoutActiveColliderMapNestedInput
@@ -44242,6 +44274,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
     metaViewerInfoId?: IntFieldUpdateOperationsInput | number
     ActiveColliderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderMapNestedInput
@@ -44258,6 +44291,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
     MetaViewerInfo?: MetaViewerInfoUpdateOneRequiredWithoutMetaViewerMapsNestedInput
     ActiveRenderFor?: MetaViewerActiveMapUpdateManyWithoutActiveRenderMapNestedInput
@@ -44270,6 +44304,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
     metaViewerInfoId?: IntFieldUpdateOperationsInput | number
     ActiveRenderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderMapNestedInput
@@ -45956,6 +45991,7 @@ export namespace Prisma {
     version?: number
     url: string
     size: number
+    contentKey?: string | null
     isDraco: boolean
   }
 
@@ -45965,6 +46001,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
     ActiveRenderFor?: MetaViewerActiveMapUpdateManyWithoutActiveRenderMapNestedInput
     ActiveColliderFor?: MetaViewerActiveMapUpdateManyWithoutActiveColliderMapNestedInput
@@ -45977,6 +46014,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
     ActiveRenderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveRenderMapNestedInput
     ActiveColliderFor?: MetaViewerActiveMapUncheckedUpdateManyWithoutActiveColliderMapNestedInput
@@ -45989,6 +46027,7 @@ export namespace Prisma {
     version?: FloatFieldUpdateOperationsInput | number
     url?: StringFieldUpdateOperationsInput | string
     size?: IntFieldUpdateOperationsInput | number
+    contentKey?: NullableStringFieldUpdateOperationsInput | string | null
     isDraco?: BoolFieldUpdateOperationsInput | boolean
   }
 

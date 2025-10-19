@@ -302,6 +302,7 @@ exports.Prisma.MetaViewerMapScalarFieldEnum = makeEnum({
   version: 'version',
   url: 'url',
   size: 'size',
+  contentKey: 'contentKey',
   isDraco: 'isDraco',
   metaViewerInfoId: 'metaViewerInfoId'
 });

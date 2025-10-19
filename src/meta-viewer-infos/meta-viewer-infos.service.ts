@@ -56,6 +56,7 @@ export class MetaViewerInfosService {
           size: createDto.activeRenderMap.size,
           isDraco: createDto.activeRenderMap.isDraco,
           version: createDto.activeRenderMap.version ?? 0,
+          contentKey: createDto.activeRenderMap.contentKey,
           MetaViewerInfo: {
             connect: { id: metaViewerInfo.id }
           }
@@ -311,6 +312,7 @@ export class MetaViewerInfosService {
         size: createDto.size,
         isDraco: createDto.isDraco,
         version: createDto.version ?? 0,
+        contentKey: createDto.contentKey,
         MetaViewerInfo: {
           connect: { id: metaViewerInfoId }
         }

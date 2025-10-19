@@ -21,6 +21,10 @@ export class UpdateMetaViewerMapDto {
     @Type(() => Boolean)
     @IsOptional()
     isDraco: boolean;
+
+    @IsString()
+    @IsOptional()
+    contentKey?: string;
   
     @IsNumber()
     @Type(() => Number)
