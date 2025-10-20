@@ -1,0 +1,115 @@
+name: Docker Image CI # 워크플로우 이름
+
+# 환경변수 정의: 여러 Job에서 공통으로 사용할 변수들
+env:
+  DOCKER_IMAGE_BASE_NAME: mecipe-api-server # 이미지의 기본 이름만 지정. DockerHub 사용자 이름은 secrets에서 가져온다
+  DOCKER_CONTAINER: nest-server # Docker 컨테이너 이름
+
+on:
+  push:
+    branches: [ "main" ] # main 브랜치에 푸시될 때 워크플로우 실행
+
+jobs:
+  # 🧪 1. 테스트 Job: 빌드 전에 코드의 유효성을 검증
+  test:
+    runs-on: ubuntu-latest # 우분투 최신 버전 환경에서 실행
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v3 # GitHub 저장소에서 코드를 가져오기
+
+    - name: Set up Node.js 20
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20.11.0 # NestJS 프로젝트에 맞는 Node.js 버전 지정
+        cache: 'npm' # npm 캐싱을 활성화해서 의존성 설치 시간 단축 (cache key는 자동으로 관리됨)
+
+    # 이 '.env' 파일 생성 단계는 대부분의 경우 테스트 Job에서는 불필요
+    # 테스트 코드가 실제 런타임 환경 변수에 직접적으로 의존하는 경우가 아니라면 삭제
+    # - name: Setting .env (Optional: Remove if not strictly needed for tests)
+    #   run: echo "${{ secrets.ENV }}" > .env
+
+    - name: Install dependencies
+      run: npm ci # 의존성 설치 (package-lock.json 기준으로 설치)
+    - name: Run tests
+      run: npm run test # 테스트 스크립트 실행
+
+  # 📦 2. 빌드 및 DockerHub 푸시 Job: 테스트 성공 시 Docker 이미지를 빌드하고 레지스트리에 올린다
+  build_and_push_docker:
+    needs: test # 'test' Job이 성공해야만 이 Job이 실행
+    runs-on: ubuntu-latest
+    env:
+      # DockerHub에 푸시할 전체 이미지 이름을 이 Job 내에서 정의. (레지스트리/사용자이름/이미지이름:태그)
+      DOCKER_FULL_IMAGE_NAME: docker.io/${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_BASE_NAME }}
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2 # Docker 빌드 성능 향상을 위한 Buildx 설정
+   
+    - name: Login to DockerHub
+      uses: docker/login-action@v3 # DockerHub 로그인 액션을 사용해서 더 안전하고 표준적으로 로그인!
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+          
+    - name: Build and Push Docker image to DockerHub
+      uses: docker/build-push-action@v5 # Docker 이미지 빌드 및 푸시를 한 번에 처리하는 액션
+      with:
+        context: . # Dockerfile이 있는 경로 (현재 프로젝트 루트)
+        push: true # DockerHub에 이미지를 푸시하도록 설정
+        tags: ${{ env.DOCKER_FULL_IMAGE_NAME }}:latest # 태그는 항상 최신 버전으로 지정
+        # 만약 Dockerfile에서 ARG를 사용한다면 아래처럼 build-args를 추가 가능
+        # build-args: |
+        #   NODE_ENV=production
+
+  # 🚀 3. 배포 Job: DockerHub에 이미지가 올라갔으면 실제 서버에 배포!
+  deploy:
+    needs: build_and_push_docker # 'build_and_push_docker' Job이 성공해야만 이 Job이 실행
+    runs-on: [self-hosted, blk] # 특정 self-hosted 러너 그룹(blk)에서 실행
+    env:
+      # DockerHub에 풀(pull)해올 전체 이미지 이름 정의
+      DOCKER_FULL_IMAGE_NAME: docker.io/${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_BASE_NAME }}
+    steps:
+    - name: Login to DockerHub on self-hosted runner
+      uses: docker/login-action@v3 # self-hosted 러너에서도 DockerHub 로그인이 필요해
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        
+    - name: Deploy application to server
+      run: | # 여러 줄의 쉘 스크립트를 실행할 때는 `|`를 사용하는 게 안정적
+        echo "--- 배포 스크립트 시작 ---"
+        
+        # self-hosted runner의 현재 작업 디렉토리를 알아내서 .env 파일 경로로 사용
+        WORKSPACE_PATH=$(pwd)
+        
+        # 1. 서버에 애플리케이션용 '.env' 파일 생성 또는 업데이트
+        # `secrets.ENV`에는 여러 환경 변수가 한 문자열에 담겨 있을 것으로 가정.
+        # 예시: "KEY1=VALUE1\nKEY2=VALUE2"
+        echo "${{ secrets.ENV }}" > "${WORKSPACE_PATH}/.env"
+        chmod 600 "${WORKSPACE_PATH}/.env" # 보안을 위해 .env 파일 권한을 설정해줘. (owner만 읽기/쓰기)
+        
+        # 2. 최신 Docker 이미지 가져오기 (pull)
+        docker pull ${{ env.DOCKER_FULL_IMAGE_NAME }}:latest
+        
+        # 3. 기존 컨테이너 중단 및 삭제 (새로운 버전으로 교체하기 위함)
+        # `|| true`는 이전 명령이 실패하더라도 스크립트가 중단되지 않고 다음을 진행하도록 해.
+        docker stop ${{ env.DOCKER_CONTAINER }} || true
+        docker rm ${{ env.DOCKER_CONTAINER }} || true
+        
+        # 4. 새로운 Docker 컨테이너 실행
+        # -d: 백그라운드에서 실행
+        # --name: 컨테이너 이름 지정
+        # -p 80:${{ secrets.PORT }}: 외부 80번 포트를 컨테이너 내부 ${{ secrets.PORT }} (예: 3000)에 연결
+        # --env-file: runner의 작업 디렉토리에 생성된 .env 파일을 컨테이너 환경 변수로 사용
+        # --restart always: 컨테이너가 종료되면 항상 다시 시작
+        docker run -d \
+          --name ${{ env.DOCKER_CONTAINER }} \
+          -p 80:${{secrets.PORT}} \   # <- API 외부 80번(호스트)을 컨테이너 내부 4000번(API)으로 연결
+          -p 4100:${{secrets.SOCKET_PORT}} \ # <- 소켓 외부 4100번(호스트)을 컨테이너 내부 4100번(소켓)으로 연결
+          --env-file "${WORKSPACE_PATH}/.env" \
+          --restart always \
+          ${{ env.DOCKER_FULL_IMAGE_NAME }}:latest
+        
+        echo "--- 배포 스크립트 완료 ---"
