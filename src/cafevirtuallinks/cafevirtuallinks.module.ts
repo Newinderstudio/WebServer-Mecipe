@@ -7,10 +7,9 @@ import { RawimageuploadModule } from 'src/rawimageupload/rawimageupload.module';
 
 @Module({
   imports: [
-    PrismaService,
     RawimageuploadModule
   ],
   controllers: [CafevirtuallinksController],
-  providers: [CafevirtuallinksService]
+  providers: [CafevirtuallinksService, PrismaService]
 })
 export class CafevirtuallinksModule { }

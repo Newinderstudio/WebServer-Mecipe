@@ -7,10 +7,9 @@ import { RawimageuploadModule } from 'src/rawimageupload/rawimageupload.module';
 
 @Module({
   imports: [
-    PrismaService,
     RawimageuploadModule
   ],
   controllers: [CaferealimagesController],
-  providers: [CaferealimagesService]
+  providers: [CaferealimagesService, PrismaService]
 })
 export class CaferealimagesModule { }

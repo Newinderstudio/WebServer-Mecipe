@@ -4,9 +4,7 @@ import { BoardsController } from './boards.controller';
 import { PrismaService } from 'src/global/prisma.service';
 
 @Module({
-  imports: [
-    PrismaService
-  ],
+  imports: [],
   controllers: [BoardsController],
   providers: [BoardsService]
 })

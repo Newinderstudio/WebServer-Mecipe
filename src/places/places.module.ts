@@ -6,10 +6,9 @@ import { RawimageuploadModule } from 'src/rawimageupload/rawimageupload.module';
 
 @Module({
   imports: [
-    PrismaService,
     RawimageuploadModule
   ],
   controllers: [PlacesController],
-  providers: [PlacesService]
+  providers: [PlacesService, PrismaService]
 })
 export class PlacesModule { }

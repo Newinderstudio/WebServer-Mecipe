@@ -2,6 +2,7 @@ import { Controller, Header, Post, Req, UploadedFile, UploadedFiles, UseGuards, 
 import { RawimageuploadService } from './rawimageupload.service';
 import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { AdminAuthGuard } from 'src/auth/jwt.guard.admin';
+import { Request } from 'express';
 
 @Controller('rawimageupload')
 export class RawimageuploadController {

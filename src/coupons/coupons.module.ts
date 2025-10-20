@@ -5,9 +5,9 @@ import { PrismaService } from 'src/global/prisma.service';
 
 @Module({
   imports: [
-    PrismaService
+    
   ],
   controllers: [CouponsController],
-  providers: [CouponsService]
+  providers: [CouponsService, PrismaService]
 })
 export class CouponsModule {}
