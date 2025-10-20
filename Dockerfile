@@ -2,6 +2,9 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Alpine에서 Prisma 실행을 위한 OpenSSL 설치
+RUN apk add --no-cache openssl1.1-compat
+
 COPY package*.json ./
 RUN npm ci
 
@@ -14,6 +17,9 @@ RUN npx prisma generate
 RUN npm run build
 
 FROM node:20-alpine
+
+# 프로덕션 이미지에도 OpenSSL 필요
+RUN apk add --no-cache openssl1.1-compat
 
 WORKDIR /app
 
