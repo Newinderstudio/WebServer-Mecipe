@@ -88,17 +88,16 @@ jobs:
         docker rm nest-server || true
         
         # 4. 새로운 Docker 컨테이너 실행
-        # -d: 백그라운드에서 실행
-        # --name: 컨테이너 이름 지정
-        # -p 80:${{ secrets.PORT }}: 외부 80번 포트를 컨테이너 내부 ${{ secrets.PORT }} (예: 3000)에 연결
-        # --env-file: runner의 작업 디렉토리에 생성된 .env 파일을 컨테이너 환경 변수로 사용
-        # --restart always: 컨테이너가 종료되면 항상 다시 시작
+        API_PORT="${{ secrets.PORT }}"
+        SOCKET_PORT="${{ secrets.SOCKET_PORT }}"
+        DOCKER_IMAGE="docker.io/${{ secrets.DOCKER_USERNAME }}/mecipe-api-server:latest"
+        
         docker run -d \
           --name nest-server \
-          -p 80:${{secrets.PORT}} \   # <- API 외부 80번(호스트)을 컨테이너 내부 4000번(API)으로 연결
-          -p 4100:${{secrets.SOCKET_PORT}} \ # <- 소켓 외부 4100번(호스트)을 컨테이너 내부 4100번(소켓)으로 연결
+          -p "80:${API_PORT}" \
+          -p "4100:${SOCKET_PORT}" \
           --env-file "${WORKSPACE_PATH}/.env" \
           --restart always \
-          docker.io/${{ secrets.DOCKER_USERNAME }}/mecipe-api-server:latest
+          "${DOCKER_IMAGE}"
         
         echo "--- 배포 스크립트 완료 ---"
