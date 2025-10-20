@@ -58,7 +58,7 @@ jobs:
   # 🚀 3. 배포 Job: DockerHub에 이미지가 올라갔으면 실제 서버에 배포!
   deploy:
     needs: build_and_push_docker # 'build_and_push_docker' Job이 성공해야만 이 Job이 실행
-    runs-on: [self-hosted, blk] # 특정 self-hosted 러너 그룹(blk)에서 실행
+    runs-on: [self-hosted, virtualcafe-was] # 특정 self-hosted 러너 그룹(virtualcafe-was)에서 실행
     steps:
     - name: Login to DockerHub on self-hosted runner
       uses: docker/login-action@v3 # self-hosted 러너에서도 DockerHub 로그인이 필요해
