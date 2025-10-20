@@ -1,10 +1,5 @@
 name: Docker Image CI # 워크플로우 이름
 
-# 환경변수 정의: 여러 Job에서 공통으로 사용할 변수들
-env:
-  DOCKER_IMAGE_BASE_NAME: mecipe-api-server # 이미지의 기본 이름만 지정. DockerHub 사용자 이름은 secrets에서 가져온다
-  DOCKER_CONTAINER: nest-server # Docker 컨테이너 이름
-
 on:
   push:
     branches: [ "main" ] # main 브랜치에 푸시될 때 워크플로우 실행
@@ -37,9 +32,6 @@ jobs:
   build_and_push_docker:
     needs: test # 'test' Job이 성공해야만 이 Job이 실행
     runs-on: ubuntu-latest
-    env:
-      # DockerHub에 푸시할 전체 이미지 이름을 이 Job 내에서 정의. (레지스트리/사용자이름/이미지이름:태그)
-      DOCKER_FULL_IMAGE_NAME: docker.io/${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_BASE_NAME }}
     steps:
     - name: Checkout Source Code
       uses: actions/checkout@v3
@@ -58,7 +50,7 @@ jobs:
       with:
         context: . # Dockerfile이 있는 경로 (현재 프로젝트 루트)
         push: true # DockerHub에 이미지를 푸시하도록 설정
-        tags: ${{ env.DOCKER_FULL_IMAGE_NAME }}:latest # 태그는 항상 최신 버전으로 지정
+        tags: docker.io/${{ secrets.DOCKER_USERNAME }}/mecipe-api-server:latest # 태그는 항상 최신 버전으로 지정
         # 만약 Dockerfile에서 ARG를 사용한다면 아래처럼 build-args를 추가 가능
         # build-args: |
         #   NODE_ENV=production
@@ -67,9 +59,6 @@ jobs:
   deploy:
     needs: build_and_push_docker # 'build_and_push_docker' Job이 성공해야만 이 Job이 실행
     runs-on: [self-hosted, blk] # 특정 self-hosted 러너 그룹(blk)에서 실행
-    env:
-      # DockerHub에 풀(pull)해올 전체 이미지 이름 정의
-      DOCKER_FULL_IMAGE_NAME: docker.io/${{ secrets.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_BASE_NAME }}
     steps:
     - name: Login to DockerHub on self-hosted runner
       uses: docker/login-action@v3 # self-hosted 러너에서도 DockerHub 로그인이 필요해
@@ -91,12 +80,12 @@ jobs:
         chmod 600 "${WORKSPACE_PATH}/.env" # 보안을 위해 .env 파일 권한을 설정해줘. (owner만 읽기/쓰기)
         
         # 2. 최신 Docker 이미지 가져오기 (pull)
-        docker pull ${{ env.DOCKER_FULL_IMAGE_NAME }}:latest
+        docker pull docker.io/${{ secrets.DOCKER_USERNAME }}/mecipe-api-server:latest
         
         # 3. 기존 컨테이너 중단 및 삭제 (새로운 버전으로 교체하기 위함)
         # `|| true`는 이전 명령이 실패하더라도 스크립트가 중단되지 않고 다음을 진행하도록 해.
-        docker stop ${{ env.DOCKER_CONTAINER }} || true
-        docker rm ${{ env.DOCKER_CONTAINER }} || true
+        docker stop nest-server || true
+        docker rm nest-server || true
         
         # 4. 새로운 Docker 컨테이너 실행
         # -d: 백그라운드에서 실행
@@ -105,11 +94,11 @@ jobs:
         # --env-file: runner의 작업 디렉토리에 생성된 .env 파일을 컨테이너 환경 변수로 사용
         # --restart always: 컨테이너가 종료되면 항상 다시 시작
         docker run -d \
-          --name ${{ env.DOCKER_CONTAINER }} \
+          --name nest-server \
           -p 80:${{secrets.PORT}} \   # <- API 외부 80번(호스트)을 컨테이너 내부 4000번(API)으로 연결
           -p 4100:${{secrets.SOCKET_PORT}} \ # <- 소켓 외부 4100번(호스트)을 컨테이너 내부 4100번(소켓)으로 연결
           --env-file "${WORKSPACE_PATH}/.env" \
           --restart always \
-          ${{ env.DOCKER_FULL_IMAGE_NAME }}:latest
+          docker.io/${{ secrets.DOCKER_USERNAME }}/mecipe-api-server:latest
         
         echo "--- 배포 스크립트 완료 ---"
